@@ -52,6 +52,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="code" target="1.8" />
       <module name="tcs-base" target="1.8" />
       <module name="tcs-control-center" target="1.8" />
       <module name="tcs-controlcenter" target="1.8" />

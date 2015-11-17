@@ -9,6 +9,7 @@
     <version>1.0</version>
     <modules>
         <module>tcs-base</module>
+        <module>tcs-web-server</module>
     </modules>
 
     <name>${project.artifactId} ${project.version}</name>

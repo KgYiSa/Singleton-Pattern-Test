@@ -1,0 +1,436 @@
+{
+    "id": 0,
+    "version": 0,
+    "properties": {},
+    "created_at": 1447719106318,
+    "created_by": "Wang Wu",
+    "updated_at": 1447719106318,
+    "updated_by": "Zhang San",
+    "name": "test_scene_15_11_17_08_11_46",
+    "state": "UNKNOWN",
+    "points": [
+        {
+            "id": 0,
+            "version": 0,
+            "properties": {},
+            "created_at": 1447719106322,
+            "created_by": "Wang Wu",
+            "updated_at": 1447719106322,
+            "updated_by": "Zhang San",
+            "name": "test_point_0",
+            "vehicle_orientation_angle": 0,
+            "type": "HALT_POSITION",
+            "position": {
+                "id": 0,
+                "version": 0,
+                "properties": {},
+                "created_at": 1447719106318,
+                "created_by": "Wang Wu",
+                "updated_at": 1447719106318,
+                "updated_by": "Zhang San",
+                "x": 934,
+                "y": 481,
+                "z": 0
+            },
+            "incomingPaths": [],
+            "outgoingPaths": [
+                0
+            ]
+        },
+        {
+            "id": 1,
+            "version": 0,
+            "properties": {},
+            "created_at": 1447719106322,
+            "created_by": "Wang Wu",
+            "updated_at": 1447719106322,
+            "updated_by": "Zhang San",
+            "name": "test_point_1",
+            "vehicle_orientation_angle": 0,
+            "type": "HALT_POSITION",
+            "position": {
+                "id": 1,
+                "version": 0,
+                "properties": {},
+                "created_at": 1447719106322,
+                "created_by": "Wang Wu",
+                "updated_at": 1447719106322,
+                "updated_by": "Zhang San",
+                "x": 592,
+                "y": 568,
+                "z": 0
+            },
+            "incomingPaths": [
+                0
+            ],
+            "outgoingPaths": [
+                1
+            ]
+        },
+        {
+            "id": 2,
+            "version": 0,
+            "properties": {},
+            "created_at": 1447719106322,
+            "created_by": "Wang Wu",
+            "updated_at": 1447719106322,
+            "updated_by": "Zhang San",
+            "name": "test_point_2",
+            "vehicle_orientation_angle": 0,
+            "type": "HALT_POSITION",
+            "position": {
+                "id": 2,
+                "version": 0,
+                "properties": {},
+                "created_at": 1447719106322,
+                "created_by": "Wang Wu",
+                "updated_at": 1447719106322,
+                "updated_by": "Zhang San",
+                "x": 658,
+                "y": 838,
+                "z": 0
+            },
+            "incomingPaths": [
+                1
+            ],
+            "outgoingPaths": [
+                2
+            ]
+        },
+        {
+            "id": 3,
+            "version": 0,
+            "properties": {},
+            "created_at": 1447719106322,
+            "created_by": "Wang Wu",
+            "updated_at": 1447719106322,
+            "updated_by": "Zhang San",
+            "name": "test_point_3",
+            "vehicle_orientation_angle": 0,
+            "type": "HALT_POSITION",
+            "position": {
+                "id": 3,
+                "version": 0,
+                "properties": {},
+                "created_at": 1447719106322,
+                "created_by": "Wang Wu",
+                "updated_at": 1447719106322,
+                "updated_by": "Zhang San",
+                "x": 982,
+                "y": 294,
+                "z": 0
+            },
+            "incomingPaths": [
+                2
+            ],
+            "outgoingPaths": [
+                3
+            ]
+        },
+        {
+            "id": 4,
+            "version": 0,
+            "properties": {},
+            "created_at": 1447719106322,
+            "created_by": "Wang Wu",
+            "updated_at": 1447719106322,
+            "updated_by": "Zhang San",
+            "name": "test_point_4",
+            "vehicle_orientation_angle": 0,
+            "type": "HALT_POSITION",
+            "position": {
+                "id": 4,
+                "version": 0,
+                "properties": {},
+                "created_at": 1447719106322,
+                "created_by": "Wang Wu",
+                "updated_at": 1447719106322,
+                "updated_by": "Zhang San",
+                "x": 304,
+                "y": 14,
+                "z": 0
+            },
+            "incomingPaths": [
+                3
+            ],
+            "outgoingPaths": []
+        },
+        {
+            "id": 5,
+            "version": 0,
+            "properties": {},
+            "created_at": 1447719106323,
+            "created_by": "Wang Wu",
+            "updated_at": 1447719106323,
+            "updated_by": "Zhang San",
+            "name": "test_point_5",
+            "vehicle_orientation_angle": 0,
+            "type": "HALT_POSITION",
+            "position": {
+                "id": 5,
+                "version": 0,
+                "properties": {},
+                "created_at": 1447719106323,
+                "created_by": "Wang Wu",
+                "updated_at": 1447719106323,
+                "updated_by": "Zhang San",
+                "x": 919,
+                "y": 803,
+                "z": 0
+            },
+            "incomingPaths": [],
+            "outgoingPaths": []
+        },
+        {
+            "id": 6,
+            "version": 0,
+            "properties": {},
+            "created_at": 1447719106323,
+            "created_by": "Wang Wu",
+            "updated_at": 1447719106323,
+            "updated_by": "Zhang San",
+            "name": "test_point_6",
+            "vehicle_orientation_angle": 0,
+            "type": "HALT_POSITION",
+            "position": {
+                "id": 6,
+                "version": 0,
+                "properties": {},
+                "created_at": 1447719106323,
+                "created_by": "Wang Wu",
+                "updated_at": 1447719106323,
+                "updated_by": "Zhang San",
+                "x": 616,
+                "y": 249,
+                "z": 0
+            },
+            "incomingPaths": [],
+            "outgoingPaths": []
+        },
+        {
+            "id": 7,
+            "version": 0,
+            "properties": {},
+            "created_at": 1447719106323,
+            "created_by": "Wang Wu",
+            "updated_at": 1447719106323,
+            "updated_by": "Zhang San",
+            "name": "test_point_7",
+            "vehicle_orientation_angle": 0,
+            "type": "HALT_POSITION",
+            "position": {
+                "id": 7,
+                "version": 0,
+                "properties": {},
+                "created_at": 1447719106323,
+                "created_by": "Wang Wu",
+                "updated_at": 1447719106323,
+                "updated_by": "Zhang San",
+                "x": 820,
+                "y": 244,
+                "z": 0
+            },
+            "incomingPaths": [],
+            "outgoingPaths": []
+        },
+        {
+            "id": 8,
+            "version": 0,
+            "properties": {},
+            "created_at": 1447719106323,
+            "created_by": "Wang Wu",
+            "updated_at": 1447719106323,
+            "updated_by": "Zhang San",
+            "name": "test_point_8",
+            "vehicle_orientation_angle": 0,
+            "type": "HALT_POSITION",
+            "position": {
+                "id": 8,
+                "version": 0,
+                "properties": {},
+                "created_at": 1447719106323,
+                "created_by": "Wang Wu",
+                "updated_at": 1447719106323,
+                "updated_by": "Zhang San",
+                "x": 152,
+                "y": 933,
+                "z": 0
+            },
+            "incomingPaths": [],
+            "outgoingPaths": []
+        },
+        {
+            "id": 9,
+            "version": 0,
+            "properties": {},
+            "created_at": 1447719106325,
+            "created_by": "Wang Wu",
+            "updated_at": 1447719106325,
+            "updated_by": "Zhang San",
+            "name": "test_point_9",
+            "vehicle_orientation_angle": 0,
+            "type": "HALT_POSITION",
+            "position": {
+                "id": 9,
+                "version": 0,
+                "properties": {},
+                "created_at": 1447719106323,
+                "created_by": "Wang Wu",
+                "updated_at": 1447719106323,
+                "updated_by": "Zhang San",
+                "x": 718,
+                "y": 736,
+                "z": 0
+            },
+            "incomingPaths": [],
+            "outgoingPaths": []
+        }
+    ],
+    "paths": [
+        {
+            "id": 0,
+            "version": 0,
+            "properties": {},
+            "created_at": 1447719106322,
+            "created_by": "Wang Wu",
+            "updated_at": 1447719106322,
+            "updated_by": "Zhang San",
+            "name": "test_path_0",
+            "source_point_id": 0,
+            "destination_point_id": 1,
+            "length": 418,
+            "routing_cost": 0,
+            "max_velocity": 1,
+            "max_reverse_velocity": 1,
+            "locked": false
+        },
+        {
+            "id": 1,
+            "version": 0,
+            "properties": {},
+            "created_at": 1447719106323,
+            "created_by": "Wang Wu",
+            "updated_at": 1447719106323,
+            "updated_by": "Zhang San",
+            "name": "test_path_1",
+            "source_point_id": 1,
+            "destination_point_id": 2,
+            "length": 170,
+            "routing_cost": 0,
+            "max_velocity": 1,
+            "max_reverse_velocity": 1,
+            "locked": false
+        },
+        {
+            "id": 2,
+            "version": 0,
+            "properties": {},
+            "created_at": 1447719106323,
+            "created_by": "Wang Wu",
+            "updated_at": 1447719106323,
+            "updated_by": "Zhang San",
+            "name": "test_path_2",
+            "source_point_id": 2,
+            "destination_point_id": 3,
+            "length": 430,
+            "routing_cost": 0,
+            "max_velocity": 1,
+            "max_reverse_velocity": 1,
+            "locked": false
+        },
+        {
+            "id": 3,
+            "version": 0,
+            "properties": {},
+            "created_at": 1447719106323,
+            "created_by": "Wang Wu",
+            "updated_at": 1447719106323,
+            "updated_by": "Zhang San",
+            "name": "test_path_3",
+            "source_point_id": 3,
+            "destination_point_id": 4,
+            "length": 685,
+            "routing_cost": 0,
+            "max_velocity": 1,
+            "max_reverse_velocity": 1,
+            "locked": false
+        }
+    ],
+    "locations": [
+        {
+            "id": 6668,
+            "version": 0,
+            "properties": {},
+            "created_at": 1447719106325,
+            "created_by": "Wang Wu",
+            "updated_at": 1447719106325,
+            "updated_by": "Zhang San",
+            "name": "test_location_6668",
+            "location_type_id": 4627,
+            "attached_links": [
+                {
+                    "id": 6668,
+                    "version": 0,
+                    "properties": {},
+                    "created_at": 1447719106325,
+                    "created_by": "Wang Wu",
+                    "updated_at": 1447719106325,
+                    "updated_by": "Zhang San",
+                    "name": "test_link_6668",
+                    "allowed_operations": [
+                        "Puts in storage"
+                    ],
+                    "point": 0
+                }
+            ],
+            "position": {
+                "id": 6668,
+                "version": 0,
+                "properties": {},
+                "created_at": 1447719106325,
+                "created_by": "Wang Wu",
+                "updated_at": 1447719106325,
+                "updated_by": "Zhang San",
+                "x": 1034,
+                "y": 581,
+                "z": 0
+            }
+        }
+    ],
+    "location_types": [
+        {
+            "id": 4627,
+            "version": 0,
+            "properties": {},
+            "created_at": 1447719106325,
+            "created_by": "Wang Wu",
+            "updated_at": 1447719106325,
+            "updated_by": "Zhang San",
+            "name": "test_lt_4627",
+            "allowed_operations": [
+                "Puts in storage",
+                "Stock removal"
+            ]
+        }
+    ],
+    "static_routes": [
+        {
+            "id": 1151,
+            "version": 0,
+            "properties": {},
+            "created_at": 1447719106547,
+            "created_by": "Wang Wu",
+            "updated_at": 1447719106547,
+            "updated_by": "Zhang San",
+            "name": "test_static_route_1151",
+            "hops": [
+                0,
+                1,
+                2
+            ],
+            "valid": true,
+            "source_point_id": 0,
+            "destination_point_id": 2
+        }
+    ]
+}

@@ -9,8 +9,6 @@
     <version>1.0</version>
     <modules>
         <module>tcs-base</module>
-        <module>tcs-kernel</module>
-        <module>tcs-control-center</module>
     </modules>
 
     <name>${project.artifactId} ${project.version}</name>

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.mj.tcs</groupId>
-    <artifactId>tcs-server</artifactId>
+    <artifactId>tcs-main</artifactId>
     <version>1.0</version>
     <modules>
         <module>tcs-base</module>

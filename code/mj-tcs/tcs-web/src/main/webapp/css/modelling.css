@@ -1,0 +1,103 @@
+.left-container {
+	
+	height: 100%;
+	background-color: #FBC6C1;
+	padding-left: 0px;
+	padding-right: 0px;
+}
+
+.left-container .operate-list {
+	/*margin-top: -10px;*/
+}
+
+.left-container .operate-content {
+	background-color: #FEF2B3;
+	height: 92%;
+}
+
+.left-container .operate-list ul {
+	background-color: #FCD303;
+	list-style: none;
+	padding-top: 10px;
+	padding-left: 5px;
+	margin-bottom: 0px;
+
+}
+
+.left-container .operate-list ul li {
+	display: inline-block;
+	margin-left: 15px;
+	margin-bottom: 10px;
+}
+
+.left-container .operate-list ul li img {
+	height: 30px;
+}
+
+
+.right-container {
+	height: 100%;
+	background-color: #EFD9CD;
+	padding-right: 0px;
+}
+
+.right-container .elements-blocks {
+	height: 70%;
+	background-color: #D2FEBD;
+}
+
+/*暂时 待删除*/
+.elements-blocks .elements-content img {
+	width: 100%;
+}
+
+.elements-blocks .blocks-content {
+	display: none;
+}
+
+/*暂时 待删除*/
+.elements-blocks .blocks-content img {
+	width: 100%;
+}
+
+
+.right-container .properties {
+	height: 30%;
+	background-color: #FEF8BD;
+}
+
+.right-container .properties .pro-title {
+	background-color: #F8D7B9;
+	height: 10%;
+}
+
+.right-container .properties .pro-title p {
+	display: inline;
+}
+
+.right-container .properties .pro-table-title {
+	height: 10%;
+}
+.right-container .properties .pro-table-title table {
+	border:1px solid #000000;
+	width: 90%;
+}
+
+.right-container .properties .pro-table-title table th {
+	text-align: center;
+	border:1px solid #000000;
+}
+
+.right-container .properties .pro-table-content {
+	overflow-y:auto;
+	height: 80%;
+}
+.right-container .properties .pro-table-content table {
+	width: 90%;
+}
+.right-container .properties .pro-table-content table td {
+	text-align: center;
+	border:1px solid #000000;
+}
+
+

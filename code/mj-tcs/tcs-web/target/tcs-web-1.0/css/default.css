@@ -1,0 +1,70 @@
+html {
+	
+}
+/*设定图片的最大宽高为外层div的宽高*/
+img {
+	max-width: 100%;
+  	max-height: 100%;
+}
+
+header {
+	height: 70px;
+	margin-top: -20px;
+	text-align: center;
+	background-image: url("../images/header-bg.jpg");
+}
+
+header h1 {
+	padding-top: 12px;
+}
+
+header h1 a {
+	font-size: 20px;
+	font-weight: bold;
+	/*text-decoration: none；*/
+}
+
+header h1 a:hover {
+	text-decoration: none;
+}
+
+body {
+	background-color: rgb(247,243,247);
+
+}
+
+
+.container-fluid {
+	background-color: #bfffff;
+	/*height: 500px;*/
+}
+
+
+.login-form {
+	background-color: #cccccc;
+	width: 30%;
+	height: 300px;
+	margin-top: 80px;
+	margin-left: auto;
+	margin-right: auto;
+	/*padding: 30px;*/
+}
+
+
+.login-form-title {
+	background-color: #dddddd;
+	text-align: center;
+	
+}
+
+.login-form-title h3{
+	margin-top: 20px;
+	margin-bottom:20px; 
+}
+
+.login-form .form-group {
+	margin-bottom: 40px;
+	margin-left: 0px;
+	margin-right: 0px;
+
+}

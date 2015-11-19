@@ -3,7 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/tcs-base" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/tcs-web-client/src/index.html" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/tcs-web" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/tcs-web-server" charset="UTF-8" />
   </component>
 </project>

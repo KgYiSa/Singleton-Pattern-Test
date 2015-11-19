@@ -1,16 +1,14 @@
 package com.mj.tcs.api.v1.dto;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
-import com.inspiresoftware.lib.dto.geda.annotations.DtoCollection;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
-import com.mj.tcs.api.v1.dto.base.BaseEntityAuditDto;
+import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.api.v1.dto.base.TripleDto;
-import com.mj.tcs.api.v1.dto.converter.value.converter.LocationLinkDto2LocationLinkMatcher;
 
+import javax.persistence.*;
 import java.util.*;
 
 /**
@@ -18,17 +16,30 @@ import java.util.*;
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
-public class LocationDto extends BaseEntityAuditDto {
+@Entity
+@Table(name = "tcs_model_location", uniqueConstraints =
+    @UniqueConstraint(columnNames = {"name", "scene"})
+)
+public class LocationDto extends BaseEntityDto {
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "scene", nullable = false)
+    private SceneDto scene;
+
     @DtoField
+    @Column
     private String name;
+
     /**
-     * This locationDto's tripleDto in mm.
+     * This locationDto's position in mm.
      */
     @JsonProperty("position")
     @DtoField(value = "position",
             dtoBeanKey = "TripleDto",
             entityBeanKeys = {"Triple"})
-    private TripleDto tripleDto = new TripleDto();
+    @OneToOne(optional = false, cascade = {CascadeType.ALL})
+    private TripleDto position = new TripleDto();
+
     /**
      * A reference to this locationDto's type.
      */
@@ -36,19 +47,22 @@ public class LocationDto extends BaseEntityAuditDto {
 //            dtoBeanKey = "LocationTypeDto",
 //            entityBeanKeys = {"LocationType"})
 //    private LocationTypeDto type;
-    private Long locationTypeId;
+    @Column
+    private Long locationType;
 
     /**
      * A set of links attached to this locationDto.
      */
-    @JsonManagedReference
-    @DtoCollection(value = "attachedLinks",
-            entityCollectionClass = HashSet.class,
-            dtoCollectionClass = HashSet.class,
-            dtoBeanKey = "LocationLinkDto",
-            entityBeanKeys = {"Location$Link"},
-            dtoToEntityMatcher = LocationLinkDto2LocationLinkMatcher.class)
-    private Set<LocationLinkDto> attachedLinks = new HashSet<>();
+//    @JsonManagedReference
+//    @DtoCollection(value = "attachedLinks",
+//            entityCollectionClass = HashSet.class,
+//            dtoCollectionClass = HashSet.class,
+//            dtoBeanKey = "LocationLinkDto",
+//            entityBeanKeys = {"Location$Link"},
+//            dtoToEntityMatcher = LocationLinkDto2LocationLinkMatcher.class)
+    @ElementCollection
+    @CollectionTable(name = "tcs_model_rel_attached_links")
+    private Set<Long> attachedLinks = new HashSet<>();
 
     public LocationDto(){
         //do nothing
@@ -57,12 +71,20 @@ public class LocationDto extends BaseEntityAuditDto {
      * Creates a new LocationDto.
      *
      * @param name The new locationDto's name.
-     * @param locationTypeId The new locationDto's type.
+     * @param locationType The new locationDto's type.
      */
     public LocationDto(String name,
-                       Long locationTypeId) {
+                       Long locationType) {
         this.name = name;
-        this.locationTypeId = Objects.requireNonNull(locationTypeId, "locationTypeId is null");
+        this.locationType = Objects.requireNonNull(locationType, "locationType is null");
+    }
+
+    public SceneDto getScene() {
+        return scene;
+    }
+
+    public void setScene(SceneDto scene) {
+        this.scene = scene;
     }
 
     public String getName() {
@@ -78,8 +100,8 @@ public class LocationDto extends BaseEntityAuditDto {
      *
      * @return The physical coordinates of this locationDto in mm.
      */
-    public TripleDto getTripleDto() {
-      return tripleDto;
+    public TripleDto getPosition() {
+      return position;
     }
 
     /**
@@ -88,8 +110,8 @@ public class LocationDto extends BaseEntityAuditDto {
      * @param newPosition The new physical coordinates of this locationDto. May not
      * be <code>null</code>.
      */
-    public void setTripleDto(TripleDto newPosition) {
-      tripleDto = Objects.requireNonNull(newPosition, "newPosition is null");
+    public void setPosition(TripleDto newPosition) {
+      position = Objects.requireNonNull(newPosition, "newPosition is null");
     }
 
     /**
@@ -97,8 +119,8 @@ public class LocationDto extends BaseEntityAuditDto {
      *
      * @return The Id to the type of this locationDto.
      */
-    public Long getLocationTypeId() {
-      return locationTypeId;
+    public Long getLocationType() {
+      return locationType;
     }
 
     /**
@@ -106,10 +128,10 @@ public class LocationDto extends BaseEntityAuditDto {
      *
      * @param newTypeId This locationDto's new type.
      */
-    public void setLocationTypeId(Long newTypeId) {
+    public void setLocationType(Long newTypeId) {
 //      type = Objects.requireNonNull(newType, "newType is null");
         // NOT required
-        this.locationTypeId = newTypeId;
+        this.locationType = newTypeId;
     }
 
     /**
@@ -117,51 +139,21 @@ public class LocationDto extends BaseEntityAuditDto {
      *
      * @return A set of links attached to this locationDto.
      */
-    public Set<LocationLinkDto> getAttachedLinks() {
-      return new HashSet<>(attachedLinks);
+    public Set<Long> getAttachedLinks() {
+      return attachedLinks;
     }
 
-    public void setAttachedLinks(Set<LocationLinkDto> attachedLinks) {
+    public void setAttachedLinks(Set<Long> attachedLinks) {
         this.attachedLinks = attachedLinks;
     }
 
-    public Optional<LocationLinkDto> getAttachedLinkById(long id) {
-        if (attachedLinks == null) {
-            return Optional.ofNullable(null);
-        }
+    public boolean attachLink(Long newLinkId) {
+        Objects.requireNonNull(newLinkId, "newLinkId is null");
 
-        return attachedLinks.stream().filter(l -> l.getId() == id).findFirst();
+        return attachedLinks.add(newLinkId);
     }
 
-    public boolean attachLink(LocationLinkDto newLink) {
-        Objects.requireNonNull(newLink, "newLink is null");
-        LocationDto linkLocation = Objects.requireNonNull(newLink.getLocationDto(), "newLink's locationDto is null");
-
-        if (!linkLocation.equals(this)) {
-            throw new IllegalArgumentException(
-                    "locationDto end of link is not this locationDto");
-        }
-        return attachedLinks.add(newLink);
+    public boolean detachLink(long linkId) {
+        return attachedLinks.remove(linkId);
     }
-
-    /**
-     * Detaches a link from this locationDto.
-     *
-     * @param pointId The ID of the point end of the link to be detached from this
-     * locationDto.
-     * @return <code>true</code> if, and only if, there was a link to the given
-     * pointDto attached to this locationDto.
-     */
-    public boolean detachLink(long pointId) {
-      Iterator<LocationLinkDto> linkIter = attachedLinks.iterator();
-      while (linkIter.hasNext()) {
-        LocationLinkDto curLink = linkIter.next();
-        if (pointId == curLink.getPointId()) {
-          linkIter.remove();
-          return true;
-        }
-      }
-      return false;
-    }
-
 }

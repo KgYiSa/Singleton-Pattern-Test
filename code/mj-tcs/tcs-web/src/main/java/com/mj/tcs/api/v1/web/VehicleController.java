@@ -1,7 +1,7 @@
 package com.mj.tcs.api.v1.web;
 
 import com.mj.tcs.api.v1.dto.VehicleDto;
-import com.mj.tcs.api.v1.dto.base.BaseEntityAuditDto;
+import com.mj.tcs.api.v1.dto.base.EntityAuditDto;
 import com.mj.tcs.api.v1.dto.converter.DtoConverter;
 import com.mj.tcs.api.v1.dto.resource.VehicleDtoResourceAssembler;
 import com.mj.tcs.exception.ObjectAccessViolationException;
@@ -98,12 +98,12 @@ public class VehicleController extends ServiceController {
 
     @RequestMapping(value = "/vehicles/{vehicleId}", method = RequestMethod.PATCH)
     public ResponseEntity<?> updateVehiclePartial(@PathVariable("vehicleId") Long vehicleId,
-                                                  BaseEntityAuditDto baseEntityAuditDto) {
+                                                  EntityAuditDto entityAuditDto) {
         Objects.requireNonNull(getModellingService().getVehicle(vehicleId),
                 "vehicle is null by id: " + vehicleId);
 
         Vehicle vehicle = getModellingService().getVehicle(vehicleId);
-        vehicle = (Vehicle) dtoConverter.mergePropertiesToEntity(vehicle, baseEntityAuditDto.getProperties());
+        vehicle = (Vehicle) dtoConverter.mergePropertiesToEntity(vehicle, entityAuditDto.getProperties());
 
         vehicle = getModellingService().updateVehicle(vehicle);
 
@@ -212,11 +212,11 @@ public class VehicleController extends ServiceController {
     @RequestMapping(value = "/scenes/{sceneId}/vehicles/{vehicleId}", method = RequestMethod.PATCH)
     public ResponseEntity<?> updateVehiclePartial(@PathVariable("sceneId") Long sceneId,
                                                 @PathVariable("vehicleId") Long vehicleId,
-                                                BaseEntityAuditDto baseEntityAuditDto) {
+                                                EntityAuditDto entityAuditDto) {
         checkAccessViolation(sceneId, vehicleId);
 
         Vehicle vehicle = getModellingService().getVehicle(vehicleId);
-        vehicle = (Vehicle) dtoConverter.mergePropertiesToEntity(vehicle, baseEntityAuditDto.getProperties());
+        vehicle = (Vehicle) dtoConverter.mergePropertiesToEntity(vehicle, entityAuditDto.getProperties());
 
         vehicle = getModellingService().updateVehicle(vehicle);
 

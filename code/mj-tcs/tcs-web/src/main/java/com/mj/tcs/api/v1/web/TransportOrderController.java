@@ -7,7 +7,7 @@
 package com.mj.tcs.api.v1.web;
 
 import com.mj.tcs.api.v1.dto.TransportOrderDto;
-import com.mj.tcs.api.v1.dto.base.BaseEntityAuditDto;
+import com.mj.tcs.api.v1.dto.base.EntityAuditDto;
 import com.mj.tcs.api.v1.dto.converter.DtoConverter;
 import com.mj.tcs.api.v1.dto.resource.TransportOrderDtoResourceAssembler;
 import com.mj.tcs.exception.ObjectAccessViolationException;
@@ -116,7 +116,7 @@ public class TransportOrderController extends ServiceController {
     @RequestMapping(value = "/scenes/{sceneId}/transport_orders/{transportOrderId}", method = RequestMethod.PATCH)
     public ResponseEntity<?> updateTransportOrderPartial(@PathVariable("sceneId") Long sceneId,
                                                 @PathVariable("transportOrderId") Long transportOrderId,
-                                                BaseEntityAuditDto baseEntityAuditDto) {
+                                                EntityAuditDto entityAuditDto) {
 
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }

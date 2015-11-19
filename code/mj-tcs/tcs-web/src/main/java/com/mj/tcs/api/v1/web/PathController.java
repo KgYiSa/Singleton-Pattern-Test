@@ -1,7 +1,7 @@
 package com.mj.tcs.api.v1.web;
 
 import com.mj.tcs.api.v1.dto.PathDto;
-import com.mj.tcs.api.v1.dto.base.BaseEntityAuditDto;
+import com.mj.tcs.api.v1.dto.base.EntityAuditDto;
 import com.mj.tcs.api.v1.dto.converter.DtoConverter;
 import com.mj.tcs.api.v1.dto.resource.PathDtoResourceAssembler;
 import com.mj.tcs.exception.ObjectAccessViolationException;
@@ -64,11 +64,11 @@ public class PathController extends ServiceController {
 
         Path newPath = (Path) dtoConverter.convertToEntity(pathDto);
         newPath.setScene(scene);
-        Point srcPoint = getModellingService().getPoint(pathDto.getSourcePointId());
-        Point dstPoint = getModellingService().getPoint(pathDto.getDestinationPointId());
-        Objects.requireNonNull(srcPoint, "Source Point is null by id " + pathDto.getSourcePointId());
-        Objects.requireNonNull(dstPoint, "Destination point is null by id " + pathDto.getDestinationPointId());
-        if (pathDto.getSourcePointId() == pathDto.getDestinationPointId()) {
+        Point srcPoint = getModellingService().getPoint(pathDto.getSourcePoint());
+        Point dstPoint = getModellingService().getPoint(pathDto.getDestinationPoint());
+        Objects.requireNonNull(srcPoint, "Source Point is null by id " + pathDto.getSourcePoint());
+        Objects.requireNonNull(dstPoint, "Destination point is null by id " + pathDto.getDestinationPoint());
+        if (pathDto.getSourcePoint() == pathDto.getDestinationPoint()) {
             throw new TcsServerRuntimeException("The source point is the same as the destination point of the path.");
         }
         newPath.setSourcePoint(srcPoint);
@@ -121,11 +121,11 @@ public class PathController extends ServiceController {
     @RequestMapping(value = "/scenes/{sceneId}/paths/{pathId}", method = RequestMethod.PATCH)
     public ResponseEntity<?> updatePathPartial(@PathVariable("sceneId") Long sceneId,
                                                 @PathVariable("pathId") Long pathId,
-                                                BaseEntityAuditDto baseEntityAuditDto) {
+                                                EntityAuditDto entityAuditDto) {
         checkAccessViolation(sceneId, pathId);
 
         Path path = getModellingService().getPath(pathId);
-        path = (Path) dtoConverter.mergePropertiesToEntity(path, baseEntityAuditDto.getProperties());
+        path = (Path) dtoConverter.mergePropertiesToEntity(path, entityAuditDto.getProperties());
 
         path = getModellingService().updatePath(path);
 

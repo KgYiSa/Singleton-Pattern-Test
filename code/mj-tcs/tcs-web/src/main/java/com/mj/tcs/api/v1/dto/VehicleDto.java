@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
-import com.mj.tcs.api.v1.dto.base.BaseEntityAuditDto;
+import com.mj.tcs.api.v1.dto.base.EntityAuditDto;
 import com.mj.tcs.api.v1.dto.base.TripleDto;
 import com.mj.tcs.data.model.Vehicle;
 
@@ -14,7 +14,7 @@ import com.mj.tcs.data.model.Vehicle;
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
-public class VehicleDto extends BaseEntityAuditDto {
+public class VehicleDto extends EntityAuditDto {
     @DtoField
     private String name;
 

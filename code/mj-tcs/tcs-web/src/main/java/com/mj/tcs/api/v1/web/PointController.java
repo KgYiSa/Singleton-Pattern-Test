@@ -1,7 +1,7 @@
 package com.mj.tcs.api.v1.web;
 
 import com.mj.tcs.api.v1.dto.PointDto;
-import com.mj.tcs.api.v1.dto.base.BaseEntityAuditDto;
+import com.mj.tcs.api.v1.dto.base.EntityAuditDto;
 import com.mj.tcs.api.v1.dto.converter.DtoConverter;
 import com.mj.tcs.api.v1.dto.resource.PointDtoResourceAssembler;
 import com.mj.tcs.exception.ObjectAccessViolationException;
@@ -11,7 +11,6 @@ import com.mj.tcs.data.model.Scene;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.hateoas.EntityLinks;
-import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.hateoas.Resources;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -111,11 +110,11 @@ public class PointController extends ServiceController {
     @RequestMapping(value = "/scenes/{sceneId}/points/{pointId}", method = RequestMethod.PATCH)
     public ResponseEntity<?> updatePointPartial(@PathVariable("sceneId") Long sceneId,
                                                 @PathVariable("pointId") Long pointId,
-                                                BaseEntityAuditDto baseEntityAuditDto) {
+                                                EntityAuditDto entityAuditDto) {
         checkAccessViolation(sceneId, pointId);
 
         Point point = getModellingService().getPoint(pointId);
-        point = (Point) dtoConverter.mergePropertiesToEntity(point, baseEntityAuditDto.getProperties());
+        point = (Point) dtoConverter.mergePropertiesToEntity(point, entityAuditDto.getProperties());
 
         point = getModellingService().updatePoint(point);
 

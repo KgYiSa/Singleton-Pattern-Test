@@ -12,8 +12,10 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
-import com.mj.tcs.api.v1.dto.base.BaseEntityAuditDto;
+import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
+import com.mj.tcs.data.model.Scene;
 
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -23,16 +25,28 @@ import java.util.Set;
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
-public class LocationLinkDto extends BaseEntityAuditDto {
+@Entity
+@Table(name = "tcs_model_location_link", uniqueConstraints =
+@UniqueConstraint(columnNames = {"name", "scene"})
+)
+public class LocationLinkDto extends BaseEntityDto {
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "scene", nullable = false)
+    private Scene scene;
+
     @DtoField
+    @Column
     private String name;
     /**
-     * A reference to the locationDto end of this link.
+     * A reference to the location end of this link.
      */
     @JsonProperty("location")
     @JsonBackReference
     // Convert outside in case of stack overflow
-    private LocationDto locationDto;
+    @Column
+    private Long location;
+
     /**
      * A reference to the pointDto end of this link.
      */
@@ -40,20 +54,26 @@ public class LocationLinkDto extends BaseEntityAuditDto {
 //    @DtoField(value = "point",
 //            dtoBeanKey = "PointDto",
 //            entityBeanKeys = {"Point"})
-    private Long pointId;
+    @Column
+    private Long point;
+
     /**
      * The operations allowed at this link.
      */
     @DtoField
+    @ElementCollection
+    @CollectionTable(name = "tcs_model_rel_link_operations")
     private Set<String> allowedOperations = new HashSet<>();
 
     public LocationLinkDto() {
     }
 
-    public LocationLinkDto(LocationDto linkLocationDto,
-                           Long linkedPointId) {
-        locationDto = Objects.requireNonNull(linkLocationDto, "linkLocationDto is null");
-        this.pointId = Objects.requireNonNull(linkedPointId, "linkedPointId is null");
+    public Scene getScene() {
+        return scene;
+    }
+
+    public void setScene(Scene scene) {
+        this.scene = scene;
     }
 
     public String getName() {
@@ -64,22 +84,22 @@ public class LocationLinkDto extends BaseEntityAuditDto {
         this.name = name;
     }
 
-    public Long getPointId() {
-        return pointId;
+    public Long getPoint() {
+        return point;
     }
 
     @JsonBackReference
-    public LocationDto getLocationDto() {
-        return locationDto;
+    public Long getLocation() {
+        return location;
     }
 
     @JsonBackReference
-    public void setLocationDto(LocationDto locationDto) {
-        this.locationDto = locationDto;
+    public void setLocation(Long location) {
+        this.location = location;
     }
 
-    public void setPointId(Long pointId) {
-        this.pointId = pointId;
+    public void setPoint(Long point) {
+        this.point = point;
     }
 
     public Set<String> getAllowedOperations() {

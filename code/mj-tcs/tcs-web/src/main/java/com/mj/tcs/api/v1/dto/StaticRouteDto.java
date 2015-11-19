@@ -10,8 +10,11 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
-import com.mj.tcs.api.v1.dto.base.BaseEntityAuditDto;
+import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
+import com.mj.tcs.api.v1.dto.base.EntityAuditDto;
+import com.mj.tcs.data.model.Scene;
 
+import javax.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -21,10 +24,22 @@ import java.util.Objects;
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
-public class StaticRouteDto extends BaseEntityAuditDto {
+@Entity
+@Table(name = "tcs_model_static_route", uniqueConstraints =
+    @UniqueConstraint(columnNames = {"name", "scene"})
+)
+public class StaticRouteDto extends BaseEntityDto {
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "scene", nullable = false)
+    private SceneDto scene;
+
     @DtoField
+    @Column
     private String name;
 
+    @ElementCollection
+    @CollectionTable(name = "tcs_model_rel_static_route_hops")
     private List<Long> hops;
 
     public String getName() {
@@ -42,7 +57,7 @@ public class StaticRouteDto extends BaseEntityAuditDto {
      * @return The first element of the list of hops in this route, or
      * <code>null</code>, if the list of hops is empty.
      */
-    public Long getSourcePointId() {
+    public Long getSourcePoint() {
         if (hops.isEmpty()) {
             return null;
         }
@@ -58,7 +73,7 @@ public class StaticRouteDto extends BaseEntityAuditDto {
      * @return The final element of the list of hops in this route, or
      * <code>null</code>, if the list of hops is empty.
      */
-    public Long getDestinationPointId() {
+    public Long getDestinationPoint() {
         if (hops.isEmpty()) {
             return null;
         }
@@ -85,7 +100,7 @@ public class StaticRouteDto extends BaseEntityAuditDto {
      *
      * @param newHop The hop to be added.
      */
-    public void addHopId(Long newHop) {
+    public void addHop(Long newHop) {
         Objects.requireNonNull(newHop, "newHop");
         hops.add(newHop);
     }

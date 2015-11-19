@@ -51,8 +51,8 @@ public class LocationController extends ServiceController {
 //        Location newLocation = (Location) dtoConverter.convertToEntity(locationDto);
 //        newLocation.setScene(scene);
 //        // location type
-//        if (locationDto.getLocationTypeId() != null) {
-//            Long existedLocationTypeId = locationDto.getLocationTypeId();
+//        if (locationDto.getLocationType() != null) {
+//            Long existedLocationTypeId = locationDto.getLocationType();
 //            LocationType locationType;
 //            if (existedLocationTypeId > 0) {
 //                locationType = getModellingService().getLocationType(existedLocationTypeId);
@@ -79,7 +79,7 @@ public class LocationController extends ServiceController {
 //                        throw new TcsServerRuntimeException("LinkDto is null by Link Id " + link.getId() +
 //                                " of location " + locationDto.getName());
 //                    }
-//                    Point linkedPoint = getModellingService().getPoint(linkDto.get().getPointId());
+//                    Point linkedPoint = getModellingService().getPoint(linkDto.get().getPoint());
 //                    Objects.requireNonNull(linkedPoint, "The linked point for the link[" + link.getName() + "] is null!");
 //                    link.setPoint(linkedPoint);
 //                }
@@ -137,7 +137,7 @@ public class LocationController extends ServiceController {
 //    @RequestMapping(value = "/scenes/{sceneId}/locations/{locationId}", method = RequestMethod.PATCH)
 //    public ResponseEntity<?> updateLocationPartial(@PathVariable("sceneId") Long sceneId,
 //                                                @PathVariable("locationId") Long locationId,
-//                                                BaseEntityAuditDto baseEntityAuditDto) {
+//                                                EntityAuditDto baseEntityAuditDto) {
 //        checkAccessViolation(sceneId, locationId);
 //
 //        Location location = getModellingService().getLocation(locationId);

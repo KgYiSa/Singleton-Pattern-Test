@@ -1,7 +1,7 @@
 package com.mj.tcs.api.v1.web;
 
 import com.mj.tcs.api.v1.dto.SceneDto;
-import com.mj.tcs.api.v1.dto.base.BaseEntityAuditDto;
+import com.mj.tcs.api.v1.dto.base.EntityAuditDto;
 import com.mj.tcs.api.v1.dto.converter.DtoConverter;
 import com.mj.tcs.api.v1.dto.resource.SceneDtoResourceAssembler;
 import com.mj.tcs.data.model.Scene;
@@ -118,12 +118,12 @@ public class SceneController extends ServiceController {
     }
 
     @RequestMapping(value = "/scenes/{sceneId}", method = RequestMethod.PATCH)
-    public ResponseEntity<?> updateScenePartial(@PathVariable("sceneId") Long sceneId, BaseEntityAuditDto baseEntityAuditDto) {
-        baseEntityAuditDto.setId(sceneId);
+    public ResponseEntity<?> updateScenePartial(@PathVariable("sceneId") Long sceneId, EntityAuditDto entityAuditDto) {
+        entityAuditDto.setId(sceneId);
 
         Scene scene = getModellingService().getScene(sceneId);
         // TODO: find a way to found which attribute should be updated!!! (merge new attributes (Map) to the current valueconverter)
-        scene = (Scene) dtoConverter.mergePropertiesToEntity(scene, baseEntityAuditDto.getProperties());
+        scene = (Scene) dtoConverter.mergePropertiesToEntity(scene, entityAuditDto.getProperties());
 
         // TODO: Should update the updated time properties?
 

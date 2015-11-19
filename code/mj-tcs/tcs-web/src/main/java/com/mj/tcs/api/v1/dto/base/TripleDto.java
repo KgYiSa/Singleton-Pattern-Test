@@ -10,7 +10,7 @@ import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
-public class TripleDto extends BaseEntityAuditDto {
+public class TripleDto extends EntityAuditDto {
     /**
      * The X coordinate.
      */

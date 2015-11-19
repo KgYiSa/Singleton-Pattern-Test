@@ -65,18 +65,18 @@ public class LocationDtoConverter implements DtoConverter  {
 
         if (locationDto.getAttachedLinks() != null) {
             for (LocationLinkDto linkDto : locationDto.getAttachedLinks()) {
-                linkDto.setLocationDto(locationDto);
+                linkDto.setLocation(locationDto);
 
                 Optional<Location.Link> link = location.getAttachedLinkById(linkDto.getId());
                 if (!link.isPresent()) {
                     throw new TcsServerRuntimeException("link entity is not found during conversion for ID " + linkDto.getId());
                 }
-                linkDto.setPointId(link.get().getPoint().getId());
+                linkDto.setPoint(link.get().getPoint().getId());
             }
         }
 
         if (location.getType() != null) {
-            locationDto.setLocationTypeId(location.getType().getId());
+            locationDto.setLocationType(location.getType().getId());
         }
 
         return locationDto;

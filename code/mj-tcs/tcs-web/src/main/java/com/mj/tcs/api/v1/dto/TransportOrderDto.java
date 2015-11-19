@@ -11,15 +11,20 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
-import com.mj.tcs.api.v1.dto.base.BaseEntityAuditDto;
+import com.mj.tcs.api.v1.dto.base.EntityAuditDto;
 import com.mj.tcs.util.UniqueTimestampGenerator;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * @author Wang Zhen
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
-public class TransportOrderDto extends BaseEntityAuditDto {
+@Entity
+@Table(name = "tcs_order_transport_drive_order_destination")
+public class TransportOrderDto extends EntityAuditDto {
     /**
      * The timestamp generator for order creation times.
      */

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -12,22 +13,36 @@ import java.util.Date;
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
-public class BaseEntityAuditDto extends BaseEntityDto {
+@Embeddable
+public class EntityAuditDto extends BaseEntityDto {
     @DtoField
+    @Column(name = "created_at")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
+
     @DtoField
+    @Column(name = "created_by", length = 20)
     private String createdBy;
+
     @DtoField
+    @Column(name = "updated_at")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
+
     @DtoField
+    @Column(name = "updated_by", length = 20)
     private String updatedBy;
 
     public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    /**
+     * Sets createdAt before insert
+     */
+    @PrePersist
+    public void setCreationDate() {
+        this.createdAt = new Date();
     }
 
     public String getCreatedBy() {
@@ -42,8 +57,12 @@ public class BaseEntityAuditDto extends BaseEntityDto {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+    /**
+     * Sets updatedAt before update
+     */
+    @PreUpdate
+    public void setChangeDate() {
+        this.updatedAt = new Date();
     }
 
     public String getUpdatedBy() {

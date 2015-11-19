@@ -113,8 +113,8 @@ public class SceneDtoConverter extends DummyDtoConverter {
             long srcPointId = pathMapping.get(pathId).getRight().getSourcePoint().getId();
             long dstPointId = pathMapping.get(pathId).getRight().getDestinationPoint().getId();
 
-            pathMapping.get(pathId).getLeft().setSourcePointId(srcPointId);
-            pathMapping.get(pathId).getLeft().setDestinationPointId(dstPointId);
+            pathMapping.get(pathId).getLeft().setSourcePoint(srcPointId);
+            pathMapping.get(pathId).getLeft().setDestinationPoint(dstPointId);
 
             // points ! see the following inverse conversion for the reason
             pointMapping.get(srcPointId).getLeft().addOutgoingPathId(pathId);
@@ -138,7 +138,7 @@ public class SceneDtoConverter extends DummyDtoConverter {
             if (location.isPresent()) {
                 LocationType type = location.get().getType();
                 if (type != null) {
-                    locationDto.setLocationTypeId(type.getId());
+                    locationDto.setLocationType(type.getId());
                 }
 
                 // links
@@ -152,7 +152,7 @@ public class SceneDtoConverter extends DummyDtoConverter {
                         if (!linkedPoint.isPresent()) {
                             throw new TcsServerRuntimeException("The linked point for link " + linkDto.getName() + " is null");
                         }
-                        linkDto.setPointId(linkedPoint.get().getId());
+                        linkDto.setPoint(linkedPoint.get().getId());
                     }
                 }
             }
@@ -220,8 +220,8 @@ public class SceneDtoConverter extends DummyDtoConverter {
                 for (Path path : scene.getPaths()) {
                     if (pathDto.getId() == path.getId()) {
                         // check all points of these paths should be existed.
-                        final long sourcePointId = pathDto.getSourcePointId();
-                        final long destinationPointId = pathDto.getDestinationPointId();
+                        final long sourcePointId = pathDto.getSourcePoint();
+                        final long destinationPointId = pathDto.getDestinationPoint();
                         if (sceneDto.getPointDtos() == null ||
                             !sceneDto.getPointDtos().stream().anyMatch(p -> p.getId() == sourcePointId) ||
                                 !sceneDto.getPointDtos().stream().anyMatch(p -> p.getId() == destinationPointId)) {
@@ -243,9 +243,9 @@ public class SceneDtoConverter extends DummyDtoConverter {
             pair.getRight().setScene(scene);
 
             // source point
-            long srcPointId = pair.getLeft().getSourcePointId();
+            long srcPointId = pair.getLeft().getSourcePoint();
             // destination point
-            long dstPointId = pair.getLeft().getDestinationPointId();
+            long dstPointId = pair.getLeft().getDestinationPoint();
 
             pair.getRight().setSourcePoint(
                     pointMapping.get(srcPointId).getRight()
@@ -320,14 +320,14 @@ public class SceneDtoConverter extends DummyDtoConverter {
                                 throw new TcsServerRuntimeException("LocationLinkDto can not be found for the location "
                                         + location.getName() + ", by link Id " + link.getId());
                             }
-                            Point linkedPoint = pointMapping.get(linkDto.get().getPointId()).getRight();
+                            Point linkedPoint = pointMapping.get(linkDto.get().getPoint()).getRight();
                             Objects.requireNonNull(linkedPoint, "The linked point for the link[" + link.getName() + "] is null!");
                             link.setPoint(linkedPoint);
                         }
                     }
 
                     // location type
-                    final Long locationTypeId = locationDto.get().getLocationTypeId();
+                    final Long locationTypeId = locationDto.get().getLocationType();
                     if (locationTypeId == null) {
                         continue;
                     }

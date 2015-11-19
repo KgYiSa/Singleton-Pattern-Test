@@ -1,7 +1,7 @@
 package com.mj.tcs.api.v1.web;
 
 import com.mj.tcs.api.v1.dto.StaticRouteDto;
-import com.mj.tcs.api.v1.dto.base.BaseEntityAuditDto;
+import com.mj.tcs.api.v1.dto.base.EntityAuditDto;
 import com.mj.tcs.api.v1.dto.converter.DtoConverter;
 import com.mj.tcs.api.v1.dto.resource.StaticRouteDtoResourceAssembler;
 import com.mj.tcs.exception.ObjectAccessViolationException;
@@ -122,11 +122,11 @@ public class StaticRouteController extends ServiceController {
     @RequestMapping(value = "/scenes/{sceneId}/static_routes/{staticRouteId}", method = RequestMethod.PATCH)
     public ResponseEntity<?> updateStaticRouteDtoPartial(@PathVariable("sceneId") Long sceneId,
                                                @PathVariable("staticRouteId") Long staticRouteId,
-                                               BaseEntityAuditDto baseEntityAuditDto) {
+                                               EntityAuditDto entityAuditDto) {
         checkAccessViolation(sceneId, staticRouteId);
 
         StaticRoute staticRoute = getModellingService().getStaticRoute(staticRouteId);
-        staticRoute = (StaticRoute) dtoConverter.mergePropertiesToEntity(staticRoute, baseEntityAuditDto.getProperties());
+        staticRoute = (StaticRoute) dtoConverter.mergePropertiesToEntity(staticRoute, entityAuditDto.getProperties());
 
         staticRoute = getModellingService().updateStaticRoute(staticRoute);
 

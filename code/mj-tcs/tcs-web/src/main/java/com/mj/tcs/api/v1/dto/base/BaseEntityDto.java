@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
-import com.mj.tcs.data.base.EntityAuditor;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.hateoas.Identifiable;
 
@@ -40,7 +39,7 @@ public class BaseEntityDto implements Identifiable<Long>, Serializable, Cloneabl
     private Long version;
 
     @Embedded
-    private EntityAuditor auditor = null;
+    private EntityAuditorDto auditorDto = null;
 
     @Transient // TODO:
     private Map<String, Object> properties = new HashMap<>();
@@ -57,12 +56,12 @@ public class BaseEntityDto implements Identifiable<Long>, Serializable, Cloneabl
         this.version = version;
     }
 
-    public EntityAuditor getAuditor() {
-        return auditor;
+    public EntityAuditorDto getAuditorDto() {
+        return auditorDto;
     }
 
-    public void setAuditor(EntityAuditor auditor) {
-        this.auditor = auditor;
+    public void setAuditorDto(EntityAuditorDto auditorDto) {
+        this.auditorDto = auditorDto;
     }
 
     /**

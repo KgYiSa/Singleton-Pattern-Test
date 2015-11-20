@@ -1,34 +1,48 @@
 package com.mj.tcs.api.v1.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
-import com.mj.tcs.api.v1.dto.base.EntityAuditDto;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * @author Wang Zhen
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
+@Entity
+@Table(name = "tcs_order_transport_drive_order_destination")
 public class DestinationDto extends BaseEntityDto {
-    @JsonProperty(value = "location")
-    @DtoField(value = "location",
-        dtoBeanKey = "LocationDto",
-        entityBeanKeys = {"Location"})
-    private GenericLocationDto locationDto;
+
+    @Column
+    private boolean dummy;
+
+    @Column
+    private Long locationId; // Location if dummy == false, Point otherwise
 
     @DtoField
+    @Column
     private String operation;
 
-    public GenericLocationDto getLocationDto() {
-        return locationDto;
+    public boolean isDummy() {
+        return dummy;
     }
 
-    public void setLocationDto(GenericLocationDto locationDto) {
-        this.locationDto = locationDto;
+    public void setDummy(boolean dummy) {
+        this.dummy = dummy;
+    }
+
+    public void setLocationId(Long locationId) {
+        this.locationId = locationId;
+    }
+
+    public Long getLocationId() {
+        return locationId;
     }
 
     public String getOperation() {

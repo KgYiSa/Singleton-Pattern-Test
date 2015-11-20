@@ -23,7 +23,7 @@ public class SceneDtoResource extends Resource{
 //        add(new LinkDto("http://localhost:8080/scene/0", "item"));
     }
 
-//    public Scene getScene() {
+//    public Scene getSceneDto() {
 //        return scene;
 //    }
 }

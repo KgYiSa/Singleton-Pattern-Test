@@ -3,12 +3,6 @@
     <output-path>$PROJECT_DIR$/tcs-web/target</output-path>
     <root id="archive" name="tcs-web-1.0.war">
       <element id="artifact" artifact-name="tcs-web:war exploded" />
-      <element id="javaee-facet-resources" facet="mj-tcs/web/Web" />
-      <element id="directory" name="WEB-INF">
-        <element id="directory" name="classes">
-          <element id="module-output" name="mj-tcs" />
-        </element>
-      </element>
     </root>
   </artifact>
 </component>

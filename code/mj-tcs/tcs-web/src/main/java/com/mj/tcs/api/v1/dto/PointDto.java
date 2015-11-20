@@ -21,15 +21,16 @@ import java.util.Set;
 @Dto
 @Entity
 @Table(name = "tcs_model_point", uniqueConstraints =
-    @UniqueConstraint(columnNames = {"name", "scene"})
+    @UniqueConstraint(columnNames = {"name", "sceneDto"})
 )
 public class PointDto extends BaseEntityDto {
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "scene", nullable = false)
-    private SceneDto scene;
+    @JoinColumn(name = "sceneDto", nullable = false)
+    private SceneDto sceneDto;
 
     @DtoField
+    @Column
     private String name;
 
     /**
@@ -49,39 +50,33 @@ public class PointDto extends BaseEntityDto {
 
     @DtoField
     @Enumerated(value = EnumType.STRING)
-    private PointDto.Type type = Type.HALT_POSITION;
+    private Type type = Type.HALT_POSITION;
 
     // convert outside
     @JsonProperty("incomingPaths")
 //    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "destinationPoint")
     @ElementCollection
     @CollectionTable(name = "tcs_model_rel_imcoming_paths")
-    private Set<Long> incomingPaths = new HashSet<>();
+    private Set<PathDto> incomingPaths = new HashSet<>();
 
     // convert outside
     @JsonProperty("outgoingPaths")
 //    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "sourcePoint")
     @ElementCollection
     @CollectionTable(name = "tcs_model_rel_outgoing_paths")
-    private Set<Long> outgoingPaths = new HashSet<>();
+    private Set<PathDto> outgoingPaths = new HashSet<>();
 
 //    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "point")
     @ElementCollection
     @CollectionTable(name = "tcs_model_rel_attached_links")
-    private Set<Long> attachedLinks = new HashSet<>();
+    private Set<LocationLinkDto> attachedLinks = new HashSet<>();
 
-    // OPERATING MODEL ONLY !!!
-    /**
-     * The vehicle occupying this point.
-     */
-    private Long occupyingVehicleId = -1L;
-
-    public SceneDto getScene() {
-        return scene;
+    public SceneDto getSceneDto() {
+        return sceneDto;
     }
 
-    public void setScene(SceneDto scene) {
-        this.scene = scene;
+    public void setSceneDto(SceneDto sceneDto) {
+        this.sceneDto = sceneDto;
     }
 
     public String getName() {
@@ -116,33 +111,41 @@ public class PointDto extends BaseEntityDto {
         this.type = type;
     }
 
-    public Set<Long> getIncomingPaths() {
+    public Set<PathDto> getIncomingPaths() {
         return incomingPaths;
     }
 
-    public void setIncomingPaths(Set<Long> incomingPathIds) {
-        this.incomingPaths = incomingPathIds;
+    public void setIncomingPaths(Set<PathDto> incomingPaths) {
+        this.incomingPaths = incomingPaths;
     }
 
-    public void addIncomingPath(long incomingPathId) {
-        this.incomingPaths.add(incomingPathId);
+    public void addIncomingPath(PathDto incomingPath) {
+        this.incomingPaths.add(incomingPath);
     }
 
-    public Set<Long> getOutgoingPaths() {
+    public Set<PathDto> getOutgoingPaths() {
         return outgoingPaths;
     }
 
-    public void setOutgoingPaths(Set<Long> outgoingPathIds) {
+    public void setOutgoingPaths(Set<PathDto> outgoingPathIds) {
         this.outgoingPaths = outgoingPathIds;
     }
 
-    public void addOutgoingPath(long outgoingPathId) {
-        this.outgoingPaths.add(outgoingPathId);
+    public void addOutgoingPath(PathDto outgoingPath) {
+        this.outgoingPaths.add(outgoingPath);
+    }
+
+    public Set<LocationLinkDto> getAttachedLinks() {
+        return attachedLinks;
+    }
+
+    public void setAttachedLinks(Set<LocationLinkDto> attachedLinks) {
+        this.attachedLinks = attachedLinks;
     }
 
     /**
      * The elements of this enumeration describe the various types of positions
-     * known in openTCS scene.
+     * known in openTCS sceneDto.
      */
     public enum Type {
 

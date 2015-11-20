@@ -6,14 +6,14 @@
 
 package com.mj.tcs.service.modelling;
 
-import com.mj.tcs.data.base.BaseEntity;
+import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 
 import java.util.Collection;
 
 /**
  * Created by xiaobai on 2015/8/23.
  */
-public interface IEntityService<T extends BaseEntity> {
+public interface IEntityDtoService<T extends BaseEntityDto> {
 
     public boolean canSupportEntityClass(Class entityClass);
 

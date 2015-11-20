@@ -113,8 +113,8 @@ public class SceneDtoConverter extends DummyDtoConverter {
             long srcPointId = pathMapping.get(pathId).getRight().getSourcePoint().getId();
             long dstPointId = pathMapping.get(pathId).getRight().getDestinationPoint().getId();
 
-            pathMapping.get(pathId).getLeft().setSourcePoint(srcPointId);
-            pathMapping.get(pathId).getLeft().setDestinationPoint(dstPointId);
+            pathMapping.get(pathId).getLeft().setSourcePointDto(srcPointId);
+            pathMapping.get(pathId).getLeft().setDestinationPointDto(dstPointId);
 
             // points ! see the following inverse conversion for the reason
             pointMapping.get(srcPointId).getLeft().addOutgoingPathId(pathId);
@@ -132,7 +132,7 @@ public class SceneDtoConverter extends DummyDtoConverter {
         }
 
         // location - location type
-        for (LocationDto locationDto : sceneDto.getLocationDtos()) {
+        for (LocationDto locationDto : sceneDto.getLocations()) {
             long id = locationDto.getId();
             Optional<Location> location = scene.getLocationById(id);
             if (location.isPresent()) {
@@ -152,7 +152,7 @@ public class SceneDtoConverter extends DummyDtoConverter {
                         if (!linkedPoint.isPresent()) {
                             throw new TcsServerRuntimeException("The linked point for link " + linkDto.getName() + " is null");
                         }
-                        linkDto.setPoint(linkedPoint.get().getId());
+                        linkDto.setPointDto(linkedPoint.get().getId());
                     }
                 }
             }
@@ -220,8 +220,8 @@ public class SceneDtoConverter extends DummyDtoConverter {
                 for (Path path : scene.getPaths()) {
                     if (pathDto.getId() == path.getId()) {
                         // check all points of these paths should be existed.
-                        final long sourcePointId = pathDto.getSourcePoint();
-                        final long destinationPointId = pathDto.getDestinationPoint();
+                        final long sourcePointId = pathDto.getSourcePointDto();
+                        final long destinationPointId = pathDto.getDestinationPointDto();
                         if (sceneDto.getPointDtos() == null ||
                             !sceneDto.getPointDtos().stream().anyMatch(p -> p.getId() == sourcePointId) ||
                                 !sceneDto.getPointDtos().stream().anyMatch(p -> p.getId() == destinationPointId)) {
@@ -243,9 +243,9 @@ public class SceneDtoConverter extends DummyDtoConverter {
             pair.getRight().setScene(scene);
 
             // source point
-            long srcPointId = pair.getLeft().getSourcePoint();
+            long srcPointId = pair.getLeft().getSourcePointDto();
             // destination point
-            long dstPointId = pair.getLeft().getDestinationPoint();
+            long dstPointId = pair.getLeft().getDestinationPointDto();
 
             pair.getRight().setSourcePoint(
                     pointMapping.get(srcPointId).getRight()
@@ -295,7 +295,7 @@ public class SceneDtoConverter extends DummyDtoConverter {
         }
 
         // location
-        if (sceneDto.getLocationDtos() != null) {
+        if (sceneDto.getLocations() != null) {
             if (scene.getLocations() != null) {
                 for (Location location : scene.getLocations()) {
 
@@ -320,7 +320,7 @@ public class SceneDtoConverter extends DummyDtoConverter {
                                 throw new TcsServerRuntimeException("LocationLinkDto can not be found for the location "
                                         + location.getName() + ", by link Id " + link.getId());
                             }
-                            Point linkedPoint = pointMapping.get(linkDto.get().getPoint()).getRight();
+                            Point linkedPoint = pointMapping.get(linkDto.get().getPointDto()).getRight();
                             Objects.requireNonNull(linkedPoint, "The linked point for the link[" + link.getName() + "] is null!");
                             link.setPoint(linkedPoint);
                         }

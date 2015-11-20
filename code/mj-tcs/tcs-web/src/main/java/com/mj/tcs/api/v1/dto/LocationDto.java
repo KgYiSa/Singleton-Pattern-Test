@@ -1,12 +1,15 @@
 package com.mj.tcs.api.v1.dto;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
+import com.inspiresoftware.lib.dto.geda.annotations.DtoCollection;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.api.v1.dto.base.TripleDto;
+import com.mj.tcs.api.v1.dto.converter.value.converter.LocationLinkDto2LocationLinkMatcher;
 
 import javax.persistence.*;
 import java.util.*;
@@ -18,13 +21,13 @@ import java.util.*;
 @Dto
 @Entity
 @Table(name = "tcs_model_location", uniqueConstraints =
-    @UniqueConstraint(columnNames = {"name", "scene"})
+    @UniqueConstraint(columnNames = {"name", "sceneDto"})
 )
 public class LocationDto extends BaseEntityDto {
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "scene", nullable = false)
-    private SceneDto scene;
+    @JoinColumn(name = "sceneDto", nullable = false)
+    private SceneDto sceneDto;
 
     @DtoField
     @Column
@@ -41,28 +44,27 @@ public class LocationDto extends BaseEntityDto {
     private TripleDto position = new TripleDto();
 
     /**
-     * A reference to this locationDto's type.
+     * A reference to this locationDto's locationTypeDto.
      */
-//    @DtoField(value = "type",
-//            dtoBeanKey = "LocationTypeDto",
-//            entityBeanKeys = {"LocationType"})
-//    private LocationTypeDto type;
+    @DtoField(value = "locationTypeDto",
+            dtoBeanKey = "LocationTypeDto",
+            entityBeanKeys = {"LocationType"})
     @Column
-    private Long locationType;
+    private LocationTypeDto locationTypeDto;
 
     /**
      * A set of links attached to this locationDto.
      */
-//    @JsonManagedReference
-//    @DtoCollection(value = "attachedLinks",
-//            entityCollectionClass = HashSet.class,
-//            dtoCollectionClass = HashSet.class,
-//            dtoBeanKey = "LocationLinkDto",
-//            entityBeanKeys = {"Location$Link"},
-//            dtoToEntityMatcher = LocationLinkDto2LocationLinkMatcher.class)
+    @JsonManagedReference
+    @DtoCollection(value = "attachedLinks",
+            entityCollectionClass = HashSet.class,
+            dtoCollectionClass = HashSet.class,
+            dtoBeanKey = "LocationLinkDto",
+            entityBeanKeys = {"Location$Link"},
+            dtoToEntityMatcher = LocationLinkDto2LocationLinkMatcher.class)
     @ElementCollection
     @CollectionTable(name = "tcs_model_rel_attached_links")
-    private Set<Long> attachedLinks = new HashSet<>();
+    private Set<LocationLinkDto> attachedLinks = new HashSet<>();
 
     public LocationDto(){
         //do nothing
@@ -71,20 +73,20 @@ public class LocationDto extends BaseEntityDto {
      * Creates a new LocationDto.
      *
      * @param name The new locationDto's name.
-     * @param locationType The new locationDto's type.
+     * @param locationType The new locationDto's locationTypeDto.
      */
     public LocationDto(String name,
-                       Long locationType) {
+                       LocationTypeDto locationType) {
         this.name = name;
-        this.locationType = Objects.requireNonNull(locationType, "locationType is null");
+        this.locationTypeDto = Objects.requireNonNull(locationType, "locationType is null");
     }
 
-    public SceneDto getScene() {
-        return scene;
+    public SceneDto getSceneDto() {
+        return sceneDto;
     }
 
-    public void setScene(SceneDto scene) {
-        this.scene = scene;
+    public void setSceneDto(SceneDto sceneDto) {
+        this.sceneDto = sceneDto;
     }
 
     public String getName() {
@@ -115,23 +117,23 @@ public class LocationDto extends BaseEntityDto {
     }
 
     /**
-     * Returns a reference to the type of this locationDto.
+     * Returns a reference to the locationTypeDto of this locationDto.
      *
-     * @return The Id to the type of this locationDto.
+     * @return The Id to the locationTypeDto of this locationDto.
      */
-    public Long getLocationType() {
-      return locationType;
+    public LocationTypeDto getLocationTypeDto() {
+      return locationTypeDto;
     }
 
     /**
-     * Sets this locationDto's type.
+     * Sets this locationDto's locationTypeDto.
      *
-     * @param newTypeId This locationDto's new type.
+     * @param newType This locationDto's new locationTypeDto.
      */
-    public void setLocationType(Long newTypeId) {
-//      type = Objects.requireNonNull(newType, "newType is null");
+    public void setLocationTypeDto(LocationTypeDto newType) {
+//      locationTypeDto = Objects.requireNonNull(newType, "newType is null");
         // NOT required
-        this.locationType = newTypeId;
+        this.locationTypeDto = newType;
     }
 
     /**
@@ -139,21 +141,21 @@ public class LocationDto extends BaseEntityDto {
      *
      * @return A set of links attached to this locationDto.
      */
-    public Set<Long> getAttachedLinks() {
+    public Set<LocationLinkDto> getAttachedLinks() {
       return attachedLinks;
     }
 
-    public void setAttachedLinks(Set<Long> attachedLinks) {
+    public void setAttachedLinks(Set<LocationLinkDto> attachedLinks) {
         this.attachedLinks = attachedLinks;
     }
 
-    public boolean attachLink(Long newLinkId) {
-        Objects.requireNonNull(newLinkId, "newLinkId is null");
+    public boolean attachLink(LocationLinkDto newLink) {
+        Objects.requireNonNull(newLink, "newLink is null");
 
-        return attachedLinks.add(newLinkId);
+        return attachedLinks.add(newLink);
     }
 
-    public boolean detachLink(long linkId) {
-        return attachedLinks.remove(linkId);
+    public boolean detachLink(LocationLinkDto link) {
+        return attachedLinks.remove(link);
     }
 }

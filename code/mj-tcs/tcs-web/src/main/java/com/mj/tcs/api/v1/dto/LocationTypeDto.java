@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
-import com.mj.tcs.api.v1.dto.base.EntityAuditDto;
-import com.mj.tcs.data.model.Scene;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -20,13 +18,13 @@ import java.util.Set;
 @Dto
 @Entity
 @Table(name = "tcs_model_location_type", uniqueConstraints =
-    @UniqueConstraint(columnNames = {"name", "scene"})
+    @UniqueConstraint(columnNames = {"name", "sceneDto"})
 )
 public class LocationTypeDto extends BaseEntityDto {
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "scene", nullable = false)
-    private SceneDto scene;
+    @JoinColumn(name = "sceneDto", nullable = false)
+    private SceneDto sceneDto;
 
     @DtoField
     @Column
@@ -50,12 +48,12 @@ public class LocationTypeDto extends BaseEntityDto {
         //DO nothing
     }
 
-    public SceneDto getScene() {
-        return scene;
+    public SceneDto getSceneDto() {
+        return sceneDto;
     }
 
-    public void setScene(SceneDto scene) {
-        this.scene = scene;
+    public void setSceneDto(SceneDto sceneDto) {
+        this.sceneDto = sceneDto;
     }
 
     public String getName() {

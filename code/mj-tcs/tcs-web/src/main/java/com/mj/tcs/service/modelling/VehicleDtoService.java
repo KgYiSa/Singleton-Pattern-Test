@@ -1,11 +1,11 @@
 package com.mj.tcs.service.modelling;
 
+import com.mj.tcs.api.v1.dto.PointDto;
+import com.mj.tcs.api.v1.dto.SceneDto;
+import com.mj.tcs.api.v1.dto.VehicleDto;
+import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.exception.ObjectUnknownException;
 import com.mj.tcs.exception.TcsServerRuntimeException;
-import com.mj.tcs.data.model.Point;
-import com.mj.tcs.data.model.Scene;
-import com.mj.tcs.data.base.BaseEntity;
-import com.mj.tcs.data.model.Vehicle;
 import com.mj.tcs.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,14 +18,14 @@ import java.util.Objects;
  * @author Wang Zhen
  */
 @Component
-public class VehicleService implements IEntityService {
+public class VehicleDtoService implements IEntityDtoService {
 
     @Autowired
     VehicleRepository vehicleRepository;
 
     @Override
     public boolean canSupportEntityClass(Class entityClass) {
-        if (Vehicle.class.equals(entityClass)) {
+        if (VehicleDto.class.equals(entityClass)) {
             return true;
         }
 
@@ -37,7 +37,7 @@ public class VehicleService implements IEntityService {
 
         switch (params.getType()) {
             case GET_ONE_BY_ELEMENT_ID:
-                Vehicle entity = vehicleRepository.findOne(
+                VehicleDto entity = vehicleRepository.findOne(
                         (long) params.getParameter(ServiceGetParams.NAME_ELEMENT_ID)
                 );
                 return Arrays.asList(entity);
@@ -53,20 +53,20 @@ public class VehicleService implements IEntityService {
     }
 
     @Override
-    public Vehicle create(BaseEntity entity) {
-        if (entity instanceof Vehicle) {
-            entity = createVehicle((Vehicle) entity);
-            return (Vehicle) entity;
+    public VehicleDto create(BaseEntityDto entity) {
+        if (entity instanceof VehicleDto) {
+            entity = createVehicle((VehicleDto) entity);
+            return (VehicleDto) entity;
         } else {
             throw new TcsServerRuntimeException("create vehicle with different entity type");
         }
     }
 
     @Override
-    public Vehicle update(BaseEntity entity) {
-        if (entity instanceof Vehicle) {
-            entity = updateVehicle((Vehicle) entity);
-            return (Vehicle) entity;
+    public VehicleDto update(BaseEntityDto entity) {
+        if (entity instanceof VehicleDto) {
+            entity = updateVehicle((VehicleDto) entity);
+            return (VehicleDto) entity;
         } else {
             throw new TcsServerRuntimeException("update vehicle with different entity type");
         }
@@ -79,35 +79,23 @@ public class VehicleService implements IEntityService {
 //        throw new TcsServerRuntimeException("Not supported, please delete from scene then save it");
     }
 
-    private Vehicle createVehicle(Vehicle entity) {
+    private VehicleDto createVehicle(VehicleDto entity) {
         // TODO: Need to notify the current scene ?
         return vehicleRepository.save(entity);
 //        throw new TcsServerRuntimeException("Not supported, please create from scene then save it");
     }
 
-    private Vehicle updateVehicle(Vehicle entity) {
-        Vehicle vehicle = (Vehicle) Objects.requireNonNull(entity, "vehicle entity is null");
-        Point currentPoint = Objects.requireNonNull(vehicle.getCurrentPosition(), "The vehicle object has no current point!");
-        Point nextPoint = vehicle.getNextPosition();
+    private VehicleDto updateVehicle(VehicleDto entity) {
+        VehicleDto vehicle = (VehicleDto) Objects.requireNonNull(entity, "vehicle entity is null");
+        PointDto currentPoint = Objects.requireNonNull(vehicle.getCurrentPosition(), "The vehicle object has no current point!");
 
-        Scene scene = vehicle.getScene();
+        SceneDto scene = vehicle.getSceneDto();
 
         // check these components belongs to the scene
         if (currentPoint != null) {
             final long currentPointId = currentPoint.getId();
-            if (!scene.getPointById(currentPointId).isPresent()) {
+            if (scene.getPointDtoById(currentPointId) == null) {
                 throw new TcsServerRuntimeException("The current point of the vehicle is not belonging to the scene");
-            }
-
-            if (nextPoint != null) {
-                final long nextPointId = nextPoint.getId();
-                if (!scene.getPointById(nextPointId).isPresent()) {
-                    throw new TcsServerRuntimeException("The next point of the vehicle is not belonging to the scene");
-                }
-
-                if (currentPointId == nextPointId) {
-                    throw new TcsServerRuntimeException("The current point and the next point of the vehicle is the same");
-                }
             }
         }
 

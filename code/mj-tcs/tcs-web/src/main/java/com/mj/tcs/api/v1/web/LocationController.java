@@ -45,11 +45,11 @@ public class LocationController extends ServiceController {
 //    @RequestMapping(value = "/scenes/{sceneId}/locations", method = RequestMethod.POST)
 //    public ResponseEntity<?> createLocation(@PathVariable("sceneId") Long sceneId,
 //                                         @RequestBody LocationDto locationDto) throws ObjectUnknownException{
-//        Scene scene = Objects.requireNonNull(getModellingService().getScene(sceneId),
+//        Scene scene = Objects.requireNonNull(getModellingService().getSceneDto(sceneId),
 //            "scene is null by the sceneId: " + sceneId);
 //
 //        Location newLocation = (Location) dtoConverter.convertToEntity(locationDto);
-//        newLocation.setScene(scene);
+//        newLocation.setSceneDto(scene);
 //        // location type
 //        if (locationDto.getLocationType() != null) {
 //            Long existedLocationTypeId = locationDto.getLocationType();
@@ -58,7 +58,7 @@ public class LocationController extends ServiceController {
 //                locationType = getModellingService().getLocationType(existedLocationTypeId);
 //                if (locationType != null) {
 //                    newLocation.setType(locationType);
-//                    locationType.setScene(scene);
+//                    locationType.setSceneDto(scene);
 //                } else {
 //                    throw new TcsServerRuntimeException(String.format("Location Type Id [%d] of the location [%s] is not exist.",
 //                            existedLocationTypeId, newLocation.getName()));
@@ -71,7 +71,7 @@ public class LocationController extends ServiceController {
 //            if (newLocation.getAttachedLinks() != null) {
 //                for (Location.Link link : newLocation.getAttachedLinks()) {
 //                    // location
-//                    link.setLocation(newLocation);
+//                    link.setLocationId(newLocation);
 //
 //                    // point
 //                    Optional<LocationLinkDto> linkDto = locationDto.getAttachedLinkById(link.getId());
@@ -79,9 +79,9 @@ public class LocationController extends ServiceController {
 //                        throw new TcsServerRuntimeException("LinkDto is null by Link Id " + link.getId() +
 //                                " of location " + locationDto.getName());
 //                    }
-//                    Point linkedPoint = getModellingService().getPoint(linkDto.get().getPoint());
+//                    Point linkedPoint = getModellingService().getPointDto(linkDto.get().getPointDto());
 //                    Objects.requireNonNull(linkedPoint, "The linked point for the link[" + link.getName() + "] is null!");
-//                    link.setPoint(linkedPoint);
+//                    link.setPointDto(linkedPoint);
 //                }
 //            } else {
 //                throw new TcsServerRuntimeException("Location Conversion error, the expected location_link is "
@@ -105,7 +105,7 @@ public class LocationController extends ServiceController {
 //                                         @PathVariable("locationId") Long locationId) {
 //        checkAccessViolation(sceneId, locationId);
 //
-//        Location location = getModellingService().getLocation(locationId);
+//        Location location = getModellingService().getLocationId(locationId);
 //
 //        if (location == null) {
 //            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -137,10 +137,10 @@ public class LocationController extends ServiceController {
 //    @RequestMapping(value = "/scenes/{sceneId}/locations/{locationId}", method = RequestMethod.PATCH)
 //    public ResponseEntity<?> updateLocationPartial(@PathVariable("sceneId") Long sceneId,
 //                                                @PathVariable("locationId") Long locationId,
-//                                                EntityAuditDto baseEntityAuditDto) {
+//                                                EntityAuditorDto baseEntityAuditDto) {
 //        checkAccessViolation(sceneId, locationId);
 //
-//        Location location = getModellingService().getLocation(locationId);
+//        Location location = getModellingService().getLocationId(locationId);
 //        location = (Location) dtoConverter.mergePropertiesToEntity(location, baseEntityAuditDto.getProperties());
 //
 //        location = getModellingService().updateLocation(location);
@@ -156,7 +156,7 @@ public class LocationController extends ServiceController {
 //                                         @PathVariable("locationId") Long locationId) {
 //        checkAccessViolation(sceneId, locationId);
 //
-//        Location location = getModellingService().getLocation(locationId);
+//        Location location = getModellingService().getLocationId(locationId);
 //        if (location != null) {
 //            getModellingService().deleteLocation(location);
 //        }
@@ -164,10 +164,10 @@ public class LocationController extends ServiceController {
 //    }
 //
 //    private void checkAccessViolation(Long sceneId, Long locationId) {
-//        Location location = Objects.requireNonNull(getModellingService().getLocation(locationId),
+//        Location location = Objects.requireNonNull(getModellingService().getLocationId(locationId),
 //                "location is null by id: " + locationId);
 //
-//        if (location.getScene().getId() != sceneId) {
+//        if (location.getSceneDto().getId() != sceneId) {
 //            throw new ObjectAccessViolationException(sceneId, locationId);
 //        }
 //    }

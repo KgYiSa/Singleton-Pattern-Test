@@ -6,7 +6,7 @@
 package com.mj.tcs.repository;
 
 
-import com.mj.tcs.data.model.Point;
+import com.mj.tcs.api.v1.dto.PointDto;
 
 /**
  *  Point Repository support find methods only.
@@ -14,5 +14,5 @@ import com.mj.tcs.data.model.Point;
  * @author liumin
  * @author Wang Zhen
  */
-public interface PointRepository extends RURepository<Point, Long> {
+public interface PointRepository extends RURepository<PointDto, Long> {
 }

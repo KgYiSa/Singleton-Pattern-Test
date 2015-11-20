@@ -6,12 +6,12 @@
 
 package com.mj.tcs.repository;
 
-import com.mj.tcs.data.model.StaticRoute;
+import com.mj.tcs.api.v1.dto.StaticRouteDto;
 import org.springframework.data.repository.CrudRepository;
 
 /**
  * @author Wang Zhen
  */
-public interface StaticRouteRepository extends CrudRepository<StaticRoute, Long> {
-    Iterable<StaticRoute> findAllBySceneId(/*@Param("sceneId")*/ Long sceneId);
+public interface StaticRouteRepository extends CrudRepository<StaticRouteDto, Long> {
+    Iterable<StaticRouteDto> findAllBySceneId(/*@Param("sceneId")*/ Long sceneId);
 }

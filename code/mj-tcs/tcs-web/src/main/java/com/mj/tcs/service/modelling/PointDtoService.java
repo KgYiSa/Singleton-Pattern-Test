@@ -1,9 +1,9 @@
 package com.mj.tcs.service.modelling;
 
+import com.mj.tcs.api.v1.dto.PointDto;
+import com.mj.tcs.api.v1.dto.SceneDto;
+import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.exception.TcsServerRuntimeException;
-import com.mj.tcs.data.model.Point;
-import com.mj.tcs.data.model.Scene;
-import com.mj.tcs.data.base.BaseEntity;
 import com.mj.tcs.repository.PointRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,14 +16,14 @@ import java.util.Objects;
  * @author Wang Zhen
  */
 @Component
-public class PointService implements IEntityService {
+public class PointDtoService implements IEntityDtoService {
 
     @Autowired
     private PointRepository pointRepository;
 
     @Override
     public boolean canSupportEntityClass(Class entityClass) {
-        if (Point.class.equals(entityClass)) {
+        if (PointDto.class.equals(entityClass)) {
             return true;
         }
 
@@ -35,7 +35,7 @@ public class PointService implements IEntityService {
 
         switch (params.getType()) {
             case GET_ONE_BY_ELEMENT_ID:
-                Point entity = pointRepository.findOne((long) params.getParameter(ServiceGetParams.NAME_ELEMENT_ID));
+                PointDto entity = pointRepository.findOne((long) params.getParameter(ServiceGetParams.NAME_ELEMENT_ID));
                 return Arrays.asList(entity);
             case GET_ALL_BY_SCENE_ID:
                 return (Collection) pointRepository.findAllByScene((long) params.getParameter(ServiceGetParams.NAME_SCENE_ID));
@@ -47,18 +47,18 @@ public class PointService implements IEntityService {
     }
 
     @Override
-    public Point create(BaseEntity entity) {
+    public PointDto create(BaseEntityDto entity) {
         throw new TcsServerRuntimeException("Not supported, please create from scene then save it");
     }
 
     @Override
-    public Point update(BaseEntity entity) {
-        Point point = (Point) Objects.requireNonNull(entity, "point entity is null");
+    public PointDto update(BaseEntityDto entity) {
+        PointDto point = (PointDto) Objects.requireNonNull(entity, "point entity is null");
 
-        Scene scene = point.getScene();
+        SceneDto scene = point.getSceneDto();
 
         final long id = point.getId();
-        if (!scene.getPointById(id).isPresent()) {
+        if (scene.getPointDtoById(id) == null) {
             throw new TcsServerRuntimeException("The point is not belonging to the scene " +
                     "or you can not create it by the method");
         }

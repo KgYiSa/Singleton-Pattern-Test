@@ -96,9 +96,6 @@
           <element id="library" level="project" name="Maven: org.apache.commons:com.springsource.org.apache.commons.collections:3.2.1" />
           <element id="library" level="project" name="Maven: org.apache.commons:com.springsource.org.apache.commons.logging:1.1.1" />
           <element id="library" level="project" name="Maven: mysql:mysql-connector-java:5.1.36" />
-          <element id="archive" name="tcs-base-1.0.jar">
-            <element id="module-output" name="tcs-base" />
-          </element>
           <element id="library" level="project" name="Maven: log4j:log4j:1.2.9" />
           <element id="library" level="project" name="Maven: com.google.guava:guava:18.0" />
           <element id="library" level="project" name="Maven: com.google.inject:guice:4.0" />

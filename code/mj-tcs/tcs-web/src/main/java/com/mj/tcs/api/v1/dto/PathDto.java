@@ -11,10 +11,11 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
-import com.mj.tcs.data.model.Point;
-import com.mj.tcs.data.model.Scene;
+import com.mj.tcs.api.v1.dto.base.TripleDto;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -24,22 +25,27 @@ import java.util.Objects;
 @Dto
 @Entity
 @Table(name = "tcs_model_path", uniqueConstraints =
-    @UniqueConstraint(columnNames = {"name", "scene"})
+    @UniqueConstraint(columnNames = {"name", "sceneDto"})
 )
 public class PathDto extends BaseEntityDto {
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "scene", nullable = false)
-    private SceneDto scene;
+    @JoinColumn(name = "sceneDto", nullable = false)
+    private SceneDto sceneDto;
 
     @DtoField
     @Column
     private String name;
 
-    @Column
-    private long sourcePoint;
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private PointDto sourcePointDto;
 
-    @Column
-    private long destinationPoint;
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private PointDto destinationPointDto;
+
+
+    @ElementCollection
+    @CollectionTable(name = "tcs_model_rel_path_control_points")
+    private List<TripleDto> controlPoints = new ArrayList<>();
 
     @DtoField
     @Column
@@ -64,19 +70,16 @@ public class PathDto extends BaseEntityDto {
     public PathDto() {}
 
     public PathDto(PointDto srcPoint, PointDto destPoint) {
-        Objects.requireNonNull(srcPoint, "srcPointDto");
-        Objects.requireNonNull(destPoint, "destPointDto");
-
-        sourcePoint = srcPoint.getId();
-        destinationPoint = destPoint.getId();
+        sourcePointDto = Objects.requireNonNull(srcPoint, "srcPointDto");;
+        destinationPointDto = Objects.requireNonNull(destPoint, "destPointDto");
     }
 
-    public SceneDto getScene() {
-        return scene;
+    public SceneDto getSceneDto() {
+        return sceneDto;
     }
 
-    public void setScene(SceneDto scene) {
-        this.scene = scene;
+    public void setSceneDto(SceneDto sceneDto) {
+        this.sceneDto = sceneDto;
     }
 
     public String getName() {
@@ -87,20 +90,20 @@ public class PathDto extends BaseEntityDto {
         this.name = name;
     }
 
-    public long getSourcePoint() {
-        return sourcePoint;
+    public PointDto getSourcePointDto() {
+        return sourcePointDto;
     }
 
-    public void setSourcePoint(long sourcePoint) {
-        this.sourcePoint = sourcePoint;
+    public void setSourcePointDto(PointDto sourcePointDto) {
+        this.sourcePointDto = sourcePointDto;
     }
 
-    public long getDestinationPoint() {
-        return destinationPoint;
+    public PointDto getDestinationPointDto() {
+        return destinationPointDto;
     }
 
-    public void setDestinationPoint(long destinationPoint) {
-        this.destinationPoint = destinationPoint;
+    public void setDestinationPointDto(PointDto destinationPointDto) {
+        this.destinationPointDto = destinationPointDto;
     }
 
     public long getLength() {

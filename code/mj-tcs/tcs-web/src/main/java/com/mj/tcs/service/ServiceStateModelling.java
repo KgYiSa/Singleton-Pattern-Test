@@ -1,10 +1,13 @@
 package com.mj.tcs.service;
 
+import com.mj.tcs.api.v1.dto.PathDto;
+import com.mj.tcs.api.v1.dto.PointDto;
+import com.mj.tcs.api.v1.dto.SceneDto;
 import com.mj.tcs.config.AppContext;
 import com.mj.tcs.data.model.*;
 import com.mj.tcs.exception.ObjectUnknownException;
 import com.mj.tcs.exception.TcsServerRuntimeException;
-import com.mj.tcs.service.modelling.IEntityService;
+import com.mj.tcs.service.modelling.IEntityDtoService;
 import com.mj.tcs.service.modelling.ServiceGetParams;
 import org.apache.commons.collections.map.CaseInsensitiveMap;
 import org.springframework.stereotype.Component;
@@ -21,9 +24,9 @@ import java.util.stream.Collectors;
 @Component
 public class ServiceStateModelling {
     // valueconverter --> service mapping
-    private static Map<String, IEntityService> modellingServiceMapping = new CaseInsensitiveMap();
+    private static Map<String, IEntityDtoService> modellingServiceMapping = new CaseInsensitiveMap();
 
-    public void registerService(String key, IEntityService service) {
+    public void registerService(String key, IEntityDtoService service) {
         if (service == null) {
             throw new TcsServerRuntimeException("registerService with a null object.");
         }
@@ -51,40 +54,40 @@ public class ServiceStateModelling {
     }
 
     // POINTS
-    public Collection<Point> getAllPointsFromScene(long sceneId) {
-        return getAllInOneSceneInternal(Point.class, sceneId).stream()
-                .map(item -> (Point) item).collect(Collectors.toList());
+    public Collection<PointDto> getAllPointsFromScene(long sceneId) {
+        return getAllInOneSceneInternal(PointDto.class, sceneId).stream()
+                .map(item -> (PointDto) item).collect(Collectors.toList());
     }
 
-    public Point getPoint(long pointId) {
-        return (Point) getOneInternal(Point.class, pointId);
+    public PointDto getPoint(long pointId) {
+        return (PointDto) getOneInternal(PointDto.class, pointId);
     }
 
-    public Collection<Point> getAllPoints() {
-        return getAllInternal(Point.class).stream()
-                .map(item -> (Point) item).collect(Collectors.toList());
+    public Collection<PointDto> getAllPoints() {
+        return getAllInternal(PointDto.class).stream()
+                .map(item -> (PointDto) item).collect(Collectors.toList());
     }
 
-    public Point createPoint(Point entity) {
+    public PointDto createPoint(PointDto entity) {
         // should create by scene service to have the correct connection relationship
         entity = Objects.requireNonNull(entity, "pointEntity is null");
-        Scene scene = Objects.requireNonNull(entity.getScene(),
+        SceneDto scene = Objects.requireNonNull(entity.getSceneDto(),
                 "the belonging scene is null for point: " + entity.toString());
 
         // the scene object will NOT know the changes, so let scene handle it.
-//        Point point = (Point) getService(Point.class).create(entity);
+//        PointDto point = (PointDto) getService(PointDto.class).create(entity);
 
         // we should know the new ID of the point.
         List<Long> currentPointIds = new ArrayList<>();
-        if (scene.getPoints() != null) {
-            currentPointIds = scene.getPoints().stream()
+        if (scene.getPointDtos() != null) {
+            currentPointIds = scene.getPointDtos().stream()
                     .map(item -> item.getId()).collect(Collectors.toList());
         }
-        scene.addPoint(entity);
+        scene.addPointDto(entity);
 
-        getService(Scene.class).update(scene);
+        getService(SceneDto.class).update(scene);
 
-        for (Point point : scene.getPoints()) {
+        for (PointDto point : scene.getPointDtos()) {
             boolean found = false;
             for (Long existedId : currentPointIds) {
                 if (existedId == point.getId()) {
@@ -101,108 +104,109 @@ public class ServiceStateModelling {
         throw new TcsServerRuntimeException("New point creation error");
     }
 
-    public Point updatePoint(Point entity) {
+    public PointDto updatePoint(PointDto entity) {
         entity = Objects.requireNonNull(entity, "pointEntity is null");
 
-        Scene scene = Objects.requireNonNull(entity.getScene(),
+        SceneDto scene = Objects.requireNonNull(entity.getSceneDto(),
                 "the belonging scene is null for point: " + entity.toString());
 
         final long id = entity.getId();
-        Optional<Point> pointOp = scene.getPointById(id);
-        if (!pointOp.isPresent()) {
+        PointDto pointDto = scene.getPointDtoById(id);
+        if (pointDto == null) {
             throw new TcsServerRuntimeException("The point is null by Id " + id + " for scene " + scene.getName());
         }
 
-        Point point = pointOp.get();
-        point = entity;
+        // TODO:
+//        PointDto point = pointDto.get();
+//        point = entity;
 
-        getService(Point.class).update(scene);
+        getService(PointDto.class).update(scene);
 
-        return (Point) getService(Point.class)
-                .update(Objects.requireNonNull(point, "point to be updated is null"));
+        return (PointDto) getService(PointDto.class)
+                .update(Objects.requireNonNull(pointDto, "point to be updated is null"));
     }
 
-    public void deletePoint(Point entity) {
-        Point point = Objects.requireNonNull(entity, "point to be deleted is null");
+    public void deletePoint(PointDto entity) {
+        PointDto point = Objects.requireNonNull(entity, "point to be deleted is null");
 
-        Scene scene = Objects.requireNonNull(entity.getScene(),
+        SceneDto scene = Objects.requireNonNull(entity.getSceneDto(),
                 "the belonging scene is null for point: " + entity.toString());
 
         // spring will remove all path objects according to the cascadeType
         scene.removePoint(point);
 
-        getService(Scene.class).update(scene);
+        getService(SceneDto.class).update(scene);
     }
 
     // PATHS
-    public Collection<Path> getAllPathsFromScene(long sceneId) {
-        return getAllInOneSceneInternal(Path.class, sceneId).stream()
-                .map(item -> (Path) item).collect(Collectors.toList());
+    public Collection<PathDto> getAllPathDtosFromScene(long sceneId) {
+        return getAllInOneSceneInternal(PathDto.class, sceneId).stream()
+                .map(item -> (PathDto) item).collect(Collectors.toList());
     }
 
-    public Collection<Path> getAllPaths() {
-        return getAllInternal(Path.class).stream()
-                .map(item -> (Path) item).collect(Collectors.toList());
+    public Collection<PathDto> getAllPathDtos() {
+        return getAllInternal(PathDto.class).stream()
+                .map(item -> (PathDto) item).collect(Collectors.toList());
     }
 
-    public Path getPath(long pathId) {
-        return (Path) getOneInternal(Path.class, pathId);
+    public PathDto getPathDto(long pathId) {
+        return (PathDto) getOneInternal(PathDto.class, pathId);
     }
 
-    public Path createPath(Path entity) {
+    public PathDto createPathDto(PathDto entity) {
         // should create by scene service to have the correct connection relationship
 
         // the scene object will NOT know the changes, so let scene handle it.
-        Path path = Objects.requireNonNull(entity, "new path object is null");
-        Scene scene = Objects.requireNonNull(entity.getScene(), "The new path object belongs no scene!");
-        Point srcPoint = Objects.requireNonNull(entity.getSourcePoint(), "The new path object belongs no source point!");
-        Point dstPoint = Objects.requireNonNull(entity.getDestinationPoint(), "The new path object belongs no destination point!");
+        PathDto path = Objects.requireNonNull(entity, "new path object is null");
+        SceneDto scene = Objects.requireNonNull(entity.getSceneDto(), "The new path object belongs no scene!");
+        PointDto srcPoint = Objects.requireNonNull(entity.getSourcePointDto(), "The new path object belongs no source point!");
+        PointDto dstPoint = Objects.requireNonNull(entity.getDestinationPointDto(), "The new path object belongs no destination point!");
 
         // we should know the new ID of the path.
-        List<Long> currentPathIds = new ArrayList<>();
-        if (scene.getPaths() != null) {
-            currentPathIds = scene.getPaths().stream()
+        List<Long> currentPathDtoIds = new ArrayList<>();
+        if (scene.getPathDtos() != null) {
+            currentPathDtoIds = scene.getPathDtos().stream()
                     .map(item -> item.getId()).collect(Collectors.toList());
         }
-        scene.addPath(path);
+        scene.addPathDto(path);
 
         // system helps do the following connections
-//        srcPoint.addOutgoingPath(path);
-//        dstPoint.addIncomingPath(path);
+//        srcPoint.addOutgoingPathDto(path);
+//        dstPoint.addIncomingPathDto(path);
 
-        getService(Scene.class).update(scene);
+        getService(SceneDto.class).update(scene);
 
-        for (Path eachPath : scene.getPaths()) {
+        for (PathDto eachPathDto : scene.getPathDtos()) {
             boolean found = false;
-            for (Long existedId : currentPathIds) {
-                if (existedId == eachPath.getId()) {
+            for (Long existedId : currentPathDtoIds) {
+                if (existedId == eachPathDto.getId()) {
                     found = true;
                     break;
                 }
             }
 
             if (!found) {
-                return eachPath;
+                return eachPathDto;
             }
         }
 
         throw new TcsServerRuntimeException("New path creation error");
     }
 
-    public Path updatePath(Path entity) {
-        return (Path) getService(Path.class).update(Objects.requireNonNull(entity, "path to be updated is null"));
+    public PathDto updatePathDto(PathDto entity) {
+        return (PathDto) getService(PathDto.class).update(Objects.requireNonNull(entity, "path to be updated is null"));
     }
 
-    public void deletePath(Path entity) {
+    public void deletePathDto(PathDto entity) {
         entity = Objects.requireNonNull(entity, "path is null");
-        Point srcPoint = Objects.requireNonNull(entity.getSourcePoint(), "The path object belongs no source point!");
-        Point dstPoint = Objects.requireNonNull(entity.getDestinationPoint(), "The path object belongs no destination point!");
+        PointDto srcPoint = Objects.requireNonNull(entity.getSourcePoint(), "The path object belongs no source point!");
+        PointDto dstPoint = Objects.requireNonNull(entity.getDestinationPoint(), "The path object belongs no destination point!");
 
-        Scene scene = entity.getScene();
+        SceneDto scene = entity.getSceneDto();
 
         // check these components belongs to the scene
         final long id = entity.getId();
-        if (!scene.getPathById(id).isPresent()) {
+        if (!scene.getPathDtoById(id).isPresent()) {
             throw new TcsServerRuntimeException("The path is not belonging to the scene");
         }
         final long srcPointId = srcPoint.getId();
@@ -214,9 +218,9 @@ public class ServiceStateModelling {
             throw new TcsServerRuntimeException("The destination point of the path is not belonging to the scene");
         }
 
-        scene.removePath(entity);
+        scene.removePathDto(entity);
 
-        getService(Scene.class).update(scene);
+        getService(SceneDto.class).update(scene);
     }
 
     // LOCATIONS
@@ -239,7 +243,7 @@ public class ServiceStateModelling {
 
         // the scene object will NOT know the changes, so let scene handle it.
         Location location = Objects.requireNonNull(entity, "new location object is null");
-        Scene scene = Objects.requireNonNull(entity.getScene(), "The new location object belongs no scene!");
+        SceneDto scene = Objects.requireNonNull(entity.getSceneDto(), "The new location object belongs no scene!");
         Set<Location.Link> links = location.getAttachedLinks();
         if (links != null) {
             for (Location.Link link : links) {
@@ -255,7 +259,7 @@ public class ServiceStateModelling {
         }
         scene.addLocation(location);
 
-        getService(Scene.class).update(scene);
+        getService(SceneDto.class).update(scene);
 
         for (Location eachLocation : scene.getLocations()) {
             boolean found = false;
@@ -281,7 +285,7 @@ public class ServiceStateModelling {
     public void deleteLocation(Location entity) {
         entity = Objects.requireNonNull(entity, "location is null");
 
-        Scene scene = entity.getScene();
+        SceneDto scene = entity.getSceneDto();
 
         // check these components belongs to the scene
         final long id = entity.getId();
@@ -291,7 +295,7 @@ public class ServiceStateModelling {
 
         scene.removeLocation(entity);
 
-        getService(Scene.class).update(scene);
+        getService(SceneDto.class).update(scene);
     }
 
     // LOCATION TYPES
@@ -312,7 +316,7 @@ public class ServiceStateModelling {
     public LocationType createLocationType(LocationType entity) {
         // the scene object will NOT know the changes, so let scene handle it.
         Objects.requireNonNull(entity, "locationTypeEntity is null");
-        Scene scene = Objects.requireNonNull(entity.getScene(), "The new locationType object belongs no scene!");
+        SceneDto scene = Objects.requireNonNull(entity.getSceneDto(), "The new locationType object belongs no scene!");
 
         // we should know the new ID of the path.
         List<Long> currentLocationTypeIds = new ArrayList<>();
@@ -324,7 +328,7 @@ public class ServiceStateModelling {
 
         entity.setId(null);
 
-        getService(Scene.class).update(scene);
+        getService(SceneDto.class).update(scene);
 
         for (LocationType eachLocationType : scene.getLocationTypes()) {
             boolean found = false;
@@ -346,7 +350,7 @@ public class ServiceStateModelling {
     public LocationType updateLocationType(LocationType entity) {
         entity = Objects.requireNonNull(entity, "locationTypeEntity is null");
 
-        Scene scene = Objects.requireNonNull(entity.getScene(),
+        SceneDto scene = Objects.requireNonNull(entity.getSceneDto(),
                 "the belonging scene is null for locationType: " + entity.toString());
 
         final long id = entity.getId();
@@ -366,12 +370,12 @@ public class ServiceStateModelling {
     public void deleteLocationType(LocationType entity) {
         LocationType locationType = Objects.requireNonNull(entity, "locationType to be deleted is null");
 
-        Scene scene = Objects.requireNonNull(entity.getScene(),
+        SceneDto scene = Objects.requireNonNull(entity.getSceneDto(),
                 "the belonging scene is null for locationType: " + entity.toString());
 
         scene.removeLocationType(locationType);
 
-        getService(Scene.class).update(scene);
+        getService(SceneDto.class).update(scene);
     }
 
     // STATIC_ROUTES
@@ -394,7 +398,7 @@ public class ServiceStateModelling {
 
         // the scene object will NOT know the changes, so let scene handle it.
         StaticRoute staticRoute = Objects.requireNonNull(entity, "new staticRoute object is null");
-        Scene scene = Objects.requireNonNull(entity.getScene(), "The new staticRoute object belongs no scene!");
+        SceneDto scene = Objects.requireNonNull(entity.getSceneDto(), "The new staticRoute object belongs no scene!");
         if (!staticRoute.isValid()) {
             throw new TcsServerRuntimeException("The static route is invalid!");
         }
@@ -407,7 +411,7 @@ public class ServiceStateModelling {
         }
         scene.addStaticRoute(staticRoute);
 
-        getService(Scene.class).update(scene);
+        getService(SceneDto.class).update(scene);
 
         for (StaticRoute eachStaticRoute : scene.getStaticRoutes()) {
             boolean found = false;
@@ -433,7 +437,7 @@ public class ServiceStateModelling {
     public void deleteStaticRoute(StaticRoute entity) {
         entity = Objects.requireNonNull(entity, "staticRoute is null");
 
-        Scene scene = entity.getScene();
+        SceneDto scene = entity.getSceneDto();
 
         // check these components belongs to the scene
         final long id = entity.getId();
@@ -443,7 +447,7 @@ public class ServiceStateModelling {
 
         scene.removeStaticRoute(entity);
 
-        getService(Scene.class).update(scene);
+        getService(SceneDto.class).update(scene);
     }
 
     // VEHICLES
@@ -478,41 +482,41 @@ public class ServiceStateModelling {
     }
 
     //SCENES
-    public Scene getScene(long sceneId) {
-        return (Scene) getOneInternal(Scene.class, sceneId);
+    public SceneDto getSceneDto(long sceneId) {
+        return (SceneDto) getOneInternal(SceneDto.class, sceneId);
     }
 
-    public Collection<Scene> getAllScenes() {
-        return getAllInternal(Scene.class).stream()
-                .map(item -> (Scene)item).collect(Collectors.toList());
+    public Collection<SceneDto> getAllScenes() {
+        return getAllInternal(SceneDto.class).stream()
+                .map(item -> (SceneDto)item).collect(Collectors.toList());
     }
 
-    public Scene createScene(Scene entity) {
-        return (Scene) getService(Scene.class).create(entity);
+    public SceneDto createScene(SceneDto entity) {
+        return (SceneDto) getService(SceneDto.class).create(entity);
     }
 
-    public Scene updateScene(Scene entity) {
-        return (Scene) getService(Scene.class).update(entity);
+    public SceneDto updateScene(SceneDto entity) {
+        return (SceneDto) getService(SceneDto.class).update(entity);
     }
 
     public void deleteScene(long sceneId) {
-        getService(Scene.class).delete(sceneId);
+        getService(SceneDto.class).delete(sceneId);
     }
 
 
     // PRIVATE
 
-    private IEntityService getService(Class entityClass) {
+    private IEntityDtoService getService(Class entityClass) {
         if (entityClass == null) {
             throw new TcsServerRuntimeException("getService with a null class !");
         }
 
         String name = entityClass.getSimpleName();
         if (modellingServiceMapping.get(name) == null) {
-            Map<String, IEntityService> services = AppContext.getContext().getBeansOfType(IEntityService.class);
+            Map<String, IEntityDtoService> services = AppContext.getContext().getBeansOfType(IEntityDtoService.class);
 
             if (services != null) {
-                for (IEntityService service : services.values()) {
+                for (IEntityDtoService service : services.values()) {
                     if (service.canSupportEntityClass(entityClass)) { // because the name is not actually the same, e.g. e.g. nameA == NameA
                         registerService(name, service);
                         return service;
@@ -554,22 +558,22 @@ public class ServiceStateModelling {
      *         TcsServerRuntimeException If the path is not the outgoing one of the point.
      *
      */
-    private Point addPointIncomingPath(Point point, Path path) {
+    private PointDto addPointIncomingPathDto(PointDto point, PathDto path) {
 
         if (point == null) {
-            throw new ObjectUnknownException("Point is null, Path: " + path);
+            throw new ObjectUnknownException("PointDto is null, PathDto: " + path);
         }
 
         if (path == null) {
-            throw new ObjectUnknownException("Path is null, Point: " + point);
+            throw new ObjectUnknownException("PathDto is null, PointDto: " + point);
         }
 
         // Check if the point really is the path's destination.
         if (!path.getDestinationPoint().equals(point)) {
-            throw new TcsServerRuntimeException("Point is not the path's destination.");
+            throw new TcsServerRuntimeException("PointDto is not the path's destination.");
         }
 
-        point.addIncomingPath(path);
+        point.addIncomingPathDto(path);
 
         return point;
     }
@@ -583,17 +587,17 @@ public class ServiceStateModelling {
      * @throws ObjectUnknownException If the referenced point or path do not
      * exist.
      */
-    public Point removePointIncomingPath(Point point,
-                                               Path path) throws ObjectUnknownException {
+    public PointDto removePointIncomingPathDto(PointDto point,
+                                               PathDto path) throws ObjectUnknownException {
         if (point == null) {
-            throw new ObjectUnknownException("Point is null, Path: " + path);
+            throw new ObjectUnknownException("PointDto is null, PathDto: " + path);
         }
 
         if (path == null) {
-            throw new ObjectUnknownException("Path is null, Point: " + point);
+            throw new ObjectUnknownException("PathDto is null, PointDto: " + point);
         }
 
-        point.removeIncomingPath(path);
+        point.removeIncomingPathDto(path);
 
         return point;
     }
@@ -607,22 +611,22 @@ public class ServiceStateModelling {
      * @throws ObjectUnknownException If the point or path does not exist.
      *         TcsServerRuntimeException If the path is not the outgoing one of the point.
      */
-    private Point addPointOutgoingPath(Point point, Path path) {
+    private PointDto addPointOutgoingPathDto(PointDto point, PathDto path) {
 
         if (point == null) {
-            throw new ObjectUnknownException("Point is null, Path: " + path);
+            throw new ObjectUnknownException("PointDto is null, PathDto: " + path);
         }
 
         if (path == null) {
-            throw new ObjectUnknownException("Path is null, Point: " + point);
+            throw new ObjectUnknownException("PathDto is null, PointDto: " + point);
         }
 
         // Check if the point really is the path's source.
         if (!path.getSourcePoint().equals(point)) {
-            throw new TcsServerRuntimeException("Point is not the path's source.");
+            throw new TcsServerRuntimeException("PointDto is not the path's source.");
         }
 
-        point.addOutgoingPath(path);
+        point.addOutgoingPathDto(path);
 
         return point;
     }
@@ -636,19 +640,19 @@ public class ServiceStateModelling {
      * @throws ObjectUnknownException If the referenced point or path do not
      * exist.
      */
-    public Point removePointOutgoingPath(Point point,
-                                               Path path)
+    public PointDto removePointOutgoingPathDto(PointDto point,
+                                               PathDto path)
             throws ObjectUnknownException {
 
         if (point == null) {
-            throw new ObjectUnknownException("Point is null, Path: " + path);
+            throw new ObjectUnknownException("PointDto is null, PathDto: " + path);
         }
 
         if (path == null) {
-            throw new ObjectUnknownException("Path is null, Point: " + point);
+            throw new ObjectUnknownException("PathDto is null, PointDto: " + point);
         }
 
-        point.removeOutgoingPath(path);
+        point.removeOutgoingPathDto(path);
 
         return point;
     }

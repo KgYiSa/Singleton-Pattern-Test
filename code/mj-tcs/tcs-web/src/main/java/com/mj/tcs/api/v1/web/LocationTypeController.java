@@ -2,7 +2,6 @@ package com.mj.tcs.api.v1.web;
 
 import com.mj.tcs.api.v1.dto.converter.DtoConverter;
 import com.mj.tcs.exception.ObjectAccessViolationException;
-import com.mj.tcs.data.model.LocationType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.hateoas.EntityLinks;
@@ -46,11 +45,11 @@ public class LocationTypeController extends ServiceController {
 //    @RequestMapping(value = "/scenes/{sceneId}/location_types", method = RequestMethod.POST)
 //    public ResponseEntity<?> createLocationType(@PathVariable("sceneId") Long sceneId,
 //                                         @RequestBody LocationTypeDto locationTypeDto) throws ObjectUnknownException{
-//        Scene scene = Objects.requireNonNull(getModellingService().getScene(sceneId),
+//        Scene scene = Objects.requireNonNull(getModellingService().getSceneDto(sceneId),
 //            "scene is null by the sceneId: " + sceneId);
 //
 //        LocationType newLocationType = (LocationType) dtoConverter.convertToEntity(locationTypeDto);
-//        newLocationType.setScene(scene);
+//        newLocationType.setSceneDto(scene);
 //
 //        newLocationType.setId(null);
 //
@@ -100,7 +99,7 @@ public class LocationTypeController extends ServiceController {
 //    @RequestMapping(value = "/scenes/{sceneId}/location_types/{locationTypeId}", method = RequestMethod.PATCH)
 //    public ResponseEntity<?> updateLocationTypePartial(@PathVariable("sceneId") Long sceneId,
 //                                                @PathVariable("locationTypeId") Long locationTypeId,
-//                                                EntityAuditDto baseEntityAuditDto) {
+//                                                EntityAuditorDto baseEntityAuditDto) {
 //        checkAccessViolation(sceneId, locationTypeId);
 //
 //        LocationType locationType = getModellingService().getLocationType(locationTypeId);
@@ -125,13 +124,13 @@ public class LocationTypeController extends ServiceController {
 //        }
 //        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 //    }
-
-    private void checkAccessViolation(Long sceneId, Long locationTypeId) {
-        LocationType locationType = Objects.requireNonNull(getModellingService().getLocationType(locationTypeId),
-                "locationType is null by id: " + locationTypeId);
-
-        if (locationType.getScene().getId() != sceneId) {
-            throw new ObjectAccessViolationException(sceneId, locationTypeId);
-        }
-    }
+//
+//    private void checkAccessViolation(Long sceneId, Long locationTypeId) {
+//        LocationType locationType = Objects.requireNonNull(getModellingService().getLocationType(locationTypeId),
+//                "locationType is null by id: " + locationTypeId);
+//
+//        if (locationType.getScene().getId() != sceneId) {
+//            throw new ObjectAccessViolationException(sceneId, locationTypeId);
+//        }
+//    }
 }

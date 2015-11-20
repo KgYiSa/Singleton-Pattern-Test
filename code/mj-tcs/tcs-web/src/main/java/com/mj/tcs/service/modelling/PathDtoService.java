@@ -1,11 +1,11 @@
 package com.mj.tcs.service.modelling;
 
+import com.mj.tcs.api.v1.dto.PathDto;
+import com.mj.tcs.api.v1.dto.PointDto;
+import com.mj.tcs.api.v1.dto.SceneDto;
+import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.exception.ObjectUnknownException;
 import com.mj.tcs.exception.TcsServerRuntimeException;
-import com.mj.tcs.data.model.Path;
-import com.mj.tcs.data.model.Point;
-import com.mj.tcs.data.model.Scene;
-import com.mj.tcs.data.base.BaseEntity;
 import com.mj.tcs.repository.PathRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,14 +18,14 @@ import java.util.Objects;
  * @author Wang Zhen
  */
 @Component
-public class PathService implements IEntityService {
+public class PathDtoService implements IEntityDtoService {
 
     @Autowired
     PathRepository pathRepository;
 
     @Override
     public boolean canSupportEntityClass(Class entityClass) {
-        if (Path.class.equals(entityClass)) {
+        if (PathDto.class.equals(entityClass)) {
             return true;
         }
 
@@ -37,7 +37,7 @@ public class PathService implements IEntityService {
 
         switch (params.getType()) {
             case GET_ONE_BY_ELEMENT_ID:
-                Path entity = pathRepository.findOne((long) params.getParameter(ServiceGetParams.NAME_ELEMENT_ID));
+                PathDto entity = pathRepository.findOne((long) params.getParameter(ServiceGetParams.NAME_ELEMENT_ID));
                 return Arrays.asList(entity);
             case GET_ALL_BY_SCENE_ID:
                 return (Collection) pathRepository.findAllByScene((long) params.getParameter(ServiceGetParams.NAME_SCENE_ID));
@@ -49,20 +49,20 @@ public class PathService implements IEntityService {
     }
 
     @Override
-    public Path create(BaseEntity entity) {
-        if (entity instanceof Path) {
-            entity = createPath((Path) entity);
-            return (Path) entity;
+    public PathDto create(BaseEntityDto entity) {
+        if (entity instanceof PathDto) {
+            entity = createPath((PathDto) entity);
+            return (PathDto) entity;
         } else {
             throw new TcsServerRuntimeException("create path with different valueconverter type");
         }
     }
 
     @Override
-    public Path update(BaseEntity entity) {
-        if (entity instanceof Path) {
-            entity = updatePath((Path) entity);
-            return (Path) entity;
+    public PathDto update(BaseEntityDto entity) {
+        if (entity instanceof PathDto) {
+            entity = updatePath((PathDto) entity);
+            return (PathDto) entity;
         } else {
             throw new TcsServerRuntimeException("update path with different valueconverter type");
         }
@@ -73,29 +73,29 @@ public class PathService implements IEntityService {
         throw new TcsServerRuntimeException("Not supported, please delete from scene then save it");
     }
 
-    private Path createPath(Path entity) {
+    private PathDto createPath(PathDto entity) {
         throw new TcsServerRuntimeException("Not supported, please create from scene then save it");
     }
 
-    private Path updatePath(Path entity) {
-        Path path = (Path) Objects.requireNonNull(entity, "path entity is null");
-        Point srcPoint = Objects.requireNonNull(path.getSourcePoint(), "The path object belongs no source point!");
-        Point dstPoint = Objects.requireNonNull(path.getDestinationPoint(), "The path object belongs no destination point!");
+    private PathDto updatePath(PathDto entity) {
+        PathDto path = (PathDto) Objects.requireNonNull(entity, "path entity is null");
+        PointDto srcPoint = Objects.requireNonNull(path.getSourcePointDto(), "The path object belongs no source point!");
+        PointDto dstPoint = Objects.requireNonNull(path.getDestinationPointDto(), "The path object belongs no destination point!");
 
-        Scene scene = path.getScene();
+        SceneDto scene = path.getSceneDto();
 
         // check these components belongs to the scene
         final long id = path.getId();
-        if (!scene.getPathById(id).isPresent()) {
+        if (scene.getPathDtoById(id) == null) {
             throw new TcsServerRuntimeException("The path is not belonging to the scene " +
                     "or you can not create it by the method");
         }
         final long srcPointId = srcPoint.getId();
-        if (!scene.getPointById(srcPointId).isPresent()) {
+        if (scene.getPointDtoById(srcPointId) == null) {
             throw new TcsServerRuntimeException("The source point of the path is not belonging to the scene");
         }
         final long dstPointId = dstPoint.getId();
-        if (!scene.getPointById(dstPointId).isPresent()) {
+        if (scene.getPointDtoById(dstPointId) == null) {
             throw new TcsServerRuntimeException("The destination point of the path is not belonging to the scene");
         }
 

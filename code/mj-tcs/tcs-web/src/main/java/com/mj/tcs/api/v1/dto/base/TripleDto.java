@@ -5,26 +5,35 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 /**
  * @author Wang Zhen
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
-public class TripleDto extends EntityAuditDto {
+@Entity
+@Table(name = "tcs_model_triple")
+public class TripleDto extends EntityAuditorDto {
     /**
      * The X coordinate.
      */
     @DtoField
+    @Column(nullable = false)
     private long x;
     /**
      * The Y coordinate.
      */
     @DtoField
+    @Column(nullable = false)
     private long y;
     /**
      * The Z coordinate.
      */
     @DtoField
+    @Column(nullable = false)
     private long z;
 
     /**

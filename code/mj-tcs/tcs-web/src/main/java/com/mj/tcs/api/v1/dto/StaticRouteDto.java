@@ -11,8 +11,6 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
-import com.mj.tcs.api.v1.dto.base.EntityAuditDto;
-import com.mj.tcs.data.model.Scene;
 
 import javax.persistence.*;
 import java.util.LinkedList;
@@ -26,13 +24,13 @@ import java.util.Objects;
 @Dto
 @Entity
 @Table(name = "tcs_model_static_route", uniqueConstraints =
-    @UniqueConstraint(columnNames = {"name", "scene"})
+    @UniqueConstraint(columnNames = {"name", "sceneDto"})
 )
 public class StaticRouteDto extends BaseEntityDto {
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "scene", nullable = false)
-    private SceneDto scene;
+    @JoinColumn(name = "sceneDto", nullable = false)
+    private SceneDto sceneDto;
 
     @DtoField
     @Column
@@ -40,7 +38,15 @@ public class StaticRouteDto extends BaseEntityDto {
 
     @ElementCollection
     @CollectionTable(name = "tcs_model_rel_static_route_hops")
-    private List<Long> hops;
+    private List<PointDto> hops;
+
+    public SceneDto getSceneDto() {
+        return sceneDto;
+    }
+
+    public void setSceneDto(SceneDto sceneDto) {
+        this.sceneDto = sceneDto;
+    }
 
     public String getName() {
         return name;
@@ -57,7 +63,7 @@ public class StaticRouteDto extends BaseEntityDto {
      * @return The first element of the list of hops in this route, or
      * <code>null</code>, if the list of hops is empty.
      */
-    public Long getSourcePoint() {
+    public PointDto getSourcePoint() {
         if (hops.isEmpty()) {
             return null;
         }
@@ -73,7 +79,7 @@ public class StaticRouteDto extends BaseEntityDto {
      * @return The final element of the list of hops in this route, or
      * <code>null</code>, if the list of hops is empty.
      */
-    public Long getDestinationPoint() {
+    public PointDto getDestinationPoint() {
         if (hops.isEmpty()) {
             return null;
         }
@@ -87,11 +93,11 @@ public class StaticRouteDto extends BaseEntityDto {
      *
      * @return The sequence of points this route consists of.
      */
-    public List<Long> getHops() {
+    public List<PointDto> getHops() {
         return new LinkedList<>(hops);
     }
 
-    public void setHops(List<Long> hops) {
+    public void setHops(List<PointDto> hops) {
         this.hops = hops;
     }
 
@@ -100,7 +106,7 @@ public class StaticRouteDto extends BaseEntityDto {
      *
      * @param newHop The hop to be added.
      */
-    public void addHop(Long newHop) {
+    public void addHop(PointDto newHop) {
         Objects.requireNonNull(newHop, "newHop");
         hops.add(newHop);
     }

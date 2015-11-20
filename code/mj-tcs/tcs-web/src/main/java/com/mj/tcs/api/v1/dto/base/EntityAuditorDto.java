@@ -14,7 +14,7 @@ import java.util.Date;
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
 @Embeddable
-public class EntityAuditDto extends BaseEntityDto {
+public class EntityAuditorDto extends BaseEntityDto {
     @DtoField
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)

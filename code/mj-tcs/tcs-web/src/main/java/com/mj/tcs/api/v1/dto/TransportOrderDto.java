@@ -27,7 +27,7 @@ import java.util.Objects;
 public class TransportOrderDto extends BaseEntityDto {
 
     @Column(name = "scene", nullable = false)
-    private SceneDto scene;
+    private SceneDto sceneDto;
 
     @DtoField
     @Column
@@ -67,12 +67,12 @@ public class TransportOrderDto extends BaseEntityDto {
     public TransportOrderDto() {
     }
 
-    public SceneDto getScene() {
-        return scene;
+    public SceneDto getSceneDto() {
+        return sceneDto;
     }
 
-    public void setScene(SceneDto scene) {
-        this.scene = scene;
+    public void setSceneDto(SceneDto sceneDto) {
+        this.sceneDto = sceneDto;
     }
 
     public String getName() {

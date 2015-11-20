@@ -40,7 +40,7 @@ public class PathDtoService implements IEntityDtoService {
                 PathDto entity = pathRepository.findOne((long) params.getParameter(ServiceGetParams.NAME_ELEMENT_ID));
                 return Arrays.asList(entity);
             case GET_ALL_BY_SCENE_ID:
-                return (Collection) pathRepository.findAllByScene((long) params.getParameter(ServiceGetParams.NAME_SCENE_ID));
+                return (Collection) pathRepository.findAllBySceneDto((long) params.getParameter(ServiceGetParams.NAME_SCENE_ID));
             case GET_ALL:
                 return (Collection) pathRepository.findAll();
             default:

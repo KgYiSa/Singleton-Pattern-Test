@@ -54,11 +54,11 @@ public class PointController extends ServiceController {
 //    @RequestMapping(value = "/scenes/{sceneId}/points", method = RequestMethod.POST)
 //    public ResponseEntity<?> createPoint(@PathVariable("sceneId") Long sceneId,
 //                                         @RequestBody PointDto pointDto) throws ObjectUnknownException{
-//        Scene scene = Objects.requireNonNull(getModellingService().getScene(sceneId),
+//        Scene scene = Objects.requireNonNull(getModellingService().getSceneDto(sceneId),
 //            "scene is null by the sceneId: " + sceneId);
 //
 //        Point newPoint = (Point) dtoConverter.convertToEntity(pointDto);
-//        newPoint.setScene(scene);
+//        newPoint.setSceneDto(scene);
 //
 //        newPoint.clearId();
 //
@@ -138,7 +138,7 @@ public class PointController extends ServiceController {
 //        Point point = Objects.requireNonNull(getModellingService().getPoint(pointId),
 //                "point is null by id: " + pointId);
 //
-//        if (point.getScene().getId() != sceneId) {
+//        if (point.getSceneDto().getId() != sceneId) {
 //            throw new ObjectAccessViolationException(sceneId, pointId);
 //        }
 //    }

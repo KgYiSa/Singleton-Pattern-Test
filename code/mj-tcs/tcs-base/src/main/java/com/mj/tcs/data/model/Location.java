@@ -3,7 +3,6 @@ package com.mj.tcs.data.model;
 import com.mj.tcs.data.base.BaseEntity;
 import com.mj.tcs.data.base.Triple;
 
-import javax.persistence.*;
 import java.util.*;
 
 /**
@@ -22,26 +21,17 @@ import java.util.*;
  *
  * @author Wang Zhen
  */
-@Entity
-@Table(name = "tcs_model_location", uniqueConstraints =
-    @UniqueConstraint(columnNames = {"name", "scene"})
-)
 public class Location extends BaseLocation {
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "scene", nullable = false)
     private Scene scene;
 
     /**
      * This location's position in mm.
      */
-    @OneToOne(optional = false, cascade = {CascadeType.ALL})
-//    @JoinColumn(name = "position_id")
     private Triple position = new Triple();
 
     /**
      * A set of links attached to this location.
      */
-    @OneToMany(mappedBy = "location", cascade = {CascadeType.ALL})
     private Set<Link> attachedLinks = new HashSet<>();
 
     public Location(){
@@ -234,25 +224,17 @@ public class Location extends BaseLocation {
         return clone;
     }
 
-    @Entity
-    @Table(name = "tcs_model_location_link", uniqueConstraints =
-    @UniqueConstraint(columnNames = {"name", "scene"})
-    )
     public static class Link extends BaseEntity implements Cloneable {
 
-        @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-        @JoinColumn(name = "scene", nullable = false)
         private Scene scene;
 
         /**
          * A reference to the location end of this link.
          */
-        @ManyToOne
         private Location location;
         /**
          * A reference to the point end of this link.
          */
-        @ManyToOne
         private Point point;
         /**
          * The operations allowed at this link.

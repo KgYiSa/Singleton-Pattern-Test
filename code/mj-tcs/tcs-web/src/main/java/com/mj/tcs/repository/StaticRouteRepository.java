@@ -13,5 +13,5 @@ import org.springframework.data.repository.CrudRepository;
  * @author Wang Zhen
  */
 public interface StaticRouteRepository extends CrudRepository<StaticRouteDto, Long> {
-    Iterable<StaticRouteDto> findAllBySceneId(/*@Param("sceneId")*/ Long sceneId);
+    Iterable<StaticRouteDto> findAllBySceneDto(/*@Param("sceneId")*/ Long sceneId);
 }

@@ -13,5 +13,5 @@ public interface VehicleRepository extends CrudRepository<VehicleDto, Long> {
      * @param sceneId the ID of the scene
      * @return all entities of the scene
      */
-    Iterable<VehicleDto> findAllBySceneId(/*@Param("sceneId")*/ Long sceneId);
+    Iterable<VehicleDto> findAllBySceneDto(/*@Param("sceneId")*/ Long sceneId);
 }

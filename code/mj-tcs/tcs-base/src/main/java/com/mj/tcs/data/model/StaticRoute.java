@@ -8,7 +8,6 @@ package com.mj.tcs.data.model;
 
 import com.mj.tcs.data.base.BaseEntity;
 
-import javax.persistence.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -19,21 +18,13 @@ import java.util.Objects;
  *
  * @author Wang Zhen
  */
-@Entity
-@Table(name = "tcs_model_static_route", uniqueConstraints =
-    @UniqueConstraint(columnNames = {"name", "scene"})
-)
 public class StaticRoute extends BaseEntity implements Cloneable {
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "scene", nullable = false)
     private Scene scene;
 
     /**
      * The sequence of points this route consists of.
      */
-    @ElementCollection
-    @CollectionTable(name = "tcs_model_rel_static_route_hops")
     private List<Point> hops = new LinkedList<>();
 
     public StaticRoute() {

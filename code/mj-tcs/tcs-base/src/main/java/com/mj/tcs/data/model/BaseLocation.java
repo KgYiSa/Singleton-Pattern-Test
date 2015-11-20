@@ -2,18 +2,13 @@ package com.mj.tcs.data.model;
 
 import com.mj.tcs.data.base.BaseResource;
 
-import javax.persistence.*;
-
 /**
  * @author Wang Zhen
  */
-@MappedSuperclass
 public abstract class BaseLocation extends BaseResource implements Cloneable {
     /**
      * A reference to this location's type.
      */
-    @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "location_type_id")
     protected LocationType type;
 
     /**

@@ -12,10 +12,6 @@ import com.mj.tcs.data.base.BaseEntity;
 import com.mj.tcs.data.model.Scene;
 import com.mj.tcs.data.model.Vehicle;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
@@ -60,18 +56,14 @@ import java.util.Objects;
  *
  * @author Stefan Walter (Fraunhofer IML)
  */
-@Entity
-@Table(name = "tcs_order_transport_sequence")
 public final class OrderSequence extends BaseEntity implements Serializable, Cloneable {
 
-    @JoinColumn(name = "scene", nullable = false)
     private Scene scene;
 
     /**
      * Transport orders belonging to this sequence that still need to be
      * processed.
      */
-    @OneToMany(mappedBy = "wrappingSequence")
     private List<TransportOrder> orders = new LinkedList<>();
     /**
      * The index of the order that was last finished in the sequence. -1 if none

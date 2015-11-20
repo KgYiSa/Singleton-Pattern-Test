@@ -13,7 +13,6 @@ import com.mj.tcs.data.model.Scene;
 import com.mj.tcs.data.model.Vehicle;
 import com.mj.tcs.util.UniqueTimestampGenerator;
 
-import javax.persistence.*;
 import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.*;
@@ -36,8 +35,6 @@ import java.util.logging.Logger;
  *
  * @author Stefan Walter (Fraunhofer IML)
  */
-@Entity
-@Table(name = "tcs_order_transport_order")
 public final class TransportOrder extends BaseEntity implements Serializable, Cloneable {
 
     /**
@@ -47,59 +44,46 @@ public final class TransportOrder extends BaseEntity implements Serializable, Cl
      * exactly the same deadline, they are sorted by their (unique) creation
      * times, with the older one coming first.
      */
-    @Transient
     public static final Comparator<TransportOrder> priorityComparator =
             new PriorityComparator();
     /**
      * A comparator for sorting transport orders by their age, with the oldest
      * ones coming first.
      */
-    @Transient
     public static final Comparator<TransportOrder> ageComparator =
             new AgeComparator();
 
     /**
      * The timestamp generator for order creation times.
      */
-    @Transient
     private static final UniqueTimestampGenerator timestampGenerator =
             new UniqueTimestampGenerator();
     /**
      * This class's Logger.
      */
-    @Transient
     private static final Logger log =
             Logger.getLogger(TransportOrder.class.getName());
 
-    @Column(name = "scene", nullable = false)
     private Scene scene;
 
     /**
      * A set of TransportOrders that must have been finished before this one may
      * be processed.
      */
-    @ElementCollection
-    @CollectionTable(name = "tcs_order_rel_transport_dependency")
     private Set<TransportOrder> dependencies =
             new LinkedHashSet<>();
     /**
      * A list of rejections for this transport order.
      */
-    @ElementCollection
-    @CollectionTable(name = "tcs_order_rel_transport_rejection")
     private List<Rejection> rejections = new LinkedList<>();
     /**
      * A list of drive orders that have been finished already.
      */
-    @ElementCollection
-    @CollectionTable(name = "tcs_order_rel_transport_drive_order_past")
     private List<DriveOrder> pastDriveOrders = new LinkedList<>();
     /**
      * A list of drive orders that still have to be processed as part of this
      * transport order (in the order they have to be processed in).
      */
-    @ElementCollection
-    @CollectionTable(name = "tcs_order_rel_transport_drive_order_future")
     private List<DriveOrder> futureDriveOrders = new LinkedList<>();
     /**
      * The drive order that is currently being processed.
@@ -108,7 +92,6 @@ public final class TransportOrder extends BaseEntity implements Serializable, Cl
     /**
      * This transport order's current state.
      */
-    @Enumerated(value = EnumType.STRING)
     private State state = State.RAW;
     /**
      * The point of time at which this TransportOrder was created.
@@ -138,7 +121,6 @@ public final class TransportOrder extends BaseEntity implements Serializable, Cl
      * The order sequence this transport order belongs to. May be
      * <code>null</code> in case this order isn't part of any sequence.
      */
-    @ManyToOne
     private OrderSequence wrappingSequence;
     /**
      * Whether this order is dispensable (may be withdrawn automatically).

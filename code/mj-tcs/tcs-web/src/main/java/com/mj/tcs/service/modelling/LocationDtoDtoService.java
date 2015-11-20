@@ -44,7 +44,7 @@ public class LocationDtoDtoService implements IEntityDtoService {
                 LocationDto entity = locationRepository.findOne((long) params.getParameter(ServiceGetParams.NAME_ELEMENT_ID));
                 return Arrays.asList(entity);
             case GET_ALL_BY_SCENE_ID:
-                return (Collection) locationRepository.findAllByScene((long) params.getParameter(ServiceGetParams.NAME_SCENE_ID));
+                return (Collection) locationRepository.findAllBySceneDto((long) params.getParameter(ServiceGetParams.NAME_SCENE_ID));
             case GET_ALL:
                 return (Collection) locationRepository.findAll();
             default:

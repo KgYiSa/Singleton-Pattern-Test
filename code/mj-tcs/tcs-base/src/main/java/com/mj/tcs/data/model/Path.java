@@ -8,7 +8,6 @@ package com.mj.tcs.data.model;
 import com.mj.tcs.data.base.BaseResource;
 import com.mj.tcs.data.base.Triple;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -18,57 +17,43 @@ import java.util.Objects;
  * @author liumin
  * @author Wang Zhen
  */
-@Entity
-@Table(name = "tcs_model_path", uniqueConstraints =
-    @UniqueConstraint(columnNames = {"name", "scene"})
-)
 public class Path extends BaseResource implements Cloneable {
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "scene", nullable = false)
     private Scene scene;
 
     /**
      * A reference to the point which this point originates in.
      */
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Point sourcePoint;
 
     /**
      * A reference to the point which this point ends in.
      */
-    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private Point destinationPoint;
 
-    @ElementCollection
-    @CollectionTable(name = "tcs_model_rel_path_control_point")
     private List<Triple> controlPoints = new ArrayList<>();
 
     /**
      * The length of this path (in mm).
      */
-    @Column(name = "path_length")
     private long length = 1L;
 
     /**
      * An explicit (unitless) weight that can be used to influence routing. The
      * higher the value, the more travelling this path costs.
      */
-    @Column(name = "routing_cost")
     private long routingCost = 1L;
 
     /**
      * The absolute maximum allowed forward velocity on this path (in mm/s). A
      * value of 0 (default) means forward movement is not allowed on this path.
      */
-    @Column(name = "max_velocity")
     private int maxVelocity;
 
     /**
      * The absolute maximum allowed reverse velocity on this path (in mm/s). A
      * value of 0 (default) means reverse movement is not allowed on this path.
      */
-    @Column(name = "max_reverse_velocity")
     private int maxReverseVelocity;
 
     /**

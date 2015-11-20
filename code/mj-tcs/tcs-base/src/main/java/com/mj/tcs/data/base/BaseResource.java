@@ -1,8 +1,5 @@
 package com.mj.tcs.data.base;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.ElementCollection;
-import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,14 +7,11 @@ import java.util.Set;
 /**
  * @author Wang Zhen
  */
-@MappedSuperclass
 public abstract class BaseResource extends BaseEntity implements Serializable, Cloneable {
     /**
      * A set of resources that <em>must</em> be acquired, too, when acquiring this
      * one.
      */
-    @ElementCollection
-    @CollectionTable(name = "tcs_model_rel_attached_resources")
     private Set<BaseResource> attachedResources = new HashSet<>();
 
     public Set<BaseResource> getAttachedResources() {

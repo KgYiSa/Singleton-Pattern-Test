@@ -144,12 +144,12 @@ public class VehicleController extends ServiceController {
 //                                         @RequestBody VehicleDto vehicleDto) throws ObjectUnknownException{
 //        Scene scene = null;
 //        if (sceneId >= 0) {
-//            scene = Objects.requireNonNull(getModellingService().getScene(sceneId),
+//            scene = Objects.requireNonNull(getModellingService().getSceneDto(sceneId),
 //                    "scene is null by the sceneId: " + sceneId);
 //        }
 //
 //        Vehicle newVehicle = (Vehicle) dtoConverter.convertToEntity(vehicleDto);
-//        newVehicle.setScene(scene);
+//        newVehicle.setSceneDto(scene);
 //        Point currentPoint = vehicleDto.getCurrentPositionPointId() < 0 ?
 //                null : getModellingService().getPoint(vehicleDto.getCurrentPositionPointId());
 //        Point nextPoint = vehicleDto.getNextPositionPointId() < 0 ?
@@ -240,7 +240,7 @@ public class VehicleController extends ServiceController {
 //        Vehicle vehicle = Objects.requireNonNull(getModellingService().getVehicle(vehicleId),
 //                "vehicle is null by id: " + vehicleId);
 //
-//        if (vehicle != null && vehicle.getScene().getId() != sceneId) {
+//        if (vehicle != null && vehicle.getSceneDto().getId() != sceneId) {
 //            throw new ObjectAccessViolationException(sceneId, vehicleId);
 //        }
 //    }

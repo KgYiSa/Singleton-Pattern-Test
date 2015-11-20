@@ -46,7 +46,7 @@ public class StaticRouteDtoService implements IEntityDtoService {
                 StaticRouteDto entity = staticRouteRepository.findOne((long) params.getParameter(ServiceGetParams.NAME_ELEMENT_ID));
                 return Arrays.asList(entity);
             case GET_ALL_BY_SCENE_ID:
-                return (Collection) staticRouteRepository.findAllBySceneId((long) params.getParameter(ServiceGetParams.NAME_SCENE_ID));
+                return (Collection) staticRouteRepository.findAllBySceneDto((long) params.getParameter(ServiceGetParams.NAME_SCENE_ID));
             case GET_ALL:
                 return (Collection) staticRouteRepository.findAll();
             default:

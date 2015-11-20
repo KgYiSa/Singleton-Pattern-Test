@@ -25,11 +25,11 @@ import java.util.Objects;
 @Dto
 @Entity
 @Table(name = "tcs_model_path", uniqueConstraints =
-    @UniqueConstraint(columnNames = {"name", "sceneDto"})
+    @UniqueConstraint(columnNames = {"name", "scene"})
 )
 public class PathDto extends BaseEntityDto {
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "sceneDto", nullable = false)
+    @JoinColumn(name = "scene", nullable = false)
     private SceneDto sceneDto;
 
     @DtoField

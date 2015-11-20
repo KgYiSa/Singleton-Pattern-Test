@@ -36,6 +36,6 @@ public class Numeric2PathConverter implements ValueConverter {
             throw new TcsServerRuntimeException("the class type is not Number class");
         }
 
-        return ServiceGateFactory.getServiceGateway().getModellingService().getPath((Long)object);
+        return ServiceGateFactory.getServiceGateway().getModellingService().getPathDto((Long)object);
     }
 }

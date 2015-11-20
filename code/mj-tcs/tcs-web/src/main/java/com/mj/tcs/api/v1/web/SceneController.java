@@ -77,7 +77,7 @@ public class SceneController extends ServiceController {
 //
 //    @RequestMapping(value = "/scenes/{sceneId}", method = RequestMethod.GET)
 //    public ResponseEntity<?> getOneScene(@PathVariable("sceneId") Long sceneId) {
-//        Scene scene = getModellingService().getScene(sceneId);
+//        Scene scene = getModellingService().getSceneDto(sceneId);
 //
 //        if (scene == null) {
 //            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -120,7 +120,7 @@ public class SceneController extends ServiceController {
 //    public ResponseEntity<?> updateScenePartial(@PathVariable("sceneId") Long sceneId, EntityAuditorDto entityAuditorDto) {
 //        entityAuditorDto.setId(sceneId);
 //
-//        Scene scene = getModellingService().getScene(sceneId);
+//        Scene scene = getModellingService().getSceneDto(sceneId);
 //        // TODO: find a way to found which attribute should be updated!!! (merge new attributes (Map) to the current valueconverter)
 //        scene = (Scene) dtoConverter.mergePropertiesToEntity(scene, entityAuditorDto.getProperties());
 //

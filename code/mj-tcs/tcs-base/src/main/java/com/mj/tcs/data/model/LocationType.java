@@ -6,7 +6,6 @@ package com.mj.tcs.data.model;
 
 import com.mj.tcs.data.base.BaseEntity;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -15,14 +14,8 @@ import java.util.Set;
  * @author lkm
  * @author Wang Zhen
  */
-@Entity
-@Table(name = "tcs_model_location_type", uniqueConstraints =
-    @UniqueConstraint(columnNames = {"name", "scene"})
-)
 public class LocationType extends BaseEntity implements Cloneable {
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "scene", nullable = false)
     private Scene scene;
 
     /**
@@ -31,7 +24,6 @@ public class LocationType extends BaseEntity implements Cloneable {
 //    @ElementCollection
 //    @CollectionTable(name = "tcs_model_location_type_operations")
     // splitted by ;
-    @Column(name = "allowed_operations", columnDefinition = "TEXT")
     private String allowedOperations = "";
 
     public LocationType(){

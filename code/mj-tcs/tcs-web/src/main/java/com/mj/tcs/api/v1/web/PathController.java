@@ -56,11 +56,11 @@ public class PathController extends ServiceController {
 //    @RequestMapping(value = "/scenes/{sceneId}/paths", method = RequestMethod.POST)
 //    public ResponseEntity<?> createPath(@PathVariable("sceneId") Long sceneId,
 //                                         @RequestBody PathDto pathDto) throws ObjectUnknownException{
-//        Scene scene = Objects.requireNonNull(getModellingService().getScene(sceneId),
+//        Scene scene = Objects.requireNonNull(getModellingService().getSceneDto(sceneId),
 //            "scene is null by the sceneId: " + sceneId);
 //
 //        Path newPath = (Path) dtoConverter.convertToEntity(pathDto);
-//        newPath.setScene(scene);
+//        newPath.setSceneDto(scene);
 //        Point srcPoint = getModellingService().getPoint(pathDto.getSourcePointDto());
 //        Point dstPoint = getModellingService().getPoint(pathDto.getDestinationPointDto());
 //        Objects.requireNonNull(srcPoint, "Source Point is null by id " + pathDto.getSourcePointDto());
@@ -149,7 +149,7 @@ public class PathController extends ServiceController {
 //        Path path = Objects.requireNonNull(getModellingService().getPath(pathId),
 //                "path is null by id: " + pathId);
 //
-//        if (path.getScene().getId() != sceneId) {
+//        if (path.getSceneDto().getId() != sceneId) {
 //            throw new ObjectAccessViolationException(sceneId, pathId);
 //        }
 //    }

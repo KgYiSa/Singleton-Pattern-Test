@@ -16,7 +16,7 @@ import javax.persistence.Table;
 @Dto
 @Entity
 @Table(name = "tcs_model_triple")
-public class TripleDto extends EntityAuditorDto {
+public class TripleDto extends BaseEntityDto {
     /**
      * The X coordinate.
      */

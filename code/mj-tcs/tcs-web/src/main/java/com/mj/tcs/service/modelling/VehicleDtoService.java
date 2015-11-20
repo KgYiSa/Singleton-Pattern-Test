@@ -42,7 +42,7 @@ public class VehicleDtoService implements IEntityDtoService {
                 );
                 return Arrays.asList(entity);
             case GET_ALL_BY_SCENE_ID:
-                return (Collection) vehicleRepository.findAllBySceneId(
+                return (Collection) vehicleRepository.findAllBySceneDto(
                         (long) params.getParameter(ServiceGetParams.NAME_SCENE_ID)
                 );
             case GET_ALL:

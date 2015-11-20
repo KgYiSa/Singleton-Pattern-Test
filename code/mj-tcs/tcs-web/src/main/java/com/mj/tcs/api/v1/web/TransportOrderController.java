@@ -63,12 +63,12 @@ public class TransportOrderController extends ServiceController {
 //                                         @RequestBody TransportOrderDto transportOrderDto) throws ObjectUnknownException{
 //        Scene scene = null;
 //        if (sceneId >= 0) {
-//            scene = Objects.requireNonNull(getModellingService().getScene(sceneId),
+//            scene = Objects.requireNonNull(getModellingService().getSceneDto(sceneId),
 //                    "scene is null by the sceneId: " + sceneId);
 //        }
 //
 //        TransportOrder newTransportOrder = (TransportOrder) dtoConverter.convertToEntity(transportOrderDto);
-//        newTransportOrder.setScene(scene);
+//        newTransportOrder.setSceneDto(scene);
 //
 //        if (transportOrderDto.getIntendedVehicle() > 0) {
 //            newTransportOrder.setIntendedVehicle(Objects.requireNonNull(getModellingService().getVehicle(transportOrderDto.getIntendedVehicle()),
@@ -136,7 +136,7 @@ public class TransportOrderController extends ServiceController {
 //        TransportOrder transportOrder = Objects.requireNonNull(getOperatingService().getTransportOrder(transportOrderId),
 //                "transportOrder is null by id: " + transportOrderId);
 //
-//        if (transportOrder != null && transportOrder.getScene().getId() != sceneId) {
+//        if (transportOrder != null && transportOrder.getSceneDto().getId() != sceneId) {
 //            throw new ObjectAccessViolationException(sceneId, transportOrderId);
 //        }
 //    }

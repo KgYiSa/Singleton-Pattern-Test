@@ -8,7 +8,6 @@ package com.mj.tcs.data.model;
 import com.mj.tcs.data.base.BaseResource;
 import com.mj.tcs.data.base.Triple;
 
-import javax.persistence.*;
 import java.util.*;
 
 /**
@@ -17,21 +16,13 @@ import java.util.*;
  * @author liumin
  * @author Wang Zhen
  */
-@Entity
-@Table(name = "tcs_model_point", uniqueConstraints =
-    @UniqueConstraint(columnNames = {"name", "scene"})
-)
 public class Point extends BaseResource implements Cloneable {
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "scene", nullable = false)
     private Scene scene;
 
     /**
      * This point's coordinates in mm.
      */
-    @OneToOne(optional = false, cascade = {CascadeType.ALL})
-//    @JoinColumn(name = "position_id")
     private Triple position = new Triple();
 
     /**
@@ -39,7 +30,6 @@ public class Point extends BaseResource implements Cloneable {
      * this position. May be Double.NaN if an orientation angle is not defined
      * for this point.
      */
-    @Column(name = "vehicle_orientation_angle")
     private double vehicleOrientationAngle = 0d/*Double.NaN*/;//Can NOT be NaN, will cause issue: java.sql.SQLException: 'NaN' is not a valid numeric or approximate numeric value
 
     /**
@@ -50,16 +40,12 @@ public class Point extends BaseResource implements Cloneable {
     /**
      * This point's type.
      */
-    @Enumerated(value = EnumType.STRING)
     private Type type = Type.HALT_POSITION;
 
-    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "destinationPoint")
     private Set<Path> incomingPaths = new HashSet<>();
 
-    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "sourcePoint")
     private Set<Path> outgoingPaths = new HashSet<>();
 
-    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "point")
     private Set<Location.Link> attachedLinks = new HashSet<>();
 
     /**

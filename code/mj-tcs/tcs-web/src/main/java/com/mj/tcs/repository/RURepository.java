@@ -62,10 +62,10 @@ public interface RURepository<T, ID extends Serializable> extends Repository<T, 
     /**
      * Returns all instances of the type in the scene.
      *
-     * @param scene the ID of the scene
+     * @param sceneId the ID of the scene
      * @return all entities of the scene
      */
-    Iterable<T> findAllByScene(/*@Param("sceneId")*/ ID scene);
+    Iterable<T> findAllBySceneDto(/*@Param("sceneId")*/ ID sceneId);
 
     /**
      * Returns all instances of the type with the given IDs.

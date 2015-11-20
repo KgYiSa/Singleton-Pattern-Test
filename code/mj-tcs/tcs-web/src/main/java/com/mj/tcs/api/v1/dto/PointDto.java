@@ -9,10 +9,7 @@ import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.api.v1.dto.base.TripleDto;
 
 import javax.persistence.*;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Wang Zhen
@@ -21,12 +18,12 @@ import java.util.Set;
 @Dto
 @Entity
 @Table(name = "tcs_model_point", uniqueConstraints =
-    @UniqueConstraint(columnNames = {"name", "sceneDto"})
+    @UniqueConstraint(columnNames = {"name", "scene"})
 )
 public class PointDto extends BaseEntityDto {
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "sceneDto", nullable = false)
+    @JoinColumn(name = "scene", nullable = false)
     private SceneDto sceneDto;
 
     @DtoField
@@ -115,6 +112,14 @@ public class PointDto extends BaseEntityDto {
         return incomingPaths;
     }
 
+    public void addIncomingPathDto(PathDto newPath) {
+        this.incomingPaths.add(Objects.requireNonNull(newPath, "newPath"));
+    }
+
+    public void removeIncomingPathDto(PathDto path) {
+        this.incomingPaths.remove(Objects.requireNonNull(path, "path"));
+    }
+
     public void setIncomingPaths(Set<PathDto> incomingPaths) {
         this.incomingPaths = incomingPaths;
     }
@@ -125,6 +130,14 @@ public class PointDto extends BaseEntityDto {
 
     public Set<PathDto> getOutgoingPaths() {
         return outgoingPaths;
+    }
+
+    public void addOutgoingPathDto(PathDto newPath) {
+        this.outgoingPaths.add(Objects.requireNonNull(newPath, "newPath"));
+    }
+
+    public void removeOutgoingPathDto(PathDto pathDto) {
+        this.outgoingPaths.remove(Objects.requireNonNull(pathDto, "pathDto"));
     }
 
     public void setOutgoingPaths(Set<PathDto> outgoingPathIds) {

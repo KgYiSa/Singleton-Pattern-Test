@@ -56,7 +56,7 @@ public class StaticRouteController extends ServiceController {
 //    @RequestMapping(value = "/scenes/{sceneId}/static_routes", method = RequestMethod.POST)
 //    public ResponseEntity<?> createStaticRouteDto(@PathVariable("sceneId") Long sceneId,
 //                                        @RequestBody StaticRouteDto staticRouteDto) throws ObjectUnknownException {
-//        Scene scene = Objects.requireNonNull(getModellingService().getScene(sceneId),
+//        Scene scene = Objects.requireNonNull(getModellingService().getSceneDto(sceneId),
 //                "scene is null by the sceneId: " + sceneId);
 //
 //        if (!staticRouteDto.isValid()) {
@@ -64,7 +64,7 @@ public class StaticRouteController extends ServiceController {
 //        }
 //
 //        StaticRoute newStaticRoute = (StaticRoute) dtoConverter.convertToEntity(staticRouteDto);
-//        newStaticRoute.setScene(scene);
+//        newStaticRoute.setSceneDto(scene);
 //
 //        // check hops
 //        for (long pointId : staticRouteDto.getHops()) {
@@ -150,7 +150,7 @@ public class StaticRouteController extends ServiceController {
 //        StaticRoute staticRoute = Objects.requireNonNull(getModellingService().getStaticRoute(staticRouteId),
 //                "staticRoute is null by id: " + staticRouteId);
 //
-//        if (staticRoute.getScene().getId() != sceneId) {
+//        if (staticRoute.getSceneDto().getId() != sceneId) {
 //            throw new ObjectAccessViolationException(sceneId, staticRouteId);
 //        }
 //    }

@@ -1,23 +1,14 @@
 package com.mj.tcs.data.model;
 
-import javax.persistence.*;
 import java.util.Objects;
 
 /**
  * @author Wang Zhen
  */
-@Entity
-@Table(name = "tcs_model_location", uniqueConstraints =
-@UniqueConstraint(columnNames = {"name", "scene"})
-)
 public class DummyLocation extends BaseLocation implements Cloneable {
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "scene", nullable = false)
     private Scene scene;
 
-    @OneToOne
-    @JoinColumn(name = "point", nullable = false)
     private Point point;
 
     public DummyLocation(){}

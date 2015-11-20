@@ -2,18 +2,15 @@ package com.mj.tcs.api.v1.dto.converter;
 
 import com.inspiresoftware.lib.dto.geda.assembler.DTOAssembler;
 import com.mj.tcs.api.v1.dto.LocationDto;
-import com.mj.tcs.api.v1.dto.LocationLinkDto;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.api.v1.dto.converter.value.converter.LocationLinkDto2LocationLinkMatcher;
 import com.mj.tcs.data.base.BaseEntity;
 import com.mj.tcs.data.model.Location;
-import com.mj.tcs.exception.TcsServerRuntimeException;
 import com.mj.tcs.util.TcsBeanUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 /**
  * @author Wang Zhen
@@ -60,24 +57,25 @@ public class LocationDtoConverter implements DtoConverter  {
         LocationDto locationDto = new LocationDto();
         Location location = (Location) entity;
 
-        DTOAssembler.newAssembler(locationDto.getClass(), location.getClass())
-                .assembleDto(locationDto, location, locationConverters, beanFactory);
-
-        if (locationDto.getAttachedLinks() != null) {
-            for (LocationLinkDto linkDto : locationDto.getAttachedLinks()) {
-                linkDto.setLocationDto(locationDto);
-
-                Optional<Location.Link> link = location.getAttachedLinkById(linkDto.getId());
-                if (!link.isPresent()) {
-                    throw new TcsServerRuntimeException("link entity is not found during conversion for ID " + linkDto.getId());
-                }
-                linkDto.setPointDto(link.get().getPoint().getId());
-            }
-        }
-
-        if (location.getType() != null) {
-            locationDto.setLocationType(location.getType().getId());
-        }
+        // TODO
+//        DTOAssembler.newAssembler(locationDto.getClass(), location.getClass())
+//                .assembleDto(locationDto, location, locationConverters, beanFactory);
+//
+//        if (locationDto.getAttachedLinks() != null) {
+//            for (LocationLinkDto linkDto : locationDto.getAttachedLinks()) {
+//                linkDto.setLocationDto(locationDto);
+//
+//                Optional<Location.Link> link = location.getAttachedLinkById(linkDto.getId());
+//                if (!link.isPresent()) {
+//                    throw new TcsServerRuntimeException("link entity is not found during conversion for ID " + linkDto.getId());
+//                }
+//                linkDto.setPointDto(link.get().getPoint().getId());
+//            }
+//        }
+//
+//        if (location.getType() != null) {
+//            locationDto.setLocationTypeDto(location.getType().getId());
+//        }
 
         return locationDto;
     }

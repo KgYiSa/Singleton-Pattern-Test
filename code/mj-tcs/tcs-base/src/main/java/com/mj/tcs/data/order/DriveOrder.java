@@ -11,7 +11,6 @@ package com.mj.tcs.data.order;
 import com.mj.tcs.data.base.IdentifiableEntity;
 import com.mj.tcs.data.model.BaseLocation;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
 
@@ -21,8 +20,6 @@ import java.util.*;
  *
  * @author Stefan Walter (Fraunhofer IML)
  */
-@Entity
-@Table(name = "tcs_order_transport_drive_order")
 public final class DriveOrder extends IdentifiableEntity implements Serializable, Cloneable {
 
     /**
@@ -40,7 +37,6 @@ public final class DriveOrder extends IdentifiableEntity implements Serializable
     /**
      * This drive order's current state.
      */
-    @Enumerated(value = EnumType.STRING)
     private State state = State.PRISTINE;
 
     /**
@@ -138,25 +134,20 @@ public final class DriveOrder extends IdentifiableEntity implements Serializable
      * A pair consisting of a location and an operation to be performed at that
      * location.
      */
-    @Entity
-    @Table(name = "tcs_order_transport_drive_order_destination")
     public static final class Destination extends IdentifiableEntity implements Serializable, Cloneable {
 
         /**
          * An operation constant for doing nothing.
          */
-        @Transient
         public static final String OP_NOP = "NOP";
         /**
          * An operation constant for parking the vehicle.
          */
-        @Transient
         public static final String OP_PARK = "PARK";
         /**
          * An operation constant for sending the vehicle to a point without a
          * location associated to it.
          */
-        @Transient
         public static final String OP_MOVE = "MOVE";
         /**
          * The destination location.
@@ -170,7 +161,6 @@ public final class DriveOrder extends IdentifiableEntity implements Serializable
          * Properties of this destination.
          * May contain parameters for the operation, for instance.
          */
-        @Transient
         private Map<String, String> properties;
 
         /**

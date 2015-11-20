@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoCollection;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
-import com.mj.tcs.api.v1.dto.base.EntityAuditorDto;
+import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.api.v1.dto.converter.value.converter.*;
 
 import javax.persistence.*;
@@ -22,9 +22,9 @@ import java.util.Set;
 @Dto
 @Entity
 @Table(name = "tcs_model_scene")
-public class SceneDto extends EntityAuditorDto {
+public class SceneDto extends BaseEntityDto {
     @DtoField
-    @Column
+    @Column(unique = true, nullable = false)
     private String name;
 
     @JsonProperty("pointDtos")
@@ -34,7 +34,7 @@ public class SceneDto extends EntityAuditorDto {
                     dtoBeanKey = "PointDto",
                     entityBeanKeys = {"PointDto"},
                     dtoToEntityMatcher = PointDto2PointMatcher.class)
-    @OneToMany(mappedBy = "scene", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
     private Set<PointDto> pointDtos;
 
     @JsonProperty("pathDtos")
@@ -44,7 +44,7 @@ public class SceneDto extends EntityAuditorDto {
             dtoBeanKey = "PathDto",
             entityBeanKeys = {"Path"},
             dtoToEntityMatcher = PathDto2PathMatcher.class)
-    @OneToMany(mappedBy = "scene", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
     private Set<PathDto> pathDtos;
 
     @JsonProperty("locationDtos")
@@ -54,7 +54,7 @@ public class SceneDto extends EntityAuditorDto {
             dtoBeanKey = "LocationDto",
             entityBeanKeys = {"Location"},
             dtoToEntityMatcher = LocationDto2LocationMatcher.class)
-    @OneToMany(mappedBy = "scene", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
     private Set<LocationDto> locationDtos;
 
     @JsonProperty("location_types")
@@ -64,7 +64,7 @@ public class SceneDto extends EntityAuditorDto {
             dtoBeanKey = "LocationTypeDto",
             entityBeanKeys = {"LocationType"},
             dtoToEntityMatcher = LocationTypeDto2LocationTypeMatcher.class)
-    @OneToMany(mappedBy = "scene", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
     private Set<LocationTypeDto> locationTypeDtos;
 
     @JsonProperty("static_routes")
@@ -74,7 +74,7 @@ public class SceneDto extends EntityAuditorDto {
             dtoBeanKey = "StaticRouteDto",
             entityBeanKeys = {"StaticRoute"},
             dtoToEntityMatcher = StaticRouteDto2StaticRouteMatcher.class)
-    @OneToMany(mappedBy = "scene", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
     private Set<StaticRouteDto> staticRouteDtos;
 
     public String getName() {
@@ -136,6 +136,14 @@ public class SceneDto extends EntityAuditorDto {
         this.pathDtos = pathDtos;
     }
 
+    public boolean addPathDto(PathDto dto) {
+        if (getPathDtos() == null) {
+            this.pathDtos = new HashSet<>();
+        }
+
+        return this.pathDtos.add(dto);
+    }
+
     public PathDto getPathDtoById(long id) {
         if (pathDtos == null) {
             return null;
@@ -147,7 +155,7 @@ public class SceneDto extends EntityAuditorDto {
         return null;
     }
 
-    public boolean removePath(PathDto path) {
+    public boolean removePathDto(PathDto path) {
         if (this.pathDtos == null) {
             return false;
         }
@@ -160,7 +168,7 @@ public class SceneDto extends EntityAuditorDto {
             throw new NullPointerException("path can not be found by id " + id);
         }
 
-        return removePath(path);
+        return removePathDto(path);
     }
 
     public Set<LocationTypeDto> getLocationTypeDtos() {
@@ -218,8 +226,22 @@ public class SceneDto extends EntityAuditorDto {
         this.locationDtos = locations;
     }
 
+    public boolean removeLocationDto(LocationDto location) {
+        if (this.locationDtos == null) {
+            return false;
+        }
+        return this.locationDtos.remove(Objects.requireNonNull(location, "location to removed is null"));
+    }
+
     public Set<StaticRouteDto> getStaticRouteDtos() {
         return staticRouteDtos;
+    }
+
+    public boolean removeStaticRouteDto(StaticRouteDto route) {
+        if (this.staticRouteDtos == null) {
+            return false;
+        }
+        return this.staticRouteDtos.remove(Objects.requireNonNull(route, "route to removed is null"));
     }
 
     public StaticRouteDto getStaticRouteDtoById(long id) {

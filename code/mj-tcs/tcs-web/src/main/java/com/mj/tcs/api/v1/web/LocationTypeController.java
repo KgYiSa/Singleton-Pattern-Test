@@ -129,7 +129,7 @@ public class LocationTypeController extends ServiceController {
 //        LocationType locationType = Objects.requireNonNull(getModellingService().getLocationType(locationTypeId),
 //                "locationType is null by id: " + locationTypeId);
 //
-//        if (locationType.getScene().getId() != sceneId) {
+//        if (locationType.getSceneDto().getId() != sceneId) {
 //            throw new ObjectAccessViolationException(sceneId, locationTypeId);
 //        }
 //    }

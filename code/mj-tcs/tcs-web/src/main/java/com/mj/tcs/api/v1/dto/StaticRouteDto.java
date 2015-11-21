@@ -22,10 +22,10 @@ import java.util.Objects;
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
-@Entity
-@Table(name = "tcs_model_static_route", uniqueConstraints =
-    @UniqueConstraint(columnNames = {"name", "scene"})
-)
+@Entity(name = "tcs_model_static_route")
+//@Table(name = "tcs_model_static_route", uniqueConstraints =
+//    @UniqueConstraint(columnNames = {"name", "scene"})
+//)
 public class StaticRouteDto extends BaseEntityDto {
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})

@@ -1,30 +1,20 @@
 package com.mj.tcs.api.v1.web;
 
-import com.mj.tcs.api.v1.dto.converter.DtoConverter;
-import com.mj.tcs.exception.ObjectAccessViolationException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.hateoas.EntityLinks;
-import org.springframework.hateoas.ExposesResourceFor;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Objects;
-
 /**
  * @author Wang Zhen
  */
-@RestController
-@ExposesResourceFor(LocationTypeController.class)
-@RequestMapping("/api/v1")
+//@RestController
+//@ExposesResourceFor(LocationTypeController.class)
+//@RequestMapping("/api/v1")
 public class LocationTypeController extends ServiceController {
-
-    @Autowired
-    @Qualifier(value = "LocationTypeDtoConverter")
-    private DtoConverter dtoConverter;
-
-    @Autowired
-    private EntityLinks entityLinks;
-
+//
+//    @Autowired
+//    @Qualifier(value = "LocationTypeDtoConverter")
+//    private DtoConverter dtoConverter;
+//
+//    @Autowired
+//    private EntityLinks entityLinks;
+//
 //    @RequestMapping(value = "/scenes/{sceneId}/location_types", method = RequestMethod.GET)
 //    public ResponseEntity<?> getAllLocationTypes(@PathVariable("sceneId") Long sceneId) {
 //        Collection<LocationType> locationTypeEntities = getModellingService().getAllLocationTypesFromScene(sceneId);

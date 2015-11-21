@@ -6,16 +6,12 @@
 
 package com.mj.tcs.api.v1.web;
 
-import org.springframework.hateoas.ExposesResourceFor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 /**
  * @author Wang Zhen
  */
-@RestController
-@ExposesResourceFor(LocationController.class)
-@RequestMapping("/api/v1")
+//@RestController
+//@ExposesResourceFor(LocationController.class)
+//@RequestMapping("/api/v1")
 public class LocationController extends ServiceController {
 
 //    @Autowired

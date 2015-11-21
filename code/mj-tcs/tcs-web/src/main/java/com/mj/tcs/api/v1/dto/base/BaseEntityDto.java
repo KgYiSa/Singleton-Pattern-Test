@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.springframework.hateoas.Identifiable;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -19,7 +18,7 @@ import java.util.Map;
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
 @MappedSuperclass
-public class BaseEntityDto implements Identifiable<Long>, Serializable, Cloneable {
+public class BaseEntityDto implements Serializable, Cloneable {
     /**
      * Each type in the same scene should be unique!!!
      * To accept same names in the same scene in that way (Not Recommended).

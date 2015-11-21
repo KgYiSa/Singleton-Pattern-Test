@@ -8,15 +8,14 @@ import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
 /**
  * @author Wang Zhen
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
-@Entity
-@Table(name = "tcs_order_transport_drive_order_destination")
+@Entity(name = "tcs_order_transport_drive_order_destination")
+//@Table(name = "tcs_order_transport_drive_order_destination")
 public class DestinationDto extends BaseEntityDto {
 
     @Column

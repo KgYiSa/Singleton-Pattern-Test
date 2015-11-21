@@ -23,10 +23,10 @@ import java.util.Objects;
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
-@Entity
-@Table(name = "tcs_model_path", uniqueConstraints =
-    @UniqueConstraint(columnNames = {"name", "scene"})
-)
+@Entity(name = "tcs_model_path")
+//@Table(name = "tcs_model_path", uniqueConstraints =
+//    @UniqueConstraint(columnNames = {"name", "scene"})
+//)
 public class PathDto extends BaseEntityDto {
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "scene", nullable = false)

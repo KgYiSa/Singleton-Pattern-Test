@@ -8,8 +8,8 @@ import org.springframework.boot.context.web.SpringBootServletInitializer;
 public class TcsWebServerApplication extends SpringBootServletInitializer {
 
     @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(TcsWebServerApplication.class);
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources(TcsWebServerApplication.class).headless(false);
     }
 
     public static void main(String[] args) {

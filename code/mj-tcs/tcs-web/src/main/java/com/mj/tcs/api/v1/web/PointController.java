@@ -1,39 +1,20 @@
 package com.mj.tcs.api.v1.web;
 
-import com.mj.tcs.api.v1.dto.PointDto;
-import com.mj.tcs.api.v1.dto.base.EntityAuditorDto;
-import com.mj.tcs.api.v1.dto.converter.DtoConverter;
-import com.mj.tcs.api.v1.dto.resource.PointDtoResourceAssembler;
-import com.mj.tcs.exception.ObjectAccessViolationException;
-import com.mj.tcs.exception.ObjectUnknownException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.hateoas.EntityLinks;
-import org.springframework.hateoas.Resources;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 /**
  * @author Wang Zhen
  */
-@RestController
+//@RestController
 //@ExposesResourceFor(PointController.class)
-@RequestMapping("/api/v1")
+//@RequestMapping("/api/v1")
 public class PointController extends ServiceController {
 
-    @Autowired
-    @Qualifier(value = "PointDtoConverter")
-    private DtoConverter dtoConverter;
-
-    @Autowired
-    private EntityLinks entityLinks;
-
+//    @Autowired
+//    @Qualifier(value = "PointDtoConverter")
+//    private DtoConverter dtoConverter;
+//
+//    @Autowired
+//    private EntityLinks entityLinks;
+//
 //    @RequestMapping(value = "/scenes/{sceneId}/points", method = RequestMethod.GET)
 //    public ResponseEntity<?> getAllPoints(@PathVariable("sceneId") Long sceneId) {
 //        Collection<Point> pointEntities = getModellingService().getAllPointsFromScene(sceneId);

@@ -7,15 +7,14 @@ import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Table;
 
 /**
  * @author Wang Zhen
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
-@Entity
-@Table(name = "tcs_model_triple")
+@Entity(name = "tcs_model_triple")
+//@Table(name = "tcs_model_triple")
 public class TripleDto extends BaseEntityDto {
     /**
      * The X coordinate.

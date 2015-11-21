@@ -20,8 +20,8 @@ import java.util.Set;
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
-@Entity
-@Table(name = "tcs_model_scene")
+@Entity(name = "tcs_model_scene")
+//@Table(name = "tcs_model_scene")
 public class SceneDto extends BaseEntityDto {
     @DtoField
     @Column(unique = true, nullable = false)

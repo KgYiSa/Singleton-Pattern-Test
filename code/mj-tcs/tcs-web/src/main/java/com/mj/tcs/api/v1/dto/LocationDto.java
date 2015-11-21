@@ -19,10 +19,10 @@ import java.util.*;
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
-@Entity
-@Table(name = "tcs_model_location", uniqueConstraints =
-    @UniqueConstraint(columnNames = {"name", "scene"})
-)
+@Entity(name = "tcs_model_location")
+//@Table(name = "tcs_model_location", uniqueConstraints =
+//    @UniqueConstraint(columnNames = {"name", "scene"})
+//)
 public class LocationDto extends BaseEntityDto {
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})

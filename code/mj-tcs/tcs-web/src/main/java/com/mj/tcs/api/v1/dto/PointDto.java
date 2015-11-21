@@ -16,10 +16,10 @@ import java.util.*;
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
-@Entity
-@Table(name = "tcs_model_point", uniqueConstraints =
-    @UniqueConstraint(columnNames = {"name", "scene"})
-)
+@Entity(name = "tcs_model_point")
+//@Table(name = "tcs_model_point", uniqueConstraints =
+//    @UniqueConstraint(columnNames = {"name", "scene"})
+//)
 public class PointDto extends BaseEntityDto {
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})

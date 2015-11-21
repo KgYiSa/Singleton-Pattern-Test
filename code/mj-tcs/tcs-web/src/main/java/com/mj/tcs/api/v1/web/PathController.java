@@ -1,41 +1,20 @@
 package com.mj.tcs.api.v1.web;
 
-import com.mj.tcs.api.v1.dto.PathDto;
-import com.mj.tcs.api.v1.dto.base.EntityAuditorDto;
-import com.mj.tcs.api.v1.dto.converter.DtoConverter;
-import com.mj.tcs.api.v1.dto.resource.PathDtoResourceAssembler;
-import com.mj.tcs.exception.ObjectAccessViolationException;
-import com.mj.tcs.exception.ObjectUnknownException;
-import com.mj.tcs.exception.TcsServerRuntimeException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.hateoas.EntityLinks;
-import org.springframework.hateoas.ExposesResourceFor;
-import org.springframework.hateoas.Resources;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 /**
  * @author Wang Zhen
  */
-@RestController
-@ExposesResourceFor(PathController.class)
-@RequestMapping("/api/v1")
+//@RestController
+//@ExposesResourceFor(PathController.class)
+//@RequestMapping("/api/v1")
 public class PathController extends ServiceController {
-
-    @Autowired
-    @Qualifier(value = "PathDtoConverter")
-    private DtoConverter dtoConverter;
-
-    @Autowired
-    private EntityLinks entityLinks;
-
+//
+//    @Autowired
+//    @Qualifier(value = "PathDtoConverter")
+//    private DtoConverter dtoConverter;
+//
+//    @Autowired
+//    private EntityLinks entityLinks;
+//
 //    @RequestMapping(value = "/scenes/{sceneId}/paths", method = RequestMethod.GET)
 //    public ResponseEntity<?> getAllPaths(@PathVariable("sceneId") Long sceneId) {
 //        Collection<Path> pathEntities = getModellingService().getAllPathsFromScene(sceneId);

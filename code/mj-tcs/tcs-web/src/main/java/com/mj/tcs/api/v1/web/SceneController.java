@@ -1,40 +1,22 @@
 package com.mj.tcs.api.v1.web;
 
-import com.mj.tcs.api.v1.dto.SceneDto;
-import com.mj.tcs.api.v1.dto.base.EntityAuditorDto;
-import com.mj.tcs.api.v1.dto.converter.DtoConverter;
-import com.mj.tcs.api.v1.dto.resource.SceneDtoResourceAssembler;
-import com.mj.tcs.exception.TcsServerRuntimeException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.hateoas.EntityLinks;
-import org.springframework.hateoas.ExposesResourceFor;
-import org.springframework.hateoas.Resources;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-
 /**
  * The class maintains the complete static topology of a scene model
  * i.e. Points, Paths, Blocks, Groups, Locations, LocationDto Types,  Static Routes, Vehicles etc.
  *
  * @author Wang Zhen
  */
-@RestController
-@ExposesResourceFor(SceneDto.class)
-@RequestMapping("/api/v1")
+//@RestController
+//@ExposesResourceFor(SceneDto.class)
+//@RequestMapping("/api/v1")
 public class SceneController extends ServiceController {
-    @Autowired
-    @Qualifier(value = "SceneDtoConverter")
-    private DtoConverter dtoConverter;// = new DtoConverterImp();
-
-    @Autowired
-    private EntityLinks entityLinks;
-
+//    @Autowired
+//    @Qualifier(value = "SceneDtoConverter")
+//    private DtoConverter dtoConverter;// = new DtoConverterImp();
+//
+//    @Autowired
+//    private EntityLinks entityLinks;
+//
 //    @RequestMapping(value = "/scenes", method = RequestMethod.GET)
 //    public ResponseEntity<?> getAllScenes() {
 //        Collection<Scene> sceneEntities = getModellingService().getAllScenes();

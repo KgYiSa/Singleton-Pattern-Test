@@ -22,8 +22,8 @@ import java.util.Objects;
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
-@Entity
-@Table(name = "tcs_order_transport_order")
+@Entity(name = "tcs_order_transport_order")
+//@Table(name = "tcs_order_transport_order")
 public class TransportOrderDto extends BaseEntityDto {
 
     @Column(name = "scene", nullable = false)

@@ -23,10 +23,10 @@ import java.util.Set;
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
-@Entity
-@Table(name = "tcs_model_location_link", uniqueConstraints =
-@UniqueConstraint(columnNames = {"name", "scene"})
-)
+@Entity(name = "tcs_model_location_link")
+//@Table(name = "tcs_model_location_link", uniqueConstraints =
+//@UniqueConstraint(columnNames = {"name", "scene"})
+//)
 public class LocationLinkDto extends BaseEntityDto {
 
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})

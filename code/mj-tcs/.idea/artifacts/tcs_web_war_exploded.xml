@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="tcs-web:war exploded">
-    <output-path>$PROJECT_DIR$/tcs-web/target/tcs-web-1.0</output-path>
+    <output-path>$PROJECT_DIR$/tcs-web/target/tcs-web</output-path>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
@@ -67,7 +67,6 @@
           <element id="library" level="project" name="Maven: org.springframework.data:spring-data-jpa:1.7.4.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework.data:spring-data-commons:1.9.4.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-aspects:4.1.8.RELEASE" />
-          <element id="library" level="project" name="Maven: org.hibernate.javax.persistence:hibernate-jpa-2.0-api:4.2.1.Final" />
           <element id="library" level="project" name="Maven: org.apache.directory.studio:org.apache.commons.collections:3.2.1" />
           <element id="library" level="project" name="Maven: commons-collections:commons-collections:3.2.1" />
           <element id="library" level="project" name="Maven: org.apache.commons:commons-lang3:3.4" />
@@ -96,7 +95,7 @@
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/tcs-web/target/tcs-web-1.0/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/tcs-web/target/tcs-web/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="tcs-web/web/Web" />
     </root>

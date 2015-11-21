@@ -12,7 +12,7 @@ import java.security.Principal;
  * @author Wang Zhen
  */
 @Controller
-@RequestMapping({"/api/v1", ""})
+@RequestMapping({"/api/v1"})
 public class IndexController {
 
     @RequestMapping(value = {"/"})

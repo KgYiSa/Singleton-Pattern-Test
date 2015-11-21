@@ -119,12 +119,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.hibernate.javax.persistence</groupId>
-            <artifactId>hibernate-jpa-2.0-api</artifactId>
+        <!--<dependency>-->
+            <!--<groupId>org.hibernate.javax.persistence</groupId>-->
+            <!--<artifactId>hibernate-jpa-2.0-api</artifactId>-->
             <!--<version>1.0.0.Final</version>-->
-            <version>4.2.1.Final</version>
-        </dependency>
+            <!--&lt;!&ndash;<version>4.2.1.Final</version>&ndash;&gt;-->
+        <!--</dependency>-->
         <!--<dependency>-->
             <!--<groupId>org.springframework.hateoas</groupId>-->
             <!--<artifactId>spring-hateoas</artifactId>-->
@@ -178,18 +178,29 @@
     </dependencies>
 
     <build>
+        <finalName>tcs-web</finalName>
         <plugins>
+            <!--JDK Versions & source code encoding-->
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <!--Resource encoding-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
             </plugin>
 
 
-            <!--<plugin>-->
-            <!--<groupId>org.apache.tomcat.maven</groupId>-->
-            <!--<artifactId>tomcat7-maven-plugin</artifactId>-->
-            <!--<version>2.2</version>-->
-            <!--</plugin>-->
         </plugins>
     </build>
 

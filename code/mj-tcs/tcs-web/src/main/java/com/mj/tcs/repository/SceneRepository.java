@@ -10,6 +10,6 @@ import org.springframework.data.repository.query.Param;
  */
 public interface SceneRepository extends CrudRepository<SceneDto, Long> {
 
-    @Query(value = "select s from SceneDto s where s.name = :sceneName")
-    SceneDto findOneByName(@Param("sceneName") String sceneName);
+//    @Query(value = "select s from SceneDto s where s.name = :sceneName")
+//    SceneDto findOneByName(@Param("sceneName") String sceneName);
 }

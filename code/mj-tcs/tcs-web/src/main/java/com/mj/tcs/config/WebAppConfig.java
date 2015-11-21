@@ -54,6 +54,11 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
         return interceptor;
     }
 
+    @Bean
+    public TcsServletContextListener getTcsServletContextListener() {
+        return new TcsServletContextListener();
+    }
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/css/**").addResourceLocations("/css/");

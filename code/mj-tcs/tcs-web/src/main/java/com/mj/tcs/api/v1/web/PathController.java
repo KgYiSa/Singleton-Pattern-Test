@@ -5,7 +5,7 @@ package com.mj.tcs.api.v1.web;
  */
 //@RestController
 //@ExposesResourceFor(PathController.class)
-//@RequestMapping("/api/v1")
+//@RequestMapping({"/api/v1", ""})
 public class PathController extends ServiceController {
 //
 //    @Autowired

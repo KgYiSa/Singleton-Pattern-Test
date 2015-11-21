@@ -5,7 +5,7 @@ package com.mj.tcs.api.v1.web;
  */
 //@RestController
 //@ExposesResourceFor(PointController.class)
-//@RequestMapping("/api/v1")
+//@RequestMapping({"/api/v1", ""})
 public class PointController extends ServiceController {
 
 //    @Autowired

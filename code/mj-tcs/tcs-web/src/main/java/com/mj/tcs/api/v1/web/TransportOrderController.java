@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 //@RestController
 //@ExposesResourceFor(TransportOrderController.class)
-//@RequestMapping("/api/v1")
+//@RequestMapping({"/api/v1", ""})
 public class TransportOrderController extends ServiceController {
 //
 //    @Autowired

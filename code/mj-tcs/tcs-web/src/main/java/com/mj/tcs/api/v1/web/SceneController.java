@@ -8,7 +8,7 @@ package com.mj.tcs.api.v1.web;
  */
 //@RestController
 //@ExposesResourceFor(SceneDto.class)
-//@RequestMapping("/api/v1")
+//@RequestMapping({"/api/v1", ""})
 public class SceneController extends ServiceController {
 //    @Autowired
 //    @Qualifier(value = "SceneDtoConverter")

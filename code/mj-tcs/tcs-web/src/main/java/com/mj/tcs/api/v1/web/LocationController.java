@@ -11,7 +11,7 @@ package com.mj.tcs.api.v1.web;
  */
 //@RestController
 //@ExposesResourceFor(LocationController.class)
-//@RequestMapping("/api/v1")
+//@RequestMapping({"/api/v1", ""})
 public class LocationController extends ServiceController {
 
 //    @Autowired

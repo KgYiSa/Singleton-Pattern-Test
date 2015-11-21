@@ -26,7 +26,9 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
     public static PropertySourcesPlaceholderConfigurer properties()
     {
         PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
-        Resource[] resources = new ClassPathResource[]{new ClassPathResource("application.properties")};
+        Resource[] resources = new ClassPathResource[] {
+                new ClassPathResource("application.properties")
+        };
         configurer.setLocations(resources);
         configurer.setIgnoreUnresolvablePlaceholders(true);
         return configurer;

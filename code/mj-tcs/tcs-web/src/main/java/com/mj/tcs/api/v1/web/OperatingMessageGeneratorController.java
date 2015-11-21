@@ -11,6 +11,7 @@ import java.util.Map;
  * @author Wang Zhen
  */
 @Controller
+//@RequestMapping({"/api/v1", ""})
 public class OperatingMessageGeneratorController extends ServiceController {
 
     @RequestMapping("/hello")

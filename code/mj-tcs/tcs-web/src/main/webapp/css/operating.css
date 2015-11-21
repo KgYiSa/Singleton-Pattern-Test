@@ -35,6 +35,7 @@
 	left: 0px;
 	bottom: 0px;
 	border:1px solid #000;
+	display: none;
 }
 
 .left-container .top-panel .top-panel-operation {

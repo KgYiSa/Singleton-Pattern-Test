@@ -14,7 +14,7 @@ import java.util.Map;
 //@RequestMapping({"/api/v1", ""})
 public class OperatingMessageGeneratorController extends ServiceController {
 
-    @RequestMapping("/hello")
+//    @RequestMapping("/hello")
     @MessageMapping("/hello")
     public String test(Map<String, String> message) throws Exception {
         System.out.println(message);
@@ -22,7 +22,7 @@ public class OperatingMessageGeneratorController extends ServiceController {
     }
 
 
-    @RequestMapping("/model")
+//    @RequestMapping("/model")
     @MessageMapping("/tcs_model")
     @SendTo("/topic/upload_model_result")
     public void receiveModel(Map<String, String> message) throws Exception {

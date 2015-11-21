@@ -34,24 +34,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+    	System.out.println("auth........");
         http.authorizeRequests()
-            .antMatchers("/hello", "/public/**").permitAll()
-            .antMatchers("/users/**").hasAuthority("ADMIN")
-            .anyRequest().fullyAuthenticated()
-            .and()
-            .formLogin()
-            .loginPage("/login")
-            .failureUrl("/login?error")
-            .usernameParameter("email")
-            .permitAll()
-            .and()
-            .logout()
-            .logoutUrl("/logout")
-            .deleteCookies("remember-me")
-            .logoutSuccessUrl("/")
-            .permitAll()
-            .and()
-            .rememberMe();
+            .antMatchers("/**", "/public/**").permitAll();
+//            .antMatchers("/users/**").hasAuthority("ADMIN")
+//            .anyRequest().fullyAuthenticated()
+//            .and()
+//            .formLogin()
+//            .loginPage("/login")
+//            .failureUrl("/login?error")
+//            .usernameParameter("email")
+//            .permitAll()
+//            .and()
+//            .logout()
+//            .logoutUrl("/logout")
+//            .deleteCookies("remember-me")
+//            .logoutSuccessUrl("/")
+//            .permitAll()
+//            .and()
+//            .rememberMe();
 
 //        // 设置拦截规则
 //        // 自定义accessDecisionManager访问控制器,并开启表达式语言

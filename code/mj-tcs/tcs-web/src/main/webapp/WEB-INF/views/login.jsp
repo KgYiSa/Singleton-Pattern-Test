@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ include file="/WEB-INF/view/include/taglib.jsp"%>
+<%@ include file="include/taglib.jsp"%>
 <html>
 <head>
     <meta charset="utf-8">

@@ -5,6 +5,8 @@ $(function(){
 	});
 	// 初始化
 	initSize();
+
+	ruler.constructRulers({container: document.querySelector('.tcs-ruler')});
 })
 
 

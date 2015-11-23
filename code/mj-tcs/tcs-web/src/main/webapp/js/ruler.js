@@ -8,7 +8,7 @@ var ruler = (function (){
     var options,
         rulerz = {},
         guides = [],
-        theRulerDOM = document.createElement('div'),
+        theRulerDOM,
         defaultOptions = {
             rulerHeight: 20,
             fontFamily: 'arial',
@@ -136,8 +136,8 @@ var ruler = (function (){
 
     })();
 
-    var constructRulers = function(curOptions){
-        theRulerDOM = editorUtils.addClasss(theRulerDOM, 'rul_wrapper');
+    var constructRulers = function(rulerDOM, curOptions){
+        theRulerDOM = editorUtils.addClasss(rulerDOM, 'rul_wrapper');
         options = editorUtils.extend(defaultOptions, curOptions);
         theRulerDOM = options.container.appendChild(theRulerDOM);
         options.sides.forEach(function(side){
@@ -150,8 +150,23 @@ var ruler = (function (){
             })
         })
 
-
+        return theRulerDOM;
     };
+
+    //var constructRulers = function(curOptions){
+    //    theRulerDOM = editorUtils.addClasss(theRulerDOM, 'rul_wrapper');
+    //    options = editorUtils.extend(defaultOptions, curOptions);
+    //    theRulerDOM = options.container.appendChild(theRulerDOM);
+    //    options.sides.forEach(function(side){
+    //        constructRuler(theRulerDOM, side);
+    //    });
+    //    constructCorner(theRulerDOM, options.cornerSides);
+    //    options.container.addEventListener('mouseup', function (e){
+    //        guides.forEach(function (guide){
+    //            guide.line.stopDrag();
+    //        })
+    //    })
+    //};
 
     var forEachRuler = function (cb){
         var index = 0;

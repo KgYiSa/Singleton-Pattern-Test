@@ -5,10 +5,6 @@
  */
 package com.mj.tcs.data.base;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
 /**
  * A generic 3-tuple of long integer values, usable for 3D coordinates and
  * vectors.
@@ -16,24 +12,19 @@ import javax.persistence.Table;
  * @author liumin
  * @author Wang Zhen
  */
-@Entity
-@Table(name = "tcs_model_triple")
 public class Triple extends BaseEntity implements Cloneable {
 
     /**
      * The X coordinate.
      */
-    @Column(nullable = false)
     private long x;
     /**
      * The Y coordinate.
      */
-    @Column(nullable = false)
     private long y;
     /**
      * The Z coordinate.
      */
-    @Column(nullable = false)
     private long z;
 
     /**

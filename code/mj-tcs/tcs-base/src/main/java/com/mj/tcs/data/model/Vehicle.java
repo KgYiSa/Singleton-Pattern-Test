@@ -7,7 +7,6 @@ import com.mj.tcs.data.order.TransportOrder;
 import com.mj.tcs.drivers.CommunicationAdapter;
 import com.mj.tcs.drivers.LoadHandlingDevice;
 
-import javax.persistence.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -16,81 +15,61 @@ import java.util.Optional;
 /**
  * @author Wang Zhen
  */
-@Entity
-@Table(name = "tcs_model_vehicle", uniqueConstraints =
-    @UniqueConstraint(columnNames = {"name", "scene"})
-)
 public class Vehicle extends BaseEntity implements Cloneable {
 
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "scene", nullable = false)
     private Scene scene;
 
     /**
      * A value indicating that no route steps have been travelled for the current
      * drive order, yet.
      */
-    @Transient
     public final int ROUTE_INDEX_DEFAULT = -1;
     /**
      * The key for a property to store the class name of the preferred
      * communication adapter (factory) for this vehicle.
      */
-    @Transient
     public final String PREFERRED_ADAPTER = "tcs:preferredAdapterClass";
     /**
      * This vehicle's current length (in mm).
      */
-    @Column(name = "length")
     private int length = 1000;
     /**
      * This vehicle's remaining energy (in percent of the maximum).
      */
-    @Column(name = "energy_level")
     private int energyLevel = 100;
     /**
      * The energy level value at/below which the vehicle should be recharged.
      */
-    @Column(name = "energy_level_critical")
     private int energyLevelCritical = 30;
     /**
      * The energy level value at/above which the vehicle can be dispatched again
      * when charging.
      */
-    @Column(name = "energy_level_good")
     private int energyLevelGood = 90;
     /**
      * The operation the vehicle's current communication adapter accepts as a
      * command to recharge the vehicle.
      */
-    @Column(name = "recharge_operation")
     private String rechargeOperation = "CHARGE";
     /**
      * The current (state of the) load handling devices of this vehicle.
      */
-    @ElementCollection
-    @CollectionTable(name = "tcs_model_rel_vehicle_loading_devices")
     private List<LoadHandlingDevice> loadHandlingDevices;
     /**
      * This vehicle's maximum velocity (in mm/s).
      */
-    @Column(name = "max_velocity")
     private int maxVelocity = 1000;
     /**
      * This vehicle's maximum reverse velocity (in mm/s).
      */
-    @Column(name = "max_reverse_velocity")
     private int maxReverseVelocity = 1000;
     /**
      * This vehicle's current state.
      */
-//    @Column(length = 20, columnDefinition = "VARCHAR(15)")
-    @Enumerated(value = EnumType.STRING)
     private State state = State.UNKNOWN;
     /**
      * This vehicle's current processing state.
      */
-    @Enumerated(value = EnumType.STRING)
     private ProcState procState = ProcState.UNAVAILABLE;
     /**
      * The current state of the communication adapter controlling the physical
@@ -110,36 +89,30 @@ public class Vehicle extends BaseEntity implements Cloneable {
      * The index of the last route step travelled for the current drive order of
      * the current transport order.
      */
-    @Column(name = "route_progress_index")
     private int routeProgressIndex = ROUTE_INDEX_DEFAULT;
     /**
      * A reference to the point which this vehicle currently occupies.
      */
-    @OneToOne
     private Point currentPosition;
     /**
      * Accumulated distance from currentPosition to nextPosition
      */
-    @Column(name = "accumulated_distance")
     private int accumulatedDistance;
     /**
      * A reference to the point which this vehicle is expected to be seen at next.
      */
-    @OneToOne
     private Point nextPosition;
     /**
      * The vehicle's precise position in world coordinates [mm], independent from
      * logical positions/point names.
      * Set to <code>null</code> if the vehicle hasn't provided a precise position.
      */
-    @OneToOne
     private Triple precisePosition;
     /**
      * The vehicle's current orientation angle (-360..360�).
      * Set to <code>Double.NaN</code> if the vehicle hasn't provided an
      * orientation angle.
      */
-    @Column(name = "orientation_angle")
     private double orientationAngle = 0.0d;
 
     /**
@@ -155,13 +128,11 @@ public class Vehicle extends BaseEntity implements Cloneable {
         setId(null);
     }
 
-    @Column(unique = true, nullable = false)
     @Override
     public String getName() {
         return this.name;
     }
 
-    @Column(unique = true, nullable = false)
     @Override
     public void setName(String inName) {
         this.name = Objects.requireNonNull(inName, "name is null");

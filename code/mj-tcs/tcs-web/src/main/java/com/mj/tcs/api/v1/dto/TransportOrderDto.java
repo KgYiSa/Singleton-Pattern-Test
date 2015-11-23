@@ -11,60 +11,68 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
-import com.mj.tcs.api.v1.dto.base.BaseEntityAuditDto;
-import com.mj.tcs.util.UniqueTimestampGenerator;
+import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
+
+import javax.persistence.*;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Wang Zhen
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
-public class TransportOrderDto extends BaseEntityAuditDto {
-    /**
-     * The timestamp generator for order creation times.
-     */
-    private static final UniqueTimestampGenerator timestampGenerator =
-            new UniqueTimestampGenerator();
+@Entity(name = "tcs_order_transport_order")
+//@Table(name = "tcs_order_transport_order")
+public class TransportOrderDto extends BaseEntityDto {
+
+    @Column(name = "scene", nullable = false)
+    private SceneDto sceneDto;
 
     @DtoField
+    @Column
     private String name;
 
-    @JsonProperty(value = "destination")
+    @JsonProperty(value = "destinations")
     @DtoField(value = "destination",
             dtoBeanKey = "DestinationDto",
             entityBeanKeys = "Destination")
-    private DestinationDto destinationDto;
-    /**
-     * The point of time at which this TransportOrder was created.
-     */
-    private long creationTime;
+    @OneToMany
+    private List<DestinationDto> destinations;
+
     /**
      * The point of time at which this TransportOrder must have been finished.
      */
+    @Column
     private long deadline = Long.MAX_VALUE;
+
     /**
      * The point of time at which this transport order was finished.
      */
+    @Column
     private long finishedTime = Long.MIN_VALUE;
+
     /**
      * A reference to the vehicle that is intended to process this transport
      * order. If this order is free to be processed by any vehicle, this is
      * <code>null</code>.
      */
-    @JsonProperty(value = "intended_vehicle_id")
-    private long intendedVehicleId;
-
-    /**
-     * Whether this order is dispensable (may be withdrawn automatically).
-     */
-    private boolean dispensable;
-
+    @JsonProperty(value = "intended_vehicle")
+    @Column
+    private long intendedVehicle;
 
     /**
      * Creates a new TransportOrder.
      */
     public TransportOrderDto() {
-        creationTime = timestampGenerator.getNextTimestamp();
+    }
+
+    public SceneDto getSceneDto() {
+        return sceneDto;
+    }
+
+    public void setSceneDto(SceneDto sceneDto) {
+        this.sceneDto = sceneDto;
     }
 
     public String getName() {
@@ -75,25 +83,12 @@ public class TransportOrderDto extends BaseEntityAuditDto {
         this.name = inName;
     }
 
-    public DestinationDto getDestinationDto() {
-        return destinationDto;
+    public List<DestinationDto> getDestinations() {
+        return destinations;
     }
 
-    public void setDestinationDto(DestinationDto destinationDto) {
-        this.destinationDto = destinationDto;
-    }
-
-    /**
-     * Returns this transport order's creation time.
-     *
-     * @return This transport order's creation time.
-     */
-    public long getCreationTime() {
-        return creationTime;
-    }
-
-    public void setCreationTime(long creationTime) {
-        this.creationTime = creationTime;
+    public void setDestinations(List<DestinationDto> destinations) {
+        this.destinations = Objects.requireNonNull(destinations, "destinations");
     }
 
     /**
@@ -138,36 +133,19 @@ public class TransportOrderDto extends BaseEntityAuditDto {
      * transport order. If this order is free to be processed by any vehicle,
      * <code>null</code> is returned.
      */
-    public long getIntendedVehicleId() {
-        return intendedVehicleId;
+    public long getIntendedVehicle() {
+        return intendedVehicle;
     }
 
     /**
      * Sets a reference to the vehicle that is intended to process this transport
      * order.
      *
-     * @param vehicleId The ID to the vehicle intended to process this order,
+     * @param vehicle The ID to the vehicle intended to process this order,
      *                  If the value <= 0, then use auto-selection.
      */
-    public void setIntendedVehicleId(long vehicleId) {
-        intendedVehicleId = vehicleId;
+    public void setIntendedVehicle(long vehicle) {
+        intendedVehicle = vehicle;
     }
 
-    /**
-     * Checks if this order is dispensable.
-     *
-     * @return <code>true</code> if, and only if, this order is dispensable.
-     */
-    public boolean isDispensable() {
-        return dispensable;
-    }
-
-    /**
-     * Sets this order's <em>dispensable</em> flag.
-     *
-     * @param dispensable This order's new <em>dispensable</em> flag.
-     */
-    public void setDispensable(boolean dispensable) {
-        this.dispensable = dispensable;
-    }
 }

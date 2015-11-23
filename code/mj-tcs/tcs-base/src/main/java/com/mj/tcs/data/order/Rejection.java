@@ -11,8 +11,6 @@ package com.mj.tcs.data.order;
 import com.mj.tcs.data.base.IdentifiableEntity;
 import com.mj.tcs.data.model.Vehicle;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
@@ -21,8 +19,6 @@ import java.io.Serializable;
  *
  * @author Stefan Walter (Fraunhofer IML)
  */
-@Entity
-@Table(name = "tcs_order_transport_rejection")
 public class Rejection extends IdentifiableEntity implements Serializable {
 
     /**

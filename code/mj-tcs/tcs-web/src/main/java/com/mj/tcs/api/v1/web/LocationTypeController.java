@@ -1,42 +1,20 @@
 package com.mj.tcs.api.v1.web;
 
-import com.mj.tcs.api.v1.dto.LocationTypeDto;
-import com.mj.tcs.api.v1.dto.base.BaseEntityAuditDto;
-import com.mj.tcs.api.v1.dto.converter.DtoConverter;
-import com.mj.tcs.api.v1.dto.resource.LocationTypeDtoResourceAssembler;
-import com.mj.tcs.exception.ObjectAccessViolationException;
-import com.mj.tcs.exception.ObjectUnknownException;
-import com.mj.tcs.data.model.LocationType;
-import com.mj.tcs.data.model.Scene;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.hateoas.EntityLinks;
-import org.springframework.hateoas.ExposesResourceFor;
-import org.springframework.hateoas.Resources;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
 /**
  * @author Wang Zhen
  */
-@RestController
-@ExposesResourceFor(LocationTypeController.class)
-@RequestMapping("/api/v1")
+//@RestController
+//@ExposesResourceFor(LocationTypeController.class)
+//@RequestMapping({"/api/v1", ""})
 public class LocationTypeController extends ServiceController {
-
-    @Autowired
-    @Qualifier(value = "LocationTypeDtoConverter")
-    private DtoConverter dtoConverter;
-
-    @Autowired
-    private EntityLinks entityLinks;
-
+//
+//    @Autowired
+//    @Qualifier(value = "LocationTypeDtoConverter")
+//    private DtoConverter dtoConverter;
+//
+//    @Autowired
+//    private EntityLinks entityLinks;
+//
 //    @RequestMapping(value = "/scenes/{sceneId}/location_types", method = RequestMethod.GET)
 //    public ResponseEntity<?> getAllLocationTypes(@PathVariable("sceneId") Long sceneId) {
 //        Collection<LocationType> locationTypeEntities = getModellingService().getAllLocationTypesFromScene(sceneId);
@@ -57,11 +35,11 @@ public class LocationTypeController extends ServiceController {
 //    @RequestMapping(value = "/scenes/{sceneId}/location_types", method = RequestMethod.POST)
 //    public ResponseEntity<?> createLocationType(@PathVariable("sceneId") Long sceneId,
 //                                         @RequestBody LocationTypeDto locationTypeDto) throws ObjectUnknownException{
-//        Scene scene = Objects.requireNonNull(getModellingService().getScene(sceneId),
+//        Scene scene = Objects.requireNonNull(getModellingService().getSceneDto(sceneId),
 //            "scene is null by the sceneId: " + sceneId);
 //
 //        LocationType newLocationType = (LocationType) dtoConverter.convertToEntity(locationTypeDto);
-//        newLocationType.setScene(scene);
+//        newLocationType.setSceneDto(scene);
 //
 //        newLocationType.setId(null);
 //
@@ -111,7 +89,7 @@ public class LocationTypeController extends ServiceController {
 //    @RequestMapping(value = "/scenes/{sceneId}/location_types/{locationTypeId}", method = RequestMethod.PATCH)
 //    public ResponseEntity<?> updateLocationTypePartial(@PathVariable("sceneId") Long sceneId,
 //                                                @PathVariable("locationTypeId") Long locationTypeId,
-//                                                BaseEntityAuditDto baseEntityAuditDto) {
+//                                                EntityAuditorDto baseEntityAuditDto) {
 //        checkAccessViolation(sceneId, locationTypeId);
 //
 //        LocationType locationType = getModellingService().getLocationType(locationTypeId);
@@ -136,13 +114,13 @@ public class LocationTypeController extends ServiceController {
 //        }
 //        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 //    }
-
-    private void checkAccessViolation(Long sceneId, Long locationTypeId) {
-        LocationType locationType = Objects.requireNonNull(getModellingService().getLocationType(locationTypeId),
-                "locationType is null by id: " + locationTypeId);
-
-        if (locationType.getScene().getId() != sceneId) {
-            throw new ObjectAccessViolationException(sceneId, locationTypeId);
-        }
-    }
+//
+//    private void checkAccessViolation(Long sceneId, Long locationTypeId) {
+//        LocationType locationType = Objects.requireNonNull(getModellingService().getLocationType(locationTypeId),
+//                "locationType is null by id: " + locationTypeId);
+//
+//        if (locationType.getSceneDto().getId() != sceneId) {
+//            throw new ObjectAccessViolationException(sceneId, locationTypeId);
+//        }
+//    }
 }

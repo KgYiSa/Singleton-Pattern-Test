@@ -10,34 +10,77 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
-import com.mj.tcs.api.v1.dto.base.BaseEntityAuditDto;
+import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
+import com.mj.tcs.api.v1.dto.base.TripleDto;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Wang Zhen
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
-public class PathDto extends BaseEntityAuditDto {
+@Entity(name = "tcs_model_path")
+//@Table(name = "tcs_model_path", uniqueConstraints =
+//    @UniqueConstraint(columnNames = {"name", "scene"})
+//)
+public class PathDto extends BaseEntityDto {
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "scene", nullable = false)
+    private SceneDto sceneDto;
+
     @DtoField
+    @Column
     private String name;
 
-    private long sourcePointId;
-    private long destinationPointId;
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private PointDto sourcePointDto;
+
+    @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private PointDto destinationPointDto;
+
+
+    @ElementCollection
+    @CollectionTable(name = "tcs_model_rel_path_control_points")
+    private List<TripleDto> controlPoints = new ArrayList<>();
 
     @DtoField
-    private long length;
+    @Column
+    private long length = 1L;
 
     @DtoField
-    private long routingCost;
+    @Column
+    private long routingCost = 1L;
 
     @DtoField
+    @Column
     private int maxVelocity;
 
     @DtoField
+    @Column
     private int maxReverseVelocity;
 
     @DtoField
+    @Column
     private boolean locked;
+
+    public PathDto() {}
+
+    public PathDto(PointDto srcPoint, PointDto destPoint) {
+        sourcePointDto = Objects.requireNonNull(srcPoint, "srcPointDto");;
+        destinationPointDto = Objects.requireNonNull(destPoint, "destPointDto");
+    }
+
+    public SceneDto getSceneDto() {
+        return sceneDto;
+    }
+
+    public void setSceneDto(SceneDto sceneDto) {
+        this.sceneDto = sceneDto;
+    }
 
     public String getName() {
         return name;
@@ -47,20 +90,20 @@ public class PathDto extends BaseEntityAuditDto {
         this.name = name;
     }
 
-    public long getSourcePointId() {
-        return sourcePointId;
+    public PointDto getSourcePointDto() {
+        return sourcePointDto;
     }
 
-    public void setSourcePointId(long sourcePointId) {
-        this.sourcePointId = sourcePointId;
+    public void setSourcePointDto(PointDto sourcePointDto) {
+        this.sourcePointDto = sourcePointDto;
     }
 
-    public long getDestinationPointId() {
-        return destinationPointId;
+    public PointDto getDestinationPointDto() {
+        return destinationPointDto;
     }
 
-    public void setDestinationPointId(Long destinationPointId) {
-        this.destinationPointId = destinationPointId;
+    public void setDestinationPointDto(PointDto destinationPointDto) {
+        this.destinationPointDto = destinationPointDto;
     }
 
     public long getLength() {

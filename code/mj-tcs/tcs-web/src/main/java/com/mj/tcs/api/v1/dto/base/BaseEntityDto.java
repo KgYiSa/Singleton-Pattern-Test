@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.springframework.hateoas.Identifiable;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +17,8 @@ import java.util.Map;
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
-public class BaseEntityDto implements Identifiable<Long>, Serializable {
+@MappedSuperclass
+public class BaseEntityDto implements Serializable, Cloneable {
     /**
      * Each type in the same scene should be unique!!!
      * To accept same names in the same scene in that way (Not Recommended).
@@ -25,17 +26,25 @@ public class BaseEntityDto implements Identifiable<Long>, Serializable {
      * It is not the same as the one in database, it is just used to identify the component from the others.
      */
     @DtoField
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Basic(optional = false)
+    @Column(name = "id", nullable = false, columnDefinition = "BIGINT UNSIGNED")
     private Long id;
+
     @DtoField
+    @Column(name = "version", nullable = false)
+    @Version
     private Long version;
+
+    @Embedded
+    private EntityAuditorDto auditorDto = null;
+
+    @Transient // TODO:
     private Map<String, Object> properties = new HashMap<>();
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getVersion() {
@@ -44,6 +53,14 @@ public class BaseEntityDto implements Identifiable<Long>, Serializable {
 
     public void setVersion(Long version) {
         this.version = version;
+    }
+
+    public EntityAuditorDto getAuditorDto() {
+        return auditorDto;
+    }
+
+    public void setAuditorDto(EntityAuditorDto auditorDto) {
+        this.auditorDto = auditorDto;
     }
 
     /**

@@ -41,4 +41,9 @@ public class IndexController {
     public String operate(HttpServletRequest req, Principal principal, Model model) {
     	return "operating";
     }
+    
+    @RequestMapping(value = "/modelling")
+    public String model(HttpServletRequest req, Principal principal, Model model) {
+    	return "modelling";
+    }
 }

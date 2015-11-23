@@ -2,7 +2,6 @@ package com.mj.tcs.data.model;
 
 import com.mj.tcs.data.base.BaseEntity;
 
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
@@ -11,29 +10,20 @@ import java.util.Set;
 /**
  * @author Wang Zhen
  */
-@Entity
-@Table(name = "tcs_model_scene")
 public class Scene extends BaseEntity implements Cloneable {
 
-    @OneToMany(mappedBy = "scene", cascade = {CascadeType.ALL})
     private Set<Point> points = new HashSet<>();
 
-    @OneToMany(mappedBy = "scene", cascade = {CascadeType.ALL})
     private Set<Path> paths = new HashSet<>();
 
-    @OneToMany(mappedBy = "scene", cascade = {CascadeType.ALL})
     private Set<Location> locations = new HashSet<>();
 
-    @OneToMany(mappedBy = "scene", cascade = {CascadeType.ALL})
     private Set<LocationType> locationTypes = new HashSet<>();
 
-    @OneToMany(mappedBy = "scene", cascade = {CascadeType.ALL})
     private Set<StaticRoute> staticRoutes = new HashSet<>();
 
-    @OneToMany(mappedBy = "scene", cascade = {CascadeType.ALL})
     private Set<Block> blocks = new HashSet<>();
 
-    @OneToMany(mappedBy = "scene", cascade = {CascadeType.ALL})
     private Set<Vehicle> vehicles = new HashSet<>();
 
     public Scene() {
@@ -76,13 +66,11 @@ public class Scene extends BaseEntity implements Cloneable {
         }
     }
 
-    @Column(unique = true, nullable = false)
     @Override
     public String getName() {
         return this.name;
     }
 
-    @Column(unique = true, nullable = false)
     @Override
     public void setName(String inName) {
         this.name = Objects.requireNonNull(inName, "name is null");

@@ -69,7 +69,7 @@ public class TransportOrderDtoConverter extends DummyDtoConverter {
                 .assembleDto(dto, specificEntity, transportOrderConverters, beanFactory);
 
         if (specificEntity.getIntendedVehicle() != null) {
-            dto.setIntendedVehicleId(specificEntity.getIntendedVehicle().getId());
+            dto.setIntendedVehicle(specificEntity.getIntendedVehicle().getId());
         }
         return dto;
     }

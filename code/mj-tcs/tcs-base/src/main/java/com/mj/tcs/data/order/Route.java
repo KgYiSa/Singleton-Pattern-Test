@@ -13,10 +13,6 @@ import com.mj.tcs.data.model.Path;
 import com.mj.tcs.data.model.Point;
 import com.mj.tcs.data.model.Vehicle;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,16 +25,12 @@ import java.util.Objects;
  *
  * @author Stefan Walter (Fraunhofer IML)
  */
-@Entity
-@Table(name = "tcs_order_transport_drive_order_route")
 public final class Route extends IdentifiableEntity implements Serializable {
 
     /**
      * The sequence of steps this route consists of, in the order they are to be
      * processed.
      */
-    @ElementCollection
-    @CollectionTable(name = "tcs_order_rel_route_step")
     private final List<Step> steps;
     /**
      * The costs for travelling this route.
@@ -103,8 +95,6 @@ public final class Route extends IdentifiableEntity implements Serializable {
      * A single step in a route, consisting of a path to travel and a point that
      * is reached by travelling the path.
      */
-    @Entity
-    @Table(name = "tcs_order_transport_drive_order_route_step")
     public static final class Step extends IdentifiableEntity implements Serializable {
 
         /**

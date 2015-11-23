@@ -7,34 +7,25 @@ package com.mj.tcs.data.base;
 
 import com.mj.tcs.util.UniqueTimestampGenerator;
 
-import javax.persistence.*;
 import java.util.Date;
 
 /**
  *
  * @author Wang Zhen
  */
-@Embeddable
 public class EntityAuditor implements Cloneable {
     /**
      * The timestamp generator for order creation times.
      */
-    @Transient
     private static final UniqueTimestampGenerator timestampGenerator =
             new UniqueTimestampGenerator();
 
-    @Column(name = "created_at")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
-    @Column(name = "created_by", length = 20)
     private String createdBy;
 
-    @Column(name = "updated_at")
-    @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
-    @Column(name = "updated_by", length = 20)
     private String updatedBy;
 
     public EntityAuditor() {}
@@ -74,7 +65,6 @@ public class EntityAuditor implements Cloneable {
     /**
      * Sets createdAt before insert
      */
-    @PrePersist
     public void setCreationDate() {
         this.createdAt = timestampGenerator.getNextDateTime();
     }
@@ -82,7 +72,6 @@ public class EntityAuditor implements Cloneable {
     /**
      * Sets updatedAt before update
      */
-    @PreUpdate
     public void setChangeDate() {
         this.updatedAt = timestampGenerator.getNextDateTime();
     }

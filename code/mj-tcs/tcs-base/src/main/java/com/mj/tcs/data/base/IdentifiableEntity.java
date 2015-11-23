@@ -6,20 +6,14 @@
 
 package com.mj.tcs.data.base;
 
-import javax.persistence.*;
 import java.io.Serializable;
 
 /**
  * @author Wang Zhen
  */
-@MappedSuperclass
 public abstract class IdentifiableEntity implements Serializable, Cloneable {
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)
-    @Column(name = "id", nullable = false, columnDefinition = "BIGINT UNSIGNED")
     protected Long id = null;
 
     public Long getId() {

@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 
@@ -18,42 +19,40 @@ import org.springframework.security.config.annotation.web.servlet.configuration.
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private Logger logger = Logger.getLogger(WebSecurityConfig.class);
 
-
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.inMemoryAuthentication().withUser("user").password("user").roles("USER");
-        auth.inMemoryAuthentication().withUser("admin").password("admin").roles("ADMIN");
-//        auth.inMemoryAuthentication().withUser("mj").password("mj").roles("SUPERADMIN");
+        auth.inMemoryAuthentication().withUser("admin").password("admin").roles("ADMIN", "USER");
+        auth.inMemoryAuthentication().withUser("mj").password("mj").roles("SUPERADMIN", "ADMIN", "USER");
     }
 
-//    @Override
-//    public void configure(WebSecurity web) throws Exception {
-//        // 设置不拦截规则
-//        web.ignoring().antMatchers("/static/**", "/**/*.jsp");
-//    }
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        // 设置不拦截规则
+        web.ignoring()
+       .antMatchers("/static/**", "/**/*.jsp");
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-    	System.out.println("auth........");
         http.authorizeRequests()
-            .antMatchers("/**", "/public/**").permitAll();
+            .antMatchers("/**", "/public/**").permitAll(); // TODO: COMMENT or REMOVE
+//            .antMatchers("/login", "/public/**").permitAll()
+//            .antMatchers("/**").hasRole("SUPERADMIN")
+//            .antMatchers("/api/v1/**").hasRole("ADMIN")
 //            .antMatchers("/users/**").hasAuthority("ADMIN")
 //            .anyRequest().fullyAuthenticated()
 //            .and()
-//            .formLogin()
-//            .loginPage("/login")
-//            .failureUrl("/login?error")
-//            .usernameParameter("email")
-//            .permitAll()
-//            .and()
-//            .logout()
-//            .logoutUrl("/logout")
-//            .deleteCookies("remember-me")
-//            .logoutSuccessUrl("/")
-//            .permitAll()
-//            .and()
-//            .rememberMe();
-
+//                .formLogin()
+//                .loginPage("/tcs-web/login")
+//                .failureUrl("/tcs-web/login?error")
+//                .permitAll()
+//                .and()
+//                .logout()
+//                .deleteCookies("remember-me")
+//                .and()
+//                .rememberMe();
+//
 //        // 设置拦截规则
 //        // 自定义accessDecisionManager访问控制器,并开启表达式语言
 //        http.authorizeRequests().accessDecisionManager(accessDecisionManager())

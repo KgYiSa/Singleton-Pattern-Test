@@ -4,8 +4,9 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
-import com.mj.tcs.api.v1.dto.base.BaseEntityAuditDto;
+import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -15,9 +16,20 @@ import java.util.Set;
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
-public class LocationTypeDto extends BaseEntityAuditDto {
+@Entity(name = "tcs_model_location_type")
+//@Table(name = "tcs_model_location_type", uniqueConstraints =
+//    @UniqueConstraint(columnNames = {"name", "scene"})
+//)
+public class LocationTypeDto extends BaseEntityDto {
+
+    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "scene", nullable = false)
+    private SceneDto sceneDto;
+
     @DtoField
+    @Column
     private String name;
+
     /**
      * The operations allowed at locations of this type.
      */
@@ -28,10 +40,20 @@ public class LocationTypeDto extends BaseEntityAuditDto {
 //            entityBeanKeys = {"Path"},
 //            dtoToEntityMatcher = PathDto2PathMatcher.class)
     @DtoField
+    @ElementCollection
+    @CollectionTable(name = "tcs_model_rel_allowed_operations")
     private Set<String> allowedOperations = new HashSet<>();
     
     public LocationTypeDto(){
         //DO nothing
+    }
+
+    public SceneDto getSceneDto() {
+        return sceneDto;
+    }
+
+    public void setSceneDto(SceneDto sceneDto) {
+        this.sceneDto = sceneDto;
     }
 
     public String getName() {

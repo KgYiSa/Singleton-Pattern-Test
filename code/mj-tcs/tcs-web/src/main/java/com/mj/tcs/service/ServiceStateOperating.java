@@ -1,6 +1,6 @@
 package com.mj.tcs.service;
 
-import com.mj.tcs.data.order.TransportOrder;
+import com.mj.tcs.api.v1.dto.TransportOrderDto;
 import com.mj.tcs.repository.DestinationRepository;
 import com.mj.tcs.repository.TransportOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,24 +23,26 @@ public class ServiceStateOperating {
     @Autowired
     DestinationRepository destinationRepository;
 
-    public Collection<TransportOrder> getAllTransportOrders() {
+    public Collection<TransportOrderDto> getAllTransportOrders() {
         return (Collection) transportOrderRepository.findAll();
     }
 
-    public Collection<TransportOrder> getAllTransportOrdersFromScene(long sceneId) {
-        return (Collection) transportOrderRepository.findAllByScene(sceneId);
+    public Collection<TransportOrderDto> getAllTransportOrdersFromScene(long sceneId) {
+//        return (Collection) transportOrderRepository.findAllByScene(sceneId);
+        // TODO
+        throw null;
     }
 
-    public TransportOrder createTransportOrder(TransportOrder order) {
+    public TransportOrderDto createTransportOrder(TransportOrderDto order) {
         return transportOrderRepository.save(Objects.requireNonNull(order,
                 "Transport Order should Not be null"));
     }
 
-    public TransportOrder getTransportOrder(long orderId) {
+    public TransportOrderDto getTransportOrder(long orderId) {
         return transportOrderRepository.findOne(orderId);
     }
 
-    public void deleteTransportOrder(TransportOrder order) {
+    public void deleteTransportOrder(TransportOrderDto order) {
         transportOrderRepository.delete(order);
     }
 }

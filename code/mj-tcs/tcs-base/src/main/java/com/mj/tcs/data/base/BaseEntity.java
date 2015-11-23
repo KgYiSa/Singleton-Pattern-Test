@@ -5,7 +5,6 @@
  */
 package com.mj.tcs.data.base;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
 
@@ -14,35 +13,27 @@ import java.util.*;
  * @author liumin
  * @author Wang Zhen
  */
-@MappedSuperclass
 public abstract class BaseEntity extends IdentifiableEntity
         implements Serializable, Cloneable {
     /**
      * A <code>Comparator</code> for ordering <code>TCSObject</code>s ascendingly
      * by their IDs.
      */
-    @Transient
     public static final Comparator<BaseEntity> idComparator =
             new IDComparator();
     /**
      * A <code>Comparator</code> for ordering <code>TCSObject</code>s ascendingly
      * by their names.
      */
-    @Transient
     public static final Comparator<BaseEntity> nameComparator =
             new NameComparator();
 
-    @Embedded
     private EntityAuditor auditor = null;
 
-    @Column(name = "version", nullable = false)
-    @Version
     private Long version;
 
-    @Column
     protected String name; // Because some entity have different column format !!!
 
-    @Transient
     private Map<String, String> properties = new TreeMap<>();
 
     public Long getVersion() {

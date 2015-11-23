@@ -6,12 +6,12 @@
 package com.mj.tcs.repository;
 
 
-import com.mj.tcs.data.model.LocationType;
+import com.mj.tcs.api.v1.dto.LocationTypeDto;
 
 /**
  *  LocationType Repository support find methods only.
  *
  * @author Wang Zhen
  */
-public interface LocationTypeRepository extends RURepository<LocationType, Long> {
+public interface LocationTypeRepository extends RURepository<LocationTypeDto, Long> {
 }

@@ -23,7 +23,7 @@ var ruler = (function (){
 
     var rotateRuler = function(curRuler, angle){
         var rotation = 'rotate(' + angle + 'deg)';
-        var origin = ruler.utils.pixelize(Math.abs(parseInt(curRuler.canvas.style.left))) + ' 100%';
+        var origin = editorUtils.pixelize(Math.abs(parseInt(curRuler.canvas.style.left))) + ' 100%';
         curRuler.canvas.style.webkitTransform = rotation;
         curRuler.canvas.style.MozTransform = rotation;
         curRuler.canvas.style.OTransform = rotation;
@@ -38,13 +38,13 @@ var ruler = (function (){
     };
 
     var positionRuler = function(curRuler, alignment){
-        curRuler.canvas.style.left = ruler.utils.pixelize(-((curRuler.canvas.width/2) - curRuler.canvas.height));
+        curRuler.canvas.style.left = editorUtils.pixelize(-((curRuler.canvas.width/2) - curRuler.canvas.height));
         switch (alignment){
             case 'top':
                 curRuler.orgPos = parseInt(curRuler.canvas.style.left);
                 break;
             case 'left':
-                curRuler.canvas.style.top = ruler.utils.pixelize(-curRuler.canvas.height - 1);
+                curRuler.canvas.style.top = editorUtils.pixelize(-curRuler.canvas.height - 1);
                 curRuler.orgPos = parseInt(curRuler.canvas.style.top);
                 rotateRuler(curRuler, 90);
                 break;
@@ -82,13 +82,13 @@ var ruler = (function (){
                 guideStyle = curRul.dimension === VERTICAL ? 'rul_lineVer' : 'rul_lineHor',
                 curDelta = curRul.dimension === VERTICAL ? CUR_DELTA_X : CUR_DELTA_Y;
             guide.title = 'Double click to delete';
-            ruler.utils.addClasss(guide, ['rul_line', guideStyle]);
+            editorUtils.addClasss(guide, ['rul_line', guideStyle]);
             guide = container.appendChild(guide);
             if(curRul.dimension === VERTICAL){
-                guide.style.left = ruler.utils.pixelize(e.clientX - ruler.utils.offsetLeft(options.container));
+                guide.style.left = editorUtils.pixelize(e.clientX - editorUtils.offsetLeft(options.container));
             }
             else{
-                guide.style.top = ruler.utils.pixelize(e.clientY - ruler.utils.offsetTop(options.container));
+                guide.style.top = editorUtils.pixelize(e.clientY - editorUtils.offsetTop(options.container));
             }
             guides.push({dimension: curRul.dimension, line:ruler.guideLine(guide, options.container.querySelector('.rul_wrapper') ,curRul.dimension,  options, curDelta, moveCB)});
 
@@ -104,7 +104,7 @@ var ruler = (function (){
             element = document.createElement('canvas');
 
 
-        ruler.utils.addClasss(element, ['rul_ruler', rulerStyle, 'rul_align_' + alignment]);
+        editorUtils.addClasss(element, ['rul_ruler', rulerStyle, 'rul_align_' + alignment]);
         canvas = container.appendChild(element);
         rulerz[alignment] = ruler.rulerConstructor(canvas, options, dimension);
         rulerz[alignment].drawRuler(container.offsetWidth, options.rulerHeight);
@@ -118,9 +118,9 @@ var ruler = (function (){
                 cornerStyle = 'rul_corner' + side.toUpperCase();
 
             corner.title = 'Clear Guide lines';
-            ruler.utils.addClasss(corner, ['rul_corner', cornerStyle]);
-            corner.style.width = ruler.utils.pixelize(options.rulerHeight + 1);
-            corner.style.height = ruler.utils.pixelize(options.rulerHeight);
+            editorUtils.addClasss(corner, ['rul_corner', cornerStyle]);
+            corner.style.width = editorUtils.pixelize(options.rulerHeight + 1);
+            corner.style.height = editorUtils.pixelize(options.rulerHeight);
             return container.appendChild(corner);
 
         }
@@ -137,8 +137,8 @@ var ruler = (function (){
     })();
 
     var constructRulers = function(curOptions){
-        theRulerDOM = ruler.utils.addClasss(theRulerDOM, 'rul_wrapper');
-        options = ruler.utils.extend(defaultOptions, curOptions);
+        theRulerDOM = editorUtils.addClasss(theRulerDOM, 'rul_wrapper');
+        options = editorUtils.extend(defaultOptions, curOptions);
         theRulerDOM = options.container.appendChild(theRulerDOM);
         options.sides.forEach(function(side){
             constructRuler(theRulerDOM, side);
@@ -171,22 +171,22 @@ var ruler = (function (){
         forEachRuler(function (curRul){
             if(curRul.dimension === ruler.VERTICAL){
                 orgY = curRul.canvas.style.top;
-                curRul.canvas.style.top = ruler.utils.pixelize(curRul.orgPos + (parseInt(values.y)));
+                curRul.canvas.style.top = editorUtils.pixelize(curRul.orgPos + (parseInt(values.y)));
                 deltaY = parseInt(orgY) - parseInt(curRul.canvas.style.top);
             }
             else{
                 orgX = curRul.canvas.style.left;
-                curRul.canvas.style.left = ruler.utils.pixelize(curRul.orgPos + (parseInt(values.x)));
+                curRul.canvas.style.left = editorUtils.pixelize(curRul.orgPos + (parseInt(values.x)));
                 deltaX = parseInt(orgX) - parseInt(curRul.canvas.style.left);
             }
         });
         guides.forEach(function(guide){
             if(guide.dimension === HORIZONTAL){
-                guide.line.guideLine.style.top = ruler.utils.pixelize(parseInt(guide.line.guideLine.style.top) - deltaY);
+                guide.line.guideLine.style.top = editorUtils.pixelize(parseInt(guide.line.guideLine.style.top) - deltaY);
                 guide.line.curPosDelta = parseInt(values.y);
             }
             else{
-                guide.line.guideLine.style.left = ruler.utils.pixelize(parseInt(guide.line.guideLine.style.left) - deltaX);
+                guide.line.guideLine.style.left = editorUtils.pixelize(parseInt(guide.line.guideLine.style.left) - deltaX);
                 guide.line.curPosDelta = parseInt(values.x);
             }
         });
@@ -209,14 +209,14 @@ var ruler = (function (){
                 curPos = parseInt(guide.line.guideLine.style.top);
                 orgDelta = options.rulerHeight + 1;
                 curScaleFac = (parseFloat(newScale) / guide.line.curScale);
-                guide.line.guideLine.style.top = ruler.utils.pixelize(((curPos - orgDelta - CUR_DELTA_Y ) / curScaleFac) +  orgDelta + CUR_DELTA_Y);
+                guide.line.guideLine.style.top = editorUtils.pixelize(((curPos - orgDelta - CUR_DELTA_Y ) / curScaleFac) +  orgDelta + CUR_DELTA_Y);
                 guide.line.curScale = newScale;
             }
             else {
                 curPos = parseInt(guide.line.guideLine.style.left);
                 orgDelta = options.rulerHeight + 1;
                 curScaleFac = (parseFloat(newScale) / guide.line.curScale);
-                guide.line.guideLine.style.left = ruler.utils.pixelize(((curPos - orgDelta - CUR_DELTA_X) / curScaleFac)  + orgDelta + CUR_DELTA_X);
+                guide.line.guideLine.style.left = editorUtils.pixelize(((curPos - orgDelta - CUR_DELTA_X) / curScaleFac)  + orgDelta + CUR_DELTA_X);
                 guide.line.curScale = newScale;
             }
         });
@@ -340,9 +340,9 @@ ruler.rulerConstructor =  function(_canvas, options, rulDimension)
 
     var initTracker = function(){
         tracker = options.container.appendChild(tracker);
-        ruler.utils.addClasss(tracker, 'rul_tracker');
+        editorUtils.addClasss(tracker, 'rul_tracker');
         tracker.style.position = "relative";
-        var height = ruler.utils.pixelize(options.rulerHeight);
+        var height = editorUtils.pixelize(options.rulerHeight);
         if(dimension === ruler.HORIZONTAL){
             tracker.style.height = height;
         }
@@ -354,10 +354,10 @@ ruler.rulerConstructor =  function(_canvas, options, rulDimension)
             var posX = e.clientX;
             var posY = e.clientY;
             if(dimension === ruler.HORIZONTAL){
-                tracker.style.left = ruler.utils.pixelize(posX - parseInt(ruler.utils.offsetLeft(options.container)));
+                tracker.style.left = editorUtils.pixelize(posX - parseInt(editorUtils.offsetLeft(options.container)));
             }
             else{
-                tracker.style.top = ruler.utils.pixelize(posY - parseInt(ruler.utils.offsetTop(options.container)) - options.rulerHeight) ;
+                tracker.style.top = editorUtils.pixelize(posY - parseInt(editorUtils.offsetTop(options.container)) - options.rulerHeight) ;
             }
         });
     };
@@ -399,8 +399,8 @@ ruler.guideLine = function(line, _dragContainer, lineDimension, options,  curDel
     var draggable = (function(){
         return {
             move : function(xpos,ypos){
-                guideLine.style.left = ruler.utils.pixelize(xpos);
-                guideLine.style.top = ruler.utils.pixelize(ypos);
+                guideLine.style.left = editorUtils.pixelize(xpos);
+                guideLine.style.top = editorUtils.pixelize(ypos);
                 updateToolTip(xpos, ypos);
                 moveCB(self, xpos, ypos);
             },
@@ -457,7 +457,7 @@ ruler.guideLine = function(line, _dragContainer, lineDimension, options,  curDel
         if(!options.enableToolTip){
             return;
         }
-        ruler.utils.addClasss(guideLine, 'rul_tooltip');
+        editorUtils.addClasss(guideLine, 'rul_tooltip');
     };
 
     var updateToolTip = function (x, y){
@@ -470,7 +470,7 @@ ruler.guideLine = function(line, _dragContainer, lineDimension, options,  curDel
     };
 
     var hideToolTip = function (e){
-        ruler.utils.removeClasss(guideLine, 'rul_tooltip');
+        editorUtils.removeClasss(guideLine, 'rul_tooltip');
     };
 
     var destroy = function(){
@@ -520,67 +520,4 @@ ruler.guideLine = function(line, _dragContainer, lineDimension, options,  curDel
 
 
 
-};
-/**
- * Created by maor.frankel on 5/25/15.
- */
-ruler.utils = {
-    extend: function extend(){
-        for(var i=1; i< arguments.length; i++)
-            for(var key in arguments[i])
-                if(arguments[i].hasOwnProperty(key))
-                    arguments[0][key] = arguments[i][key];
-        return arguments[0];
-    },
-    pixelize: function (val){
-        return val + 'px';
-    },
-    prependChild: function (container, element){
-        return container.insertBefore(element,container.firstChild);
-    },
-    addClasss: function (element, classNames){
-        if(!(classNames instanceof Array))
-        {
-            classNames = [classNames];
-        }
-
-        classNames.forEach(function (name){
-            element.className += ' ' + name;
-        });
-
-        return element;
-
-    },
-    removeClasss: function (element, classNames){
-        var curCalsss = element.className;
-        if(!(classNames instanceof Array))
-        {
-            classNames = [classNames];
-        }
-
-        classNames.forEach(function (name){
-            curCalsss = curCalsss.replace(name, '');
-        });
-        element.className = curCalsss;
-        return element;
-
-    },
-    offsetLeft: function (element) {
-        var left = element.offsetLeft;
-        var parent = element.offsetParent;
-        while (parent != null) {
-            left += parent.offsetLeft;
-            parent = parent.offsetParent;
-        }
-        return left;
-    },
-    offsetTop: function (element) {
-        var top = element.offsetTop;
-        var parent = element.offsetParent;
-        while (parent != null) {
-            top += parent.offsetTop;
-            parent = parent.offsetParent;
-        }
-        return top;
-    }
 };

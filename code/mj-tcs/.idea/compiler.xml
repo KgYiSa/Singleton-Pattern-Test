@@ -33,6 +33,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="mj-tcs" target="1.8" />
       <module name="tcs-base" target="1.8" />
       <module name="tcs-main" target="1.8" />
       <module name="tcs-web" target="1.8" />

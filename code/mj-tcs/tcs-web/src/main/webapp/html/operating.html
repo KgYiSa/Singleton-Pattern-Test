@@ -6,10 +6,9 @@
 	<link rel="stylesheet" type="text/css" href="../plugin/bootstrap/css/bootstrap.css">
 	<link rel="stylesheet" type="text/css" href="../css/default.css">
 	<link rel="stylesheet" type="text/css" href="../css/operating.css">
-	<script type="text/javascript" src="../js/jquery-1.11.3.js"></script>
-	<script type="text/javascript" src="../plugin/bootstrap/js/bootstrap.js"></script>
 	<link rel="stylesheet" href="../plugin/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css">
-    <script type="text/javascript" src="../plugin/zTree/js/jquery.zTree.core-3.5.js"></script>
+    <link rel="stylesheet" href="../plugin/bootSideMenu/css/BootSideMenu.css" type="text/css">
+
 	<title>Operating Model</title>
 </head>
 <body>
@@ -27,18 +26,6 @@
 				<div class="top-panel-to">
 					<div class="table-head">
 						<table>
-						<!-- <colgroup>						
-						<col style="width:10%;" />
-						<col style="width:10%;" />		
-						<col style="width:10%;" />		
-						<col style="width:10%;" />							
-						<col style="width:10%;" />		
-						<col style="width:10%;" />		
-						<col style="width:10%;" />		
-						<col style="width:10%;" />		
-						<col style="width:10%;" />		
-						<col style="width:10%;" />						
-						</colgroup> -->
 						<thead>
 							<tr>
 								<th>Column1</th>
@@ -60,16 +47,7 @@
 					<table >
 						<!-- 针对每一行设定样式 -->
 						<!-- <colgroup>						
-						<col style="width:10%;" />
-						<col style="width:10%;" />		
-						<col style="width:10%;" />		
-						<col style="width:10%;" />							
-						<col style="width:10%;" />		
-						<col style="width:10%;" />		
-						<col style="width:10%;" />		
-						<col style="width:10%;" />		
-						<col style="width:10%;" />		
-						<col style="width:10%;" />						
+						<col style="width:10%;" />					
 						</colgroup> -->
 					<tbody>
 						<tr>
@@ -79,7 +57,8 @@
 						</tr>
 						<tr>
 							<td>2</td>
-							<td>我只是用来测试的</td>
+							<td>column</td><td>column</td><td>column</td><td>column</td><td>column</td>
+							<td>column</td><td>column</td><td>column</td><td>column</td>
 						</tr>
 						<tr>
 							<td>3</td>
@@ -132,7 +111,7 @@
 						
 					</tbody>
 				</table>
-				</div>
+				</div> 
 				</div>
 				</div>
 				<div class="top-panel-operation">
@@ -170,27 +149,110 @@
 			<div class="bottom-panel">
 				<div class="bottom-panel-title">小车列表</div>
 				<div class="bottom-panel-list">
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+						<div class="vehicle">
+							<div class="name">Vehicle</div>
+							<div class="battery"><img src="../images/battery/battery-100-2.png" /></div>
+							<div class="status">runing</div>
+						</div>
+					</div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+						<div class="vehicle">
+							<div class="name">Vehicle</div>
+							<div class="battery"><img src="../images/battery/battery-100-2.png" /></div>
+							<div class="status">runing</div>
+						</div>
+					</div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+						<div class="vehicle">
+							<div class="name">Vehicle</div>
+							<div class="battery"><img src="../images/battery/battery-100-2.png" /></div>
+							<div class="status">runing</div>
+						</div>
+					</div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+						<div class="vehicle">
+							<div class="name">Vehicle</div>
+							<div class="battery"><img src="../images/battery/battery-100-2.png" /></div>
+							<div class="status">runing</div>
+						</div>
+					</div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+						<div class="vehicle">
+							<div class="name">Vehicle</div>
+							<div class="battery"><img src="../images/battery/battery-100-2.png" /></div>
+							<div class="status">runing</div>
+						</div>
+					</div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+						<div class="vehicle">
+							<div class="name">Vehicle</div>
+							<div class="battery"><img src="../images/battery/battery-100-2.png" /></div>
+							<div class="status">runing</div>
+						</div>
+					</div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+						<div class="vehicle">
+							<div class="name">Vehicle</div>
+							<div class="battery"><img src="../images/battery/battery-100-2.png" /></div>
+							<div class="status">runing</div>
+						</div>
+					</div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+						<div class="vehicle">
+							<div class="name">Vehicle</div>
+							<div class="battery"><img src="../images/battery/battery-100-2.png" /></div>
+							<div class="status">runing</div>
+						</div>
+					</div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+						<div class="vehicle">
+							<div class="name">Vehicle</div>
+							<div class="battery"><img src="../images/battery/battery-100-2.png" /></div>
+							<div class="status">runing</div>
+						</div>
+					</div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+						<div class="vehicle">
+							<div class="name">Vehicle</div>
+							<div class="battery"><img src="../images/battery/battery-100-2.png" /></div>
+							<div class="status">runing</div>
+						</div>
+					</div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+						<div class="vehicle">
+							<div class="name">Vehicle</div>
+							<div class="battery"><img src="../images/battery/battery-100-2.png" /></div>
+							<div class="status">runing</div>
+						</div>
+					</div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
+						<div class="vehicle">
+							<div class="name">Vehicle</div>
+							<div class="battery"><img src="../images/battery/battery-100-2.png" /></div>
+							<div class="status">runing</div>
+						</div>
+					</div>
+					<!-- <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</p></div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</p></div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</p></div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</p></div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</p></div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</p></div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</p></div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</p></div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</p></div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</p></div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</p></div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</p></div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</p></div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</p></div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</p></div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</p></div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</p></div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</p></div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</p></div>
+					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2"><p>Vehicle</p></div> -->
 
 				</div>
 			</div>
@@ -240,7 +302,61 @@
 		</div>
 	</div>
 
-	<script type="text/javascript" src="../js/init.js"></script>
+	<!-- sidebar 侧边栏 -->
+	<div id="left-sidebar">
+		<div class="content">
+			<!-- Last name: <input type="date" name="lname" value="" />
+			Last name: <input type="checkbox" name="lname" checked="checked" />
+			Last name: <input type="button" name="lname" value="222" /> -->
+			<span class="simulation ">
+				<p class="name">仿真因子：</p>
+				<input type="number" name="num" value="0" min="0" max="10" />
+				<input type="button" name="set" value="设定" />
+			</span>
+			<div class="line"><hr></div>
+			<div class="adapter-head">
+				<div class="table-head">
+					<table>
+					<thead>
+						<tr>
+							<th>名称</th>
+							<th>状态</th>
+							<th>适配器</th>
+							<th>启动</th>
+							<th>位置</th>
+						</tr>
+					</thead>
+				</table>
+				</div>
+				<div class="table-body">
+				<table>
+				<tbody>
+					<tr>
+						<td>name</td>
+						<td>hsl</td>
+						<td>name</td>
+						<td>name</td>
+						<td>name</td>
+					</tr>
+				</tbody>
+				</table>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+
+	<script type="text/javascript" src="../js/jquery-1.11.3.js"></script>
+	<script type="text/javascript" src="../plugin/bootstrap/js/bootstrap.js"></script>
+	<script type="text/javascript" src="../plugin/zTree/js/jquery.zTree.core-3.5.js"></script>
+	 <script src="../plugin/BootSideMenu/js/BootSideMenu.js"></script>
+	 <script type="text/javascript" src="../js/init.js"></script>
 	<script type="text/javascript" src="../js/operating.js"></script>
+	<script type="text/javascript">
+	  $(document).ready(function(){
+	      $('#left-sidebar').BootSideMenu({side:"left", autoClose:false});
+	      // $('#test2').BootSideMenu({side:"right"});
+	  });
+	</script>
 </body>
 </html>

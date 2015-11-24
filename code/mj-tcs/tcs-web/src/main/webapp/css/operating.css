@@ -127,13 +127,49 @@
 	overflow-y:auto;
 }
 
-.left-container .bottom-panel .bottom-panel-list p {
+/*.left-container .bottom-panel .bottom-panel-list > div {
+	height: 100%;
+}*/
+
+/*.left-container .bottom-panel .bottom-panel-list p {
 	background-color: #C0FCB5;
 	margin: 3px 0;
 	line-height: 30px;
 	text-align: center;
+}*/
+
+.left-container .bottom-panel .bottom-panel-list .vehicle {
+	width: 100%;
+	height: 30px;
+	background-color: #C0FCB5;
+	margin: 3px 0;
+	line-height: 30px;
+	text-align: center;
+	border-radius: 5px;
 }
 
+.left-container .bottom-panel .bottom-panel-list .vehicle > div {
+	float: left;
+}
+
+.left-container .bottom-panel .bottom-panel-list .vehicle .name {
+	height: 100%;
+	width: 40%;
+}
+
+.left-container .bottom-panel .bottom-panel-list .vehicle .battery {
+	height: 100%;
+	width: 10%;
+}
+/*.left-container .bottom-panel .bottom-panel-list .vehicle .battery img{
+	height: 100%;
+	width: 100%;
+}*/
+
+.left-container .bottom-panel .bottom-panel-list .vehicle .status {
+	height: 100%;
+	width: 50%;
+}
 
 .right-container {
 
@@ -226,3 +262,101 @@
 	background-color: #FEB98B;
 }
 
+
+/*sidebar left css*/
+#left-sidebar {
+	/*background-color: #32FA0F;*/
+	height: 80%;
+	min-width: 400px;
+	margin-top: 70px;
+	border-top-right-radius: 10px;
+	border-bottom-right-radius: 10px;
+	padding: 30px 20px 30px 10px;
+}
+
+
+#left-sidebar .content   {
+	height: 100%;
+	background-color: #C0C8C4;
+	padding: 30px 20px 30px 20px;
+}
+
+#left-sidebar .content .simulation {
+	width: 100%;
+	display: inline-block;
+}
+
+#left-sidebar .content .simulation p {
+	display: inline;
+	padding-right: 20px;
+	font-family: "Arial Normal", "Arial";
+	font-weight: 400;
+	font-style: normal;
+}
+
+
+#left-sidebar .content .simulation input[type=number] {
+	width: 90px;
+}
+
+#left-sidebar .content .simulation input[type=button] {
+	width: 50px;
+	margin-left: 50px;
+}
+
+
+
+#left-sidebar .content  .line {
+	
+}
+
+#left-sidebar .content  .adapter {
+	background-color: red;
+}
+
+#left-sidebar .content .line hr {
+	height: 1px;
+	border: none;
+	border-top: 1px solid #555555;
+}
+
+
+
+/*侧边栏表格*/
+#left-sidebar .content .adapter .table-head {
+	padding-right:17px;
+	background-color:#999;
+	color:#000;
+	height: 10%;
+}
+
+#left-sidebar .content .adapter .table-head table th {
+	width: 10%;
+	padding-left: 5px;
+}
+
+#left-sidebar .content .adapter .table-body {
+	width: 100%;
+	height: 100%px;
+	overflow-y: scroll;
+	height: 80%;
+}
+
+#left-sidebar .content .adapter .table-body table td {
+	width: 10%;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+	padding-left: 5px;
+
+}
+
+#left-sidebar .content .adapter .table-head table,
+.table-body table {
+	width: 100%;
+	table-layout: fixed;
+}
+
+#left-sidebar .content .adapter .table-body table tr:nth-child(2n+1) {
+	background-color: #FEB98B;
+}

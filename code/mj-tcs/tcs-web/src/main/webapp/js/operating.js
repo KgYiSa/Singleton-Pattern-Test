@@ -2,12 +2,7 @@
 
 $(function(){
 
-    
-
-
     initTree()
-   
-    
 
 	$(".elements-blocks-title li").each(function(){
 
@@ -40,18 +35,22 @@ $(function(){
     })
 
 
-
-    $(".properties .table-body tbody tr td:nth-child(2)").dblclick(function() {
+    // 绑定双击事件 依据固定不变的父层
+    $('.properties .table-body tbody').on('dblclick', 'tr td:nth-child(2)', function(){
         var value = $(this).text();
         $(this).text("");
         $(this).append("<input type='text' value='"+value+"' />");
         // alert($(this).text())
     })
 
-    $(".properties .table-body tbody tr td:nth-child(2)").blur(function(){
-        alert(3);
-        
+
+    // 绑定插入input框的blur事件
+    $('.properties .table-body tbody').on('blur', 'input', function(){
+        $(this).parent().text($(this).val());
+
+        // TODO 
     })
+
 })
 
 

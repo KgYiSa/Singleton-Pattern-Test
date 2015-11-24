@@ -46,7 +46,7 @@ var ruler = (function (){
             case 'left':
                 curRuler.canvas.style.top = editorUtils.pixelize(-curRuler.canvas.height - 1);
                 curRuler.orgPos = parseInt(curRuler.canvas.style.top);
-                rotateRuler(curRuler, 90);
+                rotateRuler(curRuler, -90);
                 break;
         }
     };
@@ -328,13 +328,13 @@ ruler.rulerConstructor =  function(_canvas, options, rulDimension)
             lineLengthMin = rulThickness / 2;
 
         for (var pos = 0; pos <= rulLength; pos += 1) {
-            delta = ((rulLength / 2) - pos);
+            delta = -((rulLength / 2) - pos);
             draw = false;
             label = '';
 
             if (delta % 50 === 0) {
                 pointLength = lineLengthMax;
-                label = Math.round(Math.abs(delta)*rulScale);
+                label = Math.round(delta*rulScale);
                 draw = true;
             }
             else if (delta % 25 === 0) {

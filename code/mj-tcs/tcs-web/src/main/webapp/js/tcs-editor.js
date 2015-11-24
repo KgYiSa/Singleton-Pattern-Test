@@ -42,13 +42,16 @@ var editor = ( function(){
         theEditorDOM = constructDomElement(options);
         two = new Two(options.two).appendTo(theEditorDOM);
 
-        options.container.addEventListener('mousemove', function(e){
-            var posX = e.clientX;
-            var posY = e.clientY;
-            var result = clientToEditorCoord(posX, posY);
-            drawTest(posX, posY)
-            console.log(result);
-        });
+        //options.container.addEventListener('mousemove', function(e){
+        //    var posX = e.clientX;
+        //    var posY = e.clientY;
+        //    var result = clientToEditorCoord(posX, posY);
+        //    drawTest(posX, posY)
+        //    console.log(result);
+        //});
+    }
+
+    var init = function(curOptions) {
 
     }
 
@@ -109,7 +112,21 @@ var editor = ( function(){
     };
 
     var constructDomElement = function(curOptions) {
-        return ruler.constructRulers(theEditorDOM, curOptions);
+        var editorDOM = ruler.constructRulers(theEditorDOM, curOptions);
+
+        return editorDOM;
+    }
+
+    var updateEditor = function(center, new_ctr) {
+        var w = editor.width(), h = editor.height();
+        var w_orig = w, h_orig = h;
+        var zoom = 1.0;
+        var w_area = editor;
+        var old_ctr = {
+            x: w_area[0].scrollLeft + w_orig/2,
+            y: w_area[0].scrollTop + h_orig/2
+        };
+
     }
 
     var clientToEditorCoord = function(x, y) {
@@ -133,6 +150,7 @@ var editor = ( function(){
     }
 
     return{
+        init: init,
         constructEditor: constructEditor,
         drawPoint: drawPoint,
         drawPath: drawPath

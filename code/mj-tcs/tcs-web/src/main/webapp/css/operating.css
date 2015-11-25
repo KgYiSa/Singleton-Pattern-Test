@@ -272,15 +272,16 @@
 	border-top-right-radius: 10px;
 	border-bottom-right-radius: 10px;
 	padding: 30px 20px 30px 10px;
+	min-height: 460px;
 }
 
 
-#left-sidebar .content   {
+#left-sidebar .content {
 	height: 100%;
+	min-height: 400px;
 	background-color: #C0C8C4;
 	padding: 30px 20px 30px 20px;
 }
-
 #left-sidebar .content .simulation {
 	width: 100%;
 	display: inline-block;
@@ -304,14 +305,9 @@
 	margin-left: 50px;
 }
 
-
-
-#left-sidebar .content  .line {
-	
-}
-
 #left-sidebar .content  .adapter {
-	background-color: red;
+	/*background-color: red;*/
+	height: 45%;
 }
 
 #left-sidebar .content .line hr {
@@ -337,9 +333,13 @@
 
 #left-sidebar .content .adapter .table-body {
 	width: 100%;
-	height: 100%px;
+	height: 100%;
 	overflow-y: scroll;
 	height: 80%;
+	border-left-style: solid;
+	border-left-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-width: 1px;
 }
 
 #left-sidebar .content .adapter .table-body table td {
@@ -357,6 +357,41 @@
 	table-layout: fixed;
 }
 
+#left-sidebar .content .adapter .table-body table tr {
+	/*text-align: center;*/
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
 #left-sidebar .content .adapter .table-body table tr:nth-child(2n+1) {
 	background-color: #FEB98B;
+	/*border-bottom-width: 1px;
+	border-bottom-style: solid;*/
 }
+
+#left-sidebar .content .settinginfo {
+	  border: 2px groove;
+	  height: 40%;
+	  padding-top:20px; 
+}
+
+#left-sidebar .content .settinginfo div {
+	margin: 3px 20px 3px 20px;
+
+	display: inline-block;
+}
+
+#left-sidebar .content .settinginfo div > p {
+	float: left;
+	width: 90px;
+}
+
+#left-sidebar .content .settinginfo div > input[type=text] {
+	float: left;
+	width: 160px;
+}
+
+#left-sidebar .content .settinginfo div > input[type=button] {
+	width: 123px;
+}
+

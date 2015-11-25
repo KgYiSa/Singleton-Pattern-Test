@@ -1,5 +1,7 @@
 (function ( $ ) {
 
+
+
 	$.fn.BootSideMenu = function( options ) {
 
 		var oldCode, newCode, side;
@@ -33,14 +35,39 @@
 		newCode += "	<span class=\"glyphicon glyphicon-chevron-right\">&nbsp;</span> <span class=\"glyphicon glyphicon-chevron-left\">&nbsp;</span>\n";
 		newCode += "</div>\n";
 		newCode = oldCode + newCode
-		console.log(newCode)
+		// console.log(newCode)
 		this.html(newCode);
 
 		if(autoClose){
 			$(this).find(".toggler").trigger("click");
 		}
 
+		// 设定settinginfo disable状态
+		$("#left-sidebar .content .settinginfo").find("input").attr('disabled', 'true');
+
 	};
+
+
+	$("#left-sidebar .content .adapter .table-body table").on('change', '.startflg', function() {
+		alert()
+	});
+// $("#left-sidebar .content .adapter .table-body table .startflg").each(function() {
+// 		$(this).click(function() {
+// 			alert($(this).val());
+// 		});
+// 	alert($(this).val());
+// });
+
+// $("#left-sidebar .content .adapter .table-body table .startflg").click(function(){
+// 	      		alert($(this).attr('value'))
+// 	      		if($(this).attr('checked')){
+// 	      				//alert($(this).val());
+// 	      		} else {
+
+// 	      		}
+	      	
+// 	      })
+
 
 	// $(document).on('click', '.sidebar .list-group-item', function(){
 	// 	$('.sidebar .list-group-item').each(function(){
@@ -88,8 +115,8 @@
 	$(document).on('click','.toggler', function(){
 		var toggler = $(this);
 		var container = toggler.parent();
-		console.log(container)
-		console.log(container.innerWidth())
+		// console.log(container)
+		// console.log(container.innerWidth())
 		var listaClassi = container[0].classList;
 		var side = getSide(listaClassi);
 		var containerWidth = container.innerWidth();
@@ -115,7 +142,6 @@
 
 //restituisce il lato del sidebar in base alla classe che trova settata
 function getSide(listaClassi){
-	console.log("111");
 	// console.log(listaClassi);
 	var side;
 	for(var i = 0; i<listaClassi.length; i++){
@@ -135,7 +161,7 @@ function getSide(listaClassi){
 //esegue l'animazione
 function doAnimation(container, containerWidth, sidebarSide, sidebarStatus){
 	var toggler = container.children()[1];
-	 console.log(container.children()[1])
+	 // console.log(container.children()[1])
 	if(sidebarStatus=="opened"){
 		if(sidebarSide=="left"){
 			container.animate({

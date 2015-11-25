@@ -314,7 +314,7 @@
 				<input type="button" name="set" value="设定" />
 			</span>
 			<div class="line"><hr></div>
-			<div class="adapter-head">
+			<div class="adapter">
 				<div class="table-head">
 					<table>
 					<thead>
@@ -326,21 +326,73 @@
 							<th>位置</th>
 						</tr>
 					</thead>
-				</table>
+					</table>
 				</div>
 				<div class="table-body">
 				<table>
 				<tbody>
 					<tr>
+						<td><a href="javascript:;">name</a></td>
+						<td title="hslhslhslhslhslhsl">hslhslhslhslhslhsl</td>
+						<td>
+							<select>
+								<option value="">请选择</option>
+								<option value="mo">adapter1</option>
+								<option value="lo">adapter2</option>
+							</select>
+						</td>
+						<td><input type="checkbox" name="1" class="startflg" value="1"/></td>
 						<td>name</td>
+					</tr>
+					<tr>
+						<td><a href="javascript:;">name</a></td>
 						<td>hsl</td>
+						<td>
+							<select>
+								<option value="">请选择</option>
+								<option value="mo">adapter1</option>
+								<option value="lo">adapter2</option>
+							</select>
+						</td>
+						<td><input type="checkbox" name="2" class="startflg" value="2"/></td>
 						<td>name</td>
-						<td>name</td>
+					</tr>
+					<tr>
+						<td><a href="javascript:;">name</a></td>
+						<td>hsl</td>
+						<td>
+							<select>
+								<option value="">请选择</option>
+								<option value="mo">adapter1</option>
+								<option value="lo">adapter2</option>
+							</select>
+						</td>
+						<td><input type="checkbox" name="3" checked="" class="startflg" value="3"/></td>
 						<td>name</td>
 					</tr>
 				</tbody>
 				</table>
 				</div>
+			</div>
+			<div class="settinginfo">
+				<div class="">
+					<p>IP ：</p>
+					<input type="text" name="ip" class="ip" value="127.0.0.1"/>
+				</div>
+				<div class="port">
+					<p>Port ：</p>
+					<input type="text" name="port" class="port" value="8080"/>
+				</div>
+				<div class="">
+					<p>SlaveId ：</p>
+					<input type="text" name="slaveId" class="slaveId" value="502"/>
+				</div>
+				<div class="">
+					<input type="hidden" name="mark" value=""/>
+					<input type="button" name="reset" class="slaveId" value="reset"/>
+					<input type="button" name="save" class="slaveId" value="save"/>
+				</div>
+				<div class="tips" style="color:red"></div>
 			</div>
 			
 		</div>
@@ -355,7 +407,59 @@
 	<script type="text/javascript">
 	  $(document).ready(function(){
 	      $('#left-sidebar').BootSideMenu({side:"left", autoClose:false});
-	      // $('#test2').BootSideMenu({side:"right"});
+
+	      // $("#left-sidebar .content .adapter .table-body table .startflg").click(function(){
+	      // 		alert($(this).attr('value'))
+	      // 		if($(this).attr('checked')){
+	      // 				//alert($(this).val());
+	      // 		} else {
+
+	      // 		}
+	      	
+	      // })
+
+
+		$("#left-sidebar .content .adapter .table-body table .startflg").on('click', function() {
+			$("#left-sidebar .content .settinginfo .tips").html("");
+
+			if($(this)[0].checked) {
+				$("#left-sidebar .content .settinginfo").find("input").removeAttr("disabled");
+				// setting value
+				$("#left-sidebar .content .settinginfo").find("input[name=slaveId]").val($(this).val());
+				$("#left-sidebar .content .settinginfo").find("input[name=mark]").val($(this).attr("name"));
+			} else {
+				$("#left-sidebar .content .settinginfo").find("input").attr('disabled', 'true');
+			}
+
+		});
+
+		// 保存数据
+		$("#left-sidebar .content .settinginfo div > input[name=save]").click(function() {
+			$("#left-sidebar .content .settinginfo .tips").html("");
+
+			var id = $(this).parent().find("input[name=mark]").val();
+			var slaveId = $(this).parent().parent().find("input[name=slaveId]").val();
+			console.log(slaveId)
+			$("#left-sidebar .content .adapter").find("input[name="+id+"]").val(slaveId);
+
+			$("#left-sidebar .content .settinginfo .tips").html("保存成功.....");
+
+		});
+
+		$("#left-sidebar .content .adapter .table-body table a").click(function() {
+			$("#left-sidebar .content .settinginfo .tips").html("");
+			// console.log($(this)[0]);
+			// console.log($(this).parent().parent().find(".startflg")[0])
+			var setinginfo = $("#left-sidebar .content .settinginfo");
+			if($(this).parent().parent().find(".startflg")[0].checked){
+				setinginfo.find("input").removeAttr("disabled");
+				setinginfo.find("input[name=slaveId]").val($(this).parent().parent().find(".startflg").val());
+				setinginfo.find("input[name=mark]").val($(this).parent().parent().find(".startflg").attr("name"));
+			}
+
+		});
+
+
 	  });
 	</script>
 </body>

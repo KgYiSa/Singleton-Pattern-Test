@@ -7,7 +7,7 @@
 }
 
 .left-container .operate-list {
-	/*margin-top: -10px;*/
+	margin-top: 0px;
 }
 
 .left-container .operate-content {
@@ -15,25 +15,73 @@
 	height: 92%;
 }
 
-.left-container .operate-list ul {
-	background-color: #FCD303;
-	list-style: none;
-	padding-top: 10px;
-	padding-left: 5px;
-	margin-bottom: 0px;
-
+.left-container .operate-list > ul {
+	  background-color: #D4D4D4;
+	  list-style: none;
+	  padding-top: 10px;
+	  padding-left: 5px;
+	  margin-bottom: 0px;
+	  padding-bottom: 10px;
 }
 
-.left-container .operate-list ul li {
+.left-container .operate-list > ul > li {
 	display: inline-block;
-	margin-left: 15px;
+	margin-left: 10px;
 	margin-bottom: 10px;
+	height: 25px;
+	width: 25px;
+	position: relative;
 }
 
-.left-container .operate-list ul li img {
-	height: 30px;
+.left-container .operate-list > ul > li > img {
+	/*统一图片大小*/
+	height: 25px;
+	border-style: groove;
+  	border-width: 2px;
+
 }
 
+.left-container .operate-list > ul > li > img:hover{
+	height: 25px;
+	width: 25px;
+	border:1px groove;
+	  /*border-style: inset;*/*/
+  	/*border-width: 1px;*/
+}
+
+.left-container .operate-list > ul > li > img:active {
+	height: 25px;
+	width: 25px;
+	border: 1px solid;
+	border-style: inset;
+	border-width: 1px;
+}
+
+/*多元素选择样式*/
+
+.left-container .operate-list .point-item {
+	min-width: 130px;
+}
+
+.left-container .operate-list .point-item > li > a {
+	padding-left: 5px;
+}
+
+.left-container .operate-list .point-item > li > a img {
+	margin-right: 8px;
+}
+
+.left-container .operate-list .path-item {
+	min-width: 100px;
+}
+
+.left-container .operate-list .path-item > li > a {
+	padding-left: 5px;
+}
+
+.left-container .operate-list .path-item > li > a img {
+	margin-right: 8px;
+}
 
 .right-container {
 	height: 100%;
@@ -119,6 +167,9 @@
 	table-layout: fixed;
 }
 
+.right-container .properties .table-body table tr {
+	  height: 26px;
+}
 .right-container .properties .table-body table tr:nth-child(2n+1) {
 	background-color: #FEB98B;
 }

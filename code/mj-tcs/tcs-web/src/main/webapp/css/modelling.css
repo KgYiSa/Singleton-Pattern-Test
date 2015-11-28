@@ -12,7 +12,13 @@
 
 .left-container .operate-content {
 	background-color: #FEF2B3;
-	height: 92%;
+	/*height: 92%;*/
+}
+
+.left-container .operate-content .tcs-editor {
+	background-color: #8af2ff;
+	height: 100%;
+	position:relative;
 }
 
 .left-container .operate-list > ul {

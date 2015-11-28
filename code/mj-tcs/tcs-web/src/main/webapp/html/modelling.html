@@ -7,6 +7,7 @@
 	<link rel="stylesheet" type="text/css" href="../css/default.css">
 	<link rel="stylesheet" type="text/css" href="../css/modelling.css">
 	<link rel="stylesheet" href="../plugin/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css">
+	<link rel="stylesheet" href="../css/tcs-editor.css" type="text/css">
 	<title>Modelling Model</title>
 </head>
 <body>
@@ -56,7 +57,23 @@
 					</ul>
 			</div>
 			<div class="operate-content">
-				<div id="tcs-editor" class="tcs-editor"></div>
+				<div id="tcs-editor" class="tcs-editor">
+					<div id="rulers">
+						<div id="ruler_corner"></div>
+						<div id="ruler_x">
+							<div id="ruler_x_cursor"></div>
+							<div>
+								<canvas height="15"></canvas>
+							</div>
+						</div>
+						<div id="ruler_y">
+							<div id="ruler_y_cursor"></div>
+							<div>
+								<canvas width="15"></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="col-md-3 right-container">

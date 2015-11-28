@@ -12,4 +12,5 @@ $(function(){
 // 初始化 页面各模块高度
 function initSize(){
 	$(".container-fluid").css("height", $(window).height() - $("header").height());
+	$(".container-fluid .operate-content").css("height", $(".container-fluid").height() - $(".container-fluid .operate-list").height());
 }

@@ -1,6 +1,6 @@
 #rulers > div {
     position: absolute;
-    background: #2f2f2c;
+    background: #F7F3F7;
     z-index: 1;
     overflow: hidden;
     -webkit-font-smoothing: none;
@@ -19,7 +19,7 @@
     height: 15px;
     top: 2px;
     left: 17px;
-    right: 2px;
+    right: 1px;
     border-top: solid #444 1px;
     border-right: solid #444 1px;
 }
@@ -47,7 +47,7 @@
     width: 15px;
     top: 17px;
     left: 2px;
-    bottom: 2px;
+    bottom: 1px;
     border-left: solid #444 1px;
     border-bottom: solid #444 1px;
 }

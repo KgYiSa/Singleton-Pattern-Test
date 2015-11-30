@@ -61,18 +61,41 @@
 					<div id="rulers">
 						<div id="ruler_corner"></div>
 						<div id="ruler_x">
-							<div id="ruler_x_cursor"></div>
 							<div>
-								<canvas height="15"></canvas>
+								<canvas height="150"></canvas>
 							</div>
 						</div>
 						<div id="ruler_y">
-							<div id="ruler_y_cursor"></div>
 							<div>
-								<canvas width="15"></canvas>
+								<canvas width="150"></canvas>
 							</div>
 						</div>
 					</div>
+					<div class="workarea" id="workarea">
+						<div id="svgcanvas" style="position:relative">
+
+						<svg xmlns="http://www.w3.org/2000/svg" id="svgroot" xlinkns="http://www.w3.org/1999/xlink" width="940" height="640" x="580" y="400" overflow="visible"><defs><filter id="canvashadow" filterUnits="objectBoundingBox"><feGaussianBlur in="SourceAlpha" stdDeviation="4" result="blur"></feGaussianBlur><feOffset in="blur" dx="5" dy="5" result="offsetBlur"></feOffset><feMerge><feMergeNode in="offsetBlur"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter><pattern id="gridpattern" patternUnits="userSpaceOnUse" x="0" y="0" width="100" height="100"><image x="0" y="0" width="100" height="100"></image></pattern></defs><svg id="canvasBackground" width="609.101842432" height="420.07023616000004" x="214.949078784" y="154.46488191999998" overflow="none" style="pointer-events:none"><defs id="placeholder_defs"><pattern id="checkerPattern" patternUnits="userSpaceOnUse" x="0" y="0" width="20" height="20" viewBox="0 0 10 10"><rect x="0" y="0" width="10" height="10" fill="#fff"></rect><rect x="0" y="0" width="5" height="5" fill="#eee"></rect><rect x="5" y="5" width="5" height="5" fill="#eee"></rect></pattern><pattern id="gridpattern" patternUnits="userSpaceOnUse" x="0" y="0" width="100" height="100"><image x="0" y="0" width="100" height="100"></image></pattern></defs><rect width="100%" height="100%" x="0" y="0" stroke="#000" fill="url(#checkerPattern)" style="pointer-events:none"></rect></svg><svg id="svgcontent" width="609.101842432" height="420.07023616000004" x="214.949078784" y="154.46488191999998" overflow="hidden" xmlns="http://www.w3.org/2000/svg" xmlns:se="http://svg-edit.googlecode.com" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 580 400"><!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ --><g style="pointer-events:none"><title style="pointer-events:inherit">background</title><rect x="-1" y="-1" width="582" height="402" id="canvas_background" fill="#fff" style="pointer-events:inherit"></rect><g id="canvasGrid" width="100%" height="100%" x="0" y="0" overflow="visible" display="none"><rect width="100%" height="100%" x="0" y="0" stroke-width="0" stroke="none" fill="url(#gridpattern)" style="pointer-events: none; display:visible;"></rect></g></g><g style="pointer-events:all"><title style="pointer-events:inherit">Layer 1</title><rect fill="#fff" stroke="#000" stroke-width="1.5" x="83.5" y="89.5" width="199" height="131" id="svg_1" stroke-dasharray="none"></rect></g></svg><g id="selectorParentGroup" transform="translate(214.949078784,154.46488191999998)"><rect id="selectorRubberBand" fill="none" stroke="#666" stroke-dasharray="3,2" display="none" style="pointer-events:none" x="438.0509107918785" y="131.53511523714283" width="0" height="0"></rect><g id="selectorGroup0" transform="" display="inline"><path id="selectedBox0" fill="none" stroke="#4F80FF" shape-rendering="crispEdges" style="pointer-events:none" d="M85.9020301056,92.203083648 L298.4622359808001,92.203083648 298.4622359808001,233.35134937600003 85.9020301056,233.35134937600003z"></path><g display="inline"><circle id="selectorGrip_rotate_nw" fill="#000" r="8" stroke="#000" fill-opacity="0" stroke-opacity="0" stroke-width="0" style="" cx="81.9020301056" cy="88.203083648"></circle><circle id="selectorGrip_rotate_ne" fill="#000" r="8" stroke="#000" fill-opacity="0" stroke-opacity="0" stroke-width="0" style="" cx="302.4622359808001" cy="88.203083648"></circle><circle id="selectorGrip_rotate_se" fill="#000" r="8" stroke="#000" fill-opacity="0" stroke-opacity="0" stroke-width="0" style="" cx="302.4622359808001" cy="237.35134937600003"></circle><circle id="selectorGrip_rotate_sw" fill="#000" r="8" stroke="#000" fill-opacity="0" stroke-opacity="0" stroke-width="0" style="" cx="81.9020301056" cy="237.35134937600003"></circle><rect id="selectorGrip_resize_nw" width="8" height="8" fill="#4F80FF" stroke="rgba(0,0,0,0)" style="cursor:nw-resize" pointer-events="all" x="82" y="88"></rect><rect id="selectorGrip_resize_n" width="8" height="8" fill="#4F80FF" stroke="rgba(0,0,0,0)" style="cursor:n-resize" pointer-events="all" x="188" y="88"></rect><rect id="selectorGrip_resize_ne" width="8" height="8" fill="#4F80FF" stroke="rgba(0,0,0,0)" style="cursor:ne-resize" pointer-events="all" x="294" y="88"></rect><rect id="selectorGrip_resize_e" width="8" height="8" fill="#4F80FF" stroke="rgba(0,0,0,0)" style="cursor:e-resize" pointer-events="all" x="294" y="159"></rect><rect id="selectorGrip_resize_se" width="8" height="8" fill="#4F80FF" stroke="rgba(0,0,0,0)" style="cursor:se-resize" pointer-events="all" x="294" y="229"></rect><rect id="selectorGrip_resize_s" width="8" height="8" fill="#4F80FF" stroke="rgba(0,0,0,0)" style="cursor:s-resize" pointer-events="all" x="188" y="229"></rect><rect id="selectorGrip_resize_sw" width="8" height="8" fill="#4F80FF" stroke="rgba(0,0,0,0)" style="cursor:sw-resize" pointer-events="all" x="82" y="229"></rect><rect id="selectorGrip_resize_w" width="8" height="8" fill="#4F80FF" stroke="rgba(0,0,0,0)" style="cursor:w-resize" pointer-events="all" x="82" y="159"></rect></g></g></g></svg>
+						</div>
+						<input id="zoom" size="3" value="100%" type="text" readonly="readonly" />
+					</div>
+				</div>
+				<div class="tcs-bottom">
+					<div class="zoom">
+						<select>
+							<option value="volvo">100%</option>
+							<option value="saab">80%</option>
+							<option value="opel">50%</option>
+							<option value="audi">20%</option>
+						</select>
+					</div>
+					<div class="show-reset selected"><img src="../images/zoom-fit.png" title=""></div>
+					<div class="show-splits"><img src="../images/view-split.png" title=""></div>
+					<div class="show-labels"><img src="../images/document-page-setup.16x16.png" title=""></div>
+					<div class="show-comment"><img src="../images/comment-add.16.png" title=""></div>
+					<div class="show-blocks"><img src="../images/block.18x18.png" title=""></div>
+					<div class="show-static-routes"><img src="../images/staticRoute.18x18.png" title=""></div>
+
+					<span class="show-position">x:100 y:200</span>
 				</div>
 			</div>
 		</div>
@@ -126,6 +149,9 @@
 	<script type="text/javascript" src="../plugin/zTree/js/jquery.zTree.core-3.5.js"></script>
 	<script type="text/javascript" src="../js/init.js"></script>
 	<script type="text/javascript" src="../js/modelling.js"></script>
+	<script type="text/javascript" src="../js/mousewheel.js"></script>
+	<script type="text/javascript" src="../js/tcs-editor.js"></script>
+	<script type="text/javascript" src="../js/tcscanvas.js"></script>
 
 </body>
 </html>

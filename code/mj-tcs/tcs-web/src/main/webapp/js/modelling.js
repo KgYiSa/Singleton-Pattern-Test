@@ -40,6 +40,24 @@ $(function(){
         // TODO 
     })
 
+
+    // modelling模式下，针对editor的共通操作eg：缩放，显示/隐藏网格线,title,blocks等
+    $(".left-container .operate-content .tcs-bottom div[class^=show-]").click(function(){
+        //console.log(this.className);
+        if($(this).hasClass("selected")) {
+            $(this).removeClass("selected");
+        } else {
+            $(this).addClass("selected");
+        }
+    })
+
+    // 鼠标位置信息显示
+    $(".tcs-editor").mousemove(function(e){
+        var x = e.pageX;
+        var y = e.pageY;
+        $(".left-container .operate-content .tcs-bottom .show-position").html("X:"+x+", Y:"+y);
+    })
+
 })
 
     //基本设定
@@ -124,13 +142,13 @@ function beforeClick(treeId, treeNode, clickFlag) {
 
 function onClick(event, treeId, treeNode, clickFlag) {
      // alert(event, treeId, treeNode, clickFlag)
-     console.log(treeNode)
+     //console.log(treeNode)
 
      var count = 1;
      var str = "";
      $.each(treeNode, function(key, value) {
         if(count < 5){
-            console.log(key+"--"+value);
+            //console.log(key+"--"+value);
             str+="<tr><td>"+key+"</td><td>"+value+"</td></tr>"
             count ++;
         } else {
@@ -161,7 +179,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 var showAttr = function(str){
     // $("#table1 tr th:not(:nth-child(1))").remove();  
     var cont = $(".properties .table-body tbody tr:not(:nth-child(1)");
-     console.log(cont)
+     //console.log(cont)
      
      cont.remove()
 

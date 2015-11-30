@@ -31,19 +31,19 @@ public class VehicleDto extends BaseEntityDto {
 
     @DtoField
     @Column
-    private int length;
+    private double length;
 
     @DtoField
     @Column
-    private int energyLevel;
+    private double energyLevel;
 
     @DtoField
     @Column
-    private int energyLevelCritical;
+    private double energyLevelCritical;
 
     @DtoField
     @Column
-    private int energyLevelGood;
+    private double energyLevelGood;
 
     @DtoField
     @Column
@@ -51,11 +51,11 @@ public class VehicleDto extends BaseEntityDto {
 
     @DtoField
     @Column
-    private int maxVelocity;
+    private double maxVelocity;
 
     @DtoField
     @Column
-    private int maxReverseVelocity;
+    private double maxReverseVelocity;
 
     @Column
     private PointDto currentPosition;
@@ -65,7 +65,7 @@ public class VehicleDto extends BaseEntityDto {
             dtoBeanKey = "TripleDto",
             entityBeanKeys = {"Triple"})
     @OneToOne
-    private TripleDto triple;
+    private TripleDto precisePosition;
 
     @DtoField
     @Column
@@ -87,23 +87,23 @@ public class VehicleDto extends BaseEntityDto {
         this.name = name;
     }
 
-    public int getLength() {
+    public double getLength() {
         return length;
     }
 
-    public void setLength(int length) {
+    public void setLength(double length) {
         this.length = length;
     }
 
-    public int getEnergyLevel() {
+    public double getEnergyLevel() {
         return energyLevel;
     }
 
-    public void setEnergyLevel(int energyLevel) {
+    public void setEnergyLevel(double energyLevel) {
         this.energyLevel = energyLevel;
     }
 
-    public int getEnergyLevelCritical() {
+    public double getEnergyLevelCritical() {
         return energyLevelCritical;
     }
 
@@ -111,7 +111,7 @@ public class VehicleDto extends BaseEntityDto {
         this.energyLevelCritical = energyLevelCritical;
     }
 
-    public int getEnergyLevelGood() {
+    public double getEnergyLevelGood() {
         return energyLevelGood;
     }
 
@@ -127,7 +127,7 @@ public class VehicleDto extends BaseEntityDto {
         this.rechargeOperation = rechargeOperation;
     }
 
-    public int getMaxVelocity() {
+    public double getMaxVelocity() {
         return maxVelocity;
     }
 
@@ -135,7 +135,7 @@ public class VehicleDto extends BaseEntityDto {
         this.maxVelocity = maxVelocity;
     }
 
-    public int getMaxReverseVelocity() {
+    public double getMaxReverseVelocity() {
         return maxReverseVelocity;
     }
 
@@ -151,12 +151,12 @@ public class VehicleDto extends BaseEntityDto {
         this.currentPosition = currentPosition;
     }
 
-    public TripleDto getTriple() {
-        return triple;
+    public TripleDto getPrecisePosition() {
+        return precisePosition;
     }
 
-    public void setTriple(TripleDto triple) {
-        this.triple = triple;
+    public void setPrecisePosition(TripleDto precisePosition) {
+        this.precisePosition = precisePosition;
     }
 
     public double getOrientationAngle() {

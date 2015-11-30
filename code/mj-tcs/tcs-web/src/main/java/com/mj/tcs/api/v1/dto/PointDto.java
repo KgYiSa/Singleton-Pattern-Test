@@ -41,6 +41,22 @@ public class PointDto extends BaseEntityDto {
 //    @JoinColumn(name = "position_id")
     private TripleDto position;
 
+    @JsonProperty("display_position_x")
+    @Column
+    private long display_position_x;
+
+    @JsonProperty("display_position_y")
+    @Column
+    private long display_position_y;
+
+    @JsonProperty("label_offset_x")
+    @Column
+    private long label_offset_x;
+
+    @JsonProperty("label_offset_y")
+    @Column
+    private long label_offset_y;
+
     @DtoField()
     @Column(name = "vehicle_orientation_angle")
     private double vehicleOrientationAngle = 0d/*Double.NaN*/;//Can NOT be NaN, will cause issue: java.sql.SQLException: 'NaN' is not a valid numeric or approximate numeric value
@@ -90,6 +106,38 @@ public class PointDto extends BaseEntityDto {
 
     public void setPosition(TripleDto position) {
         this.position = position;
+    }
+
+    public long getDisplay_position_x() {
+        return display_position_x;
+    }
+
+    public void setDisplay_position_x(long display_position_x) {
+        this.display_position_x = display_position_x;
+    }
+
+    public long getDisplay_position_y() {
+        return display_position_y;
+    }
+
+    public void setDisplay_position_y(long display_position_y) {
+        this.display_position_y = display_position_y;
+    }
+
+    public long getLabel_offset_x() {
+        return label_offset_x;
+    }
+
+    public void setLabel_offset_x(long label_offset_x) {
+        this.label_offset_x = label_offset_x;
+    }
+
+    public long getLabel_offset_y() {
+        return label_offset_y;
+    }
+
+    public void setLabel_offset_y(long label_offset_y) {
+        this.label_offset_y = label_offset_y;
     }
 
     public double getVehicleOrientationAngle() {

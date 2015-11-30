@@ -66,6 +66,11 @@ public class LocationLinkDto extends BaseEntityDto {
     public LocationLinkDto() {
     }
 
+    public LocationLinkDto(LocationDto locationDto, PointDto pointDto) {
+        setLocationDto(locationDto);
+        setPointDto(pointDto);
+    }
+
     public SceneDto getSceneDto() {
         return sceneDto;
     }

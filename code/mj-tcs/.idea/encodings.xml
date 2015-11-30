@@ -11,5 +11,6 @@
     <file url="file://$PROJECT_DIR$/tcs-web/src/main/webapp/plugin/draw2d/two.js" charset="GBK" />
     <file url="file://$PROJECT_DIR$/tcs-web/src/main/webapp/plugin/draw2d/two.min.js" charset="GBK" />
     <file url="file://$PROJECT_DIR$/tcs-web/src/main/webapp/plugin/draw2d/underscore.js" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/tcs-web/src/test/java/com/mj/tcs/util/SceneDtoModelGenerator.java" charset="GBK" />
   </component>
 </project>

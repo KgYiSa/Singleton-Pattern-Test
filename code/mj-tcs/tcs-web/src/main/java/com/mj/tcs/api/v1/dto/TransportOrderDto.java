@@ -91,6 +91,14 @@ public class TransportOrderDto extends BaseEntityDto {
         this.destinations = Objects.requireNonNull(destinations, "destinations");
     }
 
+    public void addDestionation(DestinationDto destinationDto) {
+        this.destinations.add(Objects.requireNonNull(destinationDto, "destinationDto"));
+    }
+
+    public void removeDestionation(DestinationDto destinationDto) {
+        this.destinations.remove(Objects.requireNonNull(destinationDto, "destinationDto"));
+    }
+
     /**
      * Returns this transport order's deadline. If the value of transport order's
      * deadline was not changed, the initial value <code>Long.MAX_VALUE</code>

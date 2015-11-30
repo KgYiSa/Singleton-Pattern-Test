@@ -1,5 +1,6 @@
 package com.mj.tcs.api.v1.dto;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -41,21 +42,21 @@ public class PointDto extends BaseEntityDto {
 //    @JoinColumn(name = "position_id")
     private TripleDto position;
 
-    @JsonProperty("display_position_x")
+    @JsonProperty("displayPositionX")
     @Column
-    private long display_position_x;
+    private long displayPositionX;
 
-    @JsonProperty("display_position_y")
+    @JsonProperty("displayPositionY")
     @Column
-    private long display_position_y;
+    private long displayPositionY;
 
-    @JsonProperty("label_offset_x")
+    @JsonProperty("labelOffsetX")
     @Column
-    private long label_offset_x;
+    private long labelOffsetX;
 
-    @JsonProperty("label_offset_y")
+    @JsonProperty("labelOffsetY")
     @Column
-    private long label_offset_y;
+    private long labelOffsetY;
 
     @DtoField()
     @Column(name = "vehicle_orientation_angle")
@@ -67,6 +68,7 @@ public class PointDto extends BaseEntityDto {
 
     // convert outside
     @JsonProperty("incomingPaths")
+    @JsonManagedReference
 //    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "destinationPoint")
     @ElementCollection
     @CollectionTable(name = "tcs_model_rel_imcoming_paths")
@@ -108,36 +110,36 @@ public class PointDto extends BaseEntityDto {
         this.position = position;
     }
 
-    public long getDisplay_position_x() {
-        return display_position_x;
+    public long getDisplayPositionX() {
+        return displayPositionX;
     }
 
-    public void setDisplay_position_x(long display_position_x) {
-        this.display_position_x = display_position_x;
+    public void setDisplayPositionX(long displayPositionX) {
+        this.displayPositionX = displayPositionX;
     }
 
-    public long getDisplay_position_y() {
-        return display_position_y;
+    public long getDisplayPositionY() {
+        return displayPositionY;
     }
 
-    public void setDisplay_position_y(long display_position_y) {
-        this.display_position_y = display_position_y;
+    public void setDisplayPositionY(long displayPositionY) {
+        this.displayPositionY = displayPositionY;
     }
 
-    public long getLabel_offset_x() {
-        return label_offset_x;
+    public long getLabelOffsetX() {
+        return labelOffsetX;
     }
 
-    public void setLabel_offset_x(long label_offset_x) {
-        this.label_offset_x = label_offset_x;
+    public void setLabelOffsetX(long labelOffsetX) {
+        this.labelOffsetX = labelOffsetX;
     }
 
-    public long getLabel_offset_y() {
-        return label_offset_y;
+    public long getLabelOffsetY() {
+        return labelOffsetY;
     }
 
-    public void setLabel_offset_y(long label_offset_y) {
-        this.label_offset_y = label_offset_y;
+    public void setLabelOffsetY(long labelOffsetY) {
+        this.labelOffsetY = labelOffsetY;
     }
 
     public double getVehicleOrientationAngle() {

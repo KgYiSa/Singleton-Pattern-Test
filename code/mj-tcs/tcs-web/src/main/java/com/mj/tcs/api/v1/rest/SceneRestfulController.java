@@ -1,13 +1,10 @@
-package com.mj.tcs.api.v1.web;
+package com.mj.tcs.api.v1.rest;
 
 import com.mj.tcs.api.v1.dto.SceneDto;
+import com.mj.tcs.api.v1.web.ServiceController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
@@ -17,10 +14,10 @@ import java.util.Collection;
  *
  * @author Wang Zhen
  */
-@Controller
+@RestController
 //@ExposesResourceFor(SceneDto.class)
-@RequestMapping({"/api/v1/web", "/web"})
-public class SceneController extends ServiceController {
+@RequestMapping({"/api/v1/rest", "/rest"})
+public class SceneRestfulController extends ServiceController {
 //    @Autowired
 //    @Qualifier(value = "SceneDtoConverter")
 //    private DtoConverter dtoConverter;// = new DtoConverterImp();

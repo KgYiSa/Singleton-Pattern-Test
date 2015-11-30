@@ -31,19 +31,19 @@ public class VehicleDto extends BaseEntityDto {
 
     @DtoField
     @Column
-    private int length;
+    private double length;
 
     @DtoField
     @Column
-    private int energyLevel;
+    private double energyLevel;
 
     @DtoField
     @Column
-    private int energyLevelCritical;
+    private double energyLevelCritical;
 
     @DtoField
     @Column
-    private int energyLevelGood;
+    private double energyLevelGood;
 
     @DtoField
     @Column
@@ -87,23 +87,23 @@ public class VehicleDto extends BaseEntityDto {
         this.name = name;
     }
 
-    public int getLength() {
+    public double getLength() {
         return length;
     }
 
-    public void setLength(int length) {
+    public void setLength(double length) {
         this.length = length;
     }
 
-    public int getEnergyLevel() {
+    public double getEnergyLevel() {
         return energyLevel;
     }
 
-    public void setEnergyLevel(int energyLevel) {
+    public void setEnergyLevel(double energyLevel) {
         this.energyLevel = energyLevel;
     }
 
-    public int getEnergyLevelCritical() {
+    public double getEnergyLevelCritical() {
         return energyLevelCritical;
     }
 
@@ -111,7 +111,7 @@ public class VehicleDto extends BaseEntityDto {
         this.energyLevelCritical = energyLevelCritical;
     }
 
-    public int getEnergyLevelGood() {
+    public double getEnergyLevelGood() {
         return energyLevelGood;
     }
 

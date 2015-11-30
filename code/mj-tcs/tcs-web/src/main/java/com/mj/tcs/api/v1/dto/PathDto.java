@@ -106,6 +106,14 @@ public class PathDto extends BaseEntityDto {
         this.destinationPointDto = destinationPointDto;
     }
 
+    public List<TripleDto> getControlPoints() {
+        return controlPoints;
+    }
+
+    public void setControlPoints(List<TripleDto> controlPoints) {
+        this.controlPoints = controlPoints;
+    }
+
     public long getLength() {
         return length;
     }
@@ -126,7 +134,7 @@ public class PathDto extends BaseEntityDto {
         return maxVelocity;
     }
 
-    public void setMaxVelocity(int maxVelocity) {
+    public void setMaxVelocity(double maxVelocity) {
         this.maxVelocity = maxVelocity;
     }
 
@@ -134,7 +142,7 @@ public class PathDto extends BaseEntityDto {
         return maxReverseVelocity;
     }
 
-    public void setMaxReverseVelocity(int maxReverseVelocity) {
+    public void setMaxReverseVelocity(double maxReverseVelocity) {
         this.maxReverseVelocity = maxReverseVelocity;
     }
 

@@ -51,11 +51,11 @@ public class VehicleDto extends BaseEntityDto {
 
     @DtoField
     @Column
-    private int maxVelocity;
+    private double maxVelocity;
 
     @DtoField
     @Column
-    private int maxReverseVelocity;
+    private double maxReverseVelocity;
 
     @Column
     private PointDto currentPosition;
@@ -65,7 +65,7 @@ public class VehicleDto extends BaseEntityDto {
             dtoBeanKey = "TripleDto",
             entityBeanKeys = {"Triple"})
     @OneToOne
-    private TripleDto triple;
+    private TripleDto precisePosition;
 
     @DtoField
     @Column
@@ -127,7 +127,7 @@ public class VehicleDto extends BaseEntityDto {
         this.rechargeOperation = rechargeOperation;
     }
 
-    public int getMaxVelocity() {
+    public double getMaxVelocity() {
         return maxVelocity;
     }
 
@@ -135,7 +135,7 @@ public class VehicleDto extends BaseEntityDto {
         this.maxVelocity = maxVelocity;
     }
 
-    public int getMaxReverseVelocity() {
+    public double getMaxReverseVelocity() {
         return maxReverseVelocity;
     }
 
@@ -151,12 +151,12 @@ public class VehicleDto extends BaseEntityDto {
         this.currentPosition = currentPosition;
     }
 
-    public TripleDto getTriple() {
-        return triple;
+    public TripleDto getPrecisePosition() {
+        return precisePosition;
     }
 
-    public void setTriple(TripleDto triple) {
-        this.triple = triple;
+    public void setPrecisePosition(TripleDto precisePosition) {
+        this.precisePosition = precisePosition;
     }
 
     public double getOrientationAngle() {

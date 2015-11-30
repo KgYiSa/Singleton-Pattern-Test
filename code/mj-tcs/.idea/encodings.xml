@@ -6,7 +6,6 @@
     <file url="file://$PROJECT_DIR$/tcs-web" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/tcs-web-server" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/tcs-web/src/main/java/com/mj/tcs/api/v1/web/LoginController.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/tcs-web/src/main/java/com/mj/tcs/api/v1/web/LoginController.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/tcs-web/src/main/java/com/mj/tcs/api/v1/web/LogoutController.java" charset="GBK" />
   </component>
 </project>

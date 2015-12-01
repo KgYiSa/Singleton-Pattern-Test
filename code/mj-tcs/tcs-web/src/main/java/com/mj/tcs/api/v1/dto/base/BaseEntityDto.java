@@ -12,6 +12,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author Wang Zhen
@@ -20,6 +21,11 @@ import java.util.Map;
 @Dto
 @MappedSuperclass
 public class BaseEntityDto implements Serializable, Cloneable {
+
+    @JsonProperty("@UUID")
+    @Transient
+    private final String uuid;
+
     /**
      * Each type in the same scene should be unique!!!
      * To accept same names in the same scene in that way (Not Recommended).
@@ -44,6 +50,14 @@ public class BaseEntityDto implements Serializable, Cloneable {
 
     @Transient // TODO:
     private Map<String, Object> properties = new HashMap<>();
+
+    public BaseEntityDto() {
+        uuid = UUID.randomUUID().toString();
+    }
+
+    public String getUUID() {
+        return uuid;
+    }
 
     public Long getId() {
         return id;

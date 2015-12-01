@@ -45,19 +45,19 @@ public class PointDto extends BaseEntityDto {
     private TripleDto position;
 
     @JsonProperty("display_position_x")
-    @Column
+    @Column(name = "display_position_x")
     private long displayPositionX;
 
     @JsonProperty("display_position_y")
-    @Column
+    @Column(name = "display_position_y")
     private long displayPositionY;
 
     @JsonProperty("label_offset_x")
-    @Column
+    @Column(name = "label_offset_x")
     private long labelOffsetX;
 
     @JsonProperty("label_offset_y")
-    @Column
+    @Column(name = "label_offset_y")
     private long labelOffsetY;
 
     @DtoField()

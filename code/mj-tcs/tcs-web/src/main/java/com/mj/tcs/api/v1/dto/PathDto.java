@@ -42,12 +42,14 @@ public class PathDto extends BaseEntityDto {
     @JsonProperty("sourcePoint")
     @JsonIgnoreProperties({"version", "auditor", "properties", "position", "display_position_x", "display_position_y", "label_offset_x", "label_offset_y", "vehicle_orientation_angle", "incoming_paths", "outgoing_paths", "attached_links"})
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "source_point")
 //    @Column(name = "sourcePoint")
     private PointDto sourcePointDto;
 
     @JsonProperty("destinationPoint")
     @JsonIgnoreProperties({"version", "auditor", "properties", "position", "display_position_x", "display_position_y", "label_offset_x", "label_offset_y", "vehicle_orientation_angle", "incoming_paths", "outgoing_paths", "attached_links"})
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name = "destination_point")
 //    @Column(name = "destinationPoint")
     private PointDto destinationPointDto;
 

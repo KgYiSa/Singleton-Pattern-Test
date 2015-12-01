@@ -45,6 +45,7 @@ public class LocationLinkDto extends BaseEntityDto {
     @JsonBackReference
     // Convert outside in case of stack overflow
     @ManyToOne
+    @JoinColumn(name = "location")
     private LocationDto locationDto;
 
     /**
@@ -55,6 +56,7 @@ public class LocationLinkDto extends BaseEntityDto {
 //            dtoBeanKey = "PointDto",
 //            entityBeanKeys = {"Point"})
     @ManyToOne
+    @JoinColumn(name = "point")
     private PointDto pointDto;
 
     /**

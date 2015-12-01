@@ -51,6 +51,7 @@ public class LocationDto extends BaseEntityDto {
             dtoBeanKey = "LocationTypeDto",
             entityBeanKeys = {"LocationType"})
     @OneToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "location_type")
 //    @Column(name = "locationType")
     private LocationTypeDto locationTypeDto;
 
@@ -69,19 +70,19 @@ public class LocationDto extends BaseEntityDto {
     private Set<LocationLinkDto> attachedLinks = new HashSet<>();
 
     @JsonProperty("displayPositionX")
-    @Column
+    @Column(name = "display_position_x")
     private long displayPositionX;
 
     @JsonProperty("displayPositionY")
-    @Column
+    @Column(name = "display_position_y")
     private long displayPositionY;
 
     @JsonProperty("labelOffsetX")
-    @Column
+    @Column(name = "label_offset_x")
     private long labelOffsetX;
 
     @JsonProperty("labelOffsetY")
-    @Column
+    @Column(name = "label_offset_y")
     private long labelOffsetY;
 
 

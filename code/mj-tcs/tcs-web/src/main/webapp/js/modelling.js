@@ -58,6 +58,16 @@ $(function(){
         $(".left-container .operate-content .tcs-bottom .show-position").html("X:"+x+", Y:"+y);
     })
 
+
+    //$(".zoom-label #zoom_select").click(function(){
+    //
+    //})
+    //
+    //$(".zoom-label #zoom").click(function(){
+    //    alert()
+    //    $(".zoom-label #zoom_select").click();
+    //})
+
 })
 
     //基本设定

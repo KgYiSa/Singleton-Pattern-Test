@@ -53,9 +53,19 @@
 }
 
 .left-container .operate-content .tcs-bottom select{
+	position: absolute;
+	left: 4px;
+	width: 50px;
 	height: 23px;
 	padding-left: 1px;
+	-webkit-appearance: none;
+	opacity: 0;
 
+}
+
+.left-container .operate-content .tcs-bottom .zoom-label #zoom{
+	height: 23px;
+	width: 50px;
 }
 
 .left-container .operate-content .tcs-bottom > div > img{

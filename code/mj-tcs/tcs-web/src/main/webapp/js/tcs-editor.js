@@ -98,6 +98,7 @@
             $('#workarea').on('mousewheel', function(e, delta, deltaX, deltaY){
                 if (e.altKey || e.ctrlKey) {
                     e.preventDefault();
+
                     zoom = parseInt($("#zoom").val())
                     $("#zoom").val(parseInt(zoom + deltaY*(e.altKey ? 10 : 5))).change()
                 }
@@ -157,7 +158,7 @@
                         window.animatedZoom = requestAnimationFrame(animateZoom)
                     }
                     else {
-                        $("#zoom").val(parseInt(zoomlevel*100))
+                        $("#zoom").val(parseInt(zoomlevel*100) + "%")
                         $("option", "#zoom_select").removeAttr("selected")
                         $("option[value="+ parseInt(zoomlevel*100) +"]", "#zoom_select").attr("selected", "selected")
                     }

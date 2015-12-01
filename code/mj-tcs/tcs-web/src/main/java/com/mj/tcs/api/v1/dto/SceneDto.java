@@ -8,6 +8,7 @@ import com.inspiresoftware.lib.dto.geda.annotations.DtoCollection;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.api.v1.dto.converter.value.converter.*;
+import com.mj.tcs.exception.TcsServerRuntimeException;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -27,7 +28,7 @@ public class SceneDto extends BaseEntityDto {
     @Column(unique = true, nullable = false)
     private String name;
 
-    @JsonProperty("pointDtos")
+    @JsonProperty("points")
     @DtoCollection(value = "pointDtos",
                     entityCollectionClass = HashSet.class,
                     dtoCollectionClass = HashSet.class,
@@ -37,7 +38,7 @@ public class SceneDto extends BaseEntityDto {
     @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
     private Set<PointDto> pointDtos;
 
-    @JsonProperty("pathDtos")
+    @JsonProperty("paths")
     @DtoCollection(value = "pathDtos",
             entityCollectionClass = HashSet.class,
             dtoCollectionClass = HashSet.class,

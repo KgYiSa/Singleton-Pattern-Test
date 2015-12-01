@@ -1,13 +1,13 @@
 package com.mj.tcs.api.v1.dto;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.api.v1.dto.base.TripleDto;
+import com.mj.tcs.data.model.Path;
 
 import javax.persistence.*;
 import java.util.*;
@@ -16,6 +16,7 @@ import java.util.*;
  * @author Wang Zhen
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
+//@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
 @Dto
 @Entity(name = "tcs_model_point")
 //@Table(name = "tcs_model_point", uniqueConstraints =
@@ -23,6 +24,7 @@ import java.util.*;
 //)
 public class PointDto extends BaseEntityDto {
 
+    @JsonIgnore
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "scene", nullable = false)
     private SceneDto sceneDto;
@@ -42,19 +44,19 @@ public class PointDto extends BaseEntityDto {
 //    @JoinColumn(name = "position_id")
     private TripleDto position;
 
-    @JsonProperty("displayPositionX")
+    @JsonProperty("display_position_x")
     @Column
     private long displayPositionX;
 
-    @JsonProperty("displayPositionY")
+    @JsonProperty("display_position_y")
     @Column
     private long displayPositionY;
 
-    @JsonProperty("labelOffsetX")
+    @JsonProperty("label_offset_x")
     @Column
     private long labelOffsetX;
 
-    @JsonProperty("labelOffsetY")
+    @JsonProperty("label_offset_y")
     @Column
     private long labelOffsetY;
 
@@ -67,23 +69,26 @@ public class PointDto extends BaseEntityDto {
     private Type type = Type.HALT_POSITION;
 
     // convert outside
-    @JsonProperty("incomingPaths")
-    @JsonManagedReference
+    @JsonProperty("incoming_paths")
+    @JsonIgnoreProperties({"version", "auditor", "properties", "sourcePoint", "destinationPoint", "control_points", "length", "routing_cost", "max_velocity", "max_reverse_velocity", "locked"})
 //    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "destinationPoint")
     @ElementCollection
-    @CollectionTable(name = "tcs_model_rel_imcoming_paths")
+    @CollectionTable(name = "tcs_model_rel_point_imcoming_paths")
     private Set<PathDto> incomingPaths = new HashSet<>();
 
     // convert outside
-    @JsonProperty("outgoingPaths")
+    @JsonProperty("outgoing_paths")
+    @JsonIgnoreProperties({"version", "auditor", "properties", "sourcePoint", "destinationPoint", "control_points", "length", "routing_cost", "max_velocity", "max_reverse_velocity", "locked"})
 //    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "sourcePoint")
     @ElementCollection
-    @CollectionTable(name = "tcs_model_rel_outgoing_paths")
+    @CollectionTable(name = "tcs_model_rel_point_outgoing_paths")
     private Set<PathDto> outgoingPaths = new HashSet<>();
 
+//    @JsonIdentityReference(alwaysAsId = true)
+    @JsonIgnoreProperties({"version", "auditor", "properties", "location", "point"})
 //    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "point")
     @ElementCollection
-    @CollectionTable(name = "tcs_model_rel_attached_links")
+    @CollectionTable(name = "tcs_model_rel_point_attached_links")
     private Set<LocationLinkDto> attachedLinks = new HashSet<>();
 
     public SceneDto getSceneDto() {
@@ -92,6 +97,11 @@ public class PointDto extends BaseEntityDto {
 
     public void setSceneDto(SceneDto sceneDto) {
         this.sceneDto = sceneDto;
+    }
+
+    @Override
+    public void clearId() {
+        setId(null);
     }
 
     public String getName() {
@@ -162,11 +172,11 @@ public class PointDto extends BaseEntityDto {
         return incomingPaths;
     }
 
-    public void addIncomingPathDto(PathDto newPath) {
+    public void addIncomingPath(PathDto newPath) {
         this.incomingPaths.add(Objects.requireNonNull(newPath, "newPath"));
     }
 
-    public void removeIncomingPathDto(PathDto path) {
+    public void removeIncomingPath(PathDto path) {
         this.incomingPaths.remove(Objects.requireNonNull(path, "path"));
     }
 
@@ -174,28 +184,20 @@ public class PointDto extends BaseEntityDto {
         this.incomingPaths = incomingPaths;
     }
 
-    public void addIncomingPath(PathDto incomingPath) {
-        this.incomingPaths.add(incomingPath);
-    }
-
     public Set<PathDto> getOutgoingPaths() {
         return outgoingPaths;
     }
 
-    public void addOutgoingPathDto(PathDto newPath) {
+    public void addOutgoingPath(PathDto newPath) {
         this.outgoingPaths.add(Objects.requireNonNull(newPath, "newPath"));
     }
 
-    public void removeOutgoingPathDto(PathDto pathDto) {
+    public void removeOutgoingPath(PathDto pathDto) {
         this.outgoingPaths.remove(Objects.requireNonNull(pathDto, "pathDto"));
     }
 
     public void setOutgoingPaths(Set<PathDto> outgoingPathIds) {
         this.outgoingPaths = outgoingPathIds;
-    }
-
-    public void addOutgoingPath(PathDto outgoingPath) {
-        this.outgoingPaths.add(outgoingPath);
     }
 
     public Set<LocationLinkDto> getAttachedLinks() {
@@ -216,20 +218,20 @@ public class PointDto extends BaseEntityDto {
          * Indicates a position at which a vehicle is expected to report in.
          * Halting or even parking at such a position is not allowed.
          */
-        REPORT_POSITION("REPORT_POSITION"),
+        REPORT_POSITION("REPORT"),
         /**
          * Indicates a position at which a vehicle may halt temporarily, e.g.
          * for executing an operating. The vehicle is also expected to report in
          * when it arrives at such a position. It may not park here for longer
          * than necessary, though.
          */
-        HALT_POSITION("HALT_POSITION"),
+        HALT_POSITION("HALT"),
         /**
          * Indicates a position at which a vehicle may halt for longer periods
          * of time when it is not processing orders. The vehicle is also
          * expected to report in when it arrives at such a position.
          */
-        PARK_POSITION("PARK_POSITION");
+        PARK_POSITION("PARK");
 
         private String text;
 

@@ -156,8 +156,8 @@ public class ServiceStateModelling {
         // the scene object will NOT know the changes, so let scene handle it.
         PathDto path = Objects.requireNonNull(entity, "new path object is null");
         SceneDto scene = Objects.requireNonNull(entity.getSceneDto(), "The new path object belongs no scene!");
-        PointDto srcPoint = Objects.requireNonNull(entity.getSourcePointDto(), "The new path object belongs no source point!");
-        PointDto dstPoint = Objects.requireNonNull(entity.getDestinationPointDto(), "The new path object belongs no destination point!");
+//        PointDto srcPoint = Objects.requireNonNull(entity.getSourcePointDto(), "The new path object belongs no source point!");
+//        PointDto dstPoint = Objects.requireNonNull(entity.getDestinationPointDto(), "The new path object belongs no destination point!");
 
         // we should know the new ID of the path.
         List<Long> currentPathDtoIds = new ArrayList<>();
@@ -196,8 +196,8 @@ public class ServiceStateModelling {
 
     public void deletePathDto(PathDto entity) {
         entity = Objects.requireNonNull(entity, "path is null");
-        PointDto srcPoint = Objects.requireNonNull(entity.getSourcePointDto(), "The path object belongs no source point!");
-        PointDto dstPoint = Objects.requireNonNull(entity.getDestinationPointDto(), "The path object belongs no destination point!");
+        final long srcPointId = Objects.requireNonNull(entity.getSourcePointDto(), "The path object belongs no source point!").getId();
+        final long dstPointId = Objects.requireNonNull(entity.getDestinationPointDto(), "The path object belongs no destination point!").getId();
 
         SceneDto scene = entity.getSceneDto();
 
@@ -206,11 +206,9 @@ public class ServiceStateModelling {
         if (scene.getPathDtoById(id) == null) {
             throw new TcsServerRuntimeException("The path is not belonging to the scene");
         }
-        final long srcPointId = srcPoint.getId();
         if (scene.getPointDtoById(srcPointId) == null) {
             throw new TcsServerRuntimeException("The source point of the path is not belonging to the scene");
         }
-        final long dstPointId = dstPoint.getId();
         if (scene.getPointDtoById(dstPointId) == null) {
             throw new TcsServerRuntimeException("The destination point of the path is not belonging to the scene");
         }
@@ -572,7 +570,7 @@ public class ServiceStateModelling {
             throw new TcsServerRuntimeException("PointDto is not the path's destination.");
         }
 
-        point.addIncomingPathDto(path);
+        point.addIncomingPath(path);
 
         return point;
     }
@@ -596,7 +594,7 @@ public class ServiceStateModelling {
             throw new ObjectUnknownException("PathDto is null, PointDto: " + point);
         }
 
-        point.removeIncomingPathDto(path);
+        point.removeIncomingPath(path);
 
         return point;
     }
@@ -625,7 +623,7 @@ public class ServiceStateModelling {
             throw new TcsServerRuntimeException("PointDto is not the path's source.");
         }
 
-        point.addOutgoingPathDto(path);
+        point.addOutgoingPath(path);
 
         return point;
     }
@@ -651,7 +649,7 @@ public class ServiceStateModelling {
             throw new ObjectUnknownException("PathDto is null, PointDto: " + path);
         }
 
-        point.removeOutgoingPathDto(path);
+        point.removeOutgoingPath(path);
 
         return point;
     }

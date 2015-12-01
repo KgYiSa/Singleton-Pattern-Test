@@ -1,7 +1,6 @@
 package com.mj.tcs.service.modelling;
 
 import com.mj.tcs.api.v1.dto.PathDto;
-import com.mj.tcs.api.v1.dto.PointDto;
 import com.mj.tcs.api.v1.dto.SceneDto;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.exception.ObjectUnknownException;
@@ -79,8 +78,8 @@ public class PathDtoService implements IEntityDtoService {
 
     private PathDto updatePath(PathDto entity) {
         PathDto path = (PathDto) Objects.requireNonNull(entity, "path entity is null");
-        PointDto srcPoint = Objects.requireNonNull(path.getSourcePointDto(), "The path object belongs no source point!");
-        PointDto dstPoint = Objects.requireNonNull(path.getDestinationPointDto(), "The path object belongs no destination point!");
+        final long srcPointId = Objects.requireNonNull(path.getSourcePointDto(), "The path object belongs no source point!").getId();
+        final long dstPointId = Objects.requireNonNull(path.getDestinationPointDto(), "The path object belongs no destination point!").getId();
 
         SceneDto scene = path.getSceneDto();
 
@@ -90,11 +89,9 @@ public class PathDtoService implements IEntityDtoService {
             throw new TcsServerRuntimeException("The path is not belonging to the scene " +
                     "or you can not create it by the method");
         }
-        final long srcPointId = srcPoint.getId();
         if (scene.getPointDtoById(srcPointId) == null) {
             throw new TcsServerRuntimeException("The source point of the path is not belonging to the scene");
         }
-        final long dstPointId = dstPoint.getId();
         if (scene.getPointDtoById(dstPointId) == null) {
             throw new TcsServerRuntimeException("The destination point of the path is not belonging to the scene");
         }

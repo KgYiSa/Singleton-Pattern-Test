@@ -47,18 +47,28 @@ public class SceneRestfulController extends ServiceController {
     public ResponseEntity<?> createScene(@RequestBody SceneDto sceneDto) {
         SceneDto newSceneDto = null;
 
-//        synchronized (sceneDto) {
-//            scene = (SceneDto) dtoConverter.convertToEntity(sceneDto);
-//        }
-//
-//        if (scene == null) {
-//            return new ResponseEntity<Object>(HttpStatus.NO_CONTENT);
-//        }
-//
-//        scene.clearId();
-
+        if (sceneDto.getPointDtos() != null) {
+            sceneDto.getPointDtos().forEach(p -> p.setSceneDto(sceneDto));
+        }
+        if (sceneDto.getPathDtos() != null) {
+            sceneDto.getPathDtos().forEach(p -> p.setSceneDto(sceneDto));
+        }
+        if (sceneDto.getLocationTypeDtos() != null) {
+            sceneDto.getLocationTypeDtos().forEach(t -> t.setSceneDto(sceneDto));
+        }
+        if (sceneDto.getLocationDtos() != null) {
+            sceneDto.getLocationDtos().forEach(l -> {
+                l.setSceneDto(sceneDto);
+                if (l.getAttachedLinks() != null) {
+                    l.getAttachedLinks().forEach(li -> li.setSceneDto(sceneDto));
+                }
+            });
+        }
+        if (sceneDto.getStaticRouteDtos() != null) {
+            sceneDto.getStaticRouteDtos().forEach(r -> r.setSceneDto(sceneDto));
+        }
         // Creating new scene
-        newSceneDto = getModellingService().createScene(newSceneDto);
+        newSceneDto = getModellingService().createScene(sceneDto);
 
         return new ResponseEntity<>(
 //                new SceneDtoResourceAssembler().toResource((SceneDto) dtoConverter.convertToDto(newSceneDto)),

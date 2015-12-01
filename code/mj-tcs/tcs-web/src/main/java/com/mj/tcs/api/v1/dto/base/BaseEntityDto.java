@@ -1,6 +1,7 @@
 package com.mj.tcs.api.v1.dto.base;
 
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
@@ -37,6 +38,7 @@ public class BaseEntityDto implements Serializable, Cloneable {
     @Version
     private Long version;
 
+    @JsonProperty("auditor")
     @Embedded
     private EntityAuditorDto auditorDto = null;
 
@@ -45,6 +47,14 @@ public class BaseEntityDto implements Serializable, Cloneable {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void clearId() {
+        this.id = null;
     }
 
     public Long getVersion() {

@@ -6,6 +6,7 @@ import com.mj.tcs.exception.ObjectUnknownException;
 import com.mj.tcs.repository.SceneDtoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 /**
  * @author Wang Zhen
  */
+@Transactional
 @Component
 public class SceneDtoService implements IEntityDtoService {
     private static final String SCENE_NAME_NEW_SUFFIX = "_1";

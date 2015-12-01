@@ -44,7 +44,7 @@ public class SceneDtoModelGenerator {
 
         PointDto pointDto = new PointDto();
         pointDto.setAuditorDto(createAuditor());
-//        setId(newPoint, id);
+//        pointDto.setId(id);
         pointDto.setName(name);
         pointDto.setPosition(tripleDto);
         pointDto.setDisplayPositionX(tripleDto.getX());
@@ -64,7 +64,7 @@ public class SceneDtoModelGenerator {
         String name = String.format(PATH_NAME_FORMAT, id);
 
         pathDto.setAuditorDto(createAuditor());
-//        setId(createPathCommand, id);
+//        pathDto.setId(id);
         pathDto.setName(name);
         pathDto.setSourcePointDto(srcPointDto);
         pathDto.setDestinationPointDto(dstPointDto);
@@ -75,8 +75,8 @@ public class SceneDtoModelGenerator {
         pathDto.setMaxReverseVelocity(1);
         pathDto.setMaxVelocity(1);
 
-        srcPointDto.addOutgoingPathDto(pathDto);
-        dstPointDto.addIncomingPathDto(pathDto);
+        srcPointDto.addOutgoingPath(pathDto);
+        dstPointDto.addIncomingPath(pathDto);
 
         pathDtos.add(pathDto);
 
@@ -137,12 +137,12 @@ public class SceneDtoModelGenerator {
         sceneDto.setName(newSceneName);
 
         // Points & Paths
-        for (int i=0; i< 10; i++) {
+        for (int i=0; i< 2; i++) {
             createPointDto();
 
-            if (i != 0 && i % 2 == 0) {
-                PointDto sourcePoint = (PointDto) pointDtos.toArray()[i/2 - 1];
-                PointDto destinationPoint = (PointDto) pointDtos.toArray()[i/2];
+            if (i != 0 && i % 2 == 1) {
+                PointDto sourcePoint = (PointDto) pointDtos.toArray()[i-1];
+                PointDto destinationPoint = (PointDto) pointDtos.toArray()[i];
 
                 createPathDto(sourcePoint, destinationPoint);
             }
@@ -151,18 +151,18 @@ public class SceneDtoModelGenerator {
         sceneDto.setPointDtos(pointDtos);
         sceneDto.setPathDtos(pathDtos);
 
-        LocationTypeDto locationTypeDto = createLocationTypeDto();
-        sceneDto.addLocationTypeDto(locationTypeDto);
-
-        LocationDto locationDto = createLocationDto((PointDto) pointDtos.toArray()[0], locationTypeDto);
-        sceneDto.addLocationDto(locationDto);
-
-        List<PointDto> hops = new ArrayList<>();
-        hops.add(((PointDto) pointDtos.toArray()[0]));
-        hops.add(((PointDto) pointDtos.toArray()[1]));
-        hops.add(((PointDto) pointDtos.toArray()[2]));
-        StaticRouteDto staticRouteDto = createStaticRouteDto(hops);
-        sceneDto.addStaticRouteDto(staticRouteDto);
+//        LocationTypeDto locationTypeDto = createLocationTypeDto();
+//        sceneDto.addLocationTypeDto(locationTypeDto);
+//
+//        LocationDto locationDto = createLocationDto((PointDto) pointDtos.toArray()[0], locationTypeDto);
+//        sceneDto.addLocationDto(locationDto);
+//
+//        List<PointDto> hops = new ArrayList<>();
+//        hops.add(((PointDto) pointDtos.toArray()[0]));
+//        hops.add(((PointDto) pointDtos.toArray()[1]));
+//        hops.add(((PointDto) pointDtos.toArray()[2]));
+//        StaticRouteDto staticRouteDto = createStaticRouteDto(hops);
+//        sceneDto.addStaticRouteDto(staticRouteDto);
 
         return sceneDto;
     }

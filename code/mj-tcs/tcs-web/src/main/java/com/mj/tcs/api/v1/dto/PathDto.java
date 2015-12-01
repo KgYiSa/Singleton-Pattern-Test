@@ -6,6 +6,7 @@
 
 package com.mj.tcs.api.v1.dto;
 
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
@@ -22,12 +23,14 @@ import java.util.Objects;
  * @author Wang Zhen
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
+//@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
 @Dto
 @Entity(name = "tcs_model_path")
 //@Table(name = "tcs_model_path", uniqueConstraints =
 //    @UniqueConstraint(columnNames = {"name", "scene"})
 //)
 public class PathDto extends BaseEntityDto {
+    @JsonIgnore
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "scene", nullable = false)
     private SceneDto sceneDto;
@@ -36,12 +39,17 @@ public class PathDto extends BaseEntityDto {
     @Column
     private String name;
 
+    @JsonProperty("sourcePoint")
+    @JsonIgnoreProperties({"version", "auditor", "properties", "position", "display_position_x", "display_position_y", "label_offset_x", "label_offset_y", "vehicle_orientation_angle", "incoming_paths", "outgoing_paths", "attached_links"})
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+//    @Column(name = "sourcePoint")
     private PointDto sourcePointDto;
 
+    @JsonProperty("destinationPoint")
+    @JsonIgnoreProperties({"version", "auditor", "properties", "position", "display_position_x", "display_position_y", "label_offset_x", "label_offset_y", "vehicle_orientation_angle", "incoming_paths", "outgoing_paths", "attached_links"})
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+//    @Column(name = "destinationPoint")
     private PointDto destinationPointDto;
-
 
     @ElementCollection
     @CollectionTable(name = "tcs_model_rel_path_control_points")

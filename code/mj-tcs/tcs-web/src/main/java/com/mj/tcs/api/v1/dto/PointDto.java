@@ -7,7 +7,6 @@ import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.api.v1.dto.base.TripleDto;
-import com.mj.tcs.data.model.Path;
 
 import javax.persistence.*;
 import java.util.*;
@@ -70,6 +69,8 @@ public class PointDto extends BaseEntityDto {
 
     // convert outside
     @JsonProperty("incoming_paths")
+    @JsonManagedReference(value = "incoming_paths")
+//    @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class)
     @JsonIgnoreProperties({"version", "auditor", "properties", "sourcePoint", "destinationPoint", "control_points", "length", "routing_cost", "max_velocity", "max_reverse_velocity", "locked"})
 //    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "destinationPoint")
     @ElementCollection
@@ -78,6 +79,7 @@ public class PointDto extends BaseEntityDto {
 
     // convert outside
     @JsonProperty("outgoing_paths")
+    @JsonManagedReference(value = "outgoing_paths")
     @JsonIgnoreProperties({"version", "auditor", "properties", "sourcePoint", "destinationPoint", "control_points", "length", "routing_cost", "max_velocity", "max_reverse_velocity", "locked"})
 //    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "sourcePoint")
     @ElementCollection

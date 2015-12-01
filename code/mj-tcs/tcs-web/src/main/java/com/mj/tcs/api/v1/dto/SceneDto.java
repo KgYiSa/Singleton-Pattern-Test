@@ -8,9 +8,11 @@ import com.inspiresoftware.lib.dto.geda.annotations.DtoCollection;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.api.v1.dto.converter.value.converter.*;
-import com.mj.tcs.exception.TcsServerRuntimeException;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
@@ -94,6 +96,17 @@ public class SceneDto extends BaseEntityDto {
         this.pointDtos = pointDtos;
     }
 
+    public PointDto getPointDtoByUUID(String uuid) {
+        if (pointDtos == null || uuid == null) {
+            return null;
+        }
+        Optional<PointDto> pointDto = pointDtos.stream().filter(p -> uuid.equals(p.getUUID())).findFirst();
+        if (pointDto.isPresent()) {
+            return pointDto.get();
+        }
+        return null;
+    }
+
     public PointDto getPointDtoById(long id) {
         if (pointDtos == null) {
             return null;
@@ -123,7 +136,7 @@ public class SceneDto extends BaseEntityDto {
     public boolean removePointById(long id) {
         PointDto point = getPointDtoById(id);
         if (point == null) {
-            throw new NullPointerException("path can not be found by id " + id);
+            throw new NullPointerException("path can not be found by uuid " + id);
         }
 
         return removePoint(point);
@@ -143,6 +156,17 @@ public class SceneDto extends BaseEntityDto {
         }
 
         return this.pathDtos.add(dto);
+    }
+
+    public PathDto getPathDtoByUUID(String uuid) {
+        if (pathDtos == null || uuid == null) {
+            return null;
+        }
+        Optional<PathDto> pathDto = pathDtos.stream().filter(l -> uuid.equals(l.getUUID())).findFirst();
+        if (pathDto.isPresent()) {
+            return pathDto.get();
+        }
+        return null;
     }
 
     public PathDto getPathDtoById(long id) {
@@ -166,7 +190,7 @@ public class SceneDto extends BaseEntityDto {
     public boolean removePathById(long id) {
         PathDto path = getPathDtoById(id);
         if (path == null) {
-            throw new NullPointerException("path can not be found by id " + id);
+            throw new NullPointerException("path can not be found by uuid " + id);
         }
 
         return removePathDto(path);
@@ -195,6 +219,17 @@ public class SceneDto extends BaseEntityDto {
         return this.locationTypeDtos.remove(Objects.requireNonNull(locationTypeDtos, "locationTypeDtos to removed is null"));
     }
 
+    public LocationTypeDto getLocationTypeDtoByUUID(String uuid) {
+        if (locationTypeDtos == null || uuid == null) {
+            return null;
+        }
+        Optional<LocationTypeDto> locationTypeDto = locationTypeDtos.stream().filter(l -> uuid.equals(l.getUUID())).findFirst();
+        if (locationTypeDto.isPresent()) {
+            return locationTypeDto.get();
+        }
+        return null;
+    }
+
     public LocationTypeDto getLocationTypeDtoById(long id) {
         if (locationTypeDtos == null) {
             return null;
@@ -203,6 +238,17 @@ public class SceneDto extends BaseEntityDto {
         Optional<LocationTypeDto> locationTypeDtoOp = locationTypeDtos.stream().filter(l -> l.getId() == id).findFirst();
         if (locationTypeDtoOp.isPresent()) {
             return locationTypeDtoOp.get();
+        }
+        return null;
+    }
+
+    public LocationDto getLocationDtoByUUID(String uuid) {
+        if (locationDtos == null || uuid == null) {
+            return null;
+        }
+        Optional<LocationDto> locationDto = locationDtos.stream().filter(l -> uuid.equals(l.getUUID())).findFirst();
+        if (locationDto.isPresent()) {
+            return locationDto.get();
         }
         return null;
     }
@@ -243,6 +289,17 @@ public class SceneDto extends BaseEntityDto {
             return false;
         }
         return this.staticRouteDtos.remove(Objects.requireNonNull(route, "route to removed is null"));
+    }
+
+    public StaticRouteDto getStaticRouteDtoByUUID(String uuid) {
+        if (staticRouteDtos == null || uuid == null) {
+            return null;
+        }
+        Optional<StaticRouteDto> routeDto = staticRouteDtos.stream().filter(r -> uuid.equals(r.getUUID())).findFirst();
+        if (routeDto.isPresent()) {
+            return routeDto.get();
+        }
+        return null;
     }
 
     public StaticRouteDto getStaticRouteDtoById(long id) {

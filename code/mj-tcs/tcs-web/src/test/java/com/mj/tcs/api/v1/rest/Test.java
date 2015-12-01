@@ -1,10 +1,8 @@
 package com.mj.tcs.api.v1.rest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mj.tcs.api.v1.dto.SceneDto;
 import com.mj.tcs.util.SceneDtoModelGenerator;
-import org.springframework.http.HttpEntity;
 
 import java.io.IOException;
 
@@ -20,6 +18,9 @@ public class Test {
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(dto);
         SceneDto dto2 = mapper.readValue(json, SceneDto.class);
+        if (dto2.getPointDtos() != null) {
+            dto2.getPointDtos().forEach(p -> p.setSceneDto(dto));
+        }
         System.out.println(json);
     }
 }

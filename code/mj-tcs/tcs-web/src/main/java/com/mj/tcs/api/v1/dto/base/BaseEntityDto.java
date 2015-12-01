@@ -18,6 +18,7 @@ import java.util.UUID;
  * @author Wang Zhen
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
+//@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class)
 @Dto
 @MappedSuperclass
 public class BaseEntityDto implements Serializable, Cloneable {

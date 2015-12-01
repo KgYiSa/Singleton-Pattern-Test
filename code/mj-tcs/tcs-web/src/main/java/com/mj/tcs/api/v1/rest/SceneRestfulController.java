@@ -1,12 +1,16 @@
 package com.mj.tcs.api.v1.rest;
 
+import com.mj.tcs.api.v1.dto.PathDto;
 import com.mj.tcs.api.v1.dto.SceneDto;
 import com.mj.tcs.api.v1.web.ServiceController;
+import com.mj.tcs.exception.ObjectUnknownException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * The class maintains the complete static topology of a scene model
@@ -45,30 +49,11 @@ public class SceneRestfulController extends ServiceController {
 
     @RequestMapping(value = "/scenes", method = RequestMethod.POST)
     public ResponseEntity<?> createScene(@RequestBody SceneDto sceneDto) {
-        SceneDto newSceneDto = null;
+        SceneDto newSceneDto = resolveRelationships(sceneDto);
 
-        if (sceneDto.getPointDtos() != null) {
-            sceneDto.getPointDtos().forEach(p -> p.setSceneDto(sceneDto));
-        }
-        if (sceneDto.getPathDtos() != null) {
-            sceneDto.getPathDtos().forEach(p -> p.setSceneDto(sceneDto));
-        }
-        if (sceneDto.getLocationTypeDtos() != null) {
-            sceneDto.getLocationTypeDtos().forEach(t -> t.setSceneDto(sceneDto));
-        }
-        if (sceneDto.getLocationDtos() != null) {
-            sceneDto.getLocationDtos().forEach(l -> {
-                l.setSceneDto(sceneDto);
-                if (l.getAttachedLinks() != null) {
-                    l.getAttachedLinks().forEach(li -> li.setSceneDto(sceneDto));
-                }
-            });
-        }
-        if (sceneDto.getStaticRouteDtos() != null) {
-            sceneDto.getStaticRouteDtos().forEach(r -> r.setSceneDto(sceneDto));
-        }
+
         // Creating new scene
-        newSceneDto = getModellingService().createScene(sceneDto);
+        newSceneDto = getModellingService().createScene(newSceneDto);
 
         return new ResponseEntity<>(
 //                new SceneDtoResourceAssembler().toResource((SceneDto) dtoConverter.convertToDto(newSceneDto)),
@@ -142,4 +127,57 @@ public class SceneRestfulController extends ServiceController {
 //
 //        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 //    }
+
+    private SceneDto resolveRelationships(SceneDto sceneDto) {
+        if (sceneDto.getPointDtos() != null) {
+            sceneDto.getPointDtos().forEach(p -> {
+                p.setSceneDto(sceneDto);
+
+                if (p.getIncomingPaths() != null) {
+                    p.setIncomingPaths(p.getIncomingPaths().stream()
+                            .map(pa -> {
+                                final PathDto tempPa = Objects.requireNonNull(sceneDto.getPathDtoByUUID(pa.getUUID()));
+                                tempPa.setDestinationPointDto(p);
+                                return tempPa;
+                            })
+                            .collect(Collectors.toSet()));
+                }
+                if (p.getOutgoingPaths() != null) {
+                    p.setOutgoingPaths(p.getOutgoingPaths().stream()
+                            .map(pa -> {
+                                final PathDto tempPa = Objects.requireNonNull(sceneDto.getPathDtoByUUID(pa.getUUID()));
+                                tempPa.setSourcePointDto(p);
+                                return tempPa;
+                            })
+                            .collect(Collectors.toSet()));
+                }
+            });
+        }
+        if (sceneDto.getPathDtos() != null) {
+            sceneDto.getPathDtos().forEach(p -> {
+                p.setSceneDto(sceneDto);
+
+                // CHECK RELATIONSHIP (Already linked in points' settings) TODO?
+                if (p.getSourcePointDto() == null || p.getDestinationPointDto()  == null) {
+                    throw new ObjectUnknownException("Path : " + p.getName() + " point(s) is null!");
+                }
+            });
+        }
+        if (sceneDto.getLocationTypeDtos() != null) {
+            sceneDto.getLocationTypeDtos().forEach(t -> t.setSceneDto(sceneDto));
+        }
+        if (sceneDto.getLocationDtos() != null) {
+            sceneDto.getLocationDtos().forEach(l -> {
+                l.setSceneDto(sceneDto);
+                if (l.getAttachedLinks() != null) {
+                    l.getAttachedLinks().forEach(li -> li.setSceneDto(sceneDto));
+                }
+            });
+        }
+        if (sceneDto.getStaticRouteDtos() != null) {
+            sceneDto.getStaticRouteDtos().forEach(r -> r.setSceneDto(sceneDto));
+        }
+
+        return sceneDto;
+    }
 }

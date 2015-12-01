@@ -1,5 +1,7 @@
 package com.mj.tcs.api.v1.dto;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;

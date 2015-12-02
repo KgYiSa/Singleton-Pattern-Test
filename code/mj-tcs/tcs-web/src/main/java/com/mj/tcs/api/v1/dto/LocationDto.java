@@ -1,7 +1,6 @@
 package com.mj.tcs.api.v1.dto;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
@@ -18,6 +17,7 @@ import java.util.*;
  * @author Wang Zhen
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
+//@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
 @Dto
 @Entity(name = "tcs_model_location")
 //@Table(name = "tcs_model_location", uniqueConstraints =
@@ -25,6 +25,7 @@ import java.util.*;
 //)
 public class LocationDto extends BaseEntityDto {
 
+    @JsonIgnore
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "scene", nullable = false)
     private SceneDto sceneDto;
@@ -49,7 +50,8 @@ public class LocationDto extends BaseEntityDto {
     @DtoField(value = "locationTypeDto",
             dtoBeanKey = "LocationTypeDto",
             entityBeanKeys = {"LocationType"})
-    @Column
+    @OneToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+//    @Column(name = "locationType")
     private LocationTypeDto locationTypeDto;
 
     /**
@@ -65,6 +67,23 @@ public class LocationDto extends BaseEntityDto {
     @ElementCollection
     @CollectionTable(name = "tcs_model_rel_attached_links")
     private Set<LocationLinkDto> attachedLinks = new HashSet<>();
+
+    @JsonProperty("displayPositionX")
+    @Column
+    private long displayPositionX;
+
+    @JsonProperty("displayPositionY")
+    @Column
+    private long displayPositionY;
+
+    @JsonProperty("labelOffsetX")
+    @Column
+    private long labelOffsetX;
+
+    @JsonProperty("labelOffsetY")
+    @Column
+    private long labelOffsetY;
+
 
     public LocationDto(){
         //do nothing
@@ -157,5 +176,37 @@ public class LocationDto extends BaseEntityDto {
 
     public boolean detachLink(LocationLinkDto link) {
         return attachedLinks.remove(link);
+    }
+
+    public long getDisplayPositionX() {
+        return displayPositionX;
+    }
+
+    public void setDisplayPositionX(long displayPositionX) {
+        this.displayPositionX = displayPositionX;
+    }
+
+    public long getDisplayPositionY() {
+        return displayPositionY;
+    }
+
+    public void setDisplayPositionY(long displayPositionY) {
+        this.displayPositionY = displayPositionY;
+    }
+
+    public long getLabelOffsetX() {
+        return labelOffsetX;
+    }
+
+    public void setLabelOffsetX(long labelOffsetX) {
+        this.labelOffsetX = labelOffsetX;
+    }
+
+    public long getLabelOffsetY() {
+        return labelOffsetY;
+    }
+
+    public void setLabelOffsetY(long labelOffsetY) {
+        this.labelOffsetY = labelOffsetY;
     }
 }

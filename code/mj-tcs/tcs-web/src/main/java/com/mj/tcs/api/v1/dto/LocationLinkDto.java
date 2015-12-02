@@ -7,6 +7,7 @@
 package com.mj.tcs.api.v1.dto;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -29,6 +30,7 @@ import java.util.Set;
 //)
 public class LocationLinkDto extends BaseEntityDto {
 
+    @JsonIgnore
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "scene", nullable = false)
     private SceneDto sceneDto;
@@ -39,7 +41,7 @@ public class LocationLinkDto extends BaseEntityDto {
     /**
      * A reference to the locationDto end of this link.
      */
-    @JsonProperty("locationDto")
+    @JsonProperty("location")
     @JsonBackReference
     // Convert outside in case of stack overflow
     @ManyToOne
@@ -48,7 +50,7 @@ public class LocationLinkDto extends BaseEntityDto {
     /**
      * A reference to the pointDto end of this link.
      */
-    @JsonProperty("pointDto")
+    @JsonProperty("point")
 //    @DtoField(value = "pointDto",
 //            dtoBeanKey = "PointDto",
 //            entityBeanKeys = {"Point"})
@@ -64,6 +66,11 @@ public class LocationLinkDto extends BaseEntityDto {
     private Set<String> allowedOperations = new HashSet<>();
 
     public LocationLinkDto() {
+    }
+
+    public LocationLinkDto(LocationDto locationDto, PointDto pointDto) {
+        setLocationDto(locationDto);
+        setPointDto(pointDto);
     }
 
     public SceneDto getSceneDto() {

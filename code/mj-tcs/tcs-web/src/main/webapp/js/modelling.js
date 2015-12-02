@@ -45,10 +45,30 @@ $(function(){
     $(".left-container .operate-content .tcs-bottom div[class^=show-]").click(function(){
         //console.log(this.className);
         if($(this).hasClass("selected")) {
+
             $(this).removeClass("selected");
+            switch(this.className){
+                case 'show-reset':
+                    // TODO
+                    break;
+                case 'show-splits':
+                    showGrid(0);
+                    break;
+
+            }
         } else {
+            switch(this.className){
+                case 'show-reset':
+                    // TODO
+                    break;
+                case 'show-splits':
+                    showGrid(1);
+                    break;
+
+            }
             $(this).addClass("selected");
         }
+
     })
 
     // 鼠标位置信息显示
@@ -59,16 +79,32 @@ $(function(){
     })
 
 
-    //$(".zoom-label #zoom_select").click(function(){
-    //
-    //})
-    //
-    //$(".zoom-label #zoom").click(function(){
-    //    alert()
-    //    $(".zoom-label #zoom_select").click();
-    //})
+    // select 与 input数据一致
+    $(".zoom-label #zoom_select").change(function(){
+        $(".zoom-label #zoom").val($(this).val()+"%")
+
+    })
+
+
 
 })
+
+
+//基准网格的显示/隐藏 1:显示 0不显示
+var showGrid = function(flg){
+    var rect1 = document.getElementById("rect1");
+    var rect2 = document.getElementById("rect2");
+    if(flg == 1) {
+        rect1.setAttribute("fill", "url(#grid1)");
+        rect2.setAttribute("fill", "url(#grid2)");
+    } else {
+        rect1.setAttribute("fill", "none");
+        rect2.setAttribute("fill", "none");
+    }
+
+}
+
+
 
     //基本设定
 var setting = {

@@ -3,9 +3,10 @@ package com.mj.tcs.service.modelling;
 import com.mj.tcs.api.v1.dto.SceneDto;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.exception.ObjectUnknownException;
-import com.mj.tcs.repository.SceneRepository;
+import com.mj.tcs.repository.SceneDtoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,12 +17,13 @@ import java.util.stream.Collectors;
 /**
  * @author Wang Zhen
  */
+@Transactional
 @Component
 public class SceneDtoService implements IEntityDtoService {
     private static final String SCENE_NAME_NEW_SUFFIX = "_1";
 
     @Autowired
-    private SceneRepository sceneRepository;
+    private SceneDtoRepository sceneDtoRepository;
 
     @Override
     public boolean canSupportEntityClass(Class entityClass) {
@@ -38,10 +40,10 @@ public class SceneDtoService implements IEntityDtoService {
         switch (params.getType()) {
             case GET_ONE_BY_ELEMENT_ID:
             case GET_ALL_BY_SCENE_ID:
-                SceneDto entity = sceneRepository.findOne((long) params.getParameter(ServiceGetParams.NAME_SCENE_ID));
+                SceneDto entity = sceneDtoRepository.findOne((long) params.getParameter(ServiceGetParams.NAME_SCENE_ID));
                 return Arrays.asList(entity);
             case GET_ALL:
-                return (Collection) sceneRepository.findAll();
+                return (Collection) sceneDtoRepository.findAll();
             default:
                 throw new IllegalArgumentException("parameters in scene service is incorrect: " + params);
         }
@@ -69,7 +71,7 @@ public class SceneDtoService implements IEntityDtoService {
 
     @Override
     public void delete(Long id) {
-        sceneRepository.delete(id);
+        sceneDtoRepository.delete(id);
     }
 
     // CREATING, UPDATE, PATCH, DELETE
@@ -87,20 +89,20 @@ public class SceneDtoService implements IEntityDtoService {
                 entity.setName(newSceneName);
             }
 
-        entity = sceneRepository.save(entity);
+        entity = sceneDtoRepository.save(entity);
         return entity;
     }
 
     private SceneDto updateScene(SceneDto entity) {
         checkNullException(entity, "updated scene object is null");
 
-        SceneDto oldEntity = sceneRepository.findOne(entity.getId());
+        SceneDto oldEntity = sceneDtoRepository.findOne(entity.getId());
 
         // TODO:
 //        entity.setCreatedAt(oldEntity.getCreatedAt());
 //        entity.setCreatedBy(oldEntity.getCreatedBy());
 
-        entity = sceneRepository.save(entity);
+        entity = sceneDtoRepository.save(entity);
 
         return entity;
     }
@@ -110,7 +112,7 @@ public class SceneDtoService implements IEntityDtoService {
     private Collection<SceneDto> getAllScenes() {
         Collection<SceneDto> scenes = new ArrayList<>();
 
-        for (SceneDto scene : sceneRepository.findAll()) {
+        for (SceneDto scene : sceneDtoRepository.findAll()) {
             scenes.add(scene);
         }
 

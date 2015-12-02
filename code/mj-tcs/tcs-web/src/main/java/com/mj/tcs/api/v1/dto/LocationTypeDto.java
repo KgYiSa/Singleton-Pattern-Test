@@ -1,5 +1,6 @@
 package com.mj.tcs.api.v1.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
@@ -22,6 +23,7 @@ import java.util.Set;
 //)
 public class LocationTypeDto extends BaseEntityDto {
 
+    @JsonIgnore
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "scene", nullable = false)
     private SceneDto sceneDto;

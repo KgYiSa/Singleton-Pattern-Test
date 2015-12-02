@@ -6,6 +6,7 @@
 
 package com.mj.tcs.api.v1.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -26,6 +27,7 @@ import java.util.Objects;
 //@Table(name = "tcs_order_transport_order")
 public class TransportOrderDto extends BaseEntityDto {
 
+    @JsonIgnore
     @Column(name = "scene", nullable = false)
     private SceneDto sceneDto;
 
@@ -89,6 +91,14 @@ public class TransportOrderDto extends BaseEntityDto {
 
     public void setDestinations(List<DestinationDto> destinations) {
         this.destinations = Objects.requireNonNull(destinations, "destinations");
+    }
+
+    public void addDestionation(DestinationDto destinationDto) {
+        this.destinations.add(Objects.requireNonNull(destinationDto, "destinationDto"));
+    }
+
+    public void removeDestionation(DestinationDto destinationDto) {
+        this.destinations.remove(Objects.requireNonNull(destinationDto, "destinationDto"));
     }
 
     /**

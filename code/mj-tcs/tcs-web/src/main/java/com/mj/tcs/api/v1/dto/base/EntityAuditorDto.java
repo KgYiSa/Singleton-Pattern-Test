@@ -6,6 +6,7 @@ import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -14,7 +15,7 @@ import java.util.Date;
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
 @Embeddable
-public class EntityAuditorDto {
+public class EntityAuditorDto implements Serializable {
     @DtoField
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)

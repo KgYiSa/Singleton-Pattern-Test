@@ -257,6 +257,14 @@
                 }
             }
 
+            var updateWireFrame = function() {
+                // Test support
+                //if(supportsNonSS) return;
+
+                var rule = "#workarea.wireframe #svgcontent * { stroke-width: " + 1/svgCanvas.getZoom() + "px; }";
+                $('#wireframe_rules').text(workarea.hasClass('wireframe') ? rule : "");
+            }
+
             var zoomDone = function() {
                 //    updateBgImage();
                 updateWireFrame();
@@ -428,14 +436,6 @@
                     ctx.strokeStyle = "#666";
                     ctx.stroke();
                 }
-            }
-
-            var updateWireFrame = function() {
-                // Test support
-                //if(supportsNonSS) return;
-
-                var rule = "#workarea.wireframe #svgcontent * { stroke-width: " + 1/svgCanvas.getZoom() + "px; }";
-                $('#wireframe_rules').text(workarea.hasClass('wireframe') ? rule : "");
             }
 
             (function() {

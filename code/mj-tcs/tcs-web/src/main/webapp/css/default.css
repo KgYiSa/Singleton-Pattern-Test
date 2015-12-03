@@ -8,25 +8,49 @@ img {
 }
 
 header {
+	position: relative;
 	height: 70px;
-	margin-top: -20px;
+	margin-top: -2px;
 	text-align: center;
 	background-image: url("../images/header-bg.jpg");
 }
 
-header h1 {
+header > div {
+	height:100%;
+	float: left;
+	padding-top: 4px;
+}
+
+header div .title {
+	height: 100%;
+	width: 100%;
+	font-size: 32px;
+	/*text-align: center;*/
+	/*vertical-align:middle;*/
+	margin-bottom: -10px;
 	padding-top: 12px;
 }
 
-header h1 a {
-	font-size: 20px;
-	font-weight: bold;
-	/*text-decoration: none；*/
+header .sys-info {
+	position: absolute;
+	right:15px;
 }
 
-header h1 a:hover {
-	text-decoration: none;
+header .sys-info p{
+	margin-bottom: -10px;
+	/*height:100%;*/
+	float: left;
+	width: 100px;
+	margin-top: 40px;
+
 }
+
+
+header a, a:link, a:hover, a:active, a:visited {
+	text-decoration:none;
+}
+
+
 
 body {
 	background-color: rgb(247,243,247);
@@ -35,7 +59,7 @@ body {
 
 
 .container-fluid {
-	background-color: #bfffff;
+	background-color: #3A92FF;
 	/*height: 500px;*/
 }
 

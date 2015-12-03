@@ -39,17 +39,17 @@ public class PathDto extends BaseEntityDto {
     @Column
     private String name;
 
-    @JsonProperty("sourcePoint")
-    @JsonBackReference("outgoing_paths")
-    @JsonIgnoreProperties({"version", "auditor", "properties", "position", "display_position_x", "display_position_y", "label_offset_x", "label_offset_y", "vehicle_orientation_angle", "incoming_paths", "outgoing_paths", "attached_links"})
+    @JsonProperty("source_point")
+//    @JsonBackReference("outgoing_paths")
+    @JsonIgnoreProperties({"version", "auditor", "properties", "position", "type", "display_position_x", "display_position_y", "label_offset_x", "label_offset_y", "vehicle_orientation_angle", "incoming_paths", "outgoing_paths", "attached_links"})
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "source_point")
 //    @Column(name = "sourcePoint")
     private PointDto sourcePointDto;
 
-    @JsonProperty("destinationPoint")
-    @JsonBackReference("incoming_paths")
-    @JsonIgnoreProperties({"version", "auditor", "properties", "position", "display_position_x", "display_position_y", "label_offset_x", "label_offset_y", "vehicle_orientation_angle", "incoming_paths", "outgoing_paths", "attached_links"})
+    @JsonProperty("destination_point")
+//    @JsonBackReference("incoming_paths")
+    @JsonIgnoreProperties({"version", "auditor", "properties", "position", "type", "display_position_x", "display_position_y", "label_offset_x", "label_offset_y", "vehicle_orientation_angle", "incoming_paths", "outgoing_paths", "attached_links"})
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "destination_point")
 //    @Column(name = "destinationPoint")

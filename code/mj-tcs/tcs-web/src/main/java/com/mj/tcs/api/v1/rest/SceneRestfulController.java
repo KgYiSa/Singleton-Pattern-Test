@@ -1,6 +1,7 @@
 package com.mj.tcs.api.v1.rest;
 
 import com.mj.tcs.api.v1.dto.PathDto;
+import com.mj.tcs.api.v1.dto.PointDto;
 import com.mj.tcs.api.v1.dto.SceneDto;
 import com.mj.tcs.api.v1.web.ServiceController;
 import com.mj.tcs.exception.ObjectUnknownException;
@@ -170,8 +171,17 @@ public class SceneRestfulController extends ServiceController {
             sceneDto.getLocationDtos().forEach(l -> {
                 l.setSceneDto(sceneDto);
                 if (l.getAttachedLinks() != null) {
-                    l.getAttachedLinks().forEach(li -> li.setSceneDto(sceneDto));
+                    l.getAttachedLinks().forEach(li -> {
+                        li.setSceneDto(sceneDto);
+
+                        PointDto linkedPointDto = Objects.requireNonNull(sceneDto.getPointDtoByUUID(li.getPointDto().getUUID()));
+                        li.setPointDto(linkedPointDto);
+                        linkedPointDto.addAttachedLinks(li);
+                        li.setLocationDto(sceneDto.getLocationDtoByUUID(li.getLocationDto().getUUID()));
+                    });
                 }
+
+                l.setLocationTypeDto(sceneDto.getLocationTypeDtoByUUID(l.getLocationTypeDto().getUUID()));
             });
         }
         if (sceneDto.getStaticRouteDtos() != null) {

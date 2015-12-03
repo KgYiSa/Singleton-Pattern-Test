@@ -47,6 +47,8 @@ public class LocationDto extends BaseEntityDto {
     /**
      * A reference to this locationDto's locationTypeDto.
      */
+    @JsonProperty("location_type")
+    @JsonIgnoreProperties({"version", "auditor", "properties", "allowed_operations"})
     @DtoField(value = "locationTypeDto",
             dtoBeanKey = "LocationTypeDto",
             entityBeanKeys = {"LocationType"})
@@ -65,23 +67,24 @@ public class LocationDto extends BaseEntityDto {
             dtoBeanKey = "LocationLinkDto",
             entityBeanKeys = {"Location$Link"},
             dtoToEntityMatcher = LocationLinkDto2LocationLinkMatcher.class)
-    @ElementCollection
+//    @ElementCollection
+    @OneToMany(cascade = {CascadeType.ALL})
     @CollectionTable(name = "tcs_model_rel_attached_links")
     private Set<LocationLinkDto> attachedLinks = new HashSet<>();
 
-    @JsonProperty("displayPositionX")
+    @JsonProperty("display_position_x")
     @Column(name = "display_position_x")
     private long displayPositionX;
 
-    @JsonProperty("displayPositionY")
+    @JsonProperty("display_position_y")
     @Column(name = "display_position_y")
     private long displayPositionY;
 
-    @JsonProperty("labelOffsetX")
+    @JsonProperty("label_offset_x")
     @Column(name = "label_offset_x")
     private long labelOffsetX;
 
-    @JsonProperty("labelOffsetY")
+    @JsonProperty("label_offset_y")
     @Column(name = "label_offset_y")
     private long labelOffsetY;
 

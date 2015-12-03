@@ -137,7 +137,7 @@ public class SceneDtoModelGenerator {
         sceneDto.setName(newSceneName);
 
         // Points & Paths
-        for (int i=0; i< 10; i++) {
+        for (int i=0; i< 2; i++) {
             createPointDto();
 
             if (i != 0 && i % 2 == 1) {
@@ -151,15 +151,16 @@ public class SceneDtoModelGenerator {
         sceneDto.setPointDtos(pointDtos);
         sceneDto.setPathDtos(pathDtos);
 
-//        LocationTypeDto locationTypeDto = createLocationTypeDto();
-//        sceneDto.addLocationTypeDto(locationTypeDto);
-//
-//        LocationDto locationDto = createLocationDto((PointDto) pointDtos.toArray()[0], locationTypeDto);
-//        sceneDto.addLocationDto(locationDto);
-//
+        LocationTypeDto locationTypeDto = createLocationTypeDto();
+        sceneDto.addLocationTypeDto(locationTypeDto);
+
+        LocationDto locationDto = createLocationDto((PointDto) pointDtos.toArray()[0], locationTypeDto);
+        sceneDto.addLocationDto(locationDto);
+
 //        List<PointDto> hops = new ArrayList<>();
 //        hops.add(((PointDto) pointDtos.toArray()[0]));
 //        hops.add(((PointDto) pointDtos.toArray()[1]));
+//        hops.add(((PathDto) pathDtos.toArray()[0]));
 //        hops.add(((PointDto) pointDtos.toArray()[2]));
 //        StaticRouteDto staticRouteDto = createStaticRouteDto(hops);
 //        sceneDto.addStaticRouteDto(staticRouteDto);

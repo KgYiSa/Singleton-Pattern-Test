@@ -50,7 +50,7 @@ public class SceneDto extends BaseEntityDto {
     @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
     private Set<PathDto> pathDtos;
 
-    @JsonProperty("locationDtos")
+    @JsonProperty("locations")
     @DtoCollection(value = "locationDtos",
             entityCollectionClass = HashSet.class,
             dtoCollectionClass = HashSet.class,

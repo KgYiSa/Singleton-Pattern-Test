@@ -8,6 +8,7 @@ package com.mj.tcs.api.v1.dto;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -31,7 +32,7 @@ import java.util.Set;
 public class LocationLinkDto extends BaseEntityDto {
 
     @JsonIgnore
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(optional = false, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "scene", nullable = false)
     private SceneDto sceneDto;
 
@@ -44,7 +45,7 @@ public class LocationLinkDto extends BaseEntityDto {
     @JsonProperty("location")
     @JsonBackReference
     // Convert outside in case of stack overflow
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "location")
     private LocationDto locationDto;
 
@@ -52,10 +53,11 @@ public class LocationLinkDto extends BaseEntityDto {
      * A reference to the pointDto end of this link.
      */
     @JsonProperty("point")
-//    @DtoField(value = "pointDto",
+    @JsonIgnoreProperties({"version", "auditor", "properties", "position", "type", "display_position_x", "display_position_y", "label_offset_x", "label_offset_y", "vehicle_orientation_angle", "incoming_paths", "outgoing_paths", "attached_links"})
+    //    @DtoField(value = "pointDto",
 //            dtoBeanKey = "PointDto",
 //            entityBeanKeys = {"Point"})
-    @ManyToOne
+    @ManyToOne(optional = false/*, cascade = {CascadeType.PERSIST}*/)
     @JoinColumn(name = "point")
     private PointDto pointDto;
 

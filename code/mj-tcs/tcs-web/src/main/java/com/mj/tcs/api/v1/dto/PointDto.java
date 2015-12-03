@@ -69,7 +69,7 @@ public class PointDto extends BaseEntityDto {
 
     // convert outside
     @JsonProperty("incoming_paths")
-    @JsonManagedReference(value = "incoming_paths")
+//    @JsonManagedReference(value = "incoming_paths")
 //    @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class)
     @JsonIgnoreProperties({"version", "auditor", "properties", "sourcePoint", "destinationPoint", "control_points", "length", "routing_cost", "max_velocity", "max_reverse_velocity", "locked"})
 //    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "destinationPoint")
@@ -79,7 +79,7 @@ public class PointDto extends BaseEntityDto {
 
     // convert outside
     @JsonProperty("outgoing_paths")
-    @JsonManagedReference(value = "outgoing_paths")
+//    @JsonManagedReference(value = "outgoing_paths")
     @JsonIgnoreProperties({"version", "auditor", "properties", "sourcePoint", "destinationPoint", "control_points", "length", "routing_cost", "max_velocity", "max_reverse_velocity", "locked"})
 //    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "sourcePoint")
     @ElementCollection
@@ -87,10 +87,10 @@ public class PointDto extends BaseEntityDto {
     private Set<PathDto> outgoingPaths = new HashSet<>();
 
 //    @JsonIdentityReference(alwaysAsId = true)
-    @JsonIgnoreProperties({"version", "auditor", "properties", "location", "point"})
-//    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "point")
-    @ElementCollection
-    @CollectionTable(name = "tcs_model_rel_point_attached_links")
+    @JsonIgnoreProperties({"version", "auditor", "properties", "location", "point", "allowed_operations"})
+    @OneToMany(cascade = {CascadeType.ALL}/*, mappedBy = "point"*/)
+//    @ElementCollection
+//    @CollectionTable(name = "tcs_model_rel_point_attached_links")
     private Set<LocationLinkDto> attachedLinks = new HashSet<>();
 
     public SceneDto getSceneDto() {
@@ -208,6 +208,10 @@ public class PointDto extends BaseEntityDto {
 
     public void setAttachedLinks(Set<LocationLinkDto> attachedLinks) {
         this.attachedLinks = attachedLinks;
+    }
+
+    public void addAttachedLinks(LocationLinkDto linkDto) {
+        this.attachedLinks.add(linkDto);
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.mj.tcs.api.v1.dto.base;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
@@ -7,6 +8,7 @@ import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 
 /**
  * @author Wang Zhen
@@ -77,5 +79,11 @@ public class TripleDto extends BaseEntityDto {
 
     public void setZ(long z) {
         this.z = z;
+    }
+
+    @JsonIgnore
+    @Transient
+    public EntityAuditorDto getAuditorDto() {
+        return super.getAuditorDto();
     }
 }

@@ -7,12 +7,10 @@ import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoCollection;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
+import com.mj.tcs.api.v1.dto.base.EntityProperty;
 import com.mj.tcs.api.v1.dto.converter.value.converter.*;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
@@ -29,6 +27,11 @@ public class SceneDto extends BaseEntityDto {
     @DtoField
     @Column(unique = true, nullable = false)
     private String name;
+
+    @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
+    @CollectionTable(name = "tcs_model_scene_properties", joinColumns = @JoinColumn(
+            nullable = false, name = "model_id", referencedColumnName = "id"))
+    private Set<EntityProperty> properties = new HashSet<>();
 
     @JsonProperty("points")
     @DtoCollection(value = "pointDtos",
@@ -86,6 +89,43 @@ public class SceneDto extends BaseEntityDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * Add property. It can be used to put any unknown propery during deSerialization.
+     *
+     * @param name
+     * @param value
+     */
+    public void addProperty(String name, String value, String type) {
+        Optional<EntityProperty> propertyOptional = properties.stream().filter(p -> p.getName().equals(name)).findFirst();
+        if (propertyOptional.isPresent()) {
+            propertyOptional.get().setValue(Objects.requireNonNull(value));
+            propertyOptional.get().setType(Objects.requireNonNull(type));
+        } else {
+            EntityProperty property = new EntityProperty();
+            property.setName(Objects.requireNonNull(name));
+            property.setValue(Objects.requireNonNull(value));
+            property.setType(Objects.requireNonNull(type));
+            properties.add(property);
+        }
+    }
+
+    public String getProperty(String name) {
+        Optional<EntityProperty> propertyOptional = properties.stream().filter(p -> p.getName().equals(name)).findFirst();
+        if (propertyOptional.isPresent()) {
+            return propertyOptional.get().getValue();
+        }
+
+        return null;
+    }
+
+    public void setProperties(Set<EntityProperty> properties) {
+        this.properties = properties;
+    }
+
+    public Set<EntityProperty> getProperties() {
+        return properties;
     }
 
     public Set<PointDto> getPointDtos() {

@@ -14,11 +14,10 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
+import com.mj.tcs.api.v1.dto.base.EntityProperty;
 
 import javax.persistence.*;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author Wang Zhen
@@ -41,8 +40,14 @@ public class StaticRouteDto extends BaseEntityDto {
     @Column
     private String name;
 
+    @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
+    @CollectionTable(name = "tcs_model_static_route_properties", joinColumns = @JoinColumn(
+            nullable = false, name = "model_id", referencedColumnName = "id"))
+    private Set<EntityProperty> properties = new HashSet<>();
+
     @ElementCollection
-    @CollectionTable(name = "tcs_model_rel_static_route_hops")
+    @CollectionTable(name = "tcs_model_static_route_hops", joinColumns = @JoinColumn(
+            nullable = false, name = "model_id", referencedColumnName = "id"))
     private List<PointDto> hops;
 
     public SceneDto getSceneDto() {
@@ -59,6 +64,43 @@ public class StaticRouteDto extends BaseEntityDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * Add property. It can be used to put any unknown propery during deSerialization.
+     *
+     * @param name
+     * @param value
+     */
+    public void addProperty(String name, String value, String type) {
+        Optional<EntityProperty> propertyOptional = properties.stream().filter(p -> p.getName().equals(name)).findFirst();
+        if (propertyOptional.isPresent()) {
+            propertyOptional.get().setValue(Objects.requireNonNull(value));
+            propertyOptional.get().setType(Objects.requireNonNull(type));
+        } else {
+            EntityProperty property = new EntityProperty();
+            property.setName(Objects.requireNonNull(name));
+            property.setValue(Objects.requireNonNull(value));
+            property.setType(Objects.requireNonNull(type));
+            properties.add(property);
+        }
+    }
+
+    public String getProperty(String name) {
+        Optional<EntityProperty> propertyOptional = properties.stream().filter(p -> p.getName().equals(name)).findFirst();
+        if (propertyOptional.isPresent()) {
+            return propertyOptional.get().getValue();
+        }
+
+        return null;
+    }
+
+    public void setProperties(Set<EntityProperty> properties) {
+        this.properties = properties;
+    }
+
+    public Set<EntityProperty> getProperties() {
+        return properties;
     }
 
     /**

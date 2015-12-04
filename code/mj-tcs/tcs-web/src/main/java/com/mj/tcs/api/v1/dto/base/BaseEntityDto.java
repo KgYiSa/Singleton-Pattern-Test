@@ -10,9 +10,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author Wang Zhen
@@ -48,9 +46,6 @@ public class BaseEntityDto implements Serializable, Cloneable {
     @JsonProperty("auditor")
     @Embedded
     private EntityAuditorDto auditorDto = null;
-
-    @Transient // TODO:
-    private Map<String, Object> properties = new HashMap<>();
 
     public BaseEntityDto() {
         uuid = UUID.randomUUID().toString();
@@ -88,33 +83,11 @@ public class BaseEntityDto implements Serializable, Cloneable {
         this.auditorDto = auditorDto;
     }
 
-    /**
-     * Add property. It can be used to put any unknown propery during deSerialization.
-     *
-     * @param name
-     * @param value
-     */
-    @JsonAnySetter
-    public void addProperty(String name, Object value) {
-        properties.put(name, value);
-    }
-
-    public Object getProperty(String name) {
-        return properties.get(name);
-    }
-
-    public void setProperties(Map<String, Object> properties) {
-        this.properties = properties;
-    }
-
-    public Map getProperties() {
-        return properties;
-    }
-
     @Override
     public String toString() {
         ToStringBuilder stringBuilder = new ToStringBuilder(this);
-        properties.forEach((id, val) -> stringBuilder.append(id, val));
+        // TODO
+//        properties.forEach(p -> stringBuilder.append(p.getName(), p.getValue()));
         return stringBuilder.toString();
     }
 }

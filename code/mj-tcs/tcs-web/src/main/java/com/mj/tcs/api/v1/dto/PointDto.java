@@ -45,8 +45,9 @@ public class PointDto extends BaseEntityDto {
     @DtoField(value = "position",
                 dtoBeanKey = "TripleDto",
                 entityBeanKeys = {"Triple"})
-    @OneToOne(optional = false, cascade = {CascadeType.ALL})
+//    @OneToOne(optional = false, cascade = {CascadeType.ALL})
 //    @JoinColumn(name = "position_id")
+    @Column
     private TripleDto position;
 
     @JsonProperty("display_position_x")

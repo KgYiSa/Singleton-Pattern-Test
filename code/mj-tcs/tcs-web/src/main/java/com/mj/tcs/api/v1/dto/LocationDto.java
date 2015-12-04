@@ -47,7 +47,8 @@ public class LocationDto extends BaseEntityDto {
     @DtoField(value = "position",
             dtoBeanKey = "TripleDto",
             entityBeanKeys = {"Triple"})
-    @OneToOne(optional = false, cascade = {CascadeType.ALL})
+//    @OneToOne(optional = false, cascade = {CascadeType.ALL})
+    @Column
     private TripleDto position = new TripleDto();
 
     /**

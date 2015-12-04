@@ -79,7 +79,8 @@ public class VehicleDto extends BaseEntityDto {
     @DtoField(value = "precisePosition",
             dtoBeanKey = "TripleDto",
             entityBeanKeys = {"Triple"})
-    @OneToOne
+//    @OneToOne
+    @Column
     private TripleDto precisePosition;
 
     @DtoField

@@ -7,17 +7,20 @@ import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 
 import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
+import java.io.Serializable;
 
 /**
  * @author Wang Zhen
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
-@Entity(name = "tcs_model_triple")
+//@Entity(name = "tcs_model_triple")
 //@Table(name = "tcs_model_triple")
-public class TripleDto extends BaseEntityDto {
+@Embeddable
+public class TripleDto /*extends BaseEntityDto*/ implements Serializable, Cloneable {
     /**
      * The X coordinate.
      */
@@ -79,11 +82,5 @@ public class TripleDto extends BaseEntityDto {
 
     public void setZ(long z) {
         this.z = z;
-    }
-
-    @JsonIgnore
-    @Transient
-    public EntityAuditorDto getAuditorDto() {
-        return super.getAuditorDto();
     }
 }

@@ -38,7 +38,7 @@ public class SceneDtoModelGenerator {
 
         TripleDto tripleDto = new TripleDto(new Random().nextInt(1000),
                 new Random().nextInt(1000), 0);
-        tripleDto.setAuditorDto(createAuditor());
+//        tripleDto.setAuditorDto(createAuditor());
 
         String name = String.format(POINT_NAME_FORMAT, id);
 
@@ -91,7 +91,7 @@ public class SceneDtoModelGenerator {
         locationDto.setAuditorDto(createAuditor());
         locationDto.setName(name);
         TripleDto newTripleDto = new TripleDto();
-        newTripleDto.setAuditorDto(createAuditor());
+//        newTripleDto.setAuditorDto(createAuditor());
         newTripleDto.setX(100);
         newTripleDto.setY(100);
         newTripleDto.setZ(0L);

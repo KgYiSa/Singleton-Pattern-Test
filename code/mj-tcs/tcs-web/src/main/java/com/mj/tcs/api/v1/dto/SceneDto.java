@@ -73,6 +73,16 @@ public class SceneDto extends BaseEntityDto {
     @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
     private Set<LocationTypeDto> locationTypeDtos;
 
+    @JsonProperty("blocks")
+    @DtoCollection(value = "staticRouteDtos",
+            entityCollectionClass = HashSet.class,
+            dtoCollectionClass = HashSet.class,
+            dtoBeanKey = "StaticRouteDto",
+            entityBeanKeys = {"StaticRoute"},
+            dtoToEntityMatcher = StaticRouteDto2StaticRouteMatcher.class)
+    @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
+    private Set<BlockDto> blockDtos;
+
     @JsonProperty("static_routes")
     @DtoCollection(value = "staticRouteDtos",
             entityCollectionClass = HashSet.class,
@@ -256,7 +266,7 @@ public class SceneDto extends BaseEntityDto {
         if (this.locationTypeDtos == null) {
             return false;
         }
-        return this.locationTypeDtos.remove(Objects.requireNonNull(locationTypeDtos, "locationTypeDtos to removed is null"));
+        return this.locationTypeDtos.remove(Objects.requireNonNull(locationTypeDto, "locationTypeDto to removed is null"));
     }
 
     public LocationTypeDto getLocationTypeDtoByUUID(String uuid) {
@@ -320,6 +330,60 @@ public class SceneDto extends BaseEntityDto {
         return this.locationDtos.remove(Objects.requireNonNull(location, "location to removed is null"));
     }
 
+    public boolean addLocationDto(LocationDto dto) {
+        if (getLocationDtos() == null) {
+            this.locationDtos = new HashSet<>();
+        }
+
+        return this.locationDtos.add(dto);
+    }
+
+    public Set<BlockDto> getBlockDtos() {
+        return blockDtos;
+    }
+
+    public void setBlockDtos(Set<BlockDto> blockDtos) {
+        this.blockDtos = blockDtos;
+    }
+
+    public boolean addBlockDto(BlockDto dto) {
+        if (getBlockDtos() == null) {
+            this.blockDtos = new HashSet<>();
+        }
+
+        return this.blockDtos.add(dto);
+    }
+
+    public boolean removeBlockDto(BlockDto blockDto) {
+        if (this.blockDtos == null) {
+            return false;
+        }
+        return this.blockDtos.remove(Objects.requireNonNull(blockDto, "blockDto to removed is null"));
+    }
+
+    public BlockDto getBlockDtoByUUID(String uuid) {
+        if (blockDtos == null || uuid == null) {
+            return null;
+        }
+        Optional<BlockDto> blockDtoOp = blockDtos.stream().filter(b -> uuid.equals(b.getUUID())).findFirst();
+        if (blockDtoOp.isPresent()) {
+            return blockDtoOp.get();
+        }
+        return null;
+    }
+
+    public BlockDto getBlockDtoById(long id) {
+        if (blockDtos == null) {
+            return null;
+        }
+
+        Optional<BlockDto> blockDtoOp = blockDtos.stream().filter(b -> b.getId() == id).findFirst();
+        if (blockDtoOp.isPresent()) {
+            return blockDtoOp.get();
+        }
+        return null;
+    }
+
     public Set<StaticRouteDto> getStaticRouteDtos() {
         return staticRouteDtos;
     }
@@ -364,13 +428,5 @@ public class SceneDto extends BaseEntityDto {
         }
 
         return this.staticRouteDtos.add(dto);
-    }
-
-    public boolean addLocationDto(LocationDto dto) {
-        if (getLocationDtos() == null) {
-            this.locationDtos = new HashSet<>();
-        }
-
-        return this.locationDtos.add(dto);
     }
 }

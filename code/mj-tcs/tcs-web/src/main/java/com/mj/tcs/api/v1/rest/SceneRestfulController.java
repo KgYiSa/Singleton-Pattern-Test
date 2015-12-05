@@ -184,6 +184,9 @@ public class SceneRestfulController extends ServiceController {
                 l.setLocationTypeDto(sceneDto.getLocationTypeDtoByUUID(l.getLocationTypeDto().getUUID()));
             });
         }
+        if (sceneDto.getBlockDtos() != null) {
+            sceneDto.getBlockDtos().forEach(b -> b.setSceneDto(sceneDto));
+        }
         if (sceneDto.getStaticRouteDtos() != null) {
             sceneDto.getStaticRouteDtos().forEach(r -> r.setSceneDto(sceneDto));
         }

@@ -1,6 +1,7 @@
 package com.mj.tcs.util;
 
 import com.mj.tcs.api.v1.dto.*;
+import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.api.v1.dto.base.EntityAuditorDto;
 import com.mj.tcs.api.v1.dto.base.TripleDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,6 +128,25 @@ public class SceneDtoModelGenerator {
         return locationTypeDto;
     }
 
+    public synchronized BlockDto createBlockDto(BaseEntityDto ... dtos) {
+        Objects.requireNonNull(dtos);
+
+        BlockDto blockDto = new BlockDto();
+        long id = new Random().nextInt(10000);
+        String name = String.format("test_block_%d", id);
+
+        blockDto.setAuditorDto(createAuditor());
+//        setId(createPathCommand, id);
+        blockDto.setName(name);
+
+
+        for (BaseEntityDto dto : dtos) {
+            blockDto.addMember(dto);
+        }
+
+        return blockDto;
+    }
+
     public synchronized SceneDto createSceneDto() {
         String newSceneName = SCENE_NAME_PREFIX +
                 new SimpleDateFormat(SCENE_NAME_SUFFIX_FORMAT).format(new Date()).toString();
@@ -156,6 +176,15 @@ public class SceneDtoModelGenerator {
 
         LocationDto locationDto = createLocationDto((PointDto) pointDtos.toArray()[0], locationTypeDto);
         sceneDto.addLocationDto(locationDto);
+
+//        BlockDto blockDto = new BlockDto();
+//        blockDto.addMember(((PointDto) pointDtos.toArray()[0]));
+//        blockDto.addMember(((PointDto) pointDtos.toArray()[1]));
+//        blockDto.addMember(((PathDto) pathDtos.toArray()[0]));
+        BlockDto blockDto = createBlockDto(((PointDto) pointDtos.toArray()[0]),
+                ((PointDto) pointDtos.toArray()[1]),
+                ((PathDto) pathDtos.toArray()[0]));
+        sceneDto.addBlockDto(blockDto);
 
 //        List<PointDto> hops = new ArrayList<>();
 //        hops.add(((PointDto) pointDtos.toArray()[0]));

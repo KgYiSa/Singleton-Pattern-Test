@@ -1,6 +1,5 @@
 package com.mj.tcs.api.v1.dto.base;
 
-import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -10,7 +9,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.UUID;
 
 /**
  * @author Wang Zhen
@@ -21,7 +20,7 @@ import java.util.*;
 @MappedSuperclass
 public class BaseEntityDto implements Serializable, Cloneable {
 
-    @JsonProperty("@UUID")
+    @JsonProperty("UUID")
     @Transient
     private final String uuid;
 

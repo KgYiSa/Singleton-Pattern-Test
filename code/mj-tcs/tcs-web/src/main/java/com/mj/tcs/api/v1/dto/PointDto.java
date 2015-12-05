@@ -36,7 +36,7 @@ public class PointDto extends BaseEntityDto {
     @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
     @CollectionTable(name = "tcs_model_point_properties", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
-    private Set<EntityProperty> properties = new HashSet<>();
+    private Set<EntityProperty> properties = new LinkedHashSet<>();
 
     /**
      * This point's coordinates in mm.
@@ -83,7 +83,7 @@ public class PointDto extends BaseEntityDto {
     @ElementCollection
     @CollectionTable(name = "tcs_model_point_imcoming_paths", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
-    private Set<PathDto> incomingPaths = new HashSet<>();
+    private Set<PathDto> incomingPaths = new LinkedHashSet<>();
 
     // convert outside
     @JsonProperty("outgoing_paths")
@@ -93,14 +93,14 @@ public class PointDto extends BaseEntityDto {
     @ElementCollection
     @CollectionTable(name = "tcs_model_point_outgoing_paths", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
-    private Set<PathDto> outgoingPaths = new HashSet<>();
+    private Set<PathDto> outgoingPaths = new LinkedHashSet<>();
 
 //    @JsonIdentityReference(alwaysAsId = true)
     @JsonIgnoreProperties({"version", "auditor", "properties", "location", "point", "allowed_operations"})
     @OneToMany(cascade = {CascadeType.ALL}/*, mappedBy = "point"*/)
 //    @ElementCollection
 //    @CollectionTable(name = "tcs_model_rel_point_attached_links")
-    private Set<LocationLinkDto> attachedLinks = new HashSet<>();
+    private Set<LocationLinkDto> attachedLinks = new LinkedHashSet<>();
 
     public SceneDto getSceneDto() {
         return sceneDto;

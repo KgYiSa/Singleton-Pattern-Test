@@ -9,10 +9,7 @@ import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.api.v1.dto.base.EntityProperty;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Wang Zhen
@@ -37,7 +34,7 @@ public class LocationTypeDto extends BaseEntityDto {
     @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
     @CollectionTable(name = "tcs_model_location_type_properties", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
-    private Set<EntityProperty> properties = new HashSet<>();
+    private Set<EntityProperty> properties = new LinkedHashSet<>();
 
     /**
      * The operations allowed at locations of this type.
@@ -52,7 +49,7 @@ public class LocationTypeDto extends BaseEntityDto {
     @ElementCollection
     @CollectionTable(name = "tcs_model_location_type_operations", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
-    private Set<String> allowedOperations = new HashSet<>();
+    private Set<String> allowedOperations = new LinkedHashSet<>();
     
     public LocationTypeDto(){
         //DO nothing
@@ -163,7 +160,7 @@ public class LocationTypeDto extends BaseEntityDto {
                 return false;
             }
         } else {
-            ops = new HashSet<>();
+            ops = new LinkedHashSet<>();
         }
 
         boolean answer = ops.add(operation);
@@ -189,7 +186,7 @@ public class LocationTypeDto extends BaseEntityDto {
                 return false;
             }
         } else {
-            ops = new HashSet<>();
+            ops = new LinkedHashSet<>();
         }
 
         boolean answer = ops.remove(operation);

@@ -41,7 +41,7 @@ public class PathDto extends BaseEntityDto {
     @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
     @CollectionTable(name = "tcs_model_path_properties", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
-    private Set<EntityProperty> properties = new HashSet<>();
+    private Set<EntityProperty> properties = new LinkedHashSet<>();
 
     @JsonProperty("source_point")
 //    @JsonBackReference("outgoing_paths")

@@ -181,7 +181,7 @@ public class SceneDtoModelGenerator {
         LocationDto locationDto = createLocationDto((PointDto) pointDtos.toArray()[0], locationTypeDto);
         sceneDto.addLocationDto(locationDto);
 
-        Set<BaseEntityDto> blockElements = new HashSet<>();
+        Set<BaseEntityDto> blockElements = new LinkedHashSet<>();
         blockElements.add(((PointDto) pointDtos.toArray()[0]));
         blockElements.add(((PointDto) pointDtos.toArray()[1]));
         blockElements.add(((PathDto) pathDtos.toArray()[0]));

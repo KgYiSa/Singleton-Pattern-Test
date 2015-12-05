@@ -11,10 +11,7 @@ import com.mj.tcs.api.v1.dto.base.EntityProperty;
 import com.mj.tcs.api.v1.dto.converter.value.converter.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Wang Zhen
@@ -31,7 +28,7 @@ public class SceneDto extends BaseEntityDto {
     @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
     @CollectionTable(name = "tcs_model_scene_properties", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
-    private Set<EntityProperty> properties = new HashSet<>();
+    private Set<EntityProperty> properties = new LinkedHashSet<>();
 
     @JsonProperty("points")
     @DtoCollection(value = "pointDtos",
@@ -181,7 +178,7 @@ public class SceneDto extends BaseEntityDto {
 
     public boolean addPointDto(PointDto dto) {
         if (getPointDtos() == null) {
-            this.pointDtos = new HashSet<>();
+            this.pointDtos = new LinkedHashSet<>();
         }
 
         return this.pointDtos.add(dto);
@@ -213,7 +210,7 @@ public class SceneDto extends BaseEntityDto {
 
     public boolean addPathDto(PathDto dto) {
         if (getPathDtos() == null) {
-            this.pathDtos = new HashSet<>();
+            this.pathDtos = new LinkedHashSet<>();
         }
 
         return this.pathDtos.add(dto);
@@ -267,7 +264,7 @@ public class SceneDto extends BaseEntityDto {
 
     public boolean addLocationTypeDto(LocationTypeDto dto) {
         if (getLocationTypeDtos() == null) {
-            this.locationTypeDtos = new HashSet<>();
+            this.locationTypeDtos = new LinkedHashSet<>();
         }
 
         return this.locationTypeDtos.add(dto);
@@ -343,7 +340,7 @@ public class SceneDto extends BaseEntityDto {
 
     public boolean addLocationDto(LocationDto dto) {
         if (getLocationDtos() == null) {
-            this.locationDtos = new HashSet<>();
+            this.locationDtos = new LinkedHashSet<>();
         }
 
         return this.locationDtos.add(dto);
@@ -359,7 +356,7 @@ public class SceneDto extends BaseEntityDto {
 
     public boolean addBlockDto(BlockDto dto) {
         if (getBlockDtos() == null) {
-            this.blockDtos = new HashSet<>();
+            this.blockDtos = new LinkedHashSet<>();
         }
 
         return this.blockDtos.add(dto);
@@ -435,7 +432,7 @@ public class SceneDto extends BaseEntityDto {
 
     public boolean addStaticRouteDto(StaticRouteDto dto) {
         if (getStaticRouteDtos() == null) {
-            this.staticRouteDtos = new HashSet<>();
+            this.staticRouteDtos = new LinkedHashSet<>();
         }
 
         return this.staticRouteDtos.add(dto);

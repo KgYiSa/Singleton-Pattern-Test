@@ -192,7 +192,7 @@ public class SceneRestfulController extends ServiceController {
 
                 // UUID -> Point/Path/Block
                 if (b.getMembers() != null) {
-                    Set<BlockDto.BlockElementDto> elementDtos = new HashSet<>();
+                    Set<BlockDto.BlockElementDto> elementDtos = new LinkedHashSet<>();
                     for (BlockDto.BlockElementDto mem : b.getMembers()) {
                         String uuid = Objects.requireNonNull(mem.getUUID());
 

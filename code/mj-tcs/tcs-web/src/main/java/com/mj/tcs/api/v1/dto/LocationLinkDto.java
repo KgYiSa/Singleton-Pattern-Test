@@ -17,7 +17,7 @@ import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 
 import javax.persistence.*;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -68,7 +68,7 @@ public class LocationLinkDto extends BaseEntityDto {
     @ElementCollection
     @CollectionTable(name = "tcs_model_location_link_operations", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
-    private Set<String> allowedOperations = new HashSet<>();
+    private Set<String> allowedOperations = new LinkedHashSet<>();
 
     public LocationLinkDto() {
     }
@@ -122,7 +122,7 @@ public class LocationLinkDto extends BaseEntityDto {
 
     public boolean addAllowedOperation(String operation) {
         if (this.allowedOperations == null) {
-            this.allowedOperations = new HashSet<>();
+            this.allowedOperations = new LinkedHashSet<>();
         }
 
         return this.allowedOperations.add(operation);
@@ -130,7 +130,7 @@ public class LocationLinkDto extends BaseEntityDto {
 
     public boolean removeAllowedOperation(String operation) {
         if (this.allowedOperations == null) {
-            this.allowedOperations = new HashSet<>();
+            this.allowedOperations = new LinkedHashSet<>();
             return true;
         }
 

@@ -12,10 +12,7 @@ import com.mj.tcs.api.v1.dto.base.EntityProperty;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -38,13 +35,12 @@ public class BlockDto  extends BaseEntityDto {
     @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
     @CollectionTable(name = "tcs_model_block_properties", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
-    private Set<EntityProperty> properties = new HashSet<>();
+    private Set<EntityProperty> properties = new LinkedHashSet<>();
 
     @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
     @CollectionTable(name = "tcs_model_block_members", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
-//    private Set<BaseEntityDto> members = new HashSet<>();
-    private Set<BlockElementDto> members = new HashSet<>();
+    private Set<BlockElementDto> members = new LinkedHashSet<>();
 
     @JsonIgnore
     public SceneDto getSceneDto() {

@@ -1,16 +1,18 @@
 package com.mj.tcs.api.v1.rest;
 
+import com.mj.tcs.api.v1.dto.BlockDto;
 import com.mj.tcs.api.v1.dto.PathDto;
 import com.mj.tcs.api.v1.dto.PointDto;
 import com.mj.tcs.api.v1.dto.SceneDto;
+import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.api.v1.web.ServiceController;
 import com.mj.tcs.exception.ObjectUnknownException;
+import com.mj.tcs.exception.ResourceUnknownException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -185,10 +187,41 @@ public class SceneRestfulController extends ServiceController {
             });
         }
         if (sceneDto.getBlockDtos() != null) {
-            sceneDto.getBlockDtos().forEach(b -> b.setSceneDto(sceneDto));
+            sceneDto.getBlockDtos().forEach(b -> {
+                b.setSceneDto(sceneDto);
+
+                // UUID -> Point/Path/Block
+                if (b.getMembers() != null) {
+                    Set<BlockDto.BlockElementDto> elementDtos = new HashSet<>();
+                    for (BlockDto.BlockElementDto mem : b.getMembers()) {
+                        String uuid = Objects.requireNonNull(mem.getUUID());
+
+                        // Point
+                        BaseEntityDto memDto = sceneDto.getPointDtoByUUID(uuid);
+                        if (memDto != null) {
+                            elementDtos.add(new BlockDto.BlockElementDto(memDto));
+                            continue;
+                        }
+
+                        // Path
+                        memDto = sceneDto.getPathDtoByUUID(uuid);
+                        if (memDto != null) {
+                            elementDtos.add(new BlockDto.BlockElementDto(memDto));
+                            continue;
+                        }
+
+                        throw new ResourceUnknownException("Resource: " + uuid + " not found!");
+                    }
+                    b.setMembers(elementDtos);
+                }
+            });
         }
         if (sceneDto.getStaticRouteDtos() != null) {
-            sceneDto.getStaticRouteDtos().forEach(r -> r.setSceneDto(sceneDto));
+            sceneDto.getStaticRouteDtos().forEach(r -> {
+                r.setSceneDto(sceneDto);
+
+                r.setHops(r.getHops().stream().map(p -> sceneDto.getPointDtoByUUID(p.getUUID())).collect(Collectors.toList()));
+            });
         }
 
         return sceneDto;

@@ -52,7 +52,8 @@ public class SceneDtoModelGenerator {
         pointDto.setDisplayPositionY(tripleDto.getY());
         pointDto.setLabelOffsetX(0L);
         pointDto.setLabelOffsetY(20L);
-        
+        pointDto.addProperty("key", "value", "".getClass().getName());
+
         pointDtos.add(pointDto);
 
         return pointDto;
@@ -75,6 +76,7 @@ public class SceneDtoModelGenerator {
         pathDto.setLocked(false);
         pathDto.setMaxReverseVelocity(1);
         pathDto.setMaxVelocity(1);
+        pathDto.addProperty("key", "value", "".getClass().getName());
 
         srcPointDto.addOutgoingPath(pathDto);
         dstPointDto.addIncomingPath(pathDto);
@@ -102,6 +104,7 @@ public class SceneDtoModelGenerator {
         locationDto.setLabelOffsetX(0L);
         locationDto.setLabelOffsetY(20L);
         locationDto.setLocationTypeDto(locationTypeDto);
+        locationDto.addProperty("key", "value", "".getClass().getName());
 
         // link
         LocationLinkDto linkDto = new LocationLinkDto(locationDto, pointDto);
@@ -124,11 +127,12 @@ public class SceneDtoModelGenerator {
         locationTypeDto.setName(name);
         locationTypeDto.addAllowedOperation("Puts in storage");
         locationTypeDto.addAllowedOperation("Stock removal");
+        locationTypeDto.addProperty("key", "value", "".getClass().getName());
 
         return locationTypeDto;
     }
 
-    public synchronized BlockDto createBlockDto(BaseEntityDto ... dtos) {
+    public synchronized BlockDto createBlockDto(Set<BaseEntityDto> dtos) {
         Objects.requireNonNull(dtos);
 
         BlockDto blockDto = new BlockDto();
@@ -138,6 +142,7 @@ public class SceneDtoModelGenerator {
         blockDto.setAuditorDto(createAuditor());
 //        setId(createPathCommand, id);
         blockDto.setName(name);
+        blockDto.addProperty("key", "value", "".getClass().getName());
 
 
         for (BaseEntityDto dto : dtos) {
@@ -163,7 +168,6 @@ public class SceneDtoModelGenerator {
             if (i != 0 && i % 2 == 1) {
                 PointDto sourcePoint = (PointDto) pointDtos.toArray()[i-1];
                 PointDto destinationPoint = (PointDto) pointDtos.toArray()[i];
-                sourcePoint.addProperty("xx", "yy", "".getClass().toString());
                 createPathDto(sourcePoint, destinationPoint);
             }
         }
@@ -177,22 +181,20 @@ public class SceneDtoModelGenerator {
         LocationDto locationDto = createLocationDto((PointDto) pointDtos.toArray()[0], locationTypeDto);
         sceneDto.addLocationDto(locationDto);
 
-//        BlockDto blockDto = new BlockDto();
-//        blockDto.addMember(((PointDto) pointDtos.toArray()[0]));
-//        blockDto.addMember(((PointDto) pointDtos.toArray()[1]));
-//        blockDto.addMember(((PathDto) pathDtos.toArray()[0]));
-        BlockDto blockDto = createBlockDto(((PointDto) pointDtos.toArray()[0]),
-                ((PointDto) pointDtos.toArray()[1]),
-                ((PathDto) pathDtos.toArray()[0]));
-        sceneDto.addBlockDto(blockDto);
+        Set<BaseEntityDto> blockElements = new HashSet<>();
+        blockElements.add(((PointDto) pointDtos.toArray()[0]));
+        blockElements.add(((PointDto) pointDtos.toArray()[1]));
+        blockElements.add(((PathDto) pathDtos.toArray()[0]));
+        sceneDto.addBlockDto(createBlockDto(blockElements));
 
-//        List<PointDto> hops = new ArrayList<>();
-//        hops.add(((PointDto) pointDtos.toArray()[0]));
-//        hops.add(((PointDto) pointDtos.toArray()[1]));
-//        hops.add(((PathDto) pathDtos.toArray()[0]));
-//        hops.add(((PointDto) pointDtos.toArray()[2]));
-//        StaticRouteDto staticRouteDto = createStaticRouteDto(hops);
-//        sceneDto.addStaticRouteDto(staticRouteDto);
+        List<PointDto> hops = new ArrayList<>();
+        hops.add(((PointDto) pointDtos.toArray()[0]));
+        hops.add(((PointDto) pointDtos.toArray()[1]));
+        hops.add(((PointDto) pointDtos.toArray()[2]));
+        StaticRouteDto staticRouteDto = createStaticRouteDto(hops);
+        sceneDto.addStaticRouteDto(staticRouteDto);
+
+        sceneDto.addProperty("key", "value", "".getClass().getName());
 
         return sceneDto;
     }

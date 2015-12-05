@@ -1,19 +1,22 @@
 package com.mj.tcs.api.v1.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.api.v1.dto.base.EntityProperty;
-import com.mj.tcs.exception.ResourceUnknownException;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Wang Zhen
@@ -44,18 +47,6 @@ public class BlockDto  extends BaseEntityDto {
     private Set<BlockElementDto> members = new HashSet<>();
 
     @JsonIgnore
-    @Transient
-    private final static Map<Class, String> RESOURCE_CLASSES;
-
-    static {
-        // CLASS, METHOD
-        RESOURCE_CLASSES = new HashMap<>();
-        RESOURCE_CLASSES.put(PointDto.class, "getPointDtoByUUID");
-        RESOURCE_CLASSES.put(PathDto.class, "getPathDtoByUUID");
-        RESOURCE_CLASSES.put(BlockDto.class, "getBlockDtoByUUID");
-    }
-
-    @JsonIgnore
     public SceneDto getSceneDto() {
         return sceneDto;
     }
@@ -73,7 +64,9 @@ public class BlockDto  extends BaseEntityDto {
     }
 
     /**
-     * Add property. It can be used to put any unknown propery during deSerialization.
+     * Add property. It can be used to put any unknown property during deSerialization.
+     *
+     * Note: If value is null, then remove the property.
      *
      * @param name
      * @param value
@@ -81,14 +74,23 @@ public class BlockDto  extends BaseEntityDto {
     public void addProperty(String name, String value, String type) {
         Optional<EntityProperty> propertyOptional = properties.stream().filter(p -> p.getName().equals(name)).findFirst();
         if (propertyOptional.isPresent()) {
-            propertyOptional.get().setValue(Objects.requireNonNull(value));
-            propertyOptional.get().setType(Objects.requireNonNull(type));
+            if (value == null) {
+                properties.remove(propertyOptional.get());
+                return;
+            } else {
+                propertyOptional.get().setValue(Objects.requireNonNull(value));
+                propertyOptional.get().setType(Objects.requireNonNull(type));
+            }
         } else {
-            EntityProperty property = new EntityProperty();
-            property.setName(Objects.requireNonNull(name));
-            property.setValue(Objects.requireNonNull(value));
-            property.setType(Objects.requireNonNull(type));
-            properties.add(property);
+            if (value == null) {
+                return;
+            } else {
+                EntityProperty property = new EntityProperty();
+                property.setName(Objects.requireNonNull(name));
+                property.setValue(Objects.requireNonNull(value));
+                property.setType(Objects.requireNonNull(type));
+                properties.add(property);
+            }
         }
     }
 
@@ -115,112 +117,163 @@ public class BlockDto  extends BaseEntityDto {
 
     public void setMembers(Set<BlockElementDto> members) {
         Objects.requireNonNull(members);
-        for (BlockElementDto dto : members) {
-            if (!checkResourceEntity(Objects.requireNonNull(dto))) {
-                throw new ResourceUnknownException(dto);
-            }
-
-            this.members.add(dto);
-        }
-    }
-//    public void setMembers(Set<BlockElementDto> members) {
-//        Objects.requireNonNull(members);
+        this.members = members;
 //        for (BlockElementDto dto : members) {
-//            if (!checkResourceEntity(Objects.requireNonNull(dto))) {
-//                throw new ResourceUnknownException(dto);
-//            }
-//
-//            this.members.add(dto);
+////            if (!checkResourceEntity(Objects.requireNonNull(dto))) {
+////                throw new ResourceUnknownException(dto);
+////            }
+////            if (!this.members.contains(dto)) {
+//                this.members.add(dto);
+////            }
 //        }
-//    }
+    }
 
     public void setResources(Set<BaseEntityDto> members) {
         Objects.requireNonNull(members);
         for (BaseEntityDto dto : members) {
-            if (!checkResourceEntity(Objects.requireNonNull(dto))) {
-                throw new ResourceUnknownException(dto);
-            }
-
-            this.members.add(new BlockElementDto(dto));
+//            if (!checkResourceEntity(Objects.requireNonNull(dto))) {
+//                throw new ResourceUnknownException(dto);
+//            }
+            BlockElementDto elem = new BlockElementDto(dto);
+//            if (!this.members.contains(elem)) {
+                this.members.add(elem);
+//            }
         }
     }
 
     public void addMember(BaseEntityDto member) {
         Objects.requireNonNull(member);
-        if (!checkResourceEntity(member)) {
-            throw new ResourceUnknownException(member);
-        }
+//        if (!checkResourceEntity(member)) {
+//            throw new ResourceUnknownException(member);
+//        }
 
-        this.members.add(new BlockElementDto(member));
+        BlockElementDto elem = new BlockElementDto(member);
+        this.members.add(elem);
     }
 
     @JsonIgnore
     public Set<BaseEntityDto> getResources() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Set<BaseEntityDto> resources = new HashSet<>();
 
-        Class resourceClass;
-        String resourceMethodName;
-        Method resourceMethod;
-        for (BlockElementDto elementDto : members) {
-            resourceClass = elementDto.getClass();
-            resourceMethodName = RESOURCE_CLASSES.get(resourceClass);
-            resourceMethod = SceneDto.class.getMethod(resourceMethodName);
-            resources.add((BaseEntityDto) resourceClass.cast(resourceMethod.invoke(sceneDto, elementDto.getElementUUID())));
-        }
+        resources.addAll(members.stream().map(BlockElementDto::getResource).collect(Collectors.toList()));
 
         return resources;
-    }
-
-    private boolean checkResourceEntity(BaseEntityDto dto) {
-        Objects.requireNonNull(dto);
-        return RESOURCE_CLASSES.keySet().contains(dto.getClass());
-    }
-
-    private boolean checkResourceEntity(BlockElementDto dto) {
-        Objects.requireNonNull(dto);
-
-        for (Class cls : RESOURCE_CLASSES.keySet()) {
-            if (cls.getName().equals(dto.getClassName())) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
     @Embeddable
     public static class BlockElementDto implements Serializable, Cloneable {
 
-        @Column
-        private String className;
+//        /**
+//         * For json serialization only!!!
+//         */
+//        @JsonProperty("UUID")
+//        @Transient
+//        private String uuid;
 
-        @Column
-        private String elementUUID;
+        /**
+         * For serialization from client only!!!
+         */
+        @JsonIgnore
+        @Transient
+        private String dummyUUID = null;
+
+        @JsonIgnore
+//        @Column(name = "point", nullable = true)
+        @OneToOne
+        private PointDto pointDtoMember;
+
+        @JsonIgnore
+//        @Column(name = "path", nullable = true)
+        @OneToOne
+        private PathDto pathDtoMember;
+
+//        @JsonIgnore
+//        @Column(name = "block", nullable = true)
+//        private BlockDto blockDtoMember;
 
         public BlockElementDto() {
         }
 
         public BlockElementDto(BaseEntityDto entityDto) {
             Objects.requireNonNull(entityDto);
-            setClassName(entityDto.getClass().getName());
-            setElementUUID(Objects.requireNonNull(entityDto.getUUID()));
+
+            if (entityDto instanceof PointDto) {
+                pointDtoMember = (PointDto) entityDto;
+                pathDtoMember = null;
+//                blockDtoMember = null;
+            } else if (entityDto instanceof PathDto) {
+                pointDtoMember = null;
+                pathDtoMember = (PathDto) entityDto;
+//                blockDtoMember = null;
+            } /*else if (entityDto instanceof BlockDto) {
+                pointDtoMember = null;
+                pathDtoMember = null;
+                blockDtoMember = (BlockDto) entityDto;
+            }*/ else {
+                dummyUUID = entityDto.getUUID();
+            }
+//            {
+//                throw new ResourceUnknownException(entityDto);
+//            }
         }
 
-        public String getClassName() {
-            return className;
+        @JsonProperty("UUID")
+        public String getUUID() {
+            BaseEntityDto elem = getResource();
+            if (elem != null) {
+                return elem.getUUID();
+            }
+
+            return dummyUUID;
         }
 
-        public void setClassName(String className) {
-            this.className = Objects.requireNonNull(className);
+        @JsonProperty("UUID")
+        public void setUUID(String dummyUUID) {
+            this.dummyUUID = Objects.requireNonNull(dummyUUID);
         }
 
-        public String getElementUUID() {
-            return elementUUID;
+        public PointDto getPointDtoMember() {
+            return pointDtoMember;
         }
 
-        public void setElementUUID(String elementUUID) {
-            this.elementUUID = Objects.requireNonNull(elementUUID);
+        public void setPointDtoMember(PointDto pointDtoMember) {
+            this.pointDtoMember = pointDtoMember;
+        }
+
+        public PathDto getPathDtoMember() {
+            return pathDtoMember;
+        }
+
+        public void setPathDtoMember(PathDto pathDtoMember) {
+            this.pathDtoMember = pathDtoMember;
+        }
+
+//        public BlockDto getBlockDtoMember() {
+//            return blockDtoMember;
+//        }
+//
+//        public void setBlockDtoMember(BlockDto blockDtoMember) {
+//            this.blockDtoMember = blockDtoMember;
+//        }
+
+        @JsonIgnore
+        @Transient
+        public BaseEntityDto getResource() {
+            if (pointDtoMember != null) {
+                return pointDtoMember;
+            } else if (pathDtoMember != null) {
+                return pathDtoMember;
+            }/* else if (blockDtoMember != null) {
+                return blockDtoMember;
+            }*/
+
+            return null;
+        }
+
+        @JsonIgnore
+        public boolean isEmpty() {
+            return (pointDtoMember == null) && (pathDtoMember == null) /*&& (blockDtoMember == null)*/;
         }
 
         @Override
@@ -231,7 +284,11 @@ public class BlockDto  extends BaseEntityDto {
             Objects.requireNonNull(elem);
             BlockElementDto blockElement = (BlockElementDto) elem;
 
-            return className.equals(blockElement.getClassName()) && elementUUID.equals(blockElement.getElementUUID());
+            if (getResource() == null) {
+                return false;
+            }
+
+            return getResource().equals(blockElement.getResource());
         }
     }
 }

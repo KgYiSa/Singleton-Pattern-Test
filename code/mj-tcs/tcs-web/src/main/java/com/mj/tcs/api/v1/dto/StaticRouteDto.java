@@ -6,9 +6,8 @@
 
 package com.mj.tcs.api.v1.dto;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
@@ -45,9 +44,10 @@ public class StaticRouteDto extends BaseEntityDto {
             nullable = false, name = "model_id", referencedColumnName = "id"))
     private Set<EntityProperty> properties = new HashSet<>();
 
+    @JsonIgnoreProperties({"version", "auditor", "properties", "position", "type", "display_position_x", "display_position_y", "label_offset_x", "label_offset_y", "vehicle_orientation_angle", "incoming_paths", "outgoing_paths", "attached_links"})
     @ElementCollection
     @CollectionTable(name = "tcs_model_static_route_hops", joinColumns = @JoinColumn(
-            nullable = false, name = "model_id", referencedColumnName = "id"))
+            nullable = false, name = "static_route_id", referencedColumnName = "id"))
     private List<PointDto> hops;
 
     public SceneDto getSceneDto() {
@@ -67,7 +67,9 @@ public class StaticRouteDto extends BaseEntityDto {
     }
 
     /**
-     * Add property. It can be used to put any unknown propery during deSerialization.
+     * Add property. It can be used to put any unknown property during deSerialization.
+     *
+     * Note: If value is null, then remove the property.
      *
      * @param name
      * @param value
@@ -75,14 +77,23 @@ public class StaticRouteDto extends BaseEntityDto {
     public void addProperty(String name, String value, String type) {
         Optional<EntityProperty> propertyOptional = properties.stream().filter(p -> p.getName().equals(name)).findFirst();
         if (propertyOptional.isPresent()) {
-            propertyOptional.get().setValue(Objects.requireNonNull(value));
-            propertyOptional.get().setType(Objects.requireNonNull(type));
+            if (value == null) {
+                properties.remove(propertyOptional.get());
+                return;
+            } else {
+                propertyOptional.get().setValue(Objects.requireNonNull(value));
+                propertyOptional.get().setType(Objects.requireNonNull(type));
+            }
         } else {
-            EntityProperty property = new EntityProperty();
-            property.setName(Objects.requireNonNull(name));
-            property.setValue(Objects.requireNonNull(value));
-            property.setType(Objects.requireNonNull(type));
-            properties.add(property);
+            if (value == null) {
+                return;
+            } else {
+                EntityProperty property = new EntityProperty();
+                property.setName(Objects.requireNonNull(name));
+                property.setValue(Objects.requireNonNull(value));
+                property.setType(Objects.requireNonNull(type));
+                properties.add(property);
+            }
         }
     }
 
@@ -110,6 +121,7 @@ public class StaticRouteDto extends BaseEntityDto {
      * @return The first element of the list of hops in this route, or
      * <code>null</code>, if the list of hops is empty.
      */
+    @JsonIgnore
     public PointDto getSourcePoint() {
         if (hops.isEmpty()) {
             return null;
@@ -126,6 +138,7 @@ public class StaticRouteDto extends BaseEntityDto {
      * @return The final element of the list of hops in this route, or
      * <code>null</code>, if the list of hops is empty.
      */
+    @JsonIgnore
     public PointDto getDestinationPoint() {
         if (hops.isEmpty()) {
             return null;
@@ -171,6 +184,7 @@ public class StaticRouteDto extends BaseEntityDto {
      *
      * @return <code>true</code> if, and only if, this static route is valid.
      */
+    @JsonIgnore
     public boolean isValid() {
         return hops != null || hops.size() >= 2;
     }

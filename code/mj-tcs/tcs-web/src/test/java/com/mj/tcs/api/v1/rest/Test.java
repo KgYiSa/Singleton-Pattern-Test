@@ -23,10 +23,10 @@ public class Test {
         mapper.setVisibilityChecker(VisibilityChecker.Std.defaultInstance().withFieldVisibility(JsonAutoDetect.Visibility.ANY));
 
         String json = mapper.writeValueAsString(dto);
+        System.out.println(json);
         SceneDto dto2 = mapper.readValue(json, SceneDto.class);
         if (dto2.getPointDtos() != null) {
             dto2.getPointDtos().forEach(p -> p.setSceneDto(dto));
         }
-        System.out.println(json);
     }
 }

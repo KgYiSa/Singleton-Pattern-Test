@@ -1,9 +1,7 @@
 package com.mj.tcs.api.v1.dto;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
@@ -104,7 +102,9 @@ public class VehicleDto extends BaseEntityDto {
     }
 
     /**
-     * Add property. It can be used to put any unknown propery during deSerialization.
+     * Add property. It can be used to put any unknown property during deSerialization.
+     *
+     * Note: If value is null, then remove the property.
      *
      * @param name
      * @param value
@@ -112,14 +112,23 @@ public class VehicleDto extends BaseEntityDto {
     public void addProperty(String name, String value, String type) {
         Optional<EntityProperty> propertyOptional = properties.stream().filter(p -> p.getName().equals(name)).findFirst();
         if (propertyOptional.isPresent()) {
-            propertyOptional.get().setValue(Objects.requireNonNull(value));
-            propertyOptional.get().setType(Objects.requireNonNull(type));
+            if (value == null) {
+                properties.remove(propertyOptional.get());
+                return;
+            } else {
+                propertyOptional.get().setValue(Objects.requireNonNull(value));
+                propertyOptional.get().setType(Objects.requireNonNull(type));
+            }
         } else {
-            EntityProperty property = new EntityProperty();
-            property.setName(Objects.requireNonNull(name));
-            property.setValue(Objects.requireNonNull(value));
-            property.setType(Objects.requireNonNull(type));
-            properties.add(property);
+            if (value == null) {
+                return;
+            } else {
+                EntityProperty property = new EntityProperty();
+                property.setName(Objects.requireNonNull(name));
+                property.setValue(Objects.requireNonNull(value));
+                property.setType(Objects.requireNonNull(type));
+                properties.add(property);
+            }
         }
     }
 

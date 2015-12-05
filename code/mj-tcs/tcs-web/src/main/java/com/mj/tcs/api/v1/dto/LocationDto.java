@@ -129,7 +129,9 @@ public class LocationDto extends BaseEntityDto {
     }
 
     /**
-     * Add property. It can be used to put any unknown propery during deSerialization.
+     * Add property. It can be used to put any unknown property during deSerialization.
+     *
+     * Note: If value is null, then remove the property.
      *
      * @param name
      * @param value
@@ -137,14 +139,23 @@ public class LocationDto extends BaseEntityDto {
     public void addProperty(String name, String value, String type) {
         Optional<EntityProperty> propertyOptional = properties.stream().filter(p -> p.getName().equals(name)).findFirst();
         if (propertyOptional.isPresent()) {
-            propertyOptional.get().setValue(Objects.requireNonNull(value));
-            propertyOptional.get().setType(Objects.requireNonNull(type));
+            if (value == null) {
+                properties.remove(propertyOptional.get());
+                return;
+            } else {
+                propertyOptional.get().setValue(Objects.requireNonNull(value));
+                propertyOptional.get().setType(Objects.requireNonNull(type));
+            }
         } else {
-            EntityProperty property = new EntityProperty();
-            property.setName(Objects.requireNonNull(name));
-            property.setValue(Objects.requireNonNull(value));
-            property.setType(Objects.requireNonNull(type));
-            properties.add(property);
+            if (value == null) {
+                return;
+            } else {
+                EntityProperty property = new EntityProperty();
+                property.setName(Objects.requireNonNull(name));
+                property.setValue(Objects.requireNonNull(value));
+                property.setType(Objects.requireNonNull(type));
+                properties.add(property);
+            }
         }
     }
 

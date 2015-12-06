@@ -15,6 +15,7 @@ import java.util.UUID;
  * @author Wang Zhen
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
+//@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 //@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class)
 @Dto
 @MappedSuperclass

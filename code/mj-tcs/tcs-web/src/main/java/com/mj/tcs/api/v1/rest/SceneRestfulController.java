@@ -50,6 +50,24 @@ public class SceneRestfulController extends ServiceController {
                 HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/scenes/profile", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllScenesProfile() {
+        Collection<SceneDto> sceneDtos = getModellingService().getAllScenes();
+        if (sceneDtos == null || sceneDtos.size() == 0) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+//        List<SceneDto> sceneDtos = sceneDtoEntities.stream()
+//                .map(item -> (SceneDto) dtoConverter.convertToDto(item))
+//                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(/*
+                new Resources<>(
+                        new SceneDtoResourceAssembler().toResources(sceneDtos)
+                )*/sceneDtos,
+                HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/scenes", method = RequestMethod.POST)
     public ResponseEntity<?> createScene(@RequestBody SceneDto sceneDto) {
         SceneDto newSceneDto = resolveRelationships(sceneDto);
@@ -205,6 +223,13 @@ public class SceneRestfulController extends ServiceController {
 
                         // Path
                         memDto = sceneDto.getPathDtoByUUID(uuid);
+                        if (memDto != null) {
+                            elementDtos.add(new BlockDto.BlockElementDto(memDto));
+                            continue;
+                        }
+
+                        // Location
+                        memDto = sceneDto.getLocationDtoByUUID(uuid);
                         if (memDto != null) {
                             elementDtos.add(new BlockDto.BlockElementDto(memDto));
                             continue;

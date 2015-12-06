@@ -185,6 +185,7 @@ public class SceneDtoModelGenerator {
         blockElements.add(((PointDto) pointDtos.toArray()[0]));
         blockElements.add(((PointDto) pointDtos.toArray()[1]));
         blockElements.add(((PathDto) pathDtos.toArray()[0]));
+        blockElements.add(locationDto);
         sceneDto.addBlockDto(createBlockDto(blockElements));
 
         List<PointDto> hops = new ArrayList<>();

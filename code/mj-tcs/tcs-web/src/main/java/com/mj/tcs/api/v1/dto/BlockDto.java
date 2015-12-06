@@ -181,14 +181,16 @@ public class BlockDto  extends BaseEntityDto {
         private String dummyUUID = null;
 
         @JsonIgnore
-//        @Column(name = "point", nullable = true)
         @OneToOne
         private PointDto pointDtoMember;
 
         @JsonIgnore
-//        @Column(name = "path", nullable = true)
         @OneToOne
         private PathDto pathDtoMember;
+
+        @JsonIgnore
+        @OneToOne
+        private LocationDto locationDtoMember;
 
 //        @JsonIgnore
 //        @Column(name = "block", nullable = true)
@@ -203,10 +205,17 @@ public class BlockDto  extends BaseEntityDto {
             if (entityDto instanceof PointDto) {
                 pointDtoMember = (PointDto) entityDto;
                 pathDtoMember = null;
+                locationDtoMember = null;
 //                blockDtoMember = null;
             } else if (entityDto instanceof PathDto) {
                 pointDtoMember = null;
                 pathDtoMember = (PathDto) entityDto;
+                locationDtoMember = null;
+//                blockDtoMember = null;
+            } else if (entityDto instanceof LocationDto) {
+                pointDtoMember = null;
+                pathDtoMember = null;
+                locationDtoMember = (LocationDto) entityDto;
 //                blockDtoMember = null;
             } /*else if (entityDto instanceof BlockDto) {
                 pointDtoMember = null;
@@ -251,6 +260,13 @@ public class BlockDto  extends BaseEntityDto {
             this.pathDtoMember = pathDtoMember;
         }
 
+        public LocationDto getLocationDtoMember() {
+            return locationDtoMember;
+        }
+
+        public void setLocationDtoMember(LocationDto locationDtoMember) {
+            this.locationDtoMember = locationDtoMember;
+        }
 //        public BlockDto getBlockDtoMember() {
 //            return blockDtoMember;
 //        }
@@ -266,6 +282,8 @@ public class BlockDto  extends BaseEntityDto {
                 return pointDtoMember;
             } else if (pathDtoMember != null) {
                 return pathDtoMember;
+            } else if (locationDtoMember != null) {
+                return locationDtoMember;
             }/* else if (blockDtoMember != null) {
                 return blockDtoMember;
             }*/
@@ -275,7 +293,7 @@ public class BlockDto  extends BaseEntityDto {
 
         @JsonIgnore
         public boolean isEmpty() {
-            return (pointDtoMember == null) && (pathDtoMember == null) /*&& (blockDtoMember == null)*/;
+            return (pointDtoMember == null) && (pathDtoMember == null) && (locationDtoMember == null) /*&& (blockDtoMember == null)*/;
         }
 
         @Override

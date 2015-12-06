@@ -1,5 +1,6 @@
 package com.mj.tcs.api.v1.dto.base;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -43,7 +44,8 @@ public class BaseEntityDto implements Serializable, Cloneable {
     @Version
     private Long version;
 
-    @JsonProperty("auditor")
+//    @JsonProperty("auditor")
+    @JsonIgnore // TODO: [TBD] Ignore or display in debug mode???
     @Embedded
     private EntityAuditorDto auditorDto = null;
 

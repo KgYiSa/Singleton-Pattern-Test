@@ -89,6 +89,7 @@ public class PointDto extends BaseEntityDto {
     @ElementCollection
     @CollectionTable(name = "tcs_model_point_imcoming_paths", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
+    @OrderBy(value = "name ASC")
     private Set<PathDto> incomingPaths = new LinkedHashSet<>();
 
     // convert outside
@@ -101,6 +102,7 @@ public class PointDto extends BaseEntityDto {
     @ElementCollection
     @CollectionTable(name = "tcs_model_point_outgoing_paths", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
+    @OrderBy(value = "name ASC")
     private Set<PathDto> outgoingPaths = new LinkedHashSet<>();
 
 //    @JsonIdentityReference(alwaysAsId = true)
@@ -110,6 +112,7 @@ public class PointDto extends BaseEntityDto {
     @OneToMany(cascade = {CascadeType.ALL}/*, mappedBy = "point"*/)
 //    @ElementCollection
 //    @CollectionTable(name = "tcs_model_rel_point_attached_links")
+    @OrderBy(value = "name ASC")
     private Set<LocationLinkDto> attachedLinks = new LinkedHashSet<>();
 
     public SceneDto getSceneDto() {

@@ -52,6 +52,7 @@ public class StaticRouteDto extends BaseEntityDto {
     @ElementCollection
     @CollectionTable(name = "tcs_model_static_route_hops", joinColumns = @JoinColumn(
             nullable = false, name = "static_route_id", referencedColumnName = "id"))
+    @OrderBy(value = "name ASC")
     private List<PointDto> hops;
 
     public SceneDto getSceneDto() {

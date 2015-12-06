@@ -44,6 +44,7 @@ public class SceneDto extends BaseEntityDto {
                     entityBeanKeys = {"PointDto"},
                     dtoToEntityMatcher = PointDto2PointMatcher.class)
     @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
+    @OrderBy(value = "name ASC")
     private Set<PointDto> pointDtos;
 
     @JsonProperty("paths")
@@ -56,6 +57,7 @@ public class SceneDto extends BaseEntityDto {
             entityBeanKeys = {"Path"},
             dtoToEntityMatcher = PathDto2PathMatcher.class)
     @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
+    @OrderBy(value = "name ASC")
     private Set<PathDto> pathDtos;
 
     @JsonProperty("locations")
@@ -68,6 +70,7 @@ public class SceneDto extends BaseEntityDto {
             entityBeanKeys = {"Location"},
             dtoToEntityMatcher = LocationDto2LocationMatcher.class)
     @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
+    @OrderBy(value = "name ASC")
     private Set<LocationDto> locationDtos;
 
     @JsonProperty("location_types")
@@ -80,6 +83,7 @@ public class SceneDto extends BaseEntityDto {
             entityBeanKeys = {"LocationType"},
             dtoToEntityMatcher = LocationTypeDto2LocationTypeMatcher.class)
     @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
+    @OrderBy(value = "name ASC")
     private Set<LocationTypeDto> locationTypeDtos;
 
     @JsonProperty("blocks")
@@ -92,6 +96,7 @@ public class SceneDto extends BaseEntityDto {
             entityBeanKeys = {"StaticRoute"},
             dtoToEntityMatcher = StaticRouteDto2StaticRouteMatcher.class)
     @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
+    @OrderBy(value = "name ASC")
     private Set<BlockDto> blockDtos;
 
     @JsonProperty("static_routes")
@@ -104,6 +109,7 @@ public class SceneDto extends BaseEntityDto {
             entityBeanKeys = {"StaticRoute"},
             dtoToEntityMatcher = StaticRouteDto2StaticRouteMatcher.class)
     @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
+    @OrderBy(value = "name ASC")
     private Set<StaticRouteDto> staticRouteDtos;
 
     @JsonProperty("vehicles")
@@ -116,6 +122,7 @@ public class SceneDto extends BaseEntityDto {
 //            entityBeanKeys = {"Vehicle"},
 //            dtoToEntityMatcher = StaticRouteDto2StaticRouteMatcher.class)
     @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
+    @OrderBy(value = "name ASC")
     private Set<VehicleDto> vehicleDtos;
 
     public String getName() {

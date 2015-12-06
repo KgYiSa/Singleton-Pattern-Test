@@ -138,7 +138,7 @@ public class VehicleController extends ServiceController {
 //                currentPoint.getId() == nextPoint.getId()) {
 //            throw new TcsServerRuntimeException("The current point is the same as the next point of the vehicle.");
 //        }
-//        newVehicle.setCurrentPosition(currentPoint);
+//        newVehicle.setInitialPoint(currentPoint);
 //        newVehicle.setNextPosition(nextPoint);
 //
 //        newVehicle.clearId();

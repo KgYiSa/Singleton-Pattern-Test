@@ -84,6 +84,7 @@ public class LocationDto extends BaseEntityDto {
     @OneToMany(cascade = {CascadeType.ALL})
     @CollectionTable(name = "tcs_model_location_attached_links", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
+    @OrderBy(value = "name ASC")
     private Set<LocationLinkDto> attachedLinks = new LinkedHashSet<>();
 
     @JsonProperty("display_position_x")

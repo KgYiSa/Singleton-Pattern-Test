@@ -87,7 +87,7 @@ public class VehicleDtoService implements IEntityDtoService {
 
     private VehicleDto updateVehicle(VehicleDto entity) {
         VehicleDto vehicle = (VehicleDto) Objects.requireNonNull(entity, "vehicle entity is null");
-        PointDto currentPoint = Objects.requireNonNull(vehicle.getCurrentPosition(), "The vehicle object has no current point!");
+        PointDto currentPoint = Objects.requireNonNull(vehicle.getInitialPoint(), "The vehicle object has no current point!");
 
         SceneDto scene = vehicle.getSceneDto();
 

@@ -73,7 +73,7 @@ public class VehicleDto extends BaseEntityDto {
 
     @JsonIgnoreProperties({"version", "auditor", "properties", "position", "type", "display_position_x", "display_position_y", "label_offset_x", "label_offset_y", "vehicle_orientation_angle", "incoming_paths", "outgoing_paths", "attached_links"})
     @Column
-    private PointDto currentPosition;
+    private PointDto initialPoint;
 
     @JsonProperty("precise_position")
     @DtoField(value = "precisePosition",
@@ -207,12 +207,12 @@ public class VehicleDto extends BaseEntityDto {
         this.maxReverseVelocity = maxReverseVelocity;
     }
 
-    public PointDto getCurrentPosition() {
-        return currentPosition;
+    public PointDto getInitialPoint() {
+        return initialPoint;
     }
 
-    public void setCurrentPosition(PointDto currentPosition) {
-        this.currentPosition = currentPosition;
+    public void setInitialPoint(PointDto initialPoint) {
+        this.initialPoint = initialPoint;
     }
 
     public TripleDto getPrecisePosition() {

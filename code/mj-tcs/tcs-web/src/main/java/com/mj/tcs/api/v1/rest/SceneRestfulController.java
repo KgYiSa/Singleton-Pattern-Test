@@ -40,7 +40,6 @@ public class SceneRestfulController extends ServiceController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-
         return new ResponseEntity<>(
                 sceneDtos,
                 HttpStatus.OK);

@@ -19,9 +19,9 @@ import java.util.*;
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
 @Entity(name = "tcs_model_location_type")
-//@Table(name = "tcs_model_location_type", uniqueConstraints =
-//    @UniqueConstraint(columnNames = {"name", "scene"})
-//)
+@Table(name = "tcs_model_location_type", uniqueConstraints =
+    @UniqueConstraint(columnNames = {"name", "scene"})
+)
 public class LocationTypeDto extends BaseEntityDto {
 
     @JsonIgnore

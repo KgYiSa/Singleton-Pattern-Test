@@ -26,9 +26,9 @@ import java.util.Set;
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
 @Entity(name = "tcs_model_location_link")
-//@Table(name = "tcs_model_location_link", uniqueConstraints =
-//@UniqueConstraint(columnNames = {"name", "scene"})
-//)
+@Table(name = "tcs_model_location_link", uniqueConstraints =
+    @UniqueConstraint(columnNames = {"name", "scene"})
+)
 public class LocationLinkDto extends BaseEntityDto {
 
     @JsonIgnore

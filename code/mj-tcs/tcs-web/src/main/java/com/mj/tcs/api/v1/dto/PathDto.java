@@ -27,9 +27,9 @@ import java.util.*;
 //@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
 @Dto
 @Entity(name = "tcs_model_path")
-//@Table(name = "tcs_model_path", uniqueConstraints =
-//    @UniqueConstraint(columnNames = {"name", "scene"})
-//)
+@Table(name = "tcs_model_path", uniqueConstraints =
+    @UniqueConstraint(columnNames = {"name", "scene"})
+)
 public class PathDto extends BaseEntityDto {
     @JsonIgnore
     @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})

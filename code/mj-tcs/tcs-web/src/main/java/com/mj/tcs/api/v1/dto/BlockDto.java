@@ -23,6 +23,9 @@ import java.util.stream.Collectors;
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
 @Entity(name = "tcs_model_block")
+@Table(name = "tcs_model_block", uniqueConstraints =
+@UniqueConstraint(columnNames = {"name", "scene"})
+)
 public class BlockDto  extends BaseEntityDto {
 
     @JsonIgnore

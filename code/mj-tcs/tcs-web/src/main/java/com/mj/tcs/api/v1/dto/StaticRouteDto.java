@@ -27,9 +27,9 @@ import java.util.*;
 //@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
 @Dto
 @Entity(name = "tcs_model_static_route")
-//@Table(name = "tcs_model_static_route", uniqueConstraints =
-//    @UniqueConstraint(columnNames = {"name", "scene"})
-//)
+@Table(name = "tcs_model_static_route", uniqueConstraints =
+    @UniqueConstraint(columnNames = {"name", "scene"})
+)
 public class StaticRouteDto extends BaseEntityDto {
 
     @JsonIgnore

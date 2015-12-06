@@ -1,7 +1,5 @@
 package com.mj.tcs.api.v1.rest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mj.tcs.TcsWebServerApplication;
 import com.mj.tcs.api.v1.dto.SceneDto;
 import com.mj.tcs.util.SceneDtoModelGenerator;
@@ -49,7 +47,7 @@ public class SceneRestfulControllerIntegrationTest {
 //        delete();
     }
 
-//    @Test
+    @Test
     public void testGet() throws Exception {
         HttpEntity<String> entity = prepareGet(MediaType.APPLICATION_JSON);
 

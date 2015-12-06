@@ -24,9 +24,9 @@ import java.util.Set;
 //@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
 @Dto
 @Entity(name = "tcs_model_vehicle")
-//@Table(name = "tcs_model_vehicle", uniqueConstraints =
-//    @UniqueConstraint(columnNames = {"name", "scene"})
-//)
+@Table(name = "tcs_model_vehicle", uniqueConstraints =
+    @UniqueConstraint(columnNames = {"name", "scene"})
+)
 public class VehicleDto extends BaseEntityDto {
 
     @JsonIgnore

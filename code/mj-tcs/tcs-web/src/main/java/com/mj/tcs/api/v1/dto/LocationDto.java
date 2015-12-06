@@ -23,9 +23,9 @@ import java.util.*;
 //@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
 @Dto
 @Entity(name = "tcs_model_location")
-//@Table(name = "tcs_model_location", uniqueConstraints =
-//    @UniqueConstraint(columnNames = {"name", "scene"})
-//)
+@Table(name = "tcs_model_location", uniqueConstraints =
+    @UniqueConstraint(columnNames = {"name", "scene"})
+)
 public class LocationDto extends BaseEntityDto {
 
     @JsonIgnore

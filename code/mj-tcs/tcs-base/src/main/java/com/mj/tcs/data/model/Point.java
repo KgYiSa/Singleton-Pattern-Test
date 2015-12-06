@@ -42,11 +42,11 @@ public class Point extends BaseResource implements Cloneable {
      */
     private Type type = Type.HALT_POSITION;
 
-    private Set<Path> incomingPaths = new HashSet<>();
+    private Set<Path> incomingPaths = new LinkedHashSet<>();
 
-    private Set<Path> outgoingPaths = new HashSet<>();
+    private Set<Path> outgoingPaths = new LinkedHashSet<>();
 
-    private Set<Location.Link> attachedLinks = new HashSet<>();
+    private Set<Location.Link> attachedLinks = new LinkedHashSet<>();
 
     /**
      * Creates a new point
@@ -294,9 +294,9 @@ public class Point extends BaseResource implements Cloneable {
         clone = (Point) super.clone();
         clone.position = (position == null) ? null : position.clone();
         clone.occupyingVehicle = (occupyingVehicle == null) ? null : occupyingVehicle.clone();
-        clone.incomingPaths = new HashSet<>(incomingPaths);
-        clone.outgoingPaths = new HashSet<>(outgoingPaths);
-        clone.attachedLinks = new HashSet<>(attachedLinks);
+        clone.incomingPaths = new LinkedHashSet<>(incomingPaths);
+        clone.outgoingPaths = new LinkedHashSet<>(outgoingPaths);
+        clone.attachedLinks = new LinkedHashSet<>(attachedLinks);
         return clone;
     }
 

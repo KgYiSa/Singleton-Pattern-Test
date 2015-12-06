@@ -6,7 +6,7 @@ package com.mj.tcs.data.model;
 
 import com.mj.tcs.data.base.BaseEntity;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -84,7 +84,7 @@ public class LocationType extends BaseEntity implements Cloneable {
                 return false;
             }
         } else {
-            ops = new HashSet<>();
+            ops = new LinkedHashSet<>();
         }
 
         boolean answer = ops.add(operation);
@@ -110,7 +110,7 @@ public class LocationType extends BaseEntity implements Cloneable {
                 return false;
             }
         } else {
-            ops = new HashSet<>();
+            ops = new LinkedHashSet<>();
         }
 
         boolean answer = ops.remove(operation);
@@ -156,16 +156,16 @@ public class LocationType extends BaseEntity implements Cloneable {
 
     private Set<String> stringToSet(String inString) {
         if (inString == null || inString.trim().length() == 0) {
-            return new HashSet<>();
+            return new LinkedHashSet<>();
         }
 
         String[] texts = inString.trim().split(";");
         if (texts == null || texts.length == 0) {
-            return new HashSet<>();
+            return new LinkedHashSet<>();
         }
 
 
-        Set<String> answer = new HashSet<>();
+        Set<String> answer = new LinkedHashSet<>();
         for (String text : texts) {
             answer.add(text);
         }

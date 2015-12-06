@@ -2,7 +2,7 @@ package com.mj.tcs.data.model;
 
 import com.mj.tcs.data.base.BaseResource;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -18,7 +18,7 @@ public final class Block extends BaseResource implements Cloneable {
     /**
      * The resources aggregated in this block.
      */
-    private Set<BaseResource> members = new HashSet<>();
+    private Set<BaseResource> members = new LinkedHashSet<>();
 
     public Block() {
     }
@@ -82,7 +82,7 @@ public final class Block extends BaseResource implements Cloneable {
     public Block clone() {
         Block clone = null;
         clone = (Block) super.clone();
-        clone.members = new HashSet<>(members);
+        clone.members = new LinkedHashSet<>(members);
         return clone;
     }
 }

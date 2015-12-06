@@ -2,7 +2,9 @@ package com.mj.tcs.api.v1.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoCollection;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
@@ -25,12 +27,16 @@ public class SceneDto extends BaseEntityDto {
     @Column(unique = true, nullable = false)
     private String name;
 
+    @JsonSerialize(as = LinkedHashSet.class)
+    @JsonDeserialize(as = LinkedHashSet.class)
     @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
     @CollectionTable(name = "tcs_model_scene_properties", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
     private Set<EntityProperty> properties = new LinkedHashSet<>();
 
     @JsonProperty("points")
+    @JsonSerialize(as = LinkedHashSet.class)
+    @JsonDeserialize(as = LinkedHashSet.class)
     @DtoCollection(value = "pointDtos",
                     entityCollectionClass = HashSet.class,
                     dtoCollectionClass = HashSet.class,
@@ -41,6 +47,8 @@ public class SceneDto extends BaseEntityDto {
     private Set<PointDto> pointDtos;
 
     @JsonProperty("paths")
+    @JsonSerialize(as = LinkedHashSet.class)
+    @JsonDeserialize(as = LinkedHashSet.class)
     @DtoCollection(value = "pathDtos",
             entityCollectionClass = HashSet.class,
             dtoCollectionClass = HashSet.class,
@@ -51,6 +59,8 @@ public class SceneDto extends BaseEntityDto {
     private Set<PathDto> pathDtos;
 
     @JsonProperty("locations")
+    @JsonSerialize(as = LinkedHashSet.class)
+    @JsonDeserialize(as = LinkedHashSet.class)
     @DtoCollection(value = "locationDtos",
             entityCollectionClass = HashSet.class,
             dtoCollectionClass = HashSet.class,
@@ -61,6 +71,8 @@ public class SceneDto extends BaseEntityDto {
     private Set<LocationDto> locationDtos;
 
     @JsonProperty("location_types")
+    @JsonSerialize(as = LinkedHashSet.class)
+    @JsonDeserialize(as = LinkedHashSet.class)
     @DtoCollection(value = "locationTypeDtos",
             entityCollectionClass = HashSet.class,
             dtoCollectionClass = HashSet.class,
@@ -71,6 +83,8 @@ public class SceneDto extends BaseEntityDto {
     private Set<LocationTypeDto> locationTypeDtos;
 
     @JsonProperty("blocks")
+    @JsonSerialize(as = LinkedHashSet.class)
+    @JsonDeserialize(as = LinkedHashSet.class)
     @DtoCollection(value = "staticRouteDtos",
             entityCollectionClass = HashSet.class,
             dtoCollectionClass = HashSet.class,
@@ -81,6 +95,8 @@ public class SceneDto extends BaseEntityDto {
     private Set<BlockDto> blockDtos;
 
     @JsonProperty("static_routes")
+    @JsonSerialize(as = LinkedHashSet.class)
+    @JsonDeserialize(as = LinkedHashSet.class)
     @DtoCollection(value = "staticRouteDtos",
             entityCollectionClass = HashSet.class,
             dtoCollectionClass = HashSet.class,

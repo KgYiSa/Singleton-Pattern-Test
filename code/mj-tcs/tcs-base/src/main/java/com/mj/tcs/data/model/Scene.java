@@ -2,7 +2,7 @@ package com.mj.tcs.data.model;
 
 import com.mj.tcs.data.base.BaseEntity;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -12,19 +12,19 @@ import java.util.Set;
  */
 public class Scene extends BaseEntity implements Cloneable {
 
-    private Set<Point> points = new HashSet<>();
+    private Set<Point> points = new LinkedHashSet<>();
 
-    private Set<Path> paths = new HashSet<>();
+    private Set<Path> paths = new LinkedHashSet<>();
 
-    private Set<Location> locations = new HashSet<>();
+    private Set<Location> locations = new LinkedHashSet<>();
 
-    private Set<LocationType> locationTypes = new HashSet<>();
+    private Set<LocationType> locationTypes = new LinkedHashSet<>();
 
-    private Set<StaticRoute> staticRoutes = new HashSet<>();
+    private Set<StaticRoute> staticRoutes = new LinkedHashSet<>();
 
-    private Set<Block> blocks = new HashSet<>();
+    private Set<Block> blocks = new LinkedHashSet<>();
 
-    private Set<Vehicle> vehicles = new HashSet<>();
+    private Set<Vehicle> vehicles = new LinkedHashSet<>();
 
     public Scene() {
     }
@@ -108,7 +108,7 @@ public class Scene extends BaseEntity implements Cloneable {
      */
     public boolean addPoint(Point newPoint) {
         if (this.points == null) {
-            this.points = new HashSet<>();
+            this.points = new LinkedHashSet<>();
         }
 
         return this.points.add(Objects.requireNonNull(newPoint, "point to be added is null"));
@@ -162,7 +162,7 @@ public class Scene extends BaseEntity implements Cloneable {
      */
     public boolean addPath(Path newPath) {
         if (this.paths == null) {
-            this.paths = new HashSet<>();
+            this.paths = new LinkedHashSet<>();
         }
 
         return this.paths.add(Objects.requireNonNull(newPath, "path to be added is null"));
@@ -212,7 +212,7 @@ public class Scene extends BaseEntity implements Cloneable {
 
     public boolean addLocationType(LocationType newLocationType) {
         if (this.locationTypes == null) {
-            this.locationTypes = new HashSet<>();
+            this.locationTypes = new LinkedHashSet<>();
         }
 
         return this.locationTypes.add(Objects.requireNonNull(newLocationType, "newLocationType to be added is null"));
@@ -257,7 +257,7 @@ public class Scene extends BaseEntity implements Cloneable {
 
     public boolean addLocation(Location location) {
         if (this.locations == null) {
-            this.locations = new HashSet<>();
+            this.locations = new LinkedHashSet<>();
         }
 
         return this.locations.add(Objects.requireNonNull(location, "location to be added is null"));
@@ -306,7 +306,7 @@ public class Scene extends BaseEntity implements Cloneable {
 
     public boolean addStaticRoute(StaticRoute staticRoute) {
         if (this.staticRoutes == null) {
-            this.staticRoutes = new HashSet<>();
+            this.staticRoutes = new LinkedHashSet<>();
         }
 
         return this.staticRoutes.add(Objects.requireNonNull(staticRoute, "staticRoute to be added is null"));
@@ -355,7 +355,7 @@ public class Scene extends BaseEntity implements Cloneable {
 
     public boolean addVehicle(Vehicle vehicle) {
         if (this.vehicles == null) {
-            this.vehicles = new HashSet<>();
+            this.vehicles = new LinkedHashSet<>();
         }
 
         return this.vehicles.add(Objects.requireNonNull(vehicle, "vehicle to be added is null"));
@@ -404,7 +404,7 @@ public class Scene extends BaseEntity implements Cloneable {
 
     public boolean addBlock(Block block) {
         if (this.blocks == null) {
-            this.blocks = new HashSet<>();
+            this.blocks = new LinkedHashSet<>();
         }
 
         return this.blocks.add(Objects.requireNonNull(block, "block to be added is null"));

@@ -1,7 +1,7 @@
 package com.mj.tcs.data.base;
 
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -12,7 +12,7 @@ public abstract class BaseResource extends BaseEntity implements Serializable, C
      * A set of resources that <em>must</em> be acquired, too, when acquiring this
      * one.
      */
-    private Set<BaseResource> attachedResources = new HashSet<>();
+    private Set<BaseResource> attachedResources = new LinkedHashSet<>();
 
     public Set<BaseResource> getAttachedResources() {
         return attachedResources;
@@ -56,7 +56,7 @@ public abstract class BaseResource extends BaseEntity implements Serializable, C
     @Override
     public BaseResource clone() {
         BaseResource clone = (BaseResource) super.clone();
-        clone.attachedResources = new HashSet<>(attachedResources);
+        clone.attachedResources = new LinkedHashSet<>(attachedResources);
         return clone;
     }
 }

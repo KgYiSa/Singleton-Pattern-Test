@@ -2,7 +2,9 @@ package com.mj.tcs.api.v1.dto;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoCollection;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
@@ -35,6 +37,8 @@ public class LocationDto extends BaseEntityDto {
     @Column
     private String name;
 
+    @JsonSerialize(as = LinkedHashSet.class)
+    @JsonDeserialize(as = LinkedHashSet.class)
     @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
     @CollectionTable(name = "tcs_model_location_properties", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
@@ -68,6 +72,8 @@ public class LocationDto extends BaseEntityDto {
      * A set of links attached to this locationDto.
      */
     @JsonManagedReference
+    @JsonSerialize(as = LinkedHashSet.class)
+    @JsonDeserialize(as = LinkedHashSet.class)
     @DtoCollection(value = "attachedLinks",
             entityCollectionClass = HashSet.class,
             dtoCollectionClass = HashSet.class,

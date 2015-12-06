@@ -32,7 +32,7 @@ public class Location extends BaseLocation {
     /**
      * A set of links attached to this location.
      */
-    private Set<Link> attachedLinks = new HashSet<>();
+    private Set<Link> attachedLinks = new LinkedHashSet<>();
 
     public Location(){
     }
@@ -214,7 +214,7 @@ public class Location extends BaseLocation {
         clone = (Location) super.clone();
         clone.position = (position == null) ? null : position;
         clone.type = type.clone();
-        clone.attachedLinks = new HashSet<>();
+        clone.attachedLinks = new LinkedHashSet<>();
         if (attachedLinks != null) {
             for (Link curLink : attachedLinks) {
                 clone.attachedLinks.add(curLink.clone());

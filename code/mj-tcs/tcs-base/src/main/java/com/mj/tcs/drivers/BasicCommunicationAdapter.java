@@ -34,7 +34,7 @@ public abstract class BasicCommunicationAdapter implements CommunicationAdapter,
     /**
      * This communication adapter's velocity listeners.
      */
-    private final Set<VelocityListener> velocityListeners = new HashSet<>();
+    private final Set<VelocityListener> velocityListeners = new LinkedHashSet<>();
     /**
      * A set of views observing this communication adapter.
      */

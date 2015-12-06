@@ -8,6 +8,7 @@ import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.api.v1.web.ServiceController;
 import com.mj.tcs.exception.ObjectUnknownException;
 import com.mj.tcs.exception.ResourceUnknownException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,14 +40,9 @@ public class SceneRestfulController extends ServiceController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-//        List<SceneDto> sceneDtos = sceneDtoEntities.stream()
-//                .map(item -> (SceneDto) dtoConverter.convertToDto(item))
-//                .collect(Collectors.toList());
 
-        return new ResponseEntity<>(/*
-                new Resources<>(
-                        new SceneDtoResourceAssembler().toResources(sceneDtos)
-                )*/sceneDtos,
+        return new ResponseEntity<>(
+                sceneDtos,
                 HttpStatus.OK);
     }
 
@@ -57,14 +53,16 @@ public class SceneRestfulController extends ServiceController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
 
-//        List<SceneDto> sceneDtos = sceneDtoEntities.stream()
-//                .map(item -> (SceneDto) dtoConverter.convertToDto(item))
-//                .collect(Collectors.toList());
+        List<Map<String, String>> sceneDtosProfile = new ArrayList<>();
+        for (SceneDto sceneDto : sceneDtos) {
+            Map<String, String> item = new LinkedHashMap<>();
+            item.put("id", sceneDto.getId().toString());
+            item.put("name", sceneDto.getName());
+            sceneDtosProfile.add(item);
+        }
 
-        return new ResponseEntity<>(/*
-                new Resources<>(
-                        new SceneDtoResourceAssembler().toResources(sceneDtos)
-                )*/sceneDtos,
+        return new ResponseEntity<>(
+                sceneDtosProfile,
                 HttpStatus.OK);
     }
 
@@ -111,7 +109,7 @@ public class SceneRestfulController extends ServiceController {
 //        // OPTION 1
 //        // TODO: Check why PUT arguments are null ?
 ////        Map<String, Object> resourceMap = new BeanMap(sceneDto);
-////        SceneDto scene = getModellingService().getSceneDto(sceneId);
+//        SceneDto scene = getModellingService().getSceneDto(sceneId);
 ////        dtoConverter.mergePropertiesToEntity(scene, resMap);
 //
 //        // OPTION 2 (RECOMMEND)
@@ -141,13 +139,17 @@ public class SceneRestfulController extends ServiceController {
 //                new SceneDtoResourceAssembler().toResource((SceneDto) dtoConverter.convertToDto(scene)),
 //                HttpStatus.OK);
 //    }
-//
-//    @RequestMapping(value = "/scenes/{sceneId}", method = RequestMethod.DELETE)
-//    public ResponseEntity<?> deleteScene(@PathVariable("sceneId") Long sceneId) {
-//        getModellingService().deleteScene(sceneId);
-//
-//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//    }
+
+    @RequestMapping(value = "/scenes/{sceneId}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteScene(@PathVariable("sceneId") Long sceneId) {
+        try {
+            getModellingService().deleteScene(sceneId);
+        } catch (EmptyResultDataAccessException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
     private SceneDto resolveRelationships(SceneDto sceneDto) {
         if (sceneDto.getPointDtos() != null) {

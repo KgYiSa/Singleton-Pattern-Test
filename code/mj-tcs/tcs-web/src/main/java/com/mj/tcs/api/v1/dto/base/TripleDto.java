@@ -1,6 +1,5 @@
 package com.mj.tcs.api.v1.dto.base;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
@@ -8,8 +7,6 @@ import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.Entity;
-import javax.persistence.Transient;
 import java.io.Serializable;
 
 /**
@@ -25,19 +22,19 @@ public class TripleDto /*extends BaseEntityDto*/ implements Serializable, Clonea
      * The X coordinate.
      */
     @DtoField
-    @Column(nullable = false)
+    @Column/*(nullable = false)*/ // TODO: To be compatible with VehicleDto.precisePosition attribute
     private long x;
     /**
      * The Y coordinate.
      */
     @DtoField
-    @Column(nullable = false)
+    @Column/*(nullable = false)*/
     private long y;
     /**
      * The Z coordinate.
      */
     @DtoField
-    @Column(nullable = false)
+    @Column/*(nullable = false)*/
     private long z;
 
     /**

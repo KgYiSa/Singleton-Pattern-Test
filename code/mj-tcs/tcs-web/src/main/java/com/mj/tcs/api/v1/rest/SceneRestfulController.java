@@ -250,6 +250,15 @@ public class SceneRestfulController extends ServiceController {
                 r.setHops(r.getHops().stream().map(p -> sceneDto.getPointDtoByUUID(p.getUUID())).collect(Collectors.toList()));
             });
         }
+        if (sceneDto.getVehicleDtos() != null) {
+            sceneDto.getVehicleDtos().forEach(v -> {
+                v.setSceneDto(sceneDto);
+
+                if (v.getCurrentPosition() != null) {
+                    v.setCurrentPosition(sceneDto.getPointDtoByUUID(v.getCurrentPosition().getUUID()));
+                }
+            });
+        }
 
         return sceneDto;
     }

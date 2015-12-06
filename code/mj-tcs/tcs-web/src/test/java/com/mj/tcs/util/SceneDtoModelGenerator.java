@@ -195,6 +195,9 @@ public class SceneDtoModelGenerator {
         StaticRouteDto staticRouteDto = createStaticRouteDto(hops);
         sceneDto.addStaticRouteDto(staticRouteDto);
 
+        VehicleDto vehicleDto = createVehicleDto();
+        sceneDto.addVehicleDto(vehicleDto);
+
         sceneDto.addProperty("key", "value", "".getClass().getName());
 
         return sceneDto;
@@ -239,7 +242,7 @@ public class SceneDtoModelGenerator {
     public synchronized VehicleDto createVehicleDto() {
         String newVehicleName = String.format(VEHICLE_NAME_FORMAT,
                 new Random().nextInt(10000));
-        System.out.println(newVehicleName);
+//        System.out.println(newVehicleName);
 
         VehicleDto dto = new VehicleDto();
         dto.setAuditorDto(createAuditor());

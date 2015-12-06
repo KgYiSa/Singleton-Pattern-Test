@@ -1,6 +1,7 @@
 package com.mj.tcs.api.v1.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -70,6 +71,7 @@ public class VehicleDto extends BaseEntityDto {
     @Column
     private double maxReverseVelocity;
 
+    @JsonIgnoreProperties({"version", "auditor", "properties", "position", "type", "display_position_x", "display_position_y", "label_offset_x", "label_offset_y", "vehicle_orientation_angle", "incoming_paths", "outgoing_paths", "attached_links"})
     @Column
     private PointDto currentPosition;
 

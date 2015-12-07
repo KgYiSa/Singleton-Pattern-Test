@@ -1,14 +1,12 @@
 package com.mj.tcs.service;
 
-import com.mj.tcs.api.v1.dto.TransportOrderDto;
-import com.mj.tcs.repository.DestinationRepository;
-import com.mj.tcs.repository.TransportOrderRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.mj.tcs.api.v1.dto.SceneDto;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -17,32 +15,69 @@ import java.util.Objects;
 @Transactional(isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
 @Component
 public class ServiceStateOperating {
+    // ID <--> SceneDto
+    private Map<Long, SceneDto> sceneDtoRuntimeMapping = new LinkedHashMap<>();
 
-    @Autowired
-    TransportOrderRepository transportOrderRepository;
-    @Autowired
-    DestinationRepository destinationRepository;
+    public boolean loadSceneDto(SceneDto sceneDto) {
+        Objects.requireNonNull(sceneDto);
+        Long idKey = Objects.requireNonNull(sceneDto.getId());
 
-    public Collection<TransportOrderDto> getAllTransportOrders() {
-        return (Collection) transportOrderRepository.findAll();
+        if (isSceneDtoRunning(sceneDto)) {
+            return false; // Already running
+        }
+
+        // load kernel for the sceneDto
+        // TODO:
+
+        sceneDtoRuntimeMapping.put(idKey, sceneDto);
+        return true;
     }
 
-    public Collection<TransportOrderDto> getAllTransportOrdersFromScene(long sceneId) {
-//        return (Collection) transportOrderRepository.findAllByScene(sceneId);
-        // TODO
-        throw null;
+    public void unloadSceneDto(SceneDto sceneDto) {
+        Objects.requireNonNull(sceneDto);
+        Long idKey = Objects.requireNonNull(sceneDto.getId());
+
+        if (isSceneDtoRunning(sceneDto)) {
+            // Stop kernel for the sceneDto
+            // TODO:
+
+            // remove it
+            sceneDtoRuntimeMapping.remove(idKey);
+        }
     }
 
-    public TransportOrderDto createTransportOrder(TransportOrderDto order) {
-        return transportOrderRepository.save(Objects.requireNonNull(order,
-                "Transport Order should Not be null"));
+    public boolean isSceneDtoRunning(SceneDto sceneDto) {
+        Objects.requireNonNull(sceneDto);
+        Long idKey = Objects.requireNonNull(sceneDto.getId());
+
+        return sceneDtoRuntimeMapping.containsKey(idKey);
     }
 
-    public TransportOrderDto getTransportOrder(long orderId) {
-        return transportOrderRepository.findOne(orderId);
-    }
-
-    public void deleteTransportOrder(TransportOrderDto order) {
-        transportOrderRepository.delete(order);
-    }
+//    @Autowired
+//    TransportOrderRepository transportOrderRepository;
+//    @Autowired
+//    DestinationRepository destinationRepository;
+//
+//    public Collection<TransportOrderDto> getAllTransportOrders() {
+//        return (Collection) transportOrderRepository.findAll();
+//    }
+//
+//    public Collection<TransportOrderDto> getAllTransportOrdersFromScene(long sceneId) {
+////        return (Collection) transportOrderRepository.findAllByScene(sceneId);
+//        // TODO
+//        throw null;
+//    }
+//
+//    public TransportOrderDto createTransportOrder(TransportOrderDto order) {
+//        return transportOrderRepository.save(Objects.requireNonNull(order,
+//                "Transport Order should Not be null"));
+//    }
+//
+//    public TransportOrderDto getTransportOrder(long orderId) {
+//        return transportOrderRepository.findOne(orderId);
+//    }
+//
+//    public void deleteTransportOrder(TransportOrderDto order) {
+//        transportOrderRepository.delete(order);
+//    }
 }

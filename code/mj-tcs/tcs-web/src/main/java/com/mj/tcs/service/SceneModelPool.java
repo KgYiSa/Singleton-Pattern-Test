@@ -6,8 +6,13 @@
 
 package com.mj.tcs.service;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 /**
  * @author Wang Zhen
  */
 public class SceneModelPool {
+    // UUID - Object
+    private Map<String, Object> objectPool = new LinkedHashMap<>();
 }

@@ -10,7 +10,7 @@
         <script src="../plugin/sockjs/sockjs.js"></script>
         <script src="../plugin/stomp/stomp.js"></script>
         <script type="text/javascript">
-            var wsUrl = "http://localhost:8080/tcs-web/stomp";
+            var wsUrl = "http://localhost:8080/stomp";
 //            var wsUrl = "ws://localhost:8080/tcs-web/tcs-web";
             var stompClient = null;
 
@@ -43,8 +43,9 @@
 
             function uploadFile() {
                 var file = document.getElementById('filename').files[0];
-                stompClient.send("/app/scene/1/vehicles",{}, {});
-//                stompClient.send("/tcs-web/app/scene/1/vehicles", JSON.stringify({ 'filename': file.name }));
+//                stompClient.send("/app/scene/1/vehicles",{}, {});
+//                stompClient.send("/app/topic/greetings", {}, JSON.stringify({ 'filename': file.name }));
+                stompClient.send("/app/scene/1/vehicles", {}, JSON.stringify({ 'filename': file.name }));
 
 //                var reader = new FileReader();
 //                //alert(file.name);

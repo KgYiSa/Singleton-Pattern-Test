@@ -33,18 +33,6 @@ public class SceneRestfulController extends ServiceController {
 //    @Autowired
 //    private EntityLinks entityLinks;
 
-    @RequestMapping(value = "/scenes", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllScenes() {
-        Collection<SceneDto> sceneDtos = getModellingService().getAllScenes();
-        if (sceneDtos == null || sceneDtos.size() == 0) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-
-        return new ResponseEntity<>(
-                sceneDtos,
-                HttpStatus.OK);
-    }
-
     @RequestMapping(value = "/scenes/profile", method = RequestMethod.GET)
     public ResponseEntity<?> getAllScenesProfile() {
         Collection<SceneDto> sceneDtos = getModellingService().getAllScenes();
@@ -57,11 +45,25 @@ public class SceneRestfulController extends ServiceController {
             Map<String, String> item = new LinkedHashMap<>();
             item.put("id", sceneDto.getId().toString());
             item.put("name", sceneDto.getName());
+            item.put("status", getOperatingService().isSceneDtoRunning(sceneDto) ? "running" : "stopped");
             sceneDtosProfile.add(item);
         }
 
         return new ResponseEntity<>(
                 sceneDtosProfile,
+                HttpStatus.OK);
+    }
+
+    ///////////////// MODELLING /////////////////////
+    @RequestMapping(value = "/scenes", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllScenes() {
+        Collection<SceneDto> sceneDtos = getModellingService().getAllScenes();
+        if (sceneDtos == null || sceneDtos.size() == 0) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(
+                sceneDtos,
                 HttpStatus.OK);
     }
 
@@ -148,6 +150,25 @@ public class SceneRestfulController extends ServiceController {
         }
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    //////////////// ACTIONS ///////////////////////////
+    @RequestMapping(value = "/scenes/{sceneId}/actions/start"/*, method = RequestMethod.POST*/)
+    public ResponseEntity<?> startScene(@PathVariable("sceneId") Long sceneId/*,
+                                        @RequestBody Map<String,String> params*/) {
+        SceneDto sceneDto = getModellingService().getSceneDto(sceneId);
+        getOperatingService().loadSceneDto(sceneDto);
+
+        return new ResponseEntity<Object>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/scenes/{sceneId}/actions/stop"/*, method = RequestMethod.POST*/)
+    public ResponseEntity<?> stopScene(@PathVariable("sceneId") Long sceneId/*,
+                                       @RequestBody Map<String,String> params*/) {
+        SceneDto sceneDto = getModellingService().getSceneDto(sceneId);
+        getOperatingService().unloadSceneDto(sceneDto);
+
+        return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
     private SceneDto resolveRelationships(SceneDto sceneDto) {

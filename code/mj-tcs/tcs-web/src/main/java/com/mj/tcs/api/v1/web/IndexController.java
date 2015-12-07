@@ -29,13 +29,13 @@ public class IndexController {
 
     }
 
-    @RequestMapping(value = "/hello")
-    public String hello(HttpServletRequest req, Principal principal, Model model) {
-        System.out.println("come to hello ");
-        System.out.println(req.getContextPath());
-
-        return "index";
-    }
+//    @RequestMapping(value = "/hello")
+//    public String hello(HttpServletRequest req, Principal principal, Model model) {
+//        System.out.println("come to hello ");
+//        System.out.println(req.getContextPath());
+//
+//        return "index";
+//    }
     
     @RequestMapping(value = "/operating")
     public String operate(HttpServletRequest req, Principal principal, Model model) {

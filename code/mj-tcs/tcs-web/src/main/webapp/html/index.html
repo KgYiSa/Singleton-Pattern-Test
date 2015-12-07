@@ -7,10 +7,11 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <script src="../plugin/socket/sockjs-1.0.3.js"></script>
-        <script src="../plugin/socket/stomp.js"></script>
+        <script src="../plugin/sockjs/sockjs.js"></script>
+        <script src="../plugin/stomp/stomp.js"></script>
         <script type="text/javascript">
             var wsUrl = "http://localhost:8080/tcs-web/stomp";
+//            var wsUrl = "ws://localhost:8080/tcs-web/tcs-web";
             var stompClient = null;
 
             function setConnected(connected) {
@@ -20,13 +21,15 @@
 
             function connect() {
                 var socket = new SockJS(wsUrl);
+//                var socket = new WebSocket(wsUrl);
                 stompClient = Stomp.over(socket);
                 stompClient.connect({}, function(frame) {
                     setConnected(true);
                     console.log('Connected: ' + frame);
-//                stompClient.subscribe('/topic/greetings', function(greeting){
-//                    showMessage(JSON.parse(greeting.body).content);
-//                });
+
+                    stompClient.subscribe('/topic/greetings', function(greeting){
+                        console.log(greeting);
+                    });
                 });
             }
 
@@ -40,24 +43,26 @@
 
             function uploadFile() {
                 var file = document.getElementById('filename').files[0];
-                stompClient.send("/app/tcs_model", JSON.stringify({ 'filename': file.name }));
-                var reader = new FileReader();
-                //alert(file.name);
+                stompClient.send("/app/scene/1/vehicles",{}, {});
+//                stompClient.send("/tcs-web/app/scene/1/vehicles", JSON.stringify({ 'filename': file.name }));
 
-                reader.loadend = function() {
-                }
-
-                reader.onload = function(e) {
-                    var content = e.target.result;
-                    content.split('\n').forEach(function(v) {
-                        var line = v;
-                    });
-                    stompClient.send("/app/tcs_model", content);
-                    alert("the File has been transferred.")
-                    stompClient.send("/app/tcs_model", 'end');
-                }
-
-                reader.readAsText(file);
+//                var reader = new FileReader();
+//                //alert(file.name);
+//
+//                reader.loadend = function() {
+//                }
+//
+//                reader.onload = function(e) {
+//                    var content = e.target.result;
+//                    content.split('\n').forEach(function(v) {
+//                        var line = v;
+//                    });
+//                    stompClient.send("/app/tcs_model", content);
+//                    alert("the File has been transferred.")
+//                    stompClient.send("/app/tcs_model", 'end');
+//                }
+//
+//                reader.readAsText(file);
             }
 
             function sendHello() {

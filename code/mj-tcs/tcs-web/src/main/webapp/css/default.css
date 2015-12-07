@@ -71,6 +71,8 @@ body {
 	margin-top: 80px;
 	margin-left: auto;
 	margin-right: auto;
+	min-height: 330px;
+	min-width: 480px;
 	/*padding: 30px;*/
 }
 

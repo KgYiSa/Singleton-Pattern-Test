@@ -69,7 +69,7 @@ public class SceneController extends ServiceController {
                 HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/scenes/{sceneId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/scene/{sceneId}", method = RequestMethod.GET)
     public ResponseEntity<?> getOneScene(@PathVariable("sceneId") Long sceneId) {
         SceneDto sceneDto = getModellingService().getSceneDto(sceneId);
 

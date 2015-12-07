@@ -15,8 +15,14 @@
 </head>
 <body>
 	<header>
-		<h1>AVG Operating-Model<a href="modelling.html">[modelling]</a></h1>
-		
+		<!--<h1>AVG Operating-Model<a href="modelling.html">[modelling]</a></h1>-->
+		<div><img src="${ctxStatic}/images/mj-logo.png" alt="" class=""></div>
+		<div><p class="title">AVG Operating-Mode<a href="modelling.html">[modelling]</a></p></div>
+
+		<div class="sys-info">
+			<p class="sence"><a href="javascript:;">选择场景</a>|</p>
+			<p class="user">用户：admin</p>
+		</div>
 	</header>
 
 	<div class="container-fluid">

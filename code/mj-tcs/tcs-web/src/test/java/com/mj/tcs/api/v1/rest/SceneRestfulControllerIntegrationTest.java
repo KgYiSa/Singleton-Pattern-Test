@@ -47,7 +47,7 @@ public class SceneRestfulControllerIntegrationTest {
 //        delete();
     }
 
-    @Test
+//    @Test
     public void testGet() throws Exception {
         HttpEntity<String> entity = prepareGet(MediaType.APPLICATION_JSON);
 

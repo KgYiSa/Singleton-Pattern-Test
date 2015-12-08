@@ -12,9 +12,15 @@
         <script src="../plugin/stomp/stomp.js"></script>
         <script type="text/javascript">
             var URL = "http://localhost:8080/stomp";
+            var ACTIONS = {SCENE_PROFILE :"SCENE_PROFILE",
+                           SCENE_CREATE :"SCENE_CREATE",
+                           SCENE_FIND :"SCENE_FIND",
+                           SCENE_DELETE :"SCENE_DELETE",
+                           SCENE_START :"SCENE_START",
+                           SCENE_STOP :"SCENE_STOP"};
+            var REQ_UUID = uuid();
 //            var wsUrl = "ws://localhost:8080/tcs-web/tcs-web";
             var stompClient = null;
-            var req_uuid = uuid();
             var req_action = null;
 
             function setConnected(connected) {
@@ -36,7 +42,7 @@
                     stompClient.subscribe("/user/topic/actions/response", function(message) {
                         var response = JSON.parse(message.body);
 
-                        if ((response.uuid == req_uuid) && (response.action_code == req_action)) {
+                        if (response.uuid == REQ_UUID) {
                             $('#content').html("<b>Status Code:</b>&nbsp" + response.status_code + "<br>" +
                                     "<b>Status Message:</b>&nbsp" + response.status_message + "<br>" +
 //                                        "<b>Action Code:</b>&nbsp" + response.action_code + "<br><br>" +
@@ -58,32 +64,29 @@
             }
 
             function getScenesProfile() {
-                req_action = 'SCENE_PROFILE';
-                fireAction();
+                fireAction(ACTIONS.SCENE_PROFILE);
             }
 
             function createScene() {
-                req_action = 'SCENE_CREATE';
-                var body = {"id":"null","version":0,"name":"test_scene_15_12_07_09_36_16","properties":[{"name":"key","value":"value","type":"java.lang.String"}],"UUID":"scenedto-413349a2-af75-4167-abf2-f4a56035a1e5","points":[{"id":"null","version":0,"name":"test_point_0","properties":[{"name":"key","value":"value","type":"java.lang.String"}],"vehicle_orientation_angle":0.0,"type":"HALT_POSITION","attached_links":[{"id":"null","name":"test_link_6327","UUID":"locationlinkdto-2fb5fec8-b5ae-4c14-9ce2-6f2d74553071"}],"UUID":"pointdto-062cda32-a929-4d83-87c2-a5f2e880b0d3","position":{"x":163,"y":717,"z":0},"display_position_x":163,"display_position_y":717,"label_offset_x":0,"label_offset_y":20,"incoming_paths":[],"outgoing_paths":[{"id":"null","name":"test_path_0","UUID":"pathdto-83c43a98-d149-4cc3-81e4-f3177c93349a"}]},{"id":"null","version":0,"name":"test_point_1","properties":[{"name":"key","value":"value","type":"java.lang.String"}],"vehicle_orientation_angle":0.0,"type":"HALT_POSITION","attached_links":[],"UUID":"pointdto-5b1b0204-3f79-4f93-857e-2fdf39013d84","position":{"x":677,"y":846,"z":0},"display_position_x":677,"display_position_y":846,"label_offset_x":0,"label_offset_y":20,"incoming_paths":[{"id":"null","name":"test_path_0","UUID":"pathdto-83c43a98-d149-4cc3-81e4-f3177c93349a"}],"outgoing_paths":[]},{"id":"null","version":0,"name":"test_point_2","properties":[{"name":"key","value":"value","type":"java.lang.String"}],"vehicle_orientation_angle":0.0,"type":"HALT_POSITION","attached_links":[],"UUID":"pointdto-dd56cae0-1204-4903-9a24-d2914e6adb65","position":{"x":165,"y":548,"z":0},"display_position_x":165,"display_position_y":548,"label_offset_x":0,"label_offset_y":20,"incoming_paths":[],"outgoing_paths":[{"id":"null","name":"test_path_1","UUID":"pathdto-88bcd6d5-72f2-47a5-aa53-7909cc635ace"}]},{"id":"null","version":0,"name":"test_point_3","properties":[{"name":"key","value":"value","type":"java.lang.String"}],"vehicle_orientation_angle":0.0,"type":"HALT_POSITION","attached_links":[],"UUID":"pointdto-de856c7e-a91e-4292-acf3-a6bbb66aa2ff","position":{"x":920,"y":522,"z":0},"display_position_x":920,"display_position_y":522,"label_offset_x":0,"label_offset_y":20,"incoming_paths":[{"id":"null","name":"test_path_1","UUID":"pathdto-88bcd6d5-72f2-47a5-aa53-7909cc635ace"}],"outgoing_paths":[]},{"id":"null","version":0,"name":"test_point_4","properties":[{"name":"key","value":"value","type":"java.lang.String"}],"vehicle_orientation_angle":0.0,"type":"HALT_POSITION","attached_links":[],"UUID":"pointdto-c32a2dcb-b51c-42ad-bf17-4305e5b4e314","position":{"x":545,"y":341,"z":0},"display_position_x":545,"display_position_y":341,"label_offset_x":0,"label_offset_y":20,"incoming_paths":[],"outgoing_paths":[{"id":"null","name":"test_path_2","UUID":"pathdto-7cd57f6a-a613-4bc2-8172-7f8f04094d91"}]},{"id":"null","version":0,"name":"test_point_5","properties":[{"name":"key","value":"value","type":"java.lang.String"}],"vehicle_orientation_angle":0.0,"type":"HALT_POSITION","attached_links":[],"UUID":"pointdto-191dabf9-7f07-44fe-b869-e0abc3013c45","position":{"x":827,"y":141,"z":0},"display_position_x":827,"display_position_y":141,"label_offset_x":0,"label_offset_y":20,"incoming_paths":[{"id":"null","name":"test_path_2","UUID":"pathdto-7cd57f6a-a613-4bc2-8172-7f8f04094d91"}],"outgoing_paths":[]},{"id":"null","version":0,"name":"test_point_6","properties":[{"name":"key","value":"value","type":"java.lang.String"}],"vehicle_orientation_angle":0.0,"type":"HALT_POSITION","attached_links":[],"UUID":"pointdto-14da7bfc-ad63-4ad0-9060-0bc1d4b97a3a","position":{"x":31,"y":956,"z":0},"display_position_x":31,"display_position_y":956,"label_offset_x":0,"label_offset_y":20,"incoming_paths":[],"outgoing_paths":[{"id":"null","name":"test_path_3","UUID":"pathdto-19e69517-c098-49cb-8c4b-bb691941db3a"}]},{"id":"null","version":0,"name":"test_point_7","properties":[{"name":"key","value":"value","type":"java.lang.String"}],"vehicle_orientation_angle":0.0,"type":"HALT_POSITION","attached_links":[],"UUID":"pointdto-ecf32e31-d7a6-4c9e-a618-ec1c77badf39","position":{"x":435,"y":155,"z":0},"display_position_x":435,"display_position_y":155,"label_offset_x":0,"label_offset_y":20,"incoming_paths":[{"id":"null","name":"test_path_3","UUID":"pathdto-19e69517-c098-49cb-8c4b-bb691941db3a"}],"outgoing_paths":[]},{"id":"null","version":0,"name":"test_point_8","properties":[{"name":"key","value":"value","type":"java.lang.String"}],"vehicle_orientation_angle":0.0,"type":"HALT_POSITION","attached_links":[],"UUID":"pointdto-17cd18ab-9cd0-47e1-a78e-f1a440dbd532","position":{"x":386,"y":28,"z":0},"display_position_x":386,"display_position_y":28,"label_offset_x":0,"label_offset_y":20,"incoming_paths":[],"outgoing_paths":[{"id":"null","name":"test_path_4","UUID":"pathdto-7eea5b80-d2ab-47dc-8d39-35ce93ab1141"}]},{"id":"null","version":0,"name":"test_point_9","properties":[{"name":"key","value":"value","type":"java.lang.String"}],"vehicle_orientation_angle":0.0,"type":"HALT_POSITION","attached_links":[],"UUID":"pointdto-06c94df0-a9ee-426e-bfdd-756b69a4f4f6","position":{"x":503,"y":407,"z":0},"display_position_x":503,"display_position_y":407,"label_offset_x":0,"label_offset_y":20,"incoming_paths":[{"id":"null","name":"test_path_4","UUID":"pathdto-7eea5b80-d2ab-47dc-8d39-35ce93ab1141"}],"outgoing_paths":[]}],"paths":[{"id":"null","version":0,"name":"test_path_0","properties":[{"name":"key","value":"value","type":"java.lang.String"}],"control_points":[],"length":700,"routing_cost":1,"max_velocity":1.0,"max_reverse_velocity":1.0,"locked":false,"UUID":"pathdto-83c43a98-d149-4cc3-81e4-f3177c93349a","source_point":{"id":"null","name":"test_point_0","UUID":"pointdto-062cda32-a929-4d83-87c2-a5f2e880b0d3"},"destination_point":{"id":"null","name":"test_point_1","UUID":"pointdto-5b1b0204-3f79-4f93-857e-2fdf39013d84"}},{"id":"null","version":0,"name":"test_path_1","properties":[{"name":"key","value":"value","type":"java.lang.String"}],"control_points":[],"length":810,"routing_cost":1,"max_velocity":1.0,"max_reverse_velocity":1.0,"locked":false,"UUID":"pathdto-88bcd6d5-72f2-47a5-aa53-7909cc635ace","source_point":{"id":"null","name":"test_point_2","UUID":"pointdto-dd56cae0-1204-4903-9a24-d2914e6adb65"},"destination_point":{"id":"null","name":"test_point_3","UUID":"pointdto-de856c7e-a91e-4292-acf3-a6bbb66aa2ff"}},{"id":"null","version":0,"name":"test_path_2","properties":[{"name":"key","value":"value","type":"java.lang.String"}],"control_points":[],"length":64,"routing_cost":1,"max_velocity":1.0,"max_reverse_velocity":1.0,"locked":false,"UUID":"pathdto-7cd57f6a-a613-4bc2-8172-7f8f04094d91","source_point":{"id":"null","name":"test_point_4","UUID":"pointdto-c32a2dcb-b51c-42ad-bf17-4305e5b4e314"},"destination_point":{"id":"null","name":"test_point_5","UUID":"pointdto-191dabf9-7f07-44fe-b869-e0abc3013c45"}},{"id":"null","version":0,"name":"test_path_3","properties":[{"name":"key","value":"value","type":"java.lang.String"}],"control_points":[],"length":99,"routing_cost":1,"max_velocity":1.0,"max_reverse_velocity":1.0,"locked":false,"UUID":"pathdto-19e69517-c098-49cb-8c4b-bb691941db3a","source_point":{"id":"null","name":"test_point_6","UUID":"pointdto-14da7bfc-ad63-4ad0-9060-0bc1d4b97a3a"},"destination_point":{"id":"null","name":"test_point_7","UUID":"pointdto-ecf32e31-d7a6-4c9e-a618-ec1c77badf39"}},{"id":"null","version":0,"name":"test_path_4","properties":[{"name":"key","value":"value","type":"java.lang.String"}],"control_points":[],"length":504,"routing_cost":1,"max_velocity":1.0,"max_reverse_velocity":1.0,"locked":false,"UUID":"pathdto-7eea5b80-d2ab-47dc-8d39-35ce93ab1141","source_point":{"id":"null","name":"test_point_8","UUID":"pointdto-17cd18ab-9cd0-47e1-a78e-f1a440dbd532"},"destination_point":{"id":"null","name":"test_point_9","UUID":"pointdto-06c94df0-a9ee-426e-bfdd-756b69a4f4f6"}}],"locations":[{"id":"null","version":0,"name":"test_location_6327","properties":[{"name":"key","value":"value","type":"java.lang.String"}],"attached_links":[{"id":"null","version":0,"name":"test_link_6327","allowed_operations":[],"UUID":"locationlinkdto-2fb5fec8-b5ae-4c14-9ce2-6f2d74553071","point":{"id":"null","name":"test_point_0","UUID":"pointdto-062cda32-a929-4d83-87c2-a5f2e880b0d3"}}],"UUID":"locationdto-8ca9d3af-a7df-4e54-9f94-6a47d2e75c90","position":{"x":100,"y":100,"z":0},"location_type":{"id":"null","name":"test_lt_4258","UUID":"locationtypedto-7f5b9741-dd34-46b9-9152-e41487a14233"},"display_position_x":100,"display_position_y":100,"label_offset_x":0,"label_offset_y":20}],"location_types":[{"id":"null","version":0,"name":"test_lt_4258","properties":[{"name":"key","value":"value","type":"java.lang.String"}],"allowed_operations":["Puts in storage","Stock removal"],"UUID":"locationtypedto-7f5b9741-dd34-46b9-9152-e41487a14233"}],"blocks":[{"id":"null","version":0,"name":"test_block_6575","properties":[{"name":"key","value":"value","type":"java.lang.String"}],"members":[{"UUID":"pathdto-83c43a98-d149-4cc3-81e4-f3177c93349a"},{"UUID":"locationdto-8ca9d3af-a7df-4e54-9f94-6a47d2e75c90"},{"UUID":"pointdto-062cda32-a929-4d83-87c2-a5f2e880b0d3"},{"UUID":"pointdto-5b1b0204-3f79-4f93-857e-2fdf39013d84"}],"UUID":"blockdto-b3e00ff7-8195-477a-a811-99b847d1bf87"}],"static_routes":[{"id":"null","version":0,"name":"test_static_route_9260","properties":[],"hops":[{"id":"null","name":"test_point_0","UUID":"pointdto-062cda32-a929-4d83-87c2-a5f2e880b0d3"},{"id":"null","name":"test_point_1","UUID":"pointdto-5b1b0204-3f79-4f93-857e-2fdf39013d84"},{"id":"null","name":"test_point_2","UUID":"pointdto-dd56cae0-1204-4903-9a24-d2914e6adb65"}],"UUID":"staticroutedto-714cb75d-d769-4c36-982c-5cab3900623b"}],"vehicles":[{"id":"null","version":0,"name":"test_vehicle_4900","properties":[],"length":1000.0,"energy_level":80.0,"energy_level_critical":30.0,"energy_level_good":80.0,"recharge_operation":"RECHARGE","max_velocity":100.0,"max_reverse_velocity":100.0,"initial_point":null,"orientation_angle":0.0,"UUID":"vehicledto-147766d5-4f56-4153-a176-d7998e2ee7b8","precise_position":null}]};
-                fireAction(body);
+                var body = {"id":null,"version":null,"name":"test_scene_15_12_08_22_02_33","properties":[{"name":"key","value":"value","type":"java.lang.String"}],"UUID":"scenedto-b2796efe-ab5f-44b1-aae9-6e16fedf1ccc",
+                    "points":[{"id":null,"version":null,"name":"test_point_0","properties":[],"vehicle_orientation_angle":0.0,"type":"HALT_POSITION","attached_links":[{"UUID":"locationlinkdto-94836d25-29fc-44a0-911d-86014dfac8ca"}],"UUID":"pointdto-6949b047-97fa-4104-818b-56a5b5c4066e","position":{"x":658,"y":482,"z":0},"display_position_x":658,"display_position_y":482,"label_offset_x":0,"label_offset_y":20,"incoming_paths":[],"outgoing_paths":[{"UUID":"pathdto-b9066c29-ce55-4b79-b2ee-baa8999658ef"}]},{"id":null,"version":null,"name":"test_point_1","properties":[],"vehicle_orientation_angle":0.0,"type":"HALT_POSITION","attached_links":[],"UUID":"pointdto-eacd255a-9bf2-4848-bc65-cdbac41352c5","position":{"x":827,"y":264,"z":0},"display_position_x":827,"display_position_y":264,"label_offset_x":0,"label_offset_y":20,"incoming_paths":[{"UUID":"pathdto-b9066c29-ce55-4b79-b2ee-baa8999658ef"}],"outgoing_paths":[]},{"id":null,"version":null,"name":"test_point_2","properties":[],"vehicle_orientation_angle":0.0,"type":"HALT_POSITION","attached_links":[],"UUID":"pointdto-9fae4650-88fd-4731-bc0a-c4e29c2cc2fe","position":{"x":346,"y":61,"z":0},"display_position_x":346,"display_position_y":61,"label_offset_x":0,"label_offset_y":20,"incoming_paths":[],"outgoing_paths":[]}],
+                    "paths":[{"id":null,"version":null,"name":"test_path_0","properties":[],"control_points":[],"length":426,"routing_cost":1,"max_velocity":1.0,"max_reverse_velocity":1.0,"locked":false,"UUID":"pathdto-b9066c29-ce55-4b79-b2ee-baa8999658ef","source_point":{"UUID":"pointdto-6949b047-97fa-4104-818b-56a5b5c4066e"},"destination_point":{"UUID":"pointdto-eacd255a-9bf2-4848-bc65-cdbac41352c5"}}],
+                    "locations":[{"id":null,"version":null,"name":"test_location_3785","properties":[],"attached_links":[{"id":null,"version":null,"name":"test_link_3785","allowed_operations":[],"UUID":"locationlinkdto-94836d25-29fc-44a0-911d-86014dfac8ca","point":{"UUID":"pointdto-6949b047-97fa-4104-818b-56a5b5c4066e"}}],"UUID":"locationdto-0206deb6-919c-4911-b1c2-5989655c2b30","position":{"x":100,"y":100,"z":0},"location_type":{"UUID":"locationtypedto-ec1c05be-153a-4e0b-9314-724c0ab03ae4"},"display_position_x":100,"display_position_y":100,"label_offset_x":0,"label_offset_y":20}],
+                    "location_types":[{"id":null,"version":null,"name":"test_lt_174","properties":[],"allowed_operations":["Puts in storage","Stock removal"],"UUID":"locationtypedto-ec1c05be-153a-4e0b-9314-724c0ab03ae4"}],
+                    "blocks":[{"id":null,"version":null,"name":"test_block_2435","properties":[],"members":[{"UUID":"pointdto-6949b047-97fa-4104-818b-56a5b5c4066e"},{"UUID":"pointdto-eacd255a-9bf2-4848-bc65-cdbac41352c5"},{"UUID":"pathdto-b9066c29-ce55-4b79-b2ee-baa8999658ef"},{"UUID":"locationdto-0206deb6-919c-4911-b1c2-5989655c2b30"}],"UUID":"blockdto-37ea38b3-3b15-4b16-b5bb-d7742d806461"}],
+                    "static_routes":[{"id":null,"version":null,"name":"test_static_route_6979","properties":[],"hops":[{"UUID":"pointdto-6949b047-97fa-4104-818b-56a5b5c4066e"},{"UUID":"pointdto-eacd255a-9bf2-4848-bc65-cdbac41352c5"},{"UUID":"pointdto-9fae4650-88fd-4731-bc0a-c4e29c2cc2fe"}],"UUID":"staticroutedto-1711913e-fd02-4a8c-80e4-43255d7f7a26"}],
+                    "vehicles":[{"id":null,"version":null,"name":"test_vehicle_2403","properties":[],"length":1000.0,"energy_level":80.0,"energy_level_critical":30.0,"energy_level_good":80.0,"recharge_operation":"RECHARGE","max_velocity":100.0,"max_reverse_velocity":100.0,"initial_point":null,"orientation_angle":0.0,"UUID":"vehicledto-69cb85f1-9aea-4470-8ce2-c19edbef1c36","precise_position":null}]};
+
+                fireAction(ACTIONS.SCENE_CREATE, body);
             }
 
-            function fireAction(body) {
+            function getScene() {
+                fireAction(ACTIONS.SCENE_FIND, Number($("#findSceneId").val()));
+            }
+
+            function fireAction(action, body) {
                 stompClient.send("/app/topic/actions/request", {},
-                        JSON.stringify({uuid:req_uuid,action_code:req_action,body:body}));
-            }
-
-            function sendHello() {
-                var name = document.getElementById('name').value;
-                stompClient.send("/app/hello", {}, JSON.stringify({ 'name': name }));
-            }
-
-            function showMessage(message) {
-                var response = document.getElementById('response');
-                var p = document.createElement('p');
-                p.style.wordWrap = 'break-word';
-                p.appendChild(document.createTextNode(message));
-                response.appendChild(p);
+                        JSON.stringify({uuid:REQ_UUID,action_code:action,body:body}));
             }
 
             function clearContent() {
@@ -117,13 +120,13 @@
             </div>
             <div>
                 <b>Scene ID:</b>
-                <input type="text" name="sceneId" value="1" style="width: 30px"/>
+                <input id="findSceneId" type="text" name="sceneId" value="1" style="width: 30px"/>
                 <button id="findScene" style="width: 100px;height: 100%;" onclick="getScene()">Get Scene</button>
             </div>
             <div>
                 <button id="createScene" style="width: 100px;height: 100%;" onclick="createScene()">Create Scene</button>
             </div>
-            <div id="content" style="width: 100%; height: 400px; border: solid 1px #000;">
+            <div id="content" style="width: 100%; height: 400px; border: solid 1px #000;overflow: auto">
 
             </div>
         </div>

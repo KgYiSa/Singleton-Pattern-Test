@@ -39,7 +39,7 @@ public class LocationDto extends BaseEntityDto {
 
     @JsonSerialize(as = LinkedHashSet.class)
     @JsonDeserialize(as = LinkedHashSet.class)
-    @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
+    @ElementCollection(fetch = FetchType.LAZY)/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
     @CollectionTable(name = "tcs_model_location_properties", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
     private Set<EntityProperty> properties = new LinkedHashSet<>();
@@ -81,7 +81,7 @@ public class LocationDto extends BaseEntityDto {
             entityBeanKeys = {"Location$Link"},
             dtoToEntityMatcher = LocationLinkDto2LocationLinkMatcher.class)
 //    @ElementCollection
-    @OneToMany(cascade = {CascadeType.ALL})
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @CollectionTable(name = "tcs_model_location_attached_links", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
     @OrderBy(value = "name ASC")

@@ -39,7 +39,7 @@ public class TransportOrderDto extends BaseEntityDto {
     @DtoField(value = "destination",
             dtoBeanKey = "DestinationDto",
             entityBeanKeys = "Destination")
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     private List<DestinationDto> destinations;
 
     /**

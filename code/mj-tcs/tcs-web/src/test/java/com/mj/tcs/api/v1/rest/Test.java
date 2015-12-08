@@ -1,12 +1,8 @@
 package com.mj.tcs.api.v1.rest;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.introspect.VisibilityChecker;
 import com.mj.tcs.api.v1.dto.SceneDto;
-import com.mj.tcs.api.v1.sock.TcsSockRequestEntity;
-import com.mj.tcs.api.v1.sock.TcsSockResponseEntity;
 import com.mj.tcs.util.SceneDtoModelGenerator;
 
 import java.io.IOException;
@@ -25,7 +21,7 @@ public class Test {
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        mapper.setVisibility(VisibilityChecker.Std.defaultInstance().withFieldVisibility(JsonAutoDetect.Visibility.ANY));
+//        mapper.setVisibility(VisibilityChecker.Std.defaultInstance().withFieldVisibility(JsonAutoDetect.Visibility.ANY));
 
         String json = mapper.writeValueAsString(dto);
 //        TcsSockRequestEntity dto2 = mapper.readValue(json, TcsSockRequestEntity.class);

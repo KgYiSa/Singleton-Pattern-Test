@@ -1,5 +1,7 @@
 package com.mj.tcs.api.v1.sock;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mj.tcs.api.v1.dto.BlockDto;
 import com.mj.tcs.api.v1.dto.PathDto;
 import com.mj.tcs.api.v1.dto.PointDto;
@@ -12,6 +14,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -35,13 +38,13 @@ public class SceneCommandSockController extends ServiceController {
                 responseEntity = getAllScenesProfile();
                 break;
             case SCENE_CREATE:
-                responseEntity = createSceneDto((SceneDto)request.getBody());
+                responseEntity = createSceneDto(request.getBody());
                 break;
             case SCENE_DELETE:
-                // TODO
+                responseEntity = deleteSceneDto(request.getBody());
                 break;
             case SCENE_FIND:
-                // TODO
+                responseEntity = getOneScene(request.getBody());
                 break;
             case SCENE_START:
                 // TODO
@@ -81,36 +84,55 @@ public class SceneCommandSockController extends ServiceController {
 
     //    @MessageMapping("/topic/scenes/create")
 //    @SendTo("/topic/scenes/create")
-    private TcsSockResponseEntity<?> createSceneDto(SceneDto sceneDto) {
-        SceneDto newSceneDto = resolveRelationships(sceneDto);
+    private TcsSockResponseEntity<?> createSceneDto(Object jsonBody) {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+//        mapper.setVisibility(VisibilityChecker.Std.defaultInstance().withFieldVisibility(JsonAutoDetect.Visibility.ANY));
 
-        // Creating new scene
-        newSceneDto = getModellingService().createScene(newSceneDto);
+        SceneDto newSceneDto = null;
+        try {
+            String json = mapper.writeValueAsString(jsonBody);
+            SceneDto sceneDto = mapper.readValue(json, SceneDto.class);
+            newSceneDto = resolveRelationships(sceneDto);
+
+            // Creating new scene
+            newSceneDto = getModellingService().createScene(newSceneDto);
+        } catch (Exception e) {
+            return new TcsSockResponseEntity<>(TcsSockResponseEntity.Status.ERROR, e.getMessage());
+        }
 
         return new TcsSockResponseEntity<>(TcsSockResponseEntity.Status.OK, newSceneDto);
     }
 
+    @Transactional
     //    @MessageMapping("/topic/scenes/find")
 //    @SendTo("/topic/scenes/find")
-    private TcsSockResponseEntity<?> getOneScene(/*@DestinationVariable */Long sceneId) {
-        SceneDto sceneDto = getModellingService().getSceneDto(sceneId);
+    private TcsSockResponseEntity<?> getOneScene(/*@DestinationVariable */Object jsonBody) {
+        TcsSockResponseEntity.Status status = TcsSockResponseEntity.Status.OK;
+        String errorMessage = null;
 
-        if (sceneDto == null) {
-            return null;
+        SceneDto sceneDto = null;
+        Long sceneId = null;
+        try {
+            sceneId = Long.parseLong(jsonBody.toString());
+        } catch (Exception e) {
+            status = TcsSockResponseEntity.Status.ERROR;
+            errorMessage = e.getMessage();
         }
 
-        return new TcsSockResponseEntity<>(TcsSockResponseEntity.Status.OK, sceneDto);
+            sceneDto = getModellingService().getSceneDto(sceneId);
+        return new TcsSockResponseEntity<>(status, sceneDto, errorMessage);
     }
 
     //    @MessageMapping("/topic/scenes/{sceneId}/delete")
-    private TcsSockResponseEntity<?> deleteScene(/*@DestinationVariable */Long sceneId) {
+    private TcsSockResponseEntity<?> deleteSceneDto(Object jsonBody) {
         TcsSockResponseEntity.Status status = TcsSockResponseEntity.Status.OK;
         String errorMessage = null;
 
         try {
+            Long sceneId = Long.parseLong(jsonBody.toString());
             getModellingService().deleteScene(sceneId);
         } catch (Exception e) {
-            // TODO
             status = TcsSockResponseEntity.Status.ERROR;
             errorMessage = e.getMessage();
         }
@@ -157,6 +179,10 @@ public class SceneCommandSockController extends ServiceController {
                                 return tempPa;
                             })
                             .collect(Collectors.toSet()));
+                }
+                // TODO: We do NOT need to contains the raw links, just use the LocationDto->LocationLinkDto to do the associations
+                if (p.getAttachedLinks() != null) {
+                    p.setAttachedLinks(new LinkedHashSet<>());
                 }
             });
         }

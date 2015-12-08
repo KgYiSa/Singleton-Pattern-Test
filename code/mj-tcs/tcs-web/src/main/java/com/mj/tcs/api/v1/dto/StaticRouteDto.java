@@ -43,13 +43,13 @@ public class StaticRouteDto extends BaseEntityDto {
 
     @JsonSerialize(as = LinkedHashSet.class)
     @JsonDeserialize(as = LinkedHashSet.class)
-    @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
+    @ElementCollection(fetch = FetchType.LAZY)/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
     @CollectionTable(name = "tcs_model_static_route_properties", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
     private Set<EntityProperty> properties = new LinkedHashSet<>();
 
     @JsonIgnoreProperties({"version", "auditor", "properties", "position", "type", "display_position_x", "display_position_y", "label_offset_x", "label_offset_y", "vehicle_orientation_angle", "incoming_paths", "outgoing_paths", "attached_links"})
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "tcs_model_static_route_hops", joinColumns = @JoinColumn(
             nullable = false, name = "static_route_id", referencedColumnName = "id"))
     @OrderBy(value = "name ASC")

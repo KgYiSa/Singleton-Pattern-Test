@@ -1,5 +1,6 @@
 package com.mj.tcs.api.v1.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -27,9 +28,10 @@ public class SceneDto extends BaseEntityDto {
     @Column(unique = true, nullable = false)
     private String name;
 
+    @JsonIgnore
     @JsonSerialize(as = LinkedHashSet.class)
     @JsonDeserialize(as = LinkedHashSet.class)
-    @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
+    @ElementCollection(fetch = FetchType.LAZY/*targetClass = EntityProperty.class, */)
     @CollectionTable(name = "tcs_model_scene_properties", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
     private Set<EntityProperty> properties = new LinkedHashSet<>();
@@ -43,7 +45,7 @@ public class SceneDto extends BaseEntityDto {
                     dtoBeanKey = "PointDto",
                     entityBeanKeys = {"PointDto"},
                     dtoToEntityMatcher = PointDto2PointMatcher.class)
-    @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @OrderBy(value = "name ASC")
     private Set<PointDto> pointDtos;
 
@@ -56,7 +58,7 @@ public class SceneDto extends BaseEntityDto {
             dtoBeanKey = "PathDto",
             entityBeanKeys = {"Path"},
             dtoToEntityMatcher = PathDto2PathMatcher.class)
-    @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @OrderBy(value = "name ASC")
     private Set<PathDto> pathDtos;
 
@@ -69,7 +71,7 @@ public class SceneDto extends BaseEntityDto {
             dtoBeanKey = "LocationDto",
             entityBeanKeys = {"Location"},
             dtoToEntityMatcher = LocationDto2LocationMatcher.class)
-    @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @OrderBy(value = "name ASC")
     private Set<LocationDto> locationDtos;
 
@@ -82,7 +84,7 @@ public class SceneDto extends BaseEntityDto {
             dtoBeanKey = "LocationTypeDto",
             entityBeanKeys = {"LocationType"},
             dtoToEntityMatcher = LocationTypeDto2LocationTypeMatcher.class)
-    @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @OrderBy(value = "name ASC")
     private Set<LocationTypeDto> locationTypeDtos;
 
@@ -95,7 +97,7 @@ public class SceneDto extends BaseEntityDto {
             dtoBeanKey = "StaticRouteDto",
             entityBeanKeys = {"StaticRoute"},
             dtoToEntityMatcher = StaticRouteDto2StaticRouteMatcher.class)
-    @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @OrderBy(value = "name ASC")
     private Set<BlockDto> blockDtos;
 
@@ -108,7 +110,7 @@ public class SceneDto extends BaseEntityDto {
             dtoBeanKey = "StaticRouteDto",
             entityBeanKeys = {"StaticRoute"},
             dtoToEntityMatcher = StaticRouteDto2StaticRouteMatcher.class)
-    @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @OrderBy(value = "name ASC")
     private Set<StaticRouteDto> staticRouteDtos;
 
@@ -121,7 +123,7 @@ public class SceneDto extends BaseEntityDto {
 //            dtoBeanKey = "VehicleDto",
 //            entityBeanKeys = {"Vehicle"},
 //            dtoToEntityMatcher = StaticRouteDto2StaticRouteMatcher.class)
-    @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
+    @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @OrderBy(value = "name ASC")
     private Set<VehicleDto> vehicleDtos;
 

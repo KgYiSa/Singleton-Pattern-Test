@@ -1,11 +1,13 @@
 package com.mj.tcs.config;
 
+import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -83,6 +85,31 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer
         container.setMaxTextMessageBufferSize(8192);
         container.setMaxBinaryMessageBufferSize(8192);
         return container;
+    }
+
+    @Bean
+    public FilterRegistrationBean filterRegistrationBean(){
+        /* SAME AS:
+
+        <filter>
+         <filter-name>SomeFilter</filter-name>
+            <filter-class>com.somecompany.SomeFilter</filter-class>
+        </filter>
+        <filter-mapping>
+            <filter-name>SomeFilter</filter-name>
+            <url-pattern>/url/*</url-pattern>
+            <init-param>
+               <param-name>paramName</param-name>
+               <param-value>paramValue</param-value>
+            </init-param>
+        </filter-mapping>
+        * */
+        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+        filterRegistrationBean.setEnabled(true);
+        filterRegistrationBean.setFilter(new OpenEntityManagerInViewFilter());
+        filterRegistrationBean.setName("Spring OpenEntityManagerInViewFilter");
+        filterRegistrationBean.addUrlPatterns("/*");
+        return filterRegistrationBean;
     }
 
 //    public class MyHandshakeHandler extends DefaultHandshakeHandler {

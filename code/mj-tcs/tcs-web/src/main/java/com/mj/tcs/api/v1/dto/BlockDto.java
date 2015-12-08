@@ -39,14 +39,14 @@ public class BlockDto  extends BaseEntityDto {
 
     @JsonSerialize(as = LinkedHashSet.class)
     @JsonDeserialize(as = LinkedHashSet.class)
-    @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
+    @ElementCollection(fetch = FetchType.LAZY)/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
     @CollectionTable(name = "tcs_model_block_properties", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
     private Set<EntityProperty> properties = new LinkedHashSet<>();
 
     @JsonSerialize(as = LinkedHashSet.class)
     @JsonDeserialize(as = LinkedHashSet.class)
-    @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
+    @ElementCollection(fetch = FetchType.LAZY)/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
     @CollectionTable(name = "tcs_model_block_members", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
     private Set<BlockElementDto> members = new LinkedHashSet<>();

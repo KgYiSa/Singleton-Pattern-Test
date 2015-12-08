@@ -114,6 +114,7 @@ public class SceneDtoModelGenerator {
         String linkName = String.format("test_link_%d", id);
         linkDto.setName(linkName);
         locationDto.attachLink(linkDto);
+        pointDto.addAttachedLinks(linkDto);
         return locationDto;
     }
 
@@ -162,7 +163,7 @@ public class SceneDtoModelGenerator {
         sceneDto.setName(newSceneName);
 
         // Points & Paths
-        for (int i=0; i< 10; i++) {
+        for (int i=0; i< 3; i++) {
             createPointDto();
 
             if (i != 0 && i % 2 == 1) {

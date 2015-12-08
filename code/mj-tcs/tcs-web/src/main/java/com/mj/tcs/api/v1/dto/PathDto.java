@@ -42,7 +42,7 @@ public class PathDto extends BaseEntityDto {
 
     @JsonSerialize(as = LinkedHashSet.class)
     @JsonDeserialize(as = LinkedHashSet.class)
-    @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
+    @ElementCollection(fetch = FetchType.LAZY)/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
     @CollectionTable(name = "tcs_model_path_properties", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
     private Set<EntityProperty> properties = new LinkedHashSet<>();
@@ -63,7 +63,7 @@ public class PathDto extends BaseEntityDto {
 //    @Column(name = "destinationPoint")
     private PointDto destinationPointDto;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
     @CollectionTable(name = "tcs_model_path_control_points", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
     private List<TripleDto> controlPoints = new ArrayList<>();

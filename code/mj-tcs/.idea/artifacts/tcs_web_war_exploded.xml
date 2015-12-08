@@ -41,9 +41,9 @@
           <element id="library" level="project" name="Maven: org.apache.tomcat.embed:tomcat-embed-el:8.0.28" />
           <element id="library" level="project" name="Maven: org.eclipse.jdt.core.compiler:ecj:4.4.2" />
           <element id="library" level="project" name="Maven: javax.servlet:jstl:1.2" />
-          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.7.0-rc1" />
-          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.7.0-rc1" />
-          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.7.0-rc1" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.6.3" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.6.3" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.6.3" />
           <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-websocket:1.2.7.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-websocket:4.1.8.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-messaging:4.1.8.RELEASE" />

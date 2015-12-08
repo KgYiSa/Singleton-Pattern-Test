@@ -272,7 +272,7 @@ public class SceneDtoModelGenerator {
 
 //        ResponseEntity<Object> response = restTemplate.exchange(scenePostUri, HttpMethod.POST, entity, Object.class);//restTemplate.postForObject(scenePostUri, scene, ResponseEntity.class);
 
-//        if (response.getStatusCode() == HttpStatus.CREATED) {
+//        if (response.getActionCode() == HttpStatus.CREATED) {
 //            System.out.println("Create new table [" + response.getBody() + "] successfully!");
 //            System.out.println(response.getBody().toString());
 //        } else {

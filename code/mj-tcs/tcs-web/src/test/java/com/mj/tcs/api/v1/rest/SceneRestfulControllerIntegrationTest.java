@@ -124,7 +124,7 @@ public class SceneRestfulControllerIntegrationTest {
 //                HttpMethod.PUT, newRequest, Object.class
 //        );
 //
-//        assertTrue(response.getStatusCode() == HttpStatus.OK);
+//        assertTrue(response.getActionCode() == HttpStatus.OK);
 //
 //        Map responseBody = (Map)response.getBody();
 //
@@ -150,7 +150,7 @@ public class SceneRestfulControllerIntegrationTest {
 //                HttpMethod.PATCH, newRequest, Object.class
 //        );
 //
-//        assertTrue(response.getStatusCode() == HttpStatus.OK);
+//        assertTrue(response.getActionCode() == HttpStatus.OK);
 //
 //        Map responseBody = (Map)response.getBody();
 //

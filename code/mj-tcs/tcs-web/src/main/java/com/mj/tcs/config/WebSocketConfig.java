@@ -1,16 +1,20 @@
 package com.mj.tcs.config;
 
-import org.springframework.context.ApplicationEvent;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.server.ServerHttpRequest;
+import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.messaging.SessionConnectedEvent;
-import org.springframework.web.socket.messaging.SessionDisconnectEvent;
+import org.springframework.web.socket.server.HandshakeInterceptor;
 import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
+
+import javax.servlet.http.HttpSession;
+import java.util.Map;
 
 /**
  * @author Wang Zhen
@@ -19,20 +23,47 @@ import org.springframework.web.socket.server.standard.ServletServerContainerFact
 //@EnableWebSocket
 @EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer
-        implements ApplicationListener
+        /*implements ApplicationListener*/
         /*implements WebSocketConfigurer*/ {
+
+    public static final String SESSION_ATTR = "USER";
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/stomp").setAllowedOrigins("*")
 //                .setHandshakeHandler(new DefaultHandshakeHandler(new TomcatRequestUpgradeStrategy()))
-                .withSockJS();
+//                .setHandshakeHandler(new MyHandshakeHandler())
+                .withSockJS()
+                .setInterceptors();
     }
 
     @Override
-    public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic", "/init");
-        config.setApplicationDestinationPrefixes("/app");
+    public void configureMessageBroker(MessageBrokerRegistry registry) {
+        registry.enableSimpleBroker("/topic", "/init");
+        registry.setApplicationDestinationPrefixes("/app");
+        registry.setUserDestinationPrefix("/user/");
+    }
+
+    public class HttpSessionIdHandshakeInterceptor implements HandshakeInterceptor {
+
+        public boolean beforeHandshake(ServerHttpRequest request,
+                                       ServerHttpResponse response,
+                                       WebSocketHandler wsHandler,
+                                       Map<String, Object> attributes)
+                throws Exception {
+            if (request instanceof ServletServerHttpRequest) {
+                ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
+                HttpSession session = servletRequest.getServletRequest().getSession(false);
+                if (session != null) {
+                    attributes.put(SESSION_ATTR, session.getId());
+                }
+            }
+            return true;
+        }
+
+        public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response,
+                                   WebSocketHandler wsHandler, Exception ex) {
+        }
     }
 
 //    @Override
@@ -54,14 +85,25 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer
         return container;
     }
 
-    @Override
-    public void onApplicationEvent(ApplicationEvent event) {
-        if (event instanceof SessionConnectedEvent) {
-            System.out.println("New session connected...");
-        } else if (event instanceof SessionDisconnectEvent) {
-            System.out.println("One session disconnected...");
-        }
-    }
+//    public class MyHandshakeHandler extends DefaultHandshakeHandler {
+//
+//        @Override
+//        protected Principal determineUser(ServerHttpRequest request, WebSocketHandler wsHandler,
+//                                          Map<String, Object> attributes) {
+//            // add your own code to determine the user
+//            return null;
+//        }
+//    }
+//
+//    @Override
+//    public void onApplicationEvent(ApplicationEvent event) {
+//        if (event instanceof SessionConnectedEvent) {
+//            System.out.println("New session connected...");
+//        } else if (event instanceof SessionDisconnectEvent) {
+//            System.out.println("One session disconnected...");
+//        }
+//    }
+
 
 //    static class TcsWebSocketHandler extends TextWebSocketHandler {
 //        private static final Map<String, WebSocketSession> users;

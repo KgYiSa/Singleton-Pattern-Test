@@ -29,7 +29,7 @@ public class PathController extends ServiceController {
 //                new Resources<>(
 //                        new PathDtoResourceAssembler().toResources(pathDtos)
 //                ),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}/paths", method = RequestMethod.POST)
@@ -73,7 +73,7 @@ public class PathController extends ServiceController {
 //        return new ResponseEntity<>(
 //                new PathDtoResourceAssembler().toResource(
 //                        (PathDto) dtoConverter.convertToDto(path)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}/paths/{pathId}", method = RequestMethod.PUT)
@@ -90,7 +90,7 @@ public class PathController extends ServiceController {
 //        return new ResponseEntity<>(
 //                new PathDtoResourceAssembler().toResource(
 //                        (PathDto) dtoConverter.convertToDto(entity)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //
@@ -108,7 +108,7 @@ public class PathController extends ServiceController {
 //        return new ResponseEntity<>(
 //                new PathDtoResourceAssembler().toResource(
 //                        (PathDto) dtoConverter.convertToDto(path)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}/paths/{pathId}", method = RequestMethod.DELETE)

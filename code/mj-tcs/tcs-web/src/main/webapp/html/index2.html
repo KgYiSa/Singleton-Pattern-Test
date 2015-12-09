@@ -48,14 +48,21 @@
                     stompClient.subscribe("/user/topic/actions/response", function(message) {
                         var response = JSON.parse(message.body);
 
-                        if (response.uuid == REQ_UUID) {
-                            $('#content').html("<b>Status Code:</b>&nbsp" + response.status_code + "<br>" +
-                                    "<b>Status Message:</b>&nbsp" + response.status_message + "<br>" +
-//                                        "<b>Action Code:</b>&nbsp" + response.action_code + "<br><br>" +
-                                    "<b>Body:</b>" + JSON.stringify(response.body));
-                        } else {
-                            console.log("[Redudant Message]: " + message.body);
-                        }
+                        var status = response.status_code.toLocaleLowerCase();
+                        var message = '<h6>' + response.status_message + '</h6>' + JSON.stringify(response.body);
+                        generate(status, message);
+//                        if (response.uuid == REQ_UUID) {
+//                            $('#content').html("<b>Status Code:</b>&nbsp" + response.status_code + "<br>" +
+//                                    "<b>Status Message:</b>&nbsp" + response.status_message + "<br>" +
+////                                        "<b>Action Code:</b>&nbsp" + response.action_code + "<br><br>" +
+//                                    "<b>Body:</b>" + JSON.stringify(response.body));
+//                        } else {
+//                            console.log("[Redudant Message]: " + message.body);
+//                        }
+                    });
+
+                    stompClient.subscribe("/user/queue/errors", function(message) {
+                        generate("error", message.body);
                     });
 
                     stompClient.subscribe("/user/queue/errors", function(message) {
@@ -90,17 +97,17 @@
                 fireAction(ACTIONS.SCENE_CREATE, body);
             }
 
-            function getScene() {
-                fireAction(ACTIONS.SCENE_FIND, Number($("#findSceneId").val()));
+            function startScene() {
+                fireAction(ACTIONS.SCENE_START, Number($("#findSceneId").val()));
+            }
+
+            function stopScene() {
+                fireAction(ACTIONS.SCENE_STOP, Number($("#findSceneId").val()));
             }
 
             function fireAction(action, body) {
                 stompClient.send("/app/topic/actions/request", {},
                         JSON.stringify({uuid:REQ_UUID,action_code:action,body:body}));
-            }
-
-            function clearContent() {
-                $('#content').html("");
             }
 
             function uuid() {
@@ -210,13 +217,11 @@
             <div>
                 <b>Scene ID:</b>
                 <input id="findSceneId" type="text" name="sceneId" value="1" style="width: 30px"/>
-                <button id="findScene" style="width: 100px;height: 100%;" onclick="getScene()">Get Scene</button>
+                <button id="startScene" style="width: 100px;height: 100%;" onclick="startScene()">Start Scene</button>
+                <button id="stopScene" style="width: 100px;height: 100%;" onclick="stopScene()">Stop Scene</button>
             </div>
             <div>
                 <button id="createScene" style="width: 100px;height: 100%;" onclick="createScene()">Create Scene</button>
-            </div>
-            <div id="content" style="width: 100%; height: 400px; border: solid 1px #000;overflow: auto">
-
             </div>
         </div>
 

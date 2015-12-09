@@ -29,7 +29,7 @@ public class LocationTypeController extends ServiceController {
 //                new Resources<>(
 //                        new LocationTypeDtoResourceAssembler().toResources(locationTypeDtos)
 //                ),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}/location_types", method = RequestMethod.POST)
@@ -65,7 +65,7 @@ public class LocationTypeController extends ServiceController {
 //        return new ResponseEntity<>(
 //                new LocationTypeDtoResourceAssembler().toResource(
 //                        (LocationTypeDto) dtoConverter.convertToDto(locationType)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}/location_types/{locationTypeId}", method = RequestMethod.PUT)
@@ -82,7 +82,7 @@ public class LocationTypeController extends ServiceController {
 //        return new ResponseEntity<>(
 //                new LocationTypeDtoResourceAssembler().toResource(
 //                        (LocationTypeDto) dtoConverter.convertToDto(entity)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //
@@ -100,7 +100,7 @@ public class LocationTypeController extends ServiceController {
 //        return new ResponseEntity<>(
 //                new LocationTypeDtoResourceAssembler().toResource(
 //                        (LocationTypeDto) dtoConverter.convertToDto(locationType)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}/location_types/{locationTypeId}", method = RequestMethod.DELETE)

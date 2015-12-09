@@ -29,7 +29,7 @@ public class PointController extends ServiceController {
 //                new Resources<>(
 //                        new PointDtoResourceAssembler().toResources(pointDtos)
 //                ),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}/points", method = RequestMethod.POST)
@@ -65,7 +65,7 @@ public class PointController extends ServiceController {
 //        return new ResponseEntity<>(
 //                new PointDtoResourceAssembler().toResource(
 //                        (PointDto) dtoConverter.convertToDto(point)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}/points/{pointId}", method = RequestMethod.PUT)
@@ -82,7 +82,7 @@ public class PointController extends ServiceController {
 //        return new ResponseEntity<>(
 //                new PointDtoResourceAssembler().toResource(
 //                        (PointDto) dtoConverter.convertToDto(entity)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //
@@ -100,7 +100,7 @@ public class PointController extends ServiceController {
 //        return new ResponseEntity<>(
 //                new PointDtoResourceAssembler().toResource(
 //                        (PointDto) dtoConverter.convertToDto(point)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}/points/{pointId}", method = RequestMethod.DELETE)

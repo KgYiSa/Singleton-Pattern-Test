@@ -35,7 +35,7 @@ public class LocationController extends ServiceController {
 //                new Resources<>(
 //                        new LocationDtoResourceAssembler().toResources(locationDtos)
 //                ),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}/locations", method = RequestMethod.POST)
@@ -110,7 +110,7 @@ public class LocationController extends ServiceController {
 //        return new ResponseEntity<>(
 //                new LocationDtoResourceAssembler().toResource(
 //                        (LocationDto) dtoConverter.convertToDto(location)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}/locations/{locationId}", method = RequestMethod.PUT)
@@ -127,7 +127,7 @@ public class LocationController extends ServiceController {
 //        return new ResponseEntity<>(
 //                new LocationDtoResourceAssembler().toResource(
 //                        (LocationDto) dtoConverter.convertToDto(entity)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}/locations/{locationId}", method = RequestMethod.PATCH)
@@ -144,7 +144,7 @@ public class LocationController extends ServiceController {
 //        return new ResponseEntity<>(
 //                new LocationDtoResourceAssembler().toResource(
 //                        (LocationDto) dtoConverter.convertToDto(location)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}/locations/{locationId}", method = RequestMethod.DELETE)

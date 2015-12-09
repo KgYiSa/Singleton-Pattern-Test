@@ -108,7 +108,7 @@ public class SceneController extends ServiceController {
 //
 //        return new ResponseEntity<>(
 //                new SceneDtoResourceAssembler().toResource((SceneDto) dtoConverter.convertToDto(scene)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}", method = RequestMethod.PATCH)
@@ -126,7 +126,7 @@ public class SceneController extends ServiceController {
 //
 //        return new ResponseEntity<>(
 //                new SceneDtoResourceAssembler().toResource((SceneDto) dtoConverter.convertToDto(scene)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}", method = RequestMethod.DELETE)

@@ -1,39 +1,33 @@
-package com.mj.tcs.api.v1.sock;
+package com.mj.tcs.api.v1.dto.communication;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.springframework.util.ObjectUtils;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Optional;
 
 /**
  * @author Wang Zhen
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
-public class TcsSockResponseEntity<T> extends TcsSockEntity<T> {
+public class TcsResponseEntity<T> extends TcsCommEntity<T> {
     private final Status statusCode;
     private String statusMessage;
-//    private final Type entityType;
 
-    public TcsSockResponseEntity() {
-        this(Status.ERROR, null, null);
+    public TcsResponseEntity() {
+        this(Status.ERROR, null, Status.ERROR.toString());
     }
 
-    public TcsSockResponseEntity(Status statusCode) {
-        this(statusCode, null, null);
+    public TcsResponseEntity(Status statusCode) {
+        this(statusCode, null, statusCode.toString());
     }
 
-    public TcsSockResponseEntity(Status statusCode, T body) {
-        this(statusCode, body, null);
+    public TcsResponseEntity(Status statusCode, T body) {
+        this(statusCode, body, statusCode.toString());
     }
 
-    public TcsSockResponseEntity(Status statusCode, String statusMessage) {
-        this(statusCode, null, statusMessage);
-    }
-
-    public TcsSockResponseEntity(Status statusCode, T body, String statusMessage) {
+    public TcsResponseEntity(Status statusCode, T body, String statusMessage) {
         super(body);
 
         this.statusCode = statusCode;
@@ -48,8 +42,9 @@ public class TcsSockResponseEntity<T> extends TcsSockEntity<T> {
         return statusMessage;
     }
 
-    public void setStatusMessage(String statusMessage) {
+    public TcsResponseEntity setStatusMessage(String statusMessage) {
         this.statusMessage = statusMessage;
+        return this;
     }
 
     @Override
@@ -60,7 +55,7 @@ public class TcsSockResponseEntity<T> extends TcsSockEntity<T> {
         if (other == null || !other.getClass().equals(getClass())) {
             return false;
         }
-        TcsSockResponseEntity<?> otherEntity = (TcsSockResponseEntity<?>) other;
+        TcsResponseEntity<?> otherEntity = (TcsResponseEntity<?>) other;
         return (super.equals(other)) &&
                 (ObjectUtils.nullSafeEquals(this.statusCode, otherEntity.statusCode)) &&
                 (ObjectUtils.nullSafeEquals(this.statusMessage, otherEntity.statusMessage));
@@ -116,14 +111,19 @@ public class TcsSockResponseEntity<T> extends TcsSockEntity<T> {
 //                return type.get();
 //            }
 //
-//            throw new IllegalArgumentException("The TcsSockResponseEntity.Type enum is no recognizable [text=" + text + "]");
+//            throw new IllegalArgumentException("The TcsResponseEntity.Type enum is no recognizable [text=" + text + "]");
 //        }
 //    }
 
+    /**
+     * alert, warning, success, error, information
+     */
     public enum Status {
-
-        OK("OK"),
-        ERROR("ERROR");
+        ALERT("ALERT"),
+        WARNING("WARNING"),
+        SUCCESS("SUCCESS"),
+        ERROR("ERROR"),
+        INFORMATION("INFORMATION");
 
         private String text;
 
@@ -144,7 +144,7 @@ public class TcsSockResponseEntity<T> extends TcsSockEntity<T> {
                 return type.get();
             }
 
-            throw new IllegalArgumentException("The TcsSockResponseEntity.Action enum is no recognizable [text=" + text + "]");
+            throw new IllegalArgumentException("The TcsResponseEntity.Action enum is no recognizable [text=" + text + "]");
         }
     }
 }

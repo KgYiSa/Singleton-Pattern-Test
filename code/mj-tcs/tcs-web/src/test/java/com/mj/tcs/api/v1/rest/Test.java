@@ -17,8 +17,8 @@ public class Test {
         SceneDtoModelGenerator generator = new SceneDtoModelGenerator();
 
         SceneDto dto = generator.createSceneDto();
-//        TcsSockRequestEntity dto = new TcsSockRequestEntity(TcsSockRequestEntity.Action.SCENE_PROFILE,"yy");
-//        TcsSockResponseEntity dto = new TcsSockResponseEntity(TcsSockResponseEntity.Status.ERROR, "yy", "hello");
+//        TcsRequestEntity dto = new TcsRequestEntity(TcsRequestEntity.Action.SCENE_PROFILE,"yy");
+//        TcsResponseEntity dto = new TcsResponseEntity(TcsResponseEntity.Status.ERROR, "yy", "hello");
 //        dto.setUUID("xxxx");
 
         ObjectMapper mapper = new ObjectMapper();
@@ -26,8 +26,8 @@ public class Test {
         mapper.setVisibility(VisibilityChecker.Std.defaultInstance().withFieldVisibility(JsonAutoDetect.Visibility.ANY));
 
         String json = mapper.writeValueAsString(dto);
-//        TcsSockRequestEntity dto2 = mapper.readValue(json, TcsSockRequestEntity.class);
-//        TcsSockResponseEntity dto2 = mapper.readValue(json, TcsSockResponseEntity.class);
+//        TcsRequestEntity dto2 = mapper.readValue(json, TcsRequestEntity.class);
+//        TcsResponseEntity dto2 = mapper.readValue(json, TcsResponseEntity.class);
         System.out.println(json);
         SceneDto dto2 = mapper.readValue(json, SceneDto.class);
 //        if (dto2.getPointDtos() != null) {

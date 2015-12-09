@@ -38,7 +38,7 @@ public class VehicleDto extends BaseEntityDto {
     @Column
     private String name;
 
-    @ElementCollection(fetch = FetchType.LAZY)/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
+    @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
     @CollectionTable(name = "tcs_model_vehicle_properties", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
     private Set<EntityProperty> properties = new LinkedHashSet<>();
@@ -111,7 +111,7 @@ public class VehicleDto extends BaseEntityDto {
      * @param name
      * @param value
      */
-    public void addProperty(String name, String value, String type) {
+    public void addProperty(String name, String value) {
         Optional<EntityProperty> propertyOptional = properties.stream().filter(p -> p.getName().equals(name)).findFirst();
         if (propertyOptional.isPresent()) {
             if (value == null) {
@@ -119,7 +119,6 @@ public class VehicleDto extends BaseEntityDto {
                 return;
             } else {
                 propertyOptional.get().setValue(Objects.requireNonNull(value));
-                propertyOptional.get().setType(Objects.requireNonNull(type));
             }
         } else {
             if (value == null) {
@@ -128,7 +127,6 @@ public class VehicleDto extends BaseEntityDto {
                 EntityProperty property = new EntityProperty();
                 property.setName(Objects.requireNonNull(name));
                 property.setValue(Objects.requireNonNull(value));
-                property.setType(Objects.requireNonNull(type));
                 properties.add(property);
             }
         }

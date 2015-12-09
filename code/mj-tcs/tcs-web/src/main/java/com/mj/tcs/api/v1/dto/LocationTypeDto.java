@@ -35,7 +35,7 @@ public class LocationTypeDto extends BaseEntityDto {
 
     @JsonSerialize(as = LinkedHashSet.class)
     @JsonDeserialize(as = LinkedHashSet.class)
-    @ElementCollection(fetch = FetchType.LAZY)/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
+    @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
     @CollectionTable(name = "tcs_model_location_type_properties", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
     private Set<EntityProperty> properties = new LinkedHashSet<>();
@@ -52,7 +52,7 @@ public class LocationTypeDto extends BaseEntityDto {
 //            entityBeanKeys = {"Path"},
 //            dtoToEntityMatcher = PathDto2PathMatcher.class)
     @DtoField
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection
     @CollectionTable(name = "tcs_model_location_type_operations", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
     private Set<String> allowedOperations = new LinkedHashSet<>();
@@ -85,7 +85,7 @@ public class LocationTypeDto extends BaseEntityDto {
      * @param name
      * @param value
      */
-    public void addProperty(String name, String value, String type) {
+    public void addProperty(String name, String value) {
         Optional<EntityProperty> propertyOptional = properties.stream().filter(p -> p.getName().equals(name)).findFirst();
         if (propertyOptional.isPresent()) {
             if (value == null) {
@@ -93,7 +93,6 @@ public class LocationTypeDto extends BaseEntityDto {
                 return;
             } else {
                 propertyOptional.get().setValue(Objects.requireNonNull(value));
-                propertyOptional.get().setType(Objects.requireNonNull(type));
             }
         } else {
             if (value == null) {
@@ -102,7 +101,6 @@ public class LocationTypeDto extends BaseEntityDto {
                 EntityProperty property = new EntityProperty();
                 property.setName(Objects.requireNonNull(name));
                 property.setValue(Objects.requireNonNull(value));
-                property.setType(Objects.requireNonNull(type));
                 properties.add(property);
             }
         }

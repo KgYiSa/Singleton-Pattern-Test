@@ -71,7 +71,6 @@ public class SceneRestfulController extends ServiceController {
     public ResponseEntity<?> createScene(@RequestBody SceneDto sceneDto) {
         SceneDto newSceneDto = resolveRelationships(sceneDto);
 
-
         // Creating new scene
         newSceneDto = getModellingService().createScene(newSceneDto);
 
@@ -194,6 +193,10 @@ public class SceneRestfulController extends ServiceController {
                             })
                             .collect(Collectors.toSet()));
                 }
+                // TODO: We do NOT need to contains the raw links, just use the LocationDto->LocationLinkDto to do the associations
+                if (p.getAttachedLinks() != null) {
+                    p.setAttachedLinks(new LinkedHashSet<>());
+                }
             });
         }
         if (sceneDto.getPathDtos() != null) {
@@ -201,7 +204,7 @@ public class SceneRestfulController extends ServiceController {
                 p.setSceneDto(sceneDto);
 
                 // CHECK RELATIONSHIP (Already linked in points' settings) TODO?
-                if (p.getSourcePointDto() == null || p.getDestinationPointDto()  == null) {
+                if (p.getSourcePointDto() == null || p.getDestinationPointDto() == null) {
                     throw new ObjectUnknownException("Path : " + p.getName() + " point(s) is null!");
                 }
             });

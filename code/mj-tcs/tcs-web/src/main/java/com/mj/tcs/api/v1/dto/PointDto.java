@@ -37,7 +37,7 @@ public class PointDto extends BaseEntityDto {
 
     @JsonSerialize(as = LinkedHashSet.class)
     @JsonDeserialize(as = LinkedHashSet.class)
-    @ElementCollection(fetch = FetchType.LAZY)/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
+    @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
     @CollectionTable(name = "tcs_model_point_properties", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
     private Set<EntityProperty> properties = new LinkedHashSet<>();
@@ -86,7 +86,7 @@ public class PointDto extends BaseEntityDto {
 //    @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class)
     @JsonIgnoreProperties({"version", "auditor", "properties", "source_point", "destination_point", "control_points", "length", "routing_cost", "max_velocity", "max_reverse_velocity", "locked"})
 //    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "destinationPoint")
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection
     @CollectionTable(name = "tcs_model_point_imcoming_paths", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
     @OrderBy(value = "name ASC")
@@ -99,7 +99,7 @@ public class PointDto extends BaseEntityDto {
 //    @JsonManagedReference(value = "outgoing_paths")
     @JsonIgnoreProperties({"version", "auditor", "properties", "source_point", "destination_point", "control_points", "length", "routing_cost", "max_velocity", "max_reverse_velocity", "locked"})
 //    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "sourcePoint")
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection
     @CollectionTable(name = "tcs_model_point_outgoing_paths", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
     @OrderBy(value = "name ASC")
@@ -109,7 +109,7 @@ public class PointDto extends BaseEntityDto {
     @JsonIgnoreProperties({"version", "auditor", "properties", "location", "point", "allowed_operations"})
     @JsonSerialize(as = LinkedHashSet.class)
     @JsonDeserialize(as = LinkedHashSet.class)
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL}/*, mappedBy = "point"*/)
+    @OneToMany(cascade = {CascadeType.ALL}/*, mappedBy = "point"*/)
 //    @ElementCollection
 //    @CollectionTable(name = "tcs_model_rel_point_attached_links")
     @OrderBy(value = "name ASC")
@@ -144,7 +144,7 @@ public class PointDto extends BaseEntityDto {
      * @param name
      * @param value
      */
-    public void addProperty(String name, String value, String type) {
+    public void addProperty(String name, String value) {
         Optional<EntityProperty> propertyOptional = properties.stream().filter(p -> p.getName().equals(name)).findFirst();
         if (propertyOptional.isPresent()) {
             if (value == null) {
@@ -152,7 +152,6 @@ public class PointDto extends BaseEntityDto {
                 return;
             } else {
                 propertyOptional.get().setValue(Objects.requireNonNull(value));
-                propertyOptional.get().setType(Objects.requireNonNull(type));
             }
         } else {
             if (value == null) {
@@ -161,7 +160,6 @@ public class PointDto extends BaseEntityDto {
                 EntityProperty property = new EntityProperty();
                 property.setName(Objects.requireNonNull(name));
                 property.setValue(Objects.requireNonNull(value));
-                property.setType(Objects.requireNonNull(type));
                 properties.add(property);
             }
         }

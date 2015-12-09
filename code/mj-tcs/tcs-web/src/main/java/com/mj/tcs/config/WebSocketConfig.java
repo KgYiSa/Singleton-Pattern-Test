@@ -87,31 +87,31 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer
         return container;
     }
 
-    @Bean
-    public FilterRegistrationBean filterRegistrationBean(){
-        /* SAME AS:
-
-        <filter>
-         <filter-name>SomeFilter</filter-name>
-            <filter-class>com.somecompany.SomeFilter</filter-class>
-        </filter>
-        <filter-mapping>
-            <filter-name>SomeFilter</filter-name>
-            <url-pattern>/url/*</url-pattern>
-            <init-param>
-               <param-name>paramName</param-name>
-               <param-value>paramValue</param-value>
-            </init-param>
-        </filter-mapping>
-        * */
-        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-        filterRegistrationBean.setEnabled(true);
-        filterRegistrationBean.setFilter(new OpenEntityManagerInViewFilter());
-        filterRegistrationBean.setName("Spring OpenEntityManagerInViewFilter");
-        filterRegistrationBean.addUrlPatterns("/*");
-        return filterRegistrationBean;
-    }
-
+//    @Bean
+//    public FilterRegistrationBean filterRegistrationBean(){
+//        /* SAME AS:
+//
+//        <filter>
+//         <filter-name>SomeFilter</filter-name>
+//            <filter-class>com.somecompany.SomeFilter</filter-class>
+//        </filter>
+//        <filter-mapping>
+//            <filter-name>SomeFilter</filter-name>
+//            <url-pattern>/url/*</url-pattern>
+//            <init-param>
+//               <param-name>paramName</param-name>
+//               <param-value>paramValue</param-value>
+//            </init-param>
+//        </filter-mapping>
+//        * */
+//        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+//        filterRegistrationBean.setEnabled(true);
+//        filterRegistrationBean.setFilter(new OpenEntityManagerInViewFilter());
+//        filterRegistrationBean.setName("Spring OpenEntityManagerInViewFilter");
+//        filterRegistrationBean.addUrlPatterns("/*");
+//        return filterRegistrationBean;
+//    }
+//
 //    public class MyHandshakeHandler extends DefaultHandshakeHandler {
 //
 //        @Override

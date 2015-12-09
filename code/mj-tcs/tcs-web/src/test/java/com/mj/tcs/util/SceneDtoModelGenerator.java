@@ -52,7 +52,7 @@ public class SceneDtoModelGenerator {
         pointDto.setDisplayPositionY(tripleDto.getY());
         pointDto.setLabelOffsetX(0L);
         pointDto.setLabelOffsetY(20L);
-        pointDto.addProperty("key", "value", "".getClass().getName());
+        pointDto.addProperty("key", "value");
 
         pointDtos.add(pointDto);
 
@@ -76,7 +76,7 @@ public class SceneDtoModelGenerator {
         pathDto.setLocked(false);
         pathDto.setMaxReverseVelocity(1);
         pathDto.setMaxVelocity(1);
-        pathDto.addProperty("key", "value", "".getClass().getName());
+        pathDto.addProperty("key", "value");
 
         srcPointDto.addOutgoingPath(pathDto);
         dstPointDto.addIncomingPath(pathDto);
@@ -104,7 +104,7 @@ public class SceneDtoModelGenerator {
         locationDto.setLabelOffsetX(0L);
         locationDto.setLabelOffsetY(20L);
         locationDto.setLocationTypeDto(locationTypeDto);
-        locationDto.addProperty("key", "value", "".getClass().getName());
+        locationDto.addProperty("key", "value");
 
         // link
         LocationLinkDto linkDto = new LocationLinkDto(locationDto, pointDto);
@@ -128,7 +128,7 @@ public class SceneDtoModelGenerator {
         locationTypeDto.setName(name);
         locationTypeDto.addAllowedOperation("Puts in storage");
         locationTypeDto.addAllowedOperation("Stock removal");
-        locationTypeDto.addProperty("key", "value", "".getClass().getName());
+        locationTypeDto.addProperty("key", "value");
 
         return locationTypeDto;
     }
@@ -143,7 +143,7 @@ public class SceneDtoModelGenerator {
         blockDto.setAuditorDto(createAuditor());
 //        setId(createPathCommand, id);
         blockDto.setName(name);
-        blockDto.addProperty("key", "value", "".getClass().getName());
+        blockDto.addProperty("key", "value");
 
 
         for (BaseEntityDto dto : dtos) {
@@ -163,7 +163,7 @@ public class SceneDtoModelGenerator {
         sceneDto.setName(newSceneName);
 
         // Points & Paths
-        for (int i=0; i< 3; i++) {
+        for (int i=0; i< 10; i++) {
             createPointDto();
 
             if (i != 0 && i % 2 == 1) {
@@ -199,7 +199,7 @@ public class SceneDtoModelGenerator {
         VehicleDto vehicleDto = createVehicleDto();
         sceneDto.addVehicleDto(vehicleDto);
 
-        sceneDto.addProperty("key", "value", "".getClass().getName());
+        sceneDto.addProperty("key", "value");
 
         return sceneDto;
     }

@@ -7,7 +7,13 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
+        <link rel="stylesheet" type="text/css" href="../css/animate.css"/>
+        <link rel="stylesheet" href="../css/font-awesome/css/font-awesome.min.css"/>
+
         <script src="../js/jquery-1.11.3.js"></script>
+
+        <script src="../plugin/noty/packaged/jquery.noty.packaged.min.js"></script>
+
         <script src="../plugin/sockjs/sockjs.js"></script>
         <script src="../plugin/stomp/stomp.js"></script>
         <script type="text/javascript">
@@ -50,6 +56,10 @@
                         } else {
                             console.log("[Redudant Message]: " + message.body);
                         }
+                    });
+
+                    stompClient.subscribe("/user/queue/errors", function(message) {
+                        generate("error", message.body);
                     });
                 });
             }
@@ -106,6 +116,85 @@
                 var uuid = s.join("");
                 return uuid;
             }
+
+            /**
+             *
+             * @param type
+             *        alert, warning, success, error, information
+             * @param text
+             *
+             */
+            function generate(type, text) {
+                // Refer to: http://www.yeahzan.com/fa/facss.html
+                var icon_style = "fa-info-circle";
+                switch (type) {
+                    case 'alert':
+                        icon_style = "fa-flash";
+                        break;
+                    case 'warning':
+                        icon_style = "fa-warning";
+                        break;
+                    case 'success':
+                        icon_style = "fa-heart";
+                        break;
+                    case 'error':
+                        icon_style = "fa-minus";
+                        break;
+                    case 'information':
+                        icon_style = "fa-info-circle";
+                        break;
+                }
+
+                var new_text = '<div class="activity-item"> <i class="fa '
+                        + icon_style
+                        + '"></i>'
+                        + '<div class="activity">'
+                        + text
+                        + '</div> </div>';
+
+                var n = noty({
+                    text        : new_text,
+                    type        : type,
+                    dismissQueue: true,
+                    layout      : 'bottomRight',
+                    closeWith   : ['click'],
+                    theme       : 'relax',
+                    maxVisible  : 10,
+                    timeout     : 60000, // 60 seconds fade out
+                    animation   : {
+                        open  : 'animated bounceInRight',
+                        close : 'animated fadeOut',
+                        easing: 'swing',
+                        speed : 500
+                    }
+                });
+                console.log('html: ' + n.options.id);
+            }
+
+            // TESTING ONLY !!!
+//            // notification body's can be any html string or just string
+//            var notification_html = [];
+//            notification_html[0] = 'There are <a href="#">6 new tasks</a> waiting for you. Don\'t forget! <span>About 3 hours ago</span>',
+//            notification_html[1] = 'Mail server was updated. See <a href="#">changelog</a> <span>About 2 hours ago</span>',
+//            notification_html[2] = 'Your <a href="#">latest post</a> was liked by <a href="#">Audrey Mall</a> <span>35 minutes ago</span>',
+//            notification_html[3] = '<a href="#">Eugene</a> ordered 2 copies of <a href="#">OEM license</a> <span>14 minutes ago</span>';
+//
+//            function generateAll() {
+//                generate('warning', notification_html[0]);
+//                generate('error', notification_html[1]);
+//                generate('information', notification_html[2]);
+//                generate('success', notification_html[3]);
+////            generate('notification');
+////            generate('success');
+//            }
+//
+//            $(document).ready(function () {
+//
+//                setTimeout(function() {
+//                    generateAll();
+//                }, 500);
+//
+//            });
         </script>
     </head>
     <body>

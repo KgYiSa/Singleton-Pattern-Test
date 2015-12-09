@@ -14,7 +14,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -104,7 +103,6 @@ public class SceneCommandSockController extends ServiceController {
         return new TcsSockResponseEntity<>(TcsSockResponseEntity.Status.OK, newSceneDto);
     }
 
-    @Transactional
     //    @MessageMapping("/topic/scenes/find")
 //    @SendTo("/topic/scenes/find")
     private TcsSockResponseEntity<?> getOneScene(/*@DestinationVariable */Object jsonBody) {

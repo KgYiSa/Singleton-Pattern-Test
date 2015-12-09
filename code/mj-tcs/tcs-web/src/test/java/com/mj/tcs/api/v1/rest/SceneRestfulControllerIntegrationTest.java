@@ -5,6 +5,7 @@ import com.mj.tcs.api.v1.dto.SceneDto;
 import com.mj.tcs.util.SceneDtoModelGenerator;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
@@ -28,7 +29,7 @@ import static org.junit.Assert.assertTrue;
 @WebAppConfiguration
 @IntegrationTest({"server.port=0", "management.port=0"})
 public class SceneRestfulControllerIntegrationTest {
-    private static final String BASE_URI = "http://localhost:8080/tcs-web/api/v1/rest";
+    private static final String BASE_URI = "http://localhost:8080/api/v1/rest";
 
     private static final RestTemplate restTemplate = new RestTemplate();
 
@@ -60,7 +61,7 @@ public class SceneRestfulControllerIntegrationTest {
         assertTrue(response.getStatusCode() == HttpStatus.OK);
     }
 
-//    @Test
+    @Test
     public void post() throws IOException {
         SceneDto dto = generator.createSceneDto();
         HttpEntity<SceneDto> request = new HttpEntity<>(dto);

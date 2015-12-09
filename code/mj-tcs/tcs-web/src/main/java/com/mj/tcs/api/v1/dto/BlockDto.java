@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Dto
 @Entity(name = "tcs_model_block")
 @Table(name = "tcs_model_block", uniqueConstraints =
-@UniqueConstraint(columnNames = {"name", "scene"})
+    @UniqueConstraint(columnNames = {"name", "scene"})
 )
 public class BlockDto  extends BaseEntityDto {
 
@@ -120,7 +120,7 @@ public class BlockDto  extends BaseEntityDto {
 
     public void setMembers(Set<BlockElementDto> members) {
         Objects.requireNonNull(members);
-//
+        this.members.clear();
         // Check to avoid duplicated element !!!
         for (BlockElementDto elem : members) {
             if (!this.members.stream().anyMatch(b -> b.equals(elem))) {
@@ -131,6 +131,7 @@ public class BlockDto  extends BaseEntityDto {
 
     public void setResources(Set<BaseEntityDto> members) {
         Objects.requireNonNull(members);
+        this.members.clear();
         for (BaseEntityDto dto : members) {
             BlockElementDto elem = new BlockElementDto(dto);
 
@@ -165,6 +166,7 @@ public class BlockDto  extends BaseEntityDto {
 
     @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
     @Embeddable
+    @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"point_dto_member", "path_dto_member", "location_dto_member"}))
     public static class BlockElementDto implements Serializable, Cloneable {
 
 //        /**

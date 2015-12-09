@@ -161,19 +161,31 @@
 
                 var n = noty({
                     text        : new_text,
-                    type        : type,
-                    dismissQueue: true,
-                    layout      : 'bottomRight',
-                    closeWith   : ['click'],
-                    theme       : 'relax',
+                    type        : type, // 消息类型
+                    dismissQueue: true, // 使用序列
+                    layout      : 'bottomRight', // 显示的位置
+                    theme       : 'relax', // 使用的主题
+                    template    : '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>',
                     maxVisible  : 10,
+                    modal: false,
+                    maxVisible: 5, // 可以设置最多显示多少个通知消息
+                    killer: false, // 在显示这个noty之前，将所有的noty关掉
+                    closeWith: ['click'], // 关闭的方式，默认是click['click', 'button', 'hover']
+                    killer: false, // 在显示这个noty之前，将所有的noty关掉
                     timeout     : 60000, // 60 seconds fade out
                     animation   : {
                         open  : 'animated bounceInRight',
                         close : 'animated fadeOut',
                         easing: 'swing',
                         speed : 500
-                    }
+                    },
+                    callback: {     // 设置回调函数
+                        onShow: function() {},
+                        afterShow: function() {},
+                        onClose: function() {},
+                        afterClose: function() {}
+                    },
+                    buttons: false // 定义一个按钮数组
                 });
                 console.log('html: ' + n.options.id);
             }

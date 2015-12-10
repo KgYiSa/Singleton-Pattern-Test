@@ -62,7 +62,7 @@ public class SceneDtoService implements IEntityDtoService {
     @Override
     public SceneDto update(BaseEntityDto entity) {
         if (entity instanceof SceneDto) {
-            entity = createScene((SceneDto) entity);
+            entity = updateScene((SceneDto) entity);
             return (SceneDto) entity;
         } else {
             throw new IllegalArgumentException("update scene with different valueconverter type");

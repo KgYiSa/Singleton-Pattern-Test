@@ -29,7 +29,7 @@ public class StaticRouteController extends ServiceController {
 //                new Resources<>(
 //                        new StaticRouteDtoResourceAssembler().toResources(staticRouteDtos)
 //                ),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}/static_routes", method = RequestMethod.POST)
@@ -74,7 +74,7 @@ public class StaticRouteController extends ServiceController {
 //        return new ResponseEntity<>(
 //                new StaticRouteDtoResourceAssembler().toResource(
 //                        (StaticRouteDto) dtoConverter.convertToDto(staticRoute)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}/static_routes/{staticRouteId}", method = RequestMethod.PUT)
@@ -91,7 +91,7 @@ public class StaticRouteController extends ServiceController {
 //        return new ResponseEntity<>(
 //                new StaticRouteDtoResourceAssembler().toResource(
 //                        (StaticRouteDto) dtoConverter.convertToDto(entity)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //
@@ -109,7 +109,7 @@ public class StaticRouteController extends ServiceController {
 //        return new ResponseEntity<>(
 //                new StaticRouteDtoResourceAssembler().toResource(
 //                        (StaticRouteDto) dtoConverter.convertToDto(staticRoute)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}/static_routes/{staticRouteId}", method = RequestMethod.DELETE)

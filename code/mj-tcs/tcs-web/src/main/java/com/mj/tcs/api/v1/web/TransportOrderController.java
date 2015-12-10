@@ -37,7 +37,7 @@ public class TransportOrderController extends ServiceController {
 //                new Resources<>(
 //                        new TransportOrderDtoResourceAssembler().toResources(transportOrderDtos)
 //                ),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}/transport_orders", method = RequestMethod.POST)
@@ -82,7 +82,7 @@ public class TransportOrderController extends ServiceController {
 //        return new ResponseEntity<>(
 //                new TransportOrderDtoResourceAssembler().toResource(
 //                        (TransportOrderDto) dtoConverter.convertToDto(transportOrder)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}/transport_orders/{transportOrderId}", method = RequestMethod.PUT)

@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Dto
 @Entity(name = "tcs_model_block")
 @Table(name = "tcs_model_block", uniqueConstraints =
-@UniqueConstraint(columnNames = {"name", "scene"})
+    @UniqueConstraint(columnNames = {"name", "scene"})
 )
 public class BlockDto  extends BaseEntityDto {
 
@@ -76,7 +76,7 @@ public class BlockDto  extends BaseEntityDto {
      * @param name
      * @param value
      */
-    public void addProperty(String name, String value, String type) {
+    public void addProperty(String name, String value) {
         Optional<EntityProperty> propertyOptional = properties.stream().filter(p -> p.getName().equals(name)).findFirst();
         if (propertyOptional.isPresent()) {
             if (value == null) {
@@ -84,7 +84,6 @@ public class BlockDto  extends BaseEntityDto {
                 return;
             } else {
                 propertyOptional.get().setValue(Objects.requireNonNull(value));
-                propertyOptional.get().setType(Objects.requireNonNull(type));
             }
         } else {
             if (value == null) {
@@ -93,7 +92,6 @@ public class BlockDto  extends BaseEntityDto {
                 EntityProperty property = new EntityProperty();
                 property.setName(Objects.requireNonNull(name));
                 property.setValue(Objects.requireNonNull(value));
-                property.setType(Objects.requireNonNull(type));
                 properties.add(property);
             }
         }
@@ -122,27 +120,25 @@ public class BlockDto  extends BaseEntityDto {
 
     public void setMembers(Set<BlockElementDto> members) {
         Objects.requireNonNull(members);
-        this.members = members;
-//        for (BlockElementDto dto : members) {
-////            if (!checkResourceEntity(Objects.requireNonNull(dto))) {
-////                throw new ResourceUnknownException(dto);
-////            }
-////            if (!this.members.contains(dto)) {
-//                this.members.add(dto);
-////            }
-//        }
+        this.members.clear();
+        // Check to avoid duplicated element !!!
+        for (BlockElementDto elem : members) {
+            if (!this.members.stream().anyMatch(b -> b.equals(elem))) {
+                this.members.add(elem);
+            }
+        }
     }
 
     public void setResources(Set<BaseEntityDto> members) {
         Objects.requireNonNull(members);
+        this.members.clear();
         for (BaseEntityDto dto : members) {
-//            if (!checkResourceEntity(Objects.requireNonNull(dto))) {
-//                throw new ResourceUnknownException(dto);
-//            }
             BlockElementDto elem = new BlockElementDto(dto);
-//            if (!this.members.contains(elem)) {
+
+            // Check to avoid duplicated element !!!
+            if (!this.members.stream().anyMatch(b -> b.equals(elem))) {
                 this.members.add(elem);
-//            }
+            }
         }
     }
 
@@ -153,7 +149,10 @@ public class BlockDto  extends BaseEntityDto {
 //        }
 
         BlockElementDto elem = new BlockElementDto(member);
-        this.members.add(elem);
+        // Check to avoid duplicated element !!!
+        if (!this.members.stream().anyMatch(b -> b.equals(elem))) {
+            this.members.add(elem);
+        }
     }
 
     @JsonIgnore
@@ -167,6 +166,7 @@ public class BlockDto  extends BaseEntityDto {
 
     @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
     @Embeddable
+    @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"point_dto_member", "path_dto_member", "location_dto_member"}))
     public static class BlockElementDto implements Serializable, Cloneable {
 
 //        /**

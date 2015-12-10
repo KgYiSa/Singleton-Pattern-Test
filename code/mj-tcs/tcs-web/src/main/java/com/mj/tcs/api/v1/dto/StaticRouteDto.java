@@ -79,7 +79,7 @@ public class StaticRouteDto extends BaseEntityDto {
      * @param name
      * @param value
      */
-    public void addProperty(String name, String value, String type) {
+    public void addProperty(String name, String value) {
         Optional<EntityProperty> propertyOptional = properties.stream().filter(p -> p.getName().equals(name)).findFirst();
         if (propertyOptional.isPresent()) {
             if (value == null) {
@@ -87,7 +87,6 @@ public class StaticRouteDto extends BaseEntityDto {
                 return;
             } else {
                 propertyOptional.get().setValue(Objects.requireNonNull(value));
-                propertyOptional.get().setType(Objects.requireNonNull(type));
             }
         } else {
             if (value == null) {
@@ -96,7 +95,6 @@ public class StaticRouteDto extends BaseEntityDto {
                 EntityProperty property = new EntityProperty();
                 property.setName(Objects.requireNonNull(name));
                 property.setValue(Objects.requireNonNull(value));
-                property.setType(Objects.requireNonNull(type));
                 properties.add(property);
             }
         }

@@ -101,6 +101,25 @@
         <!--<groupId>org.springframework.boot</groupId>-->
         <!--<artifactId>spring-boot-starter-data-rest</artifactId>-->
         <!--</dependency>-->
+
+        <!-- !!!Attention 2.7.0-rc1 error !!! -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.6.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.6.3</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.6.3</version>
+        </dependency>
+
+        <!-- Websocket -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
@@ -110,6 +129,12 @@
             <artifactId>spring-messaging</artifactId>
             <version>${spring.messaging.version}</version>
         </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.0-b01</version>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -171,7 +196,6 @@
             <version>1.0</version>
         </dependency>
 
-
         <!-- for testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -184,29 +208,31 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <finalName>tcs-web</finalName>
-        <plugins>
-            <!--JDK Versions & source code encoding-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-            <!--Resource encoding-->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.7</version>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+    <!--<build>-->
+        <!--<finalName>tcs-web</finalName>-->
+        <!--<plugins>-->
+            <!--&lt;!&ndash;JDK Versions & source code encoding&ndash;&gt;-->
+            <!--&lt;!&ndash;<plugin>&ndash;&gt;-->
+                <!--&lt;!&ndash;<groupId>org.apache.maven.plugins</groupId>&ndash;&gt;-->
+                <!--&lt;!&ndash;<artifactId>maven-compiler-plugin</artifactId>&ndash;&gt;-->
+                <!--&lt;!&ndash;<version>3.3</version>&ndash;&gt;-->
+                <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<source>1.8</source>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<target>1.8</target>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<encoding>UTF-8</encoding>&ndash;&gt;-->
+                    <!--&lt;!&ndash;&lt;!&ndash;<compilerArgument>-proc:none</compilerArgument>&ndash;&gt;&ndash;&gt;-->
+                <!--&lt;!&ndash;</configuration>&ndash;&gt;-->
+            <!--&lt;!&ndash;</plugin>&ndash;&gt;-->
+            <!--&lt;!&ndash;Resource encoding&ndash;&gt;-->
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-resources-plugin</artifactId>-->
+                <!--<version>2.7</version>-->
+                <!--<configuration>-->
+                    <!--<encoding>UTF-8</encoding>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+        <!--</plugins>-->
+    <!--</build>-->
 
 </project>

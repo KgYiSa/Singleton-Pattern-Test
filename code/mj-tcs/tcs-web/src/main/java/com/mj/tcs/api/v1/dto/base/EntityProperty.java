@@ -20,9 +20,6 @@ public class EntityProperty implements Serializable, Cloneable {
     @Column
     private String value;
 
-    @Column
-    private String type;
-
     public String getName() {
         return name;
     }
@@ -41,17 +38,4 @@ public class EntityProperty implements Serializable, Cloneable {
         this.value = Objects.requireNonNull(value);
         return this;
     }
-
-    public String getType() {
-        return type;
-    }
-
-    public EntityProperty setType(String type) {
-        this.type = Objects.requireNonNull(type);
-        return this;
-    }
-
-//    public Object getValueByType() throws ClassNotFoundException {
-//        return Class.forName(this.type).cast(value);
-//    }
 }

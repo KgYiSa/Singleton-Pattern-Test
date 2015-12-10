@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="tcs-web:war">
-    <output-path>$PROJECT_DIR$/tcs-web/target</output-path>
-    <root id="archive" name="tcs-web.war">
-      <element id="artifact" artifact-name="tcs-web:war exploded" />
-    </root>
-  </artifact>
-</component>

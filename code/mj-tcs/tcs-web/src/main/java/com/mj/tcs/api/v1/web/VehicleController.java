@@ -29,7 +29,7 @@ public class VehicleController extends ServiceController {
 //                new Resources<>(
 //                        new VehicleDtoResourceAssembler().toResources(vehicleDtos)
 //                ),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/vehicles", method = RequestMethod.POST)
@@ -51,7 +51,7 @@ public class VehicleController extends ServiceController {
 //        return new ResponseEntity<>(
 //                new VehicleDtoResourceAssembler().toResource(
 //                        (VehicleDto) dtoConverter.convertToDto(vehicle)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/vehicles/{vehicleId}", method = RequestMethod.PUT)
@@ -68,7 +68,7 @@ public class VehicleController extends ServiceController {
 //        return new ResponseEntity<>(
 //                new VehicleDtoResourceAssembler().toResource(
 //                        (VehicleDto) dtoConverter.convertToDto(entity)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //
@@ -86,7 +86,7 @@ public class VehicleController extends ServiceController {
 //        return new ResponseEntity<>(
 //                new VehicleDtoResourceAssembler().toResource(
 //                        (VehicleDto) dtoConverter.convertToDto(vehicle)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/vehicles/{vehicleId}", method = RequestMethod.DELETE)
@@ -115,7 +115,7 @@ public class VehicleController extends ServiceController {
 //                new Resources<>(
 //                        new VehicleDtoResourceAssembler().toResources(vehicleDtos)
 //                ),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}/vehicles", method = RequestMethod.POST)
@@ -164,7 +164,7 @@ public class VehicleController extends ServiceController {
 //        return new ResponseEntity<>(
 //                new VehicleDtoResourceAssembler().toResource(
 //                        (VehicleDto) dtoConverter.convertToDto(vehicle)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}/vehicles/{vehicleId}", method = RequestMethod.PUT)
@@ -181,7 +181,7 @@ public class VehicleController extends ServiceController {
 //        return new ResponseEntity<>(
 //                new VehicleDtoResourceAssembler().toResource(
 //                        (VehicleDto) dtoConverter.convertToDto(entity)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //
@@ -199,7 +199,7 @@ public class VehicleController extends ServiceController {
 //        return new ResponseEntity<>(
 //                new VehicleDtoResourceAssembler().toResource(
 //                        (VehicleDto) dtoConverter.convertToDto(vehicle)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}/vehicles/{vehicleId}", method = RequestMethod.DELETE)

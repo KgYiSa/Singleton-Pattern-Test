@@ -7,7 +7,7 @@ import com.mj.tcs.api.v1.dto.converter.value.converter.Numeric2PathConverter;
 import com.mj.tcs.api.v1.dto.converter.value.converter.PointDto2PointMatcher;
 import com.mj.tcs.data.model.Point;
 import com.mj.tcs.data.base.BaseEntity;
-import com.mj.tcs.util.TcsBeanUtils;
+import com.mj.tcs.util.TcsDtoUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -86,7 +86,7 @@ public class PointDtoConverter implements DtoConverter  {
 
     @Override
     public Object mergePropertiesToDto(final BaseEntityDto dto, final Map<String, Object> properties) {
-        TcsBeanUtils.copyProperties(dto, properties);
+        TcsDtoUtils.copyProperties(dto, properties);
 
         return dto;
     }
@@ -103,7 +103,7 @@ public class PointDtoConverter implements DtoConverter  {
 
     @Override
     public Object mergePropertiesToEntity(final BaseEntity entity, final Map<String, Object> properties) {
-        TcsBeanUtils.copyProperties(entity, properties);
+        TcsDtoUtils.copyProperties(entity, properties);
 
         return entity;
     }

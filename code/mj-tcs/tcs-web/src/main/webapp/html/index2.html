@@ -48,26 +48,24 @@
                     stompClient.subscribe("/user/topic/actions/response", function(message) {
                         var response = JSON.parse(message.body);
 
-                        var status = response.status_code.toLocaleLowerCase();
-                        var message = '<h6>' + response.status_message + '</h6>' + JSON.stringify(response.body);
-                        generate(status, message);
-//                        if (response.uuid == REQ_UUID) {
-//                            $('#content').html("<b>Status Code:</b>&nbsp" + response.status_code + "<br>" +
-//                                    "<b>Status Message:</b>&nbsp" + response.status_message + "<br>" +
-////                                        "<b>Action Code:</b>&nbsp" + response.action_code + "<br><br>" +
-//                                    "<b>Body:</b>" + JSON.stringify(response.body));
-//                        } else {
-//                            console.log("[Redudant Message]: " + message.body);
-//                        }
+                        if (response.uuid == REQ_UUID) {
+                            var status = response.status_code.toLocaleLowerCase();
+                            var message = '<h6>' + response.status_message + '</h6>' + JSON.stringify(response.body);
+                            generate(status, message);
+
+                            $('#content').html("<b>Status Code:</b>&nbsp" + response.status_code + "<br>" +
+                                    "<b>Status Message:</b>&nbsp" + response.status_message + "<br>" +
+//                                        "<b>Action Code:</b>&nbsp" + response.action_code + "<br><br>" +
+                                    "<b>Body:</b>" + JSON.stringify(response.body));
+                        } else {
+                            generate('error', 'Received irrelevant message ! <br><p>' + message.body + '</p>')
+                        }
                     });
 
                     stompClient.subscribe("/user/queue/errors", function(message) {
                         generate("error", message.body);
                     });
 
-                    stompClient.subscribe("/user/queue/errors", function(message) {
-                        generate("error", message.body);
-                    });
                 });
             }
 

@@ -16,18 +16,6 @@
         </sourceRoots>
       </configuration>
     </facet>
-    <facet type="Spring" name="Spring">
-      <configuration>
-        <fileset id="fileset" name="Spring Application Context" removed="false">
-          <file>file://$MODULE_DIR$/src/main/java/com/mj/tcs/config/AppContext.java</file>
-          <file>file://$MODULE_DIR$/src/main/java/com/mj/tcs/config/ServiceGateFactory.java</file>
-          <file>file://$MODULE_DIR$/src/main/java/com/mj/tcs/TcsWebServerApplication.java</file>
-          <file>file://$MODULE_DIR$/src/main/java/com/mj/tcs/config/WebAppConfig.java</file>
-          <file>file://$MODULE_DIR$/src/main/java/com/mj/tcs/config/WebSecurityConfig.java</file>
-          <file>file://$MODULE_DIR$/src/main/java/com/mj/tcs/config/WebSocketConfig.java</file>
-        </fileset>
-      </configuration>
-    </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/target/classes" />
@@ -36,10 +24,9 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
-    <orderEntry type="jdk" jdkName="jdk1.8.0_45_64bit" jdkType="JavaSDK" />
+    <orderEntry type="jdk" jdkName="jdk1.8.0_51_64bit" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:1.2.7.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:1.2.7.RELEASE" level="project" />

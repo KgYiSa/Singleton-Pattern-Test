@@ -7,10 +7,10 @@ import com.mj.tcs.api.v1.dto.SceneDto;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.exception.ObjectUnknownException;
 import com.mj.tcs.exception.ResourceUnknownException;
+import org.apache.commons.beanutils.PropertyUtils;
 
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.lang.reflect.Field;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -132,5 +132,63 @@ public class TcsDtoUtils {
         }
 
         return sceneDto;
+    }
+
+
+    /**
+     * Copy from one class object (or a Map object) to another class object.
+     *
+     * @param dst
+     * @param src
+     */
+    public static void copyProperties(Object dst, Object src) throws RuntimeException {
+        try {
+            if (src instanceof Map) {
+                Iterator names = ((Map) src).keySet().iterator();
+                while (names.hasNext()) {
+                    String name = (String) names.next();
+                    if (PropertyUtils.isWriteable(dst, name)) {
+                        Object value = ((Map)src).get(name);
+                        if (value != null) {
+                            PropertyUtils.setSimpleProperty(dst, name, value);
+                        }
+                    }
+                }
+            } else {
+                Field[] fields = src.getClass().getDeclaredFields();
+                for (int i=0; i<fields.length; i++) {
+                    String name = fields[i].getName();
+                    if (PropertyUtils.isReadable(src, name) && PropertyUtils.isWriteable(dst, name)) {
+                        Object value = PropertyUtils.getSimpleProperty(src, name);
+                        if (value != null) {
+                            PropertyUtils.setSimpleProperty(dst, name, value);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("copyProperties error from " + src.toString() + " to " + dst.toString(),
+                    e);
+        }
+    }
+
+    public static boolean checkObjProperty(Object src, Map dst) throws RuntimeException {
+        try {
+            Field[] fields = src.getClass().getDeclaredFields();
+            for (int i = 0; i < fields.length; i++) {
+                String name = fields[i].getName();
+                if (!dst.containsKey(name)) {
+                    if (PropertyUtils.isReadable(src, name)) {
+                        Object value = PropertyUtils.getSimpleProperty(src, name);
+                        if (value == null) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        } catch (Exception e) {
+            throw new RuntimeException("checkObjProperty error", e);
+        }
     }
 }

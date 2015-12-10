@@ -1,5 +1,6 @@
 package com.mj.tcs.api.v1.dto.communication;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.springframework.util.ObjectUtils;
@@ -13,7 +14,8 @@ import java.util.Optional;
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 public class TcsRequestEntity<T> extends TcsCommEntity<T> {
 
-    private String uuid;
+    @JsonProperty("uuid")
+    private String requestUUID;
     private Action actionCode;
 
     public TcsRequestEntity() {
@@ -24,12 +26,12 @@ public class TcsRequestEntity<T> extends TcsCommEntity<T> {
         super(body);
     }
 
-    public String getUUID() {
-        return uuid;
+    public String getRequestUUID() {
+        return requestUUID;
     }
 
-    public void setUUID(String uuid) {
-        this.uuid = uuid;
+    public void setRequestUUID(String uuid) {
+        this.requestUUID = uuid;
     }
 
     public Action getActionCode() {
@@ -49,21 +51,21 @@ public class TcsRequestEntity<T> extends TcsCommEntity<T> {
             return false;
         }
         TcsRequestEntity<?> otherEntity = (TcsRequestEntity<?>) other;
-        return (ObjectUtils.nullSafeEquals(this.uuid, otherEntity.uuid)) &&
+        return (ObjectUtils.nullSafeEquals(this.requestUUID, otherEntity.requestUUID)) &&
                 (ObjectUtils.nullSafeEquals(this.actionCode, otherEntity.actionCode)) &&
                 (super.equals(other));
     }
     @Override
     public int hashCode() {
-        return (ObjectUtils.nullSafeHashCode(this.uuid) * 29 +
+        return (ObjectUtils.nullSafeHashCode(this.requestUUID) * 29 +
                 ObjectUtils.nullSafeHashCode(this.actionCode)*39 +
                 super.hashCode());
     }
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("<");
-        if (this.uuid != null) {
-            builder.append(this.uuid);
+        if (this.requestUUID != null) {
+            builder.append(this.requestUUID);
         }
         if (this.actionCode != null) {
             builder.append(',')

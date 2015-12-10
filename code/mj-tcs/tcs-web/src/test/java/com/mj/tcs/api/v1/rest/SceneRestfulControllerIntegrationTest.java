@@ -4,8 +4,7 @@ import com.mj.tcs.TcsWebServerApplication;
 import com.mj.tcs.api.v1.dto.SceneDto;
 import com.mj.tcs.api.v1.dto.communication.TcsResponseEntity;
 import com.mj.tcs.util.SceneDtoModelGenerator;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.IntegrationTest;
@@ -13,14 +12,14 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Created by xiaobai on 2015/11/30.
@@ -32,113 +31,143 @@ import static org.junit.Assert.assertTrue;
 public class SceneRestfulControllerIntegrationTest {
     private static final String BASE_URI = "http://localhost:8080/api/v1/rest";
 
-    private static final RestTemplate restTemplate = new RestTemplate();
+    private static final RestTemplate REST_TEMPLATE = new RestTemplate();
 
-    private static Map<String, Object> sceneDataMapping;
+    private static SceneDtoModelGenerator DATA_GENERATOR = null;
 
-    private SceneDtoModelGenerator generator = null;
+    private static Map<String, Object> SCENE_DATA_MAPPING;
 
-    @Before
-    public void setUp() throws Exception {
-        generator = new SceneDtoModelGenerator();
+    @BeforeClass
+    public static void setUp() throws Exception {
+        DATA_GENERATOR = new SceneDtoModelGenerator();
+        SCENE_DATA_MAPPING = post();
     }
 
-    @After
-    public void tearDown() throws Exception {
-//        delete();
+    @AfterClass
+    public static void tearDown() throws Exception {
+        delete();
     }
 
 //    @Test
-    public void testGet() throws Exception {
-        HttpEntity<String> entity = prepareGet(MediaType.APPLICATION_JSON);
-
-        ResponseEntity<Collection> response = restTemplate.exchange(
-                BASE_URI + "/scenes/",
-                HttpMethod.GET, entity, Collection.class
-        );
-
-        Collection<SceneDto> sceneDtos = (Collection<SceneDto>) response.getBody();
-
-        assertTrue(response.getStatusCode() == HttpStatus.OK);
-    }
-
-    @Test
-    public void post() throws IOException {
-        SceneDto dto = generator.createSceneDto();
+    public static Map post() throws IOException {
+        SceneDto dto = DATA_GENERATOR.createSceneDto();
         HttpEntity<SceneDto> request = new HttpEntity<>(dto);
 
-        ResponseEntity<TcsResponseEntity> response = restTemplate.exchange(
+        ResponseEntity<TcsResponseEntity> response = REST_TEMPLATE.exchange(
                 BASE_URI + "/scenes/",
                 HttpMethod.POST, request, TcsResponseEntity.class
         );
 
+        assertNotNull(response.getBody());
         assertTrue(response.getBody().getStatusCode() == TcsResponseEntity.Status.SUCCESS);
-//        assertTrue(response.getStatusCode() == HttpStatus.CREATED);
-
-//        Map responseBody = (Map)response.getBody();
-//
-//        assertEquals(dto.getName(), responseBody.get("name"));
-//        assertEquals(dto.getPathDtos().size(), ((Collection)responseBody.get("paths")).size());
-//        assertEquals(dto.getPointDtos().size(), ((Collection) responseBody.get("points")).size());
-
-//        return responseBody;
+        assertNotNull(response.getBody().getBody());
+        return (Map) response.getBody().getBody();
     }
 
+    //    @Test // no testing here
+    public static void delete() {
+        HttpEntity<String> entity = prepareHttpEntity(null);
 
-//    @Test
-    public void getOne() {
-        // The new one
-        long id = (Integer) sceneDataMapping.get("id");
-        String name = (String) sceneDataMapping.get("name");
+        assertNotNull(SCENE_DATA_MAPPING);
+        assertNotNull(SCENE_DATA_MAPPING.get("id"));
+        Long sceneId = Long.parseLong(SCENE_DATA_MAPPING.get("id").toString());
+        assertNotNull(sceneId);
 
-        // Tesing
-        HttpEntity<String> newRequest = prepareGet(MediaType.APPLICATION_JSON);
+        ResponseEntity<TcsResponseEntity> response = REST_TEMPLATE.exchange(
+                BASE_URI + "/scenes/" + sceneId,
+                HttpMethod.DELETE, entity, TcsResponseEntity.class
+        );
 
-        ResponseEntity<Object> response = restTemplate.exchange(
-                BASE_URI + "/scenes/" + id,
-                HttpMethod.GET, newRequest, Object.class
+        assertTrue(response.getBody().getStatusCode() == TcsResponseEntity.Status.SUCCESS);
+
+        // Try get once to double check !
+        HttpEntity<String> newRequest = prepareHttpEntity(null);
+
+        ResponseEntity<TcsResponseEntity> newResponse = REST_TEMPLATE.exchange(
+                BASE_URI + "/scenes/" + sceneId,
+                HttpMethod.GET, newRequest, TcsResponseEntity.class
+        );
+
+        assertTrue (newResponse.getBody().getStatusCode() != TcsResponseEntity.Status.ERROR);
+        assertNull(newResponse.getBody().getBody());
+    }
+
+    @Test
+    public void testGetProfile() throws Exception {
+        HttpEntity<String> entity = prepareHttpEntity(null);
+
+        ResponseEntity<TcsResponseEntity> response = REST_TEMPLATE.exchange(
+                BASE_URI + "/scenes/profile",
+                HttpMethod.GET, entity, TcsResponseEntity.class
         );
 
         assertTrue(response.getStatusCode() == HttpStatus.OK);
+        assertTrue(response.getBody().getStatusCode() == TcsResponseEntity.Status.SUCCESS);
+    }
 
-        Map newResponseBody = (Map)response.getBody();
+    @Test
+    public void testGet() {
+        assertNotNull(SCENE_DATA_MAPPING);
+        assertNotNull(SCENE_DATA_MAPPING.get("id"));
+        assertNotNull(SCENE_DATA_MAPPING.get("name"));
 
-        assertEquals(name, (String)newResponseBody.get("name"));
+        Long sceneId = Long.parseLong(SCENE_DATA_MAPPING.get("id").toString());
+        assertNotNull(sceneId);
+
+        String name = SCENE_DATA_MAPPING.get("name").toString();
+
+        // Tesing
+        HttpEntity<String> newRequest = prepareHttpEntity(null);
+
+        ResponseEntity<TcsResponseEntity> response = REST_TEMPLATE.exchange(
+                BASE_URI + "/scenes/" + sceneId,
+                HttpMethod.GET, newRequest, TcsResponseEntity.class
+        );
+
+        assertNotNull(response.getBody());
+        assertTrue(response.getBody().getStatusCode() == TcsResponseEntity.Status.SUCCESS);
+        assertNotNull(response.getBody().getBody());
+        assertEquals(name, ((Map) response.getBody().getBody()).get("name").toString());
     }
 
     // need to instantiate resttemplate by a ClientHttpRequestFactory object to support PUT
 //    @Test
-    public void put() { // update all
-        // Create a new one
-//        long id = (Integer) sceneDataMapping.get("id");
-//        String name = (String) sceneDataMapping.get("name");
+//    public void testPut() { // update all
+//        assertNotNull(SCENE_DATA_MAPPING);
+//        assertNotNull(SCENE_DATA_MAPPING.get("id"));
+//        assertNotNull(SCENE_DATA_MAPPING.get("name"));
+//
+//        Long sceneId = Long.parseLong(SCENE_DATA_MAPPING.get("id").toString());
+//        assertNotNull(sceneId);
+//
+//        String name = SCENE_DATA_MAPPING.get("name").toString();
 //
 //        // Tesing
 //        String newName = name + "_new";
-//        SceneDto dto = generator().createSceneDto();
+//        SceneDto dto = DATA_GENERATOR.createSceneDto();
 //        dto.setName(newName);
-//        dto.setId(id);
+//        dto.setId(sceneId);
 //
-//        HttpEntity<SceneDto> newRequest = new HttpEntity<>(dto);
+//        HttpEntity<SceneDto> request = prepareHttpEntity(dto);
 //
-//        ResponseEntity<Object> response = restTemplate.exchange(
-//                BASE_URI + "/scenes/" + id,
-//                HttpMethod.PUT, newRequest, Object.class
+//        ResponseEntity<TcsResponseEntity> response = REST_TEMPLATE.exchange(
+//                BASE_URI + "/scenes/" + sceneId,
+//                HttpMethod.PUT, request, TcsResponseEntity.class
 //        );
 //
-//        assertTrue(response.getActionCode() == HttpStatus.SUCCESS);
+//        assertNotNull(response.getBody());
+//        assertTrue(response.getBody().getStatusCode() == TcsResponseEntity.Status.SUCCESS);
 //
-//        Map responseBody = (Map)response.getBody();
-//
-//        assertEquals(newName, responseBody.get("name"));
-    }
+//        assertNotNull(response.getBody().getBody());
+//        assertEquals(name, ((Map) response.getBody().getBody()).get("name").toString());
+//    }
 
     // need to instantiate resttemplate by a ClientHttpRequestFactory object to support PATCH
 //    @Test
     public void patch() { // update partial
         // Create a new one
-//        long id = (Integer) sceneDataMapping.get("id");
-//        String name = (String) sceneDataMapping.get("name");
+//        long id = (Integer) SCENE_DATA_MAPPING.get("id");
+//        String name = (String) SCENE_DATA_MAPPING.get("name");
 //
 //        // Tesing
 //        String newName = name + "_new";
@@ -147,7 +176,7 @@ public class SceneRestfulControllerIntegrationTest {
 //
 //        HttpEntity<Map<String, Object>> newRequest = new HttpEntity<>(requestMap);
 //
-//        ResponseEntity<Object> response = restTemplate.exchange(
+//        ResponseEntity<Object> response = REST_TEMPLATE.exchange(
 //                BASE_URI + "/scenes/" + id,
 //                HttpMethod.PATCH, newRequest, Object.class
 //        );
@@ -159,44 +188,13 @@ public class SceneRestfulControllerIntegrationTest {
 //        assertEquals(newName, responseBody.get("name"));
     }
 
-    //    @Test // no testing here
-    public static void delete() {
-        // Create a new one
-
-        long id = (Integer) sceneDataMapping.get("id");
-        String name = (String) sceneDataMapping.get("name");
-
-        // testing
-        HttpEntity<String> entity = prepareGet(MediaType.APPLICATION_JSON);
-
-        ResponseEntity<Object> response = restTemplate.exchange(
-                BASE_URI + "/scenes/" + id,
-                HttpMethod.DELETE, entity, Object.class
-        );
-
-        assertTrue(response.getStatusCode() == HttpStatus.NO_CONTENT);
-    }
-
-    private static HttpEntity<String> prepareGet(MediaType type) {
+    private static <T> HttpEntity<T> prepareHttpEntity(T body) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(type);
-        HttpEntity<String> entity = new HttpEntity<String>(headers);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<T> entity = new HttpEntity<T>(headers);
+        if (body != null) {
+            entity = new HttpEntity<T>(body, headers);
+        }
         return entity;
-    }
-
-//    @Test
-    public void testGetAllScenes() throws Exception {
-
-    }
-
-//    @Test
-    public void testCreateScene() throws Exception {
-        SceneDto sceneDto = generator.createSceneDto();
-
-    }
-
-//    @Test
-    public void testGetOneScene() throws Exception {
-
     }
 }

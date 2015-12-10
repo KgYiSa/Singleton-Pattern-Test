@@ -7,7 +7,9 @@ import com.mj.tcs.api.v1.dto.communication.TcsRequestEntity;
 import com.mj.tcs.api.v1.dto.communication.TcsResponseEntity;
 import com.mj.tcs.api.v1.web.ServiceController;
 import com.mj.tcs.util.TcsDtoUtils;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
@@ -21,9 +23,8 @@ import java.util.*;
 public class SceneCommandSockController extends ServiceController {
 
     @MessageMapping("/topic/actions/request")
-//    @SendToUser(value = "/topic/actions/response",broadcast = false)
     @SendToUser("/topic/actions/response")
-    public TcsResponseEntity<?> request(/*Principal principal, */SimpMessageHeaderAccessor ha, TcsRequestEntity request) {
+    public TcsResponseEntity<?> executeAction(/*Principal principal, */SimpMessageHeaderAccessor ha, TcsRequestEntity request) {
         Objects.requireNonNull(request);
         TcsResponseEntity<?> responseEntity = null;
 
@@ -54,8 +55,46 @@ public class SceneCommandSockController extends ServiceController {
                 break;
         }
 
+        responseEntity.setResponseUUID(request.getRequestUUID());
         return responseEntity;
     }
+
+//
+//    @MessageMapping("/topic/scene/{sceneId}/actions/request")
+//    @SendTo("/topic/scene/{sceneId}/actions/response")
+//    public TcsResponseEntity<?> executeSceneAction(@DestinationVariable Long sceneId, TcsRequestEntity request) {
+//        Objects.requireNonNull(request);
+//        TcsResponseEntity<?> responseEntity = null;
+//
+//        TcsRequestEntity.Action actionCode = request.getActionCode();
+//        switch (actionCode) {
+//            case SCENE_PROFILE:
+//                responseEntity = getAllScenesProfile();
+//                break;
+//            case SCENE_CREATE:
+//                // ERROR !!! FORBIDDEN
+//                responseEntity = createSceneDto(request.getBody());
+//                break;
+//            case SCENE_DELETE:
+//                responseEntity = deleteSceneDto(request.getBody());
+//                break;
+//            case SCENE_FIND:
+//                responseEntity = getOneScene(request.getBody());
+//                break;
+//            case SCENE_START:
+//                responseEntity = startScene(request.getBody());
+//                break;
+//            case SCENE_STOP:
+//                responseEntity = stopScene(request.getBody());
+//                break;
+//            default:
+//                responseEntity = new TcsResponseEntity<>(TcsResponseEntity.Status.ERROR,
+//                        "The action code [" + actionCode + "] is not recognized.");
+//                break;
+//        }
+//
+//        return responseEntity;
+//    }
 
     private TcsResponseEntity<?> getAllScenesProfile() {
         Collection<SceneDto> sceneDtos = getModellingService().getAllScenes();
@@ -94,6 +133,12 @@ public class SceneCommandSockController extends ServiceController {
         return new TcsResponseEntity<>(TcsResponseEntity.Status.SUCCESS, newSceneDto, "Operation Success");
     }
 
+
+    /**
+     * TODO: lazy loading error!
+     * @param jsonBody
+     * @return
+     */
     private TcsResponseEntity<?> getOneScene(Object jsonBody) {
         TcsResponseEntity.Status status = TcsResponseEntity.Status.SUCCESS;
         String errorMessage = "Operation Success";

@@ -8,7 +8,7 @@ import com.mj.tcs.api.v1.dto.converter.value.converter.LocationLinkDto2LocationL
 import com.mj.tcs.data.base.BaseEntity;
 import com.mj.tcs.data.model.Location;
 import com.mj.tcs.exception.TcsServerRuntimeException;
-import com.mj.tcs.util.TcsBeanUtils;
+import com.mj.tcs.util.TcsDtoUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -122,7 +122,7 @@ public class LocationDtoConverter implements DtoConverter  {
 
     @Override
     public Object mergePropertiesToDto(final BaseEntityDto dto, final Map<String, Object> properties) {
-        TcsBeanUtils.copyProperties(dto, properties);
+        TcsDtoUtils.copyProperties(dto, properties);
 
         return dto;
     }
@@ -139,7 +139,7 @@ public class LocationDtoConverter implements DtoConverter  {
 
     @Override
     public Object mergePropertiesToEntity(final BaseEntity entity, final Map<String, Object> properties) {
-        TcsBeanUtils.copyProperties(entity, properties);
+        TcsDtoUtils.copyProperties(entity, properties);
 
         return entity;
     }

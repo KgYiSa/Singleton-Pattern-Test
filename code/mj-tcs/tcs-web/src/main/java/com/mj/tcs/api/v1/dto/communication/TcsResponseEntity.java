@@ -1,5 +1,6 @@
 package com.mj.tcs.api.v1.dto.communication;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.springframework.util.ObjectUtils;
@@ -12,6 +13,9 @@ import java.util.Optional;
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 public class TcsResponseEntity<T> extends TcsCommEntity<T> {
+
+    @JsonProperty("uuid")
+    private String responseUUID;
     private final Status statusCode;
     private String statusMessage;
 
@@ -32,6 +36,14 @@ public class TcsResponseEntity<T> extends TcsCommEntity<T> {
 
         this.statusCode = statusCode;
         this.statusMessage = statusMessage;
+    }
+
+    public String getResponseUUID() {
+        return responseUUID;
+    }
+
+    public void setResponseUUID(String uuid) {
+        this.responseUUID = uuid;
     }
 
     public Status getStatusCode() {
@@ -57,6 +69,7 @@ public class TcsResponseEntity<T> extends TcsCommEntity<T> {
         }
         TcsResponseEntity<?> otherEntity = (TcsResponseEntity<?>) other;
         return (super.equals(other)) &&
+                (ObjectUtils.nullSafeEquals(this.responseUUID, otherEntity.responseUUID)) &&
                 (ObjectUtils.nullSafeEquals(this.statusCode, otherEntity.statusCode)) &&
                 (ObjectUtils.nullSafeEquals(this.statusMessage, otherEntity.statusMessage));
     }
@@ -64,16 +77,21 @@ public class TcsResponseEntity<T> extends TcsCommEntity<T> {
     @Override
     public int hashCode() {
         return (super.hashCode() * 39 +
-                ObjectUtils.nullSafeHashCode(this.statusCode) * 49 +
-                ObjectUtils.nullSafeHashCode(this.statusMessage)*59);
+                ObjectUtils.nullSafeHashCode(this.responseUUID) * 49 +
+                ObjectUtils.nullSafeHashCode(this.statusCode) * 59 +
+                ObjectUtils.nullSafeHashCode(this.statusMessage)*69);
     }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder("<");
         builder.append(super.toString());
+        if (this.responseUUID != null) {
+            builder.append(this.responseUUID);
+        }
         if (this.statusCode != null) {
-            builder.append(this.statusCode.toString());
+            builder.append(',')
+                    .append(this.statusCode.toString());
             if (this.statusMessage != null) {
                 builder.append(',');
             }

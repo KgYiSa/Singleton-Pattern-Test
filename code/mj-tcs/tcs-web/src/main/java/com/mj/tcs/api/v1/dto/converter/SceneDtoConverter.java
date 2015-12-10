@@ -5,7 +5,7 @@ import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.api.v1.dto.converter.value.converter.*;
 import com.mj.tcs.data.base.BaseEntity;
 import com.mj.tcs.data.model.Scene;
-import com.mj.tcs.util.TcsBeanUtils;
+import com.mj.tcs.util.TcsDtoUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -379,7 +379,7 @@ public class SceneDtoConverter extends DummyDtoConverter {
 
     @Override
     public Object mergePropertiesToDto(final BaseEntityDto dto, final Map<String, Object> properties) {
-        TcsBeanUtils.copyProperties(dto, properties);
+        TcsDtoUtils.copyProperties(dto, properties);
 
         return dto;
     }
@@ -396,7 +396,7 @@ public class SceneDtoConverter extends DummyDtoConverter {
 
     @Override
     public Object mergePropertiesToEntity(final BaseEntity entity, final Map<String, Object> properties) {
-        TcsBeanUtils.copyProperties(entity, properties);
+        TcsDtoUtils.copyProperties(entity, properties);
 
         return entity;
     }

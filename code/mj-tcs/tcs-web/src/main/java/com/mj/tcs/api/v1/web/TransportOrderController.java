@@ -6,8 +6,6 @@
 
 package com.mj.tcs.api.v1.web;
 
-import org.springframework.web.bind.annotation.RestController;
-
 /**
  * @author Wang Zhen
  */
@@ -25,7 +23,7 @@ public class TransportOrderController extends ServiceController {
 //
 //    @RequestMapping(value = "/scenes/{sceneId}/transport_orders", method = RequestMethod.GET)
 //    public ResponseEntity<?> getAllTransportOrdersFromOneScene(@PathVariable("sceneId") Long sceneId) {
-//        Collection<TransportOrder> transportOrderEntities = getOperatingService().getAllTransportOrdersFromScene(sceneId);
+//        Collection<TransportOrder> transportOrderEntities = getService().getAllTransportOrdersFromScene(sceneId);
 //        if (transportOrderEntities == null || transportOrderEntities.size() == 0) {
 //            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 //        }
@@ -45,7 +43,7 @@ public class TransportOrderController extends ServiceController {
 //                                         @RequestBody TransportOrderDto transportOrderDto) throws ObjectUnknownException{
 //        Scene scene = null;
 //        if (sceneId >= 0) {
-//            scene = Objects.requireNonNull(getModellingService().getSceneDto(sceneId),
+//            scene = Objects.requireNonNull(getService().getSceneDto(sceneId),
 //                    "scene is null by the sceneId: " + sceneId);
 //        }
 //
@@ -53,7 +51,7 @@ public class TransportOrderController extends ServiceController {
 //        newTransportOrder.setSceneDto(scene);
 //
 //        if (transportOrderDto.getIntendedVehicle() > 0) {
-//            newTransportOrder.setIntendedVehicle(Objects.requireNonNull(getModellingService().getVehicle(transportOrderDto.getIntendedVehicle()),
+//            newTransportOrder.setIntendedVehicle(Objects.requireNonNull(getService().getVehicle(transportOrderDto.getIntendedVehicle()),
 //                    "the vehicle can not be found by id " + transportOrderDto.getIntendedVehicle()));
 //        } else {
 //            newTransportOrder.setIntendedVehicle(null);
@@ -61,7 +59,7 @@ public class TransportOrderController extends ServiceController {
 //
 //        newTransportOrder.clearId();
 //
-//        newTransportOrder = getOperatingService().createTransportOrder(newTransportOrder);
+//        newTransportOrder = getService().createTransportOrder(newTransportOrder);
 //
 //        return new ResponseEntity<>(
 //                new TransportOrderDtoResourceAssembler().toResource((TransportOrderDto) dtoConverter.convertToDto(newTransportOrder)),
@@ -73,7 +71,7 @@ public class TransportOrderController extends ServiceController {
 //                                         @PathVariable("transportOrderId") Long transportOrderId) {
 //        checkAccessViolation(sceneId, transportOrderId);
 //
-//        TransportOrder transportOrder = getOperatingService().getTransportOrder(transportOrderId);
+//        TransportOrder transportOrder = getService().getTransportOrder(transportOrderId);
 //
 //        if (transportOrder == null) {
 //            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -106,16 +104,16 @@ public class TransportOrderController extends ServiceController {
 //                                         @PathVariable("transportOrderId") Long transportOrderId) {
 //        checkAccessViolation(sceneId, transportOrderId);
 //
-//        TransportOrder transportOrder = Objects.requireNonNull(getOperatingService().getTransportOrder(transportOrderId),
+//        TransportOrder transportOrder = Objects.requireNonNull(getService().getTransportOrder(transportOrderId),
 //                "transportOrder is null by transportOrderId: " + transportOrderId);
 //
-//        getOperatingService().deleteTransportOrder(transportOrder);
+//        getService().deleteTransportOrder(transportOrder);
 //
 //        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 //    }
 //
 //    private void checkAccessViolation(Long sceneId, Long transportOrderId) {
-//        TransportOrder transportOrder = Objects.requireNonNull(getOperatingService().getTransportOrder(transportOrderId),
+//        TransportOrder transportOrder = Objects.requireNonNull(getService().getTransportOrder(transportOrderId),
 //                "transportOrder is null by id: " + transportOrderId);
 //
 //        if (transportOrder != null && transportOrder.getSceneDto().getId() != sceneId) {

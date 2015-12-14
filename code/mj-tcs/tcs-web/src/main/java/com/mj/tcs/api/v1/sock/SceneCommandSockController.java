@@ -7,9 +7,7 @@ import com.mj.tcs.api.v1.dto.communication.TcsRequestEntity;
 import com.mj.tcs.api.v1.dto.communication.TcsResponseEntity;
 import com.mj.tcs.api.v1.web.ServiceController;
 import com.mj.tcs.util.TcsDtoUtils;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
@@ -97,7 +95,7 @@ public class SceneCommandSockController extends ServiceController {
 //    }
 
     private TcsResponseEntity<?> getAllScenesProfile() {
-        Collection<SceneDto> sceneDtos = getModellingService().getAllScenes();
+        Collection<SceneDto> sceneDtos = getService().findAllScene();
         List<Map<String, String>> sceneDtosProfile = new ArrayList<>();
 
         if (sceneDtos != null) {
@@ -105,7 +103,7 @@ public class SceneCommandSockController extends ServiceController {
                 Map<String, String> item = new LinkedHashMap<>();
                 item.put("id", sceneDto.getId().toString());
                 item.put("name", sceneDto.getName());
-                item.put("status", getOperatingService().isSceneDtoRunning(sceneDto) ? "running" : "stopped");
+                item.put("status", getService().isSceneDtoRunning(sceneDto) ? "running" : "stopped");
                 sceneDtosProfile.add(item);
             }
         }
@@ -125,7 +123,7 @@ public class SceneCommandSockController extends ServiceController {
             newSceneDto = TcsDtoUtils.resolveSceneDtoRelationships(sceneDto);
 
             // Creating new scene
-            newSceneDto = getModellingService().createScene(newSceneDto);
+            newSceneDto = getService().createScene(newSceneDto);
         } catch (Exception e) {
             return new TcsResponseEntity<>(TcsResponseEntity.Status.ERROR, e.getMessage());
         }
@@ -152,7 +150,7 @@ public class SceneCommandSockController extends ServiceController {
             errorMessage = e.getMessage();
         }
 
-            sceneDto = getModellingService().getSceneDto(sceneId);
+            sceneDto = getService().getSceneDto(sceneId);
         return new TcsResponseEntity<>(status, sceneDto, errorMessage);
     }
 
@@ -162,7 +160,7 @@ public class SceneCommandSockController extends ServiceController {
 
         try {
             Long sceneId = Long.parseLong(jsonBody.toString());
-            getModellingService().deleteScene(sceneId);
+            getService().deleteScene(sceneId);
         } catch (Exception e) {
             status = TcsResponseEntity.Status.ERROR;
             errorMessage = e.getMessage();
@@ -178,8 +176,8 @@ public class SceneCommandSockController extends ServiceController {
 
         try {
             Long sceneId = Long.parseLong(jsonBody.toString());
-            SceneDto sceneDto = getModellingService().getSceneDto(sceneId);
-            getOperatingService().loadSceneDto(sceneDto);
+            SceneDto sceneDto = getService().getSceneDto(sceneId);
+            getService().loadSceneDto(sceneDto);
         } catch (Exception e) {
             status = TcsResponseEntity.Status.ERROR;
             errorMessage = e.getMessage();
@@ -194,8 +192,8 @@ public class SceneCommandSockController extends ServiceController {
 
         try {
             Long sceneId = Long.parseLong(jsonBody.toString());
-            SceneDto sceneDto = getModellingService().getSceneDto(sceneId);
-            getOperatingService().unloadSceneDto(sceneDto);
+            SceneDto sceneDto = getService().getSceneDto(sceneId);
+            getService().unloadSceneDto(sceneDto);
         } catch (Exception e) {
             status = TcsResponseEntity.Status.ERROR;
             errorMessage = e.getMessage();

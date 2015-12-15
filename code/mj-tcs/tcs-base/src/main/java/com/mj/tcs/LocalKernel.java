@@ -1,6 +1,7 @@
 package com.mj.tcs;
 
 import com.mj.tcs.algorithms.Scheduler;
+import com.mj.tcs.data.base.TCSResource;
 import com.mj.tcs.data.order.Rejection;
 import com.mj.tcs.data.user.CredentialsException;
 import com.mj.tcs.drivers.CommunicationAdapter;
@@ -9,7 +10,6 @@ import com.mj.tcs.drivers.LoadHandlingDevice;
 import com.mj.tcs.data.ObjectUnknownException;
 import com.mj.tcs.data.model.Point;
 import com.mj.tcs.data.model.Vehicle;
-import com.mj.tcs.data.base.BaseResource;
 import com.mj.tcs.data.base.Triple;
 import com.mj.tcs.data.order.OrderSequence;
 import com.mj.tcs.data.order.TransportOrder;
@@ -379,7 +379,7 @@ public interface LocalKernel extends Kernel {
      * @throws CredentialsException If the calling client is not allowed to
      * execute this method.
      */
-    Set<BaseResource> expandResources(Set<BaseResource> resources)
+    Set<TCSResource> expandResources(Set<TCSResource> resources)
             throws ObjectUnknownException, CredentialsException;
 
     /**

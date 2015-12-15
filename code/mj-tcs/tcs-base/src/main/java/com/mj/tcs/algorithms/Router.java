@@ -1,6 +1,6 @@
 package com.mj.tcs.algorithms;
 
-import com.mj.tcs.data.model.BaseLocation;
+import com.mj.tcs.data.model.Location;
 import com.mj.tcs.data.model.Point;
 import com.mj.tcs.data.model.Vehicle;
 import com.mj.tcs.data.order.DriveOrder;
@@ -81,6 +81,16 @@ public interface Router {
     long getCosts(Vehicle vehicle, Point sourcePoint, Point destinationPoint);
 
     /**
+     * Notifies the router of a route being selected for a vehicle.
+     *
+     * @param vehicle The vehicle for which a route is being selected.
+     * @param driveOrders The drive orders encapsulating the route being selected,
+     * or <code>null</code>, if no route is being selected for the vehicle (i.e.
+     * an existing entry for the given vehicle would be removed).
+     */
+    void selectRoute(Vehicle vehicle, List<DriveOrder> driveOrders);
+
+    /**
      * Returns the costs for travelling a route from one location to another with
      * a given vehicle.
      *
@@ -90,18 +100,8 @@ public interface Router {
      * @return The costs of the route, or
      * <code>Long.MAX_VALUE</code>, if no such route exists.
      */
-    long getCosts(Vehicle vehicle, BaseLocation srcLocation,
-                  BaseLocation destLocation);
-
-    /**
-     * Notifies the router of a route being selected for a vehicle.
-     *
-     * @param vehicle The vehicle for which a route is being selected.
-     * @param driveOrders The drive orders encapsulating the route being selected,
-     * or <code>null</code>, if no route is being selected for the vehicle (i.e.
-     * an existing entry for the given vehicle would be removed).
-     */
-    void selectRoute(Vehicle vehicle, List<DriveOrder> driveOrders);
+    long getCosts(Vehicle vehicle, Location srcLocation,
+                  Location destLocation);
 
     /**
      * Returns an unmodifiable view on the selected routes the router knows about.

@@ -8,7 +8,7 @@
  */
 package com.mj.tcs;
 
-import com.mj.tcs.data.model.BaseLocation;
+import com.mj.tcs.data.model.Location;
 
 import java.io.Serializable;
 
@@ -22,7 +22,7 @@ public final class TravelCosts implements Comparable<TravelCosts>, Serializable 
     /**
      * The destination reference.
      */
-    private final BaseLocation location;
+    private final Location location;
     /**
      * The costs to travel to this location.
      */
@@ -34,7 +34,7 @@ public final class TravelCosts implements Comparable<TravelCosts>, Serializable 
      * @param location A reference to the destination
      * @param costs The costs
      */
-    public TravelCosts(BaseLocation location, long costs) {
+    public TravelCosts(Location location, long costs) {
         this.location = location;
         this.costs = costs;
     }
@@ -57,7 +57,7 @@ public final class TravelCosts implements Comparable<TravelCosts>, Serializable 
      *
      * @return The destination's reference
      */
-    public BaseLocation getLocation() {
+    public Location getLocation() {
         return location;
     }
 

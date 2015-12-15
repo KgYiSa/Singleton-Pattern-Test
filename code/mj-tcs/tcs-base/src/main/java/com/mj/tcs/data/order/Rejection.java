@@ -8,7 +8,7 @@
  */
 package com.mj.tcs.data.order;
 
-import com.mj.tcs.data.base.IdentifiableEntity;
+import com.mj.tcs.data.base.TCSObjectReference;
 import com.mj.tcs.data.model.Vehicle;
 
 import java.io.Serializable;
@@ -19,13 +19,14 @@ import java.io.Serializable;
  *
  * @author Stefan Walter (Fraunhofer IML)
  */
-public class Rejection extends IdentifiableEntity implements Serializable {
+public class Rejection
+        implements Serializable {
 
     /**
      * The vehicle that rejected the transport order.
      * May not be <code>null</code>.
      */
-    private final Vehicle vehicle;
+    private final TCSObjectReference<Vehicle> vehicle;
     /**
      * The reason given for rejecting the transport order.
      * May not be <code>null</code>.
@@ -43,7 +44,7 @@ public class Rejection extends IdentifiableEntity implements Serializable {
      * @param vehicle The vehicle that rejected the transport order.
      * @param reason The reason given for rejecting the transport order.
      */
-    public Rejection(Vehicle vehicle, String reason) {
+    public Rejection(TCSObjectReference<Vehicle> vehicle, String reason) {
         if (vehicle == null) {
             throw new NullPointerException("vehicle is null");
         }
@@ -79,7 +80,7 @@ public class Rejection extends IdentifiableEntity implements Serializable {
      *
      * @return The vehicle that rejected the transport order.
      */
-    public Vehicle getVehicle() {
+    public TCSObjectReference<Vehicle> getVehicle() {
         return vehicle;
     }
 }

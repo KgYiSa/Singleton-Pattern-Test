@@ -1,6 +1,6 @@
 package com.mj.tcs.algorithms;
 
-import com.mj.tcs.data.model.BaseLocation;
+import com.mj.tcs.data.model.Location;
 import com.mj.tcs.data.model.Vehicle;
 
 /**
@@ -16,5 +16,5 @@ public interface RechargeStrategy {
      * @param vehicle The vehicle to be recharged.
      * @return A suitable location for recharging the given vehicle.
      */
-    BaseLocation getRechargeLocation(Vehicle vehicle);
+    Location getRechargeLocation(Vehicle vehicle);
 }

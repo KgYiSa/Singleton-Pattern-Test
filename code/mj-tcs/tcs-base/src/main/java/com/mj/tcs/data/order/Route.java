@@ -8,7 +8,6 @@
  */
 package com.mj.tcs.data.order;
 
-import com.mj.tcs.data.base.IdentifiableEntity;
 import com.mj.tcs.data.model.Path;
 import com.mj.tcs.data.model.Point;
 import com.mj.tcs.data.model.Vehicle;
@@ -25,7 +24,8 @@ import java.util.Objects;
  *
  * @author Stefan Walter (Fraunhofer IML)
  */
-public final class Route extends IdentifiableEntity implements Serializable {
+public final class Route
+        implements Serializable {
 
     /**
      * The sequence of steps this route consists of, in the order they are to be
@@ -95,7 +95,8 @@ public final class Route extends IdentifiableEntity implements Serializable {
      * A single step in a route, consisting of a path to travel and a point that
      * is reached by travelling the path.
      */
-    public static final class Step extends IdentifiableEntity implements Serializable {
+    public static final class Step
+            implements Serializable {
 
         /**
          * The path to travel.

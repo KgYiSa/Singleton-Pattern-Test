@@ -34,7 +34,6 @@ public class ServiceGateway {
         Objects.requireNonNull(sceneDto);
         Objects.requireNonNull(clazz, "clazz is null");
 
-
         if (BlockDto.class.equals(clazz)) {
             return clazz.cast(sceneDto.getBlockDtoById(id));
         }

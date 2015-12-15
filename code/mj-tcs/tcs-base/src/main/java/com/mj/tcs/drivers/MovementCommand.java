@@ -1,6 +1,6 @@
 package com.mj.tcs.drivers;
 
-import com.mj.tcs.data.model.BaseLocation;
+import com.mj.tcs.data.model.Location;
 import com.mj.tcs.data.model.Point;
 import com.mj.tcs.data.order.DriveOrder;
 import com.mj.tcs.data.order.Route;
@@ -41,7 +41,7 @@ public final class MovementCommand implements AdapterCommand {
      * The location at which the operation is to be executed. (May be
      * <code>null</code> if <em>operation</em> is <code>NO_OPERATION</code>.)
      */
-    private final BaseLocation opLocation;
+    private final Location opLocation;
     /**
      * The destination position of the whole drive order.
      */
@@ -72,7 +72,7 @@ public final class MovementCommand implements AdapterCommand {
      */
     public MovementCommand(Route.Step newStep,
                            String newOperation,
-                           BaseLocation newOpLocation,
+                           Location newOpLocation,
                            Point newDestination,
                            String newDestOperation,
                            Map<String, String> newProperties) {
@@ -131,7 +131,7 @@ public final class MovementCommand implements AdapterCommand {
      *
      * @return The location at which the operation is to be executed.
      */
-    public BaseLocation getOpLocation() {
+    public Location getOpLocation() {
         return opLocation;
     }
 

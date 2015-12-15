@@ -8,8 +8,8 @@
  */
 package com.mj.tcs.data.order;
 
-import com.mj.tcs.data.base.IdentifiableEntity;
-import com.mj.tcs.data.model.BaseLocation;
+import com.mj.tcs.data.base.TCSObjectReference;
+import com.mj.tcs.data.model.Location;
 
 import java.io.Serializable;
 import java.util.*;
@@ -20,7 +20,8 @@ import java.util.*;
  *
  * @author Stefan Walter (Fraunhofer IML)
  */
-public final class DriveOrder extends IdentifiableEntity implements Serializable, Cloneable {
+public final class DriveOrder
+        implements Serializable, Cloneable {
 
     /**
      * This drive order's destination.
@@ -29,7 +30,7 @@ public final class DriveOrder extends IdentifiableEntity implements Serializable
     /**
      * A back-reference to the transport order this drive order belongs to.
      */
-    private TransportOrder transportOrder;
+    private TCSObjectReference<TransportOrder> transportOrder;
     /**
      * This drive order's route.
      */
@@ -65,7 +66,7 @@ public final class DriveOrder extends IdentifiableEntity implements Serializable
      *
      * @return A reference to the transport order this drive order belongs to.
      */
-    public TransportOrder getTransportOrder() {
+    public TCSObjectReference<TransportOrder> getTransportOrder() {
         return transportOrder;
     }
 
@@ -74,7 +75,7 @@ public final class DriveOrder extends IdentifiableEntity implements Serializable
      *
      * @param transportOrder A reference to the transport order.
      */
-    public void setTransportOrder(TransportOrder transportOrder) {
+    public void setTransportOrder(TCSObjectReference<TransportOrder> transportOrder) {
         this.transportOrder = transportOrder;
     }
 
@@ -125,7 +126,13 @@ public final class DriveOrder extends IdentifiableEntity implements Serializable
 
     @Override
     public DriveOrder clone() {
-        DriveOrder clone = (DriveOrder) super.clone();
+        DriveOrder clone;
+        try {
+            clone = (DriveOrder) super.clone();
+        }
+        catch (CloneNotSupportedException exc) {
+            throw new IllegalStateException("Unexpected exception", exc);
+        }
         clone.destination = destination.clone();
         return clone;
     }
@@ -134,7 +141,8 @@ public final class DriveOrder extends IdentifiableEntity implements Serializable
      * A pair consisting of a location and an operation to be performed at that
      * location.
      */
-    public static final class Destination extends IdentifiableEntity implements Serializable, Cloneable {
+    public static final class Destination
+            implements Serializable, Cloneable {
 
         /**
          * An operation constant for doing nothing.
@@ -152,7 +160,7 @@ public final class DriveOrder extends IdentifiableEntity implements Serializable
         /**
          * The destination location.
          */
-        private BaseLocation location;
+        private TCSObjectReference<Location> location;
         /**
          * The operation to be performed at the destination location.
          */
@@ -173,7 +181,7 @@ public final class DriveOrder extends IdentifiableEntity implements Serializable
          * the operation, for instance, or anything else that might be interesting
          * for the executing vehicle driver.
          */
-        public Destination(BaseLocation destLocation,
+        public Destination(TCSObjectReference<Location> destLocation,
                            String destOperation,
                            Map<String, String> destProperties) {
             location = Objects.requireNonNull(destLocation, "destLocation is null");
@@ -190,7 +198,7 @@ public final class DriveOrder extends IdentifiableEntity implements Serializable
          * @param destOperation The operation to be performed at the destination
          * location.
          */
-        public Destination(BaseLocation destLocation,
+        public Destination(TCSObjectReference<Location> destLocation,
                            String destOperation) {
             this(destLocation, destOperation, new HashMap<String, String>());
         }
@@ -200,7 +208,7 @@ public final class DriveOrder extends IdentifiableEntity implements Serializable
          *
          * @return The destination location.
          */
-        public BaseLocation getLocation() {
+        public TCSObjectReference<Location> getLocation() {
             return location;
         }
 
@@ -242,7 +250,13 @@ public final class DriveOrder extends IdentifiableEntity implements Serializable
 
         @Override
         public Destination clone() {
-            Destination clone = (Destination) super.clone();
+            Destination clone;
+            try {
+                clone = (Destination) super.clone();
+            }
+            catch (CloneNotSupportedException exc) {
+                throw new IllegalStateException("Unexpected exception", exc);
+            }
             clone.location = location.clone();
             return clone;
         }
@@ -262,49 +276,27 @@ public final class DriveOrder extends IdentifiableEntity implements Serializable
          * A DriveOrder's initial state, indicating it being still untouched/not
          * being processed.
          */
-        PRISTINE("PRISTINE"),
+        PRISTINE,
         /**
          * Indicates a DriveOrder is part of a TransportOrder.
          */
-        ACTIVE("ACTIVE"),
+        ACTIVE,
         /**
          * Indicates this drive order being processed at the moment.
          */
-        TRAVELLING("TRAVELLING"),
+        TRAVELLING,
         /**
          * Indicates the vehicle processing an order is currently executing an
          * operation.
          */
-        OPERATING("OPERATING"),
+        OPERATING,
         /**
          * Marks a DriveOrder as successfully completed.
          */
-        FINISHED("FINISHED"),
+        FINISHED,
         /**
          * Marks a DriveOrder as failed.
          */
-        FAILED("FAILED");
-
-        private String text;
-
-        State(String text) {
-            this.text = text;
-        }
-
-        @Override
-        public String toString() {
-            return this.text;
-        }
-
-        public static State fromString(String text) {
-            Optional<State> type = Arrays.stream(State.values())
-                    .filter(s -> s.toString().compareToIgnoreCase(text) == 0).findFirst();
-
-            if (type.isPresent()) {
-                return type.get();
-            }
-
-            throw new IllegalArgumentException("The Point.Type enum type is no recognizable [text=" + text + "]");
-        }
+        FAILED
     }
 }

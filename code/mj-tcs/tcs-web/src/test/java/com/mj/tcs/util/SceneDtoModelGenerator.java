@@ -1,6 +1,7 @@
 package com.mj.tcs.util;
 
 import com.mj.tcs.api.v1.dto.*;
+import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.api.v1.dto.base.EntityAuditorDto;
 import com.mj.tcs.api.v1.dto.base.TripleDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class SceneDtoModelGenerator {
 
         TripleDto tripleDto = new TripleDto(new Random().nextInt(1000),
                 new Random().nextInt(1000), 0);
-        tripleDto.setAuditorDto(createAuditor());
+//        tripleDto.setAuditorDto(createAuditor());
 
         String name = String.format(POINT_NAME_FORMAT, id);
 
@@ -51,7 +52,8 @@ public class SceneDtoModelGenerator {
         pointDto.setDisplayPositionY(tripleDto.getY());
         pointDto.setLabelOffsetX(0L);
         pointDto.setLabelOffsetY(20L);
-        
+        pointDto.addProperty("key", "value");
+
         pointDtos.add(pointDto);
 
         return pointDto;
@@ -74,6 +76,7 @@ public class SceneDtoModelGenerator {
         pathDto.setLocked(false);
         pathDto.setMaxReverseVelocity(1);
         pathDto.setMaxVelocity(1);
+        pathDto.addProperty("key", "value");
 
         srcPointDto.addOutgoingPath(pathDto);
         dstPointDto.addIncomingPath(pathDto);
@@ -91,7 +94,7 @@ public class SceneDtoModelGenerator {
         locationDto.setAuditorDto(createAuditor());
         locationDto.setName(name);
         TripleDto newTripleDto = new TripleDto();
-        newTripleDto.setAuditorDto(createAuditor());
+//        newTripleDto.setAuditorDto(createAuditor());
         newTripleDto.setX(100);
         newTripleDto.setY(100);
         newTripleDto.setZ(0L);
@@ -101,6 +104,7 @@ public class SceneDtoModelGenerator {
         locationDto.setLabelOffsetX(0L);
         locationDto.setLabelOffsetY(20L);
         locationDto.setLocationTypeDto(locationTypeDto);
+        locationDto.addProperty("key", "value");
 
         // link
         LocationLinkDto linkDto = new LocationLinkDto(locationDto, pointDto);
@@ -123,8 +127,29 @@ public class SceneDtoModelGenerator {
         locationTypeDto.setName(name);
         locationTypeDto.addAllowedOperation("Puts in storage");
         locationTypeDto.addAllowedOperation("Stock removal");
+        locationTypeDto.addProperty("key", "value");
 
         return locationTypeDto;
+    }
+
+    public synchronized BlockDto createBlockDto(Set<BaseEntityDto> dtos) {
+        Objects.requireNonNull(dtos);
+
+        BlockDto blockDto = new BlockDto();
+        long id = new Random().nextInt(10000);
+        String name = String.format("test_block_%d", id);
+
+        blockDto.setAuditorDto(createAuditor());
+//        setId(createPathCommand, id);
+        blockDto.setName(name);
+        blockDto.addProperty("key", "value");
+
+
+        for (BaseEntityDto dto : dtos) {
+            blockDto.addMember(dto);
+        }
+
+        return blockDto;
     }
 
     public synchronized SceneDto createSceneDto() {
@@ -137,13 +162,12 @@ public class SceneDtoModelGenerator {
         sceneDto.setName(newSceneName);
 
         // Points & Paths
-        for (int i=0; i< 5; i++) {
+        for (int i=0; i< 10; i++) {
             createPointDto();
 
             if (i != 0 && i % 2 == 1) {
                 PointDto sourcePoint = (PointDto) pointDtos.toArray()[i-1];
                 PointDto destinationPoint = (PointDto) pointDtos.toArray()[i];
-
                 createPathDto(sourcePoint, destinationPoint);
             }
         }
@@ -151,18 +175,30 @@ public class SceneDtoModelGenerator {
         sceneDto.setPointDtos(pointDtos);
         sceneDto.setPathDtos(pathDtos);
 
-//        LocationTypeDto locationTypeDto = createLocationTypeDto();
-//        sceneDto.addLocationTypeDto(locationTypeDto);
-//
-//        LocationDto locationDto = createLocationDto((PointDto) pointDtos.toArray()[0], locationTypeDto);
-//        sceneDto.addLocationDto(locationDto);
-//
-//        List<PointDto> hops = new ArrayList<>();
-//        hops.add(((PointDto) pointDtos.toArray()[0]));
-//        hops.add(((PointDto) pointDtos.toArray()[1]));
-//        hops.add(((PointDto) pointDtos.toArray()[2]));
-//        StaticRouteDto staticRouteDto = createStaticRouteDto(hops);
-//        sceneDto.addStaticRouteDto(staticRouteDto);
+        LocationTypeDto locationTypeDto = createLocationTypeDto();
+        sceneDto.addLocationTypeDto(locationTypeDto);
+
+        LocationDto locationDto = createLocationDto((PointDto) pointDtos.toArray()[0], locationTypeDto);
+        sceneDto.addLocationDto(locationDto);
+
+        Set<BaseEntityDto> blockElements = new LinkedHashSet<>();
+        blockElements.add(((PointDto) pointDtos.toArray()[0]));
+        blockElements.add(((PointDto) pointDtos.toArray()[1]));
+        blockElements.add(((PathDto) pathDtos.toArray()[0]));
+        blockElements.add(locationDto);
+        sceneDto.addBlockDto(createBlockDto(blockElements));
+
+        List<PointDto> hops = new ArrayList<>();
+        hops.add(((PointDto) pointDtos.toArray()[0]));
+        hops.add(((PointDto) pointDtos.toArray()[1]));
+        hops.add(((PointDto) pointDtos.toArray()[2]));
+        StaticRouteDto staticRouteDto = createStaticRouteDto(hops);
+        sceneDto.addStaticRouteDto(staticRouteDto);
+
+        VehicleDto vehicleDto = createVehicleDto();
+        sceneDto.addVehicleDto(vehicleDto);
+
+        sceneDto.addProperty("key", "value");
 
         return sceneDto;
     }
@@ -206,7 +242,7 @@ public class SceneDtoModelGenerator {
     public synchronized VehicleDto createVehicleDto() {
         String newVehicleName = String.format(VEHICLE_NAME_FORMAT,
                 new Random().nextInt(10000));
-        System.out.println(newVehicleName);
+//        System.out.println(newVehicleName);
 
         VehicleDto dto = new VehicleDto();
         dto.setAuditorDto(createAuditor());

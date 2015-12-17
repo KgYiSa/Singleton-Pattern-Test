@@ -2,19 +2,17 @@ package com.mj.tcs.api.v1.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoCollection;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
-import com.mj.tcs.api.v1.dto.converter.value.converter.*;
-import com.mj.tcs.exception.TcsServerRuntimeException;
+import com.mj.tcs.api.v1.dto.base.EntityProperty;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Wang Zhen
@@ -28,55 +26,67 @@ public class SceneDto extends BaseEntityDto {
     @Column(unique = true, nullable = false)
     private String name;
 
+    @JsonSerialize(as = LinkedHashSet.class)
+    @JsonDeserialize(as = LinkedHashSet.class)
+    @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
+    @CollectionTable(name = "tcs_model_scene_properties", joinColumns = @JoinColumn(
+            nullable = false, name = "model_id", referencedColumnName = "id"))
+    private Set<EntityProperty> properties = new LinkedHashSet<>();
+
     @JsonProperty("points")
-    @DtoCollection(value = "pointDtos",
-                    entityCollectionClass = HashSet.class,
-                    dtoCollectionClass = HashSet.class,
-                    dtoBeanKey = "PointDto",
-                    entityBeanKeys = {"PointDto"},
-                    dtoToEntityMatcher = PointDto2PointMatcher.class)
+    @JsonSerialize(as = LinkedHashSet.class)
+    @JsonDeserialize(as = LinkedHashSet.class)
     @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
+    @OrderBy(value = "name ASC")
     private Set<PointDto> pointDtos;
 
     @JsonProperty("paths")
-    @DtoCollection(value = "pathDtos",
-            entityCollectionClass = HashSet.class,
-            dtoCollectionClass = HashSet.class,
-            dtoBeanKey = "PathDto",
-            entityBeanKeys = {"Path"},
-            dtoToEntityMatcher = PathDto2PathMatcher.class)
+    @JsonSerialize(as = LinkedHashSet.class)
+    @JsonDeserialize(as = LinkedHashSet.class)
     @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
+    @OrderBy(value = "name ASC")
     private Set<PathDto> pathDtos;
 
-    @JsonProperty("locationDtos")
-    @DtoCollection(value = "locationDtos",
-            entityCollectionClass = HashSet.class,
-            dtoCollectionClass = HashSet.class,
-            dtoBeanKey = "LocationDto",
-            entityBeanKeys = {"Location"},
-            dtoToEntityMatcher = LocationDto2LocationMatcher.class)
+    @JsonProperty("locations")
+    @JsonSerialize(as = LinkedHashSet.class)
+    @JsonDeserialize(as = LinkedHashSet.class)
     @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
+    @OrderBy(value = "name ASC")
     private Set<LocationDto> locationDtos;
 
     @JsonProperty("location_types")
-    @DtoCollection(value = "locationTypeDtos",
-            entityCollectionClass = HashSet.class,
-            dtoCollectionClass = HashSet.class,
-            dtoBeanKey = "LocationTypeDto",
-            entityBeanKeys = {"LocationType"},
-            dtoToEntityMatcher = LocationTypeDto2LocationTypeMatcher.class)
+    @JsonSerialize(as = LinkedHashSet.class)
+    @JsonDeserialize(as = LinkedHashSet.class)
     @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
+    @OrderBy(value = "name ASC")
     private Set<LocationTypeDto> locationTypeDtos;
 
-    @JsonProperty("static_routes")
-    @DtoCollection(value = "staticRouteDtos",
-            entityCollectionClass = HashSet.class,
-            dtoCollectionClass = HashSet.class,
-            dtoBeanKey = "StaticRouteDto",
-            entityBeanKeys = {"StaticRoute"},
-            dtoToEntityMatcher = StaticRouteDto2StaticRouteMatcher.class)
+    @JsonProperty("blocks")
+    @JsonSerialize(as = LinkedHashSet.class)
+    @JsonDeserialize(as = LinkedHashSet.class)
     @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
+    @OrderBy(value = "name ASC")
+    private Set<BlockDto> blockDtos;
+
+    @JsonProperty("static_routes")
+    @JsonSerialize(as = LinkedHashSet.class)
+    @JsonDeserialize(as = LinkedHashSet.class)
+    @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
+    @OrderBy(value = "name ASC")
     private Set<StaticRouteDto> staticRouteDtos;
+
+    @JsonProperty("vehicles")
+    @JsonSerialize(as = LinkedHashSet.class)
+    @JsonDeserialize(as = LinkedHashSet.class)
+//    @DtoCollection(value = "vehicleDtos",
+//            entityCollectionClass = HashSet.class,
+//            dtoCollectionClass = HashSet.class,
+//            dtoBeanKey = "VehicleDto",
+//            entityBeanKeys = {"Vehicle"},
+//            dtoToEntityMatcher = StaticRouteDto2StaticRouteMatcher.class)
+    @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
+    @OrderBy(value = "name ASC")
+    private Set<VehicleDto> vehicleDtos;
 
     public String getName() {
         return name;
@@ -84,6 +94,52 @@ public class SceneDto extends BaseEntityDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * Add property. It can be used to put any unknown property during deSerialization.
+     *
+     * Note: If value is null, then remove the property.
+     *
+     * @param name
+     * @param value
+     */
+    public void addProperty(String name, String value) {
+        Optional<EntityProperty> propertyOptional = properties.stream().filter(p -> p.getName().equals(name)).findFirst();
+        if (propertyOptional.isPresent()) {
+            if (value == null) {
+                properties.remove(propertyOptional.get());
+                return;
+            } else {
+                propertyOptional.get().setValue(Objects.requireNonNull(value));
+            }
+        } else {
+            if (value == null) {
+                return;
+            } else {
+                EntityProperty property = new EntityProperty();
+                property.setName(Objects.requireNonNull(name));
+                property.setValue(Objects.requireNonNull(value));
+                properties.add(property);
+            }
+        }
+    }
+
+    public String getProperty(String name) {
+        Optional<EntityProperty> propertyOptional = properties.stream().filter(p -> p.getName().equals(name)).findFirst();
+        if (propertyOptional.isPresent()) {
+            return propertyOptional.get().getValue();
+        }
+
+        return null;
+    }
+
+    public void setProperties(Set<EntityProperty> properties) {
+        this.properties = properties;
+    }
+
+    public Set<EntityProperty> getProperties() {
+        return properties;
     }
 
     public Set<PointDto> getPointDtos() {
@@ -94,20 +150,31 @@ public class SceneDto extends BaseEntityDto {
         this.pointDtos = pointDtos;
     }
 
+    public PointDto getPointDtoByUUID(String uuid) {
+        if (pointDtos == null || uuid == null) {
+            return null;
+        }
+        Optional<PointDto> pointDtoOp = pointDtos.stream().filter(p -> uuid.equals(p.getUUID())).findFirst();
+        if (pointDtoOp.isPresent()) {
+            return pointDtoOp.get();
+        }
+        return null;
+    }
+
     public PointDto getPointDtoById(long id) {
         if (pointDtos == null) {
             return null;
         }
-        Optional<PointDto> pointDto = pointDtos.stream().filter(l -> l.getId() == id).findFirst();
-        if (pointDto.isPresent()) {
-            return pointDto.get();
+        Optional<PointDto> pointDtoOp = pointDtos.stream().filter(l -> l.getId() == id).findFirst();
+        if (pointDtoOp.isPresent()) {
+            return pointDtoOp.get();
         }
         return null;
     }
 
     public boolean addPointDto(PointDto dto) {
         if (getPointDtos() == null) {
-            this.pointDtos = new HashSet<>();
+            this.pointDtos = new LinkedHashSet<>();
         }
 
         return this.pointDtos.add(dto);
@@ -123,7 +190,7 @@ public class SceneDto extends BaseEntityDto {
     public boolean removePointById(long id) {
         PointDto point = getPointDtoById(id);
         if (point == null) {
-            throw new NullPointerException("path can not be found by id " + id);
+            throw new NullPointerException("path can not be found by uuid " + id);
         }
 
         return removePoint(point);
@@ -139,19 +206,30 @@ public class SceneDto extends BaseEntityDto {
 
     public boolean addPathDto(PathDto dto) {
         if (getPathDtos() == null) {
-            this.pathDtos = new HashSet<>();
+            this.pathDtos = new LinkedHashSet<>();
         }
 
         return this.pathDtos.add(dto);
+    }
+
+    public PathDto getPathDtoByUUID(String uuid) {
+        if (pathDtos == null || uuid == null) {
+            return null;
+        }
+        Optional<PathDto> pathDtoOp = pathDtos.stream().filter(l -> uuid.equals(l.getUUID())).findFirst();
+        if (pathDtoOp.isPresent()) {
+            return pathDtoOp.get();
+        }
+        return null;
     }
 
     public PathDto getPathDtoById(long id) {
         if (pathDtos == null) {
             return null;
         }
-        Optional<PathDto> pathDto = pathDtos.stream().filter(l -> l.getId() == id).findFirst();
-        if (pathDto.isPresent()) {
-            return pathDto.get();
+        Optional<PathDto> pathDtoOp = pathDtos.stream().filter(l -> l.getId() == id).findFirst();
+        if (pathDtoOp.isPresent()) {
+            return pathDtoOp.get();
         }
         return null;
     }
@@ -166,7 +244,7 @@ public class SceneDto extends BaseEntityDto {
     public boolean removePathById(long id) {
         PathDto path = getPathDtoById(id);
         if (path == null) {
-            throw new NullPointerException("path can not be found by id " + id);
+            throw new NullPointerException("path can not be found by uuid " + id);
         }
 
         return removePathDto(path);
@@ -182,7 +260,7 @@ public class SceneDto extends BaseEntityDto {
 
     public boolean addLocationTypeDto(LocationTypeDto dto) {
         if (getLocationTypeDtos() == null) {
-            this.locationTypeDtos = new HashSet<>();
+            this.locationTypeDtos = new LinkedHashSet<>();
         }
 
         return this.locationTypeDtos.add(dto);
@@ -192,7 +270,18 @@ public class SceneDto extends BaseEntityDto {
         if (this.locationTypeDtos == null) {
             return false;
         }
-        return this.locationTypeDtos.remove(Objects.requireNonNull(locationTypeDtos, "locationTypeDtos to removed is null"));
+        return this.locationTypeDtos.remove(Objects.requireNonNull(locationTypeDto, "locationTypeDto to removed is null"));
+    }
+
+    public LocationTypeDto getLocationTypeDtoByUUID(String uuid) {
+        if (locationTypeDtos == null || uuid == null) {
+            return null;
+        }
+        Optional<LocationTypeDto> locationTypeDtoOp = locationTypeDtos.stream().filter(l -> uuid.equals(l.getUUID())).findFirst();
+        if (locationTypeDtoOp.isPresent()) {
+            return locationTypeDtoOp.get();
+        }
+        return null;
     }
 
     public LocationTypeDto getLocationTypeDtoById(long id) {
@@ -207,14 +296,25 @@ public class SceneDto extends BaseEntityDto {
         return null;
     }
 
+    public LocationDto getLocationDtoByUUID(String uuid) {
+        if (locationDtos == null || uuid == null) {
+            return null;
+        }
+        Optional<LocationDto> locationDtoOp = locationDtos.stream().filter(l -> uuid.equals(l.getUUID())).findFirst();
+        if (locationDtoOp.isPresent()) {
+            return locationDtoOp.get();
+        }
+        return null;
+    }
+
     public LocationDto getLocationDtoById(long id) {
         if (locationDtos == null) {
             return null;
         }
 
-        Optional<LocationDto> locationDto = locationDtos.stream().filter(l -> l.getId() == id).findFirst();
-        if (locationDto.isPresent()) {
-            return locationDto.get();
+        Optional<LocationDto> locationDtoOp = locationDtos.stream().filter(l -> l.getId() == id).findFirst();
+        if (locationDtoOp.isPresent()) {
+            return locationDtoOp.get();
         }
         return null;
     }
@@ -234,6 +334,60 @@ public class SceneDto extends BaseEntityDto {
         return this.locationDtos.remove(Objects.requireNonNull(location, "location to removed is null"));
     }
 
+    public boolean addLocationDto(LocationDto dto) {
+        if (getLocationDtos() == null) {
+            this.locationDtos = new LinkedHashSet<>();
+        }
+
+        return this.locationDtos.add(dto);
+    }
+
+    public Set<BlockDto> getBlockDtos() {
+        return blockDtos;
+    }
+
+    public void setBlockDtos(Set<BlockDto> blockDtos) {
+        this.blockDtos = blockDtos;
+    }
+
+    public boolean addBlockDto(BlockDto dto) {
+        if (getBlockDtos() == null) {
+            this.blockDtos = new LinkedHashSet<>();
+        }
+
+        return this.blockDtos.add(dto);
+    }
+
+    public boolean removeBlockDto(BlockDto blockDto) {
+        if (this.blockDtos == null) {
+            return false;
+        }
+        return this.blockDtos.remove(Objects.requireNonNull(blockDto, "blockDto to removed is null"));
+    }
+
+    public BlockDto getBlockDtoByUUID(String uuid) {
+        if (blockDtos == null || uuid == null) {
+            return null;
+        }
+        Optional<BlockDto> blockDtoOp = blockDtos.stream().filter(b -> uuid.equals(b.getUUID())).findFirst();
+        if (blockDtoOp.isPresent()) {
+            return blockDtoOp.get();
+        }
+        return null;
+    }
+
+    public BlockDto getBlockDtoById(long id) {
+        if (blockDtos == null) {
+            return null;
+        }
+
+        Optional<BlockDto> blockDtoOp = blockDtos.stream().filter(b -> b.getId() == id).findFirst();
+        if (blockDtoOp.isPresent()) {
+            return blockDtoOp.get();
+        }
+        return null;
+    }
+
     public Set<StaticRouteDto> getStaticRouteDtos() {
         return staticRouteDtos;
     }
@@ -242,7 +396,18 @@ public class SceneDto extends BaseEntityDto {
         if (this.staticRouteDtos == null) {
             return false;
         }
-        return this.staticRouteDtos.remove(Objects.requireNonNull(route, "route to removed is null"));
+        return this.staticRouteDtos.remove(Objects.requireNonNull(route, "vehicleDto to removed is null"));
+    }
+
+    public StaticRouteDto getStaticRouteDtoByUUID(String uuid) {
+        if (staticRouteDtos == null || uuid == null) {
+            return null;
+        }
+        Optional<StaticRouteDto> routeDtoOp = staticRouteDtos.stream().filter(r -> uuid.equals(r.getUUID())).findFirst();
+        if (routeDtoOp.isPresent()) {
+            return routeDtoOp.get();
+        }
+        return null;
     }
 
     public StaticRouteDto getStaticRouteDtoById(long id) {
@@ -250,9 +415,9 @@ public class SceneDto extends BaseEntityDto {
             return null;
         }
 
-        Optional<StaticRouteDto> staticRouteDto = staticRouteDtos.stream().filter(sr -> sr.getId() == id).findFirst();
-        if (staticRouteDto.isPresent()) {
-            return staticRouteDto.get();
+        Optional<StaticRouteDto> staticRouteDtoOp = staticRouteDtos.stream().filter(sr -> sr.getId() == id).findFirst();
+        if (staticRouteDtoOp.isPresent()) {
+            return staticRouteDtoOp.get();
         }
         return null;
     }
@@ -263,17 +428,55 @@ public class SceneDto extends BaseEntityDto {
 
     public boolean addStaticRouteDto(StaticRouteDto dto) {
         if (getStaticRouteDtos() == null) {
-            this.staticRouteDtos = new HashSet<>();
+            this.staticRouteDtos = new LinkedHashSet<>();
         }
 
         return this.staticRouteDtos.add(dto);
     }
 
-    public boolean addLocationDto(LocationDto dto) {
-        if (getLocationDtos() == null) {
-            this.locationDtos = new HashSet<>();
+    public Set<VehicleDto> getVehicleDtos() {
+        return vehicleDtos;
+    }
+
+    public boolean removeVehicleDto(VehicleDto vehicleDto) {
+        if (this.vehicleDtos == null) {
+            return false;
+        }
+        return this.vehicleDtos.remove(Objects.requireNonNull(vehicleDto, "vehicleDto to removed is null"));
+    }
+
+    public VehicleDto getVehicleDtoByUUID(String uuid) {
+        if (vehicleDtos == null || uuid == null) {
+            return null;
+        }
+        Optional<VehicleDto> vehicleDtoOp = vehicleDtos.stream().filter(v -> uuid.equals(v.getUUID())).findFirst();
+        if (vehicleDtoOp.isPresent()) {
+            return vehicleDtoOp.get();
+        }
+        return null;
+    }
+
+    public VehicleDto getVehicleDtoById(long id) {
+        if (vehicleDtos == null) {
+            return null;
         }
 
-        return this.locationDtos.add(dto);
+        Optional<VehicleDto> vehicleDtoOp = vehicleDtos.stream().filter(v -> v.getId() == id).findFirst();
+        if (vehicleDtoOp.isPresent()) {
+            return vehicleDtoOp.get();
+        }
+        return null;
+    }
+
+    public void setVehicleDtos(Set<VehicleDto> vehicleDtos) {
+        this.vehicleDtos = vehicleDtos;
+    }
+
+    public boolean addVehicleDto(VehicleDto dto) {
+        if (getVehicleDtos() == null) {
+            this.vehicleDtos = new LinkedHashSet<>();
+        }
+
+        return this.vehicleDtos.add(dto);
     }
 }

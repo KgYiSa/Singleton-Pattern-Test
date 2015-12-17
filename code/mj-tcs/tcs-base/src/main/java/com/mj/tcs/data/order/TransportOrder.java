@@ -8,12 +8,11 @@
  */
 package com.mj.tcs.data.order;
 
-import com.mj.tcs.data.base.BaseEntity;
-import com.mj.tcs.data.model.Scene;
+import com.mj.tcs.data.base.TCSObject;
+import com.mj.tcs.data.base.TCSObjectReference;
 import com.mj.tcs.data.model.Vehicle;
 import com.mj.tcs.util.UniqueTimestampGenerator;
 
-import javax.xml.bind.annotation.XmlType;
 import java.io.Serializable;
 import java.util.*;
 import java.util.logging.Logger;
@@ -35,7 +34,9 @@ import java.util.logging.Logger;
  *
  * @author Stefan Walter (Fraunhofer IML)
  */
-public final class TransportOrder extends BaseEntity implements Serializable, Cloneable {
+public final class TransportOrder
+        extends TCSObject<TransportOrder>
+        implements Serializable, Cloneable {
 
     /**
      * A comparator for sorting transport orders by their priority, with those
@@ -52,7 +53,6 @@ public final class TransportOrder extends BaseEntity implements Serializable, Cl
      */
     public static final Comparator<TransportOrder> ageComparator =
             new AgeComparator();
-
     /**
      * The timestamp generator for order creation times.
      */
@@ -63,14 +63,11 @@ public final class TransportOrder extends BaseEntity implements Serializable, Cl
      */
     private static final Logger log =
             Logger.getLogger(TransportOrder.class.getName());
-
-    private Scene scene;
-
     /**
      * A set of TransportOrders that must have been finished before this one may
      * be processed.
      */
-    private Set<TransportOrder> dependencies =
+    private Set<TCSObjectReference<TransportOrder>> dependencies =
             new LinkedHashSet<>();
     /**
      * A list of rejections for this transport order.
@@ -110,36 +107,34 @@ public final class TransportOrder extends BaseEntity implements Serializable, Cl
      * order. If this order is free to be processed by any vehicle, this is
      * <code>null</code>.
      */
-    private Vehicle intendedVehicle;
+    private TCSObjectReference<Vehicle> intendedVehicle;
     /**
      * A reference to the vehicle currently processing this transport order. If
      * this transport order is not being processed at the moment, this is
      * <code>null</code>.
      */
-    private Vehicle processingVehicle;
+    private TCSObjectReference<Vehicle> processingVehicle;
     /**
      * The order sequence this transport order belongs to. May be
      * <code>null</code> in case this order isn't part of any sequence.
      */
-    private OrderSequence wrappingSequence;
+    private TCSObjectReference<OrderSequence> wrappingSequence;
     /**
      * Whether this order is dispensable (may be withdrawn automatically).
      */
     private boolean dispensable;
 
-    public TransportOrder() {
-        creationTime = timestampGenerator.getNextTimestamp();
-    }
-
     /**
      * Creates a new TransportOrder.
      *
+     * @param objectID This transport order's ID.
      * @param name This transport order's name.
      * @param destinations A list of destinations that are to be travelled to
      * when processing this transport order.
      */
-    public TransportOrder(String name,
+    public TransportOrder(int objectID, String name,
                           List<DriveOrder.Destination> destinations) {
+        super(objectID, name);
         if (destinations == null) {
             throw new NullPointerException("destinations is null");
         }
@@ -148,24 +143,13 @@ public final class TransportOrder extends BaseEntity implements Serializable, Cl
         }
         for (DriveOrder.Destination curDest : destinations) {
             DriveOrder driveOrder = new DriveOrder(curDest);
-            driveOrder.setTransportOrder(this);
+            driveOrder.setTransportOrder(this.getReference());
             futureDriveOrders.add(driveOrder);
         }
-
         creationTime = timestampGenerator.getNextTimestamp();
     }
 
     // Methods not declared in any interface start here
-
-
-    public Scene getScene() {
-        return scene;
-    }
-
-    public void setScene(Scene scene) {
-        this.scene = scene;
-    }
-
     /**
      * Returns this transport order's current state.
      *
@@ -209,6 +193,15 @@ public final class TransportOrder extends BaseEntity implements Serializable, Cl
     }
 
     /**
+     * Returns this transport order's creation time.
+     *
+     * @return This transport order's creation time.
+     */
+    public long getCreationTime() {
+        return creationTime;
+    }
+
+    /**
      * Returns this transport order's deadline. If the value of transport order's
      * deadline was not changed, the initial value <code>Long.MAX_VALUE</code>
      * is returned.
@@ -227,15 +220,6 @@ public final class TransportOrder extends BaseEntity implements Serializable, Cl
      */
     public void setDeadline(long newDeadline) {
         deadline = newDeadline;
-    }
-
-    /**
-     * Returns this transport order's creation time.
-     *
-     * @return This transport order's creation time.
-     */
-    public long getCreationTime() {
-        return creationTime;
     }
 
     /**
@@ -259,7 +243,7 @@ public final class TransportOrder extends BaseEntity implements Serializable, Cl
      * transport order. If this order is free to be processed by any vehicle,
      * <code>null</code> is returned.
      */
-    public Vehicle getIntendedVehicle() {
+    public TCSObjectReference<Vehicle> getIntendedVehicle() {
         return intendedVehicle;
     }
 
@@ -269,7 +253,7 @@ public final class TransportOrder extends BaseEntity implements Serializable, Cl
      *
      * @param vehicle The reference to the vehicle intended to process this order.
      */
-    public void setIntendedVehicle(Vehicle vehicle) {
+    public void setIntendedVehicle(TCSObjectReference<Vehicle> vehicle) {
         intendedVehicle = vehicle;
     }
 
@@ -281,7 +265,7 @@ public final class TransportOrder extends BaseEntity implements Serializable, Cl
      * order. If this transport order is not currently being processed,
      * <code>null</code> is returned.
      */
-    public Vehicle getProcessingVehicle() {
+    public TCSObjectReference<Vehicle> getProcessingVehicle() {
         return processingVehicle;
     }
 
@@ -291,7 +275,7 @@ public final class TransportOrder extends BaseEntity implements Serializable, Cl
      * @param vehicle The reference to the vehicle currently processing this
      * transport order.
      */
-    public void setProcessingVehicle(Vehicle vehicle) {
+    public void setProcessingVehicle(TCSObjectReference<Vehicle> vehicle) {
         processingVehicle = vehicle;
     }
 
@@ -300,7 +284,7 @@ public final class TransportOrder extends BaseEntity implements Serializable, Cl
      *
      * @return The set of transport orders this order depends on.
      */
-    public Set<TransportOrder> getDependencies() {
+    public Set<TCSObjectReference<TransportOrder>> getDependencies() {
         return dependencies;
     }
 
@@ -312,7 +296,7 @@ public final class TransportOrder extends BaseEntity implements Serializable, Cl
      * @return <code>true</code> if, and only if, the given transport order was
      * not already a dependency for this one.
      */
-    public boolean addDependency(TransportOrder newDep) {
+    public boolean addDependency(TCSObjectReference<TransportOrder> newDep) {
         if (newDep == null) {
             throw new NullPointerException("newDep is null");
         }
@@ -327,7 +311,7 @@ public final class TransportOrder extends BaseEntity implements Serializable, Cl
      * @return <code>true</code> if, and only if, the given transport order was
      * a dependency for this one.
      */
-    public boolean removeDependency(TransportOrder rmDep) {
+    public boolean removeDependency(TCSObjectReference<TransportOrder> rmDep) {
         if (rmDep == null) {
             throw new NullPointerException("rmDep is null");
         }
@@ -370,7 +354,7 @@ public final class TransportOrder extends BaseEntity implements Serializable, Cl
      * @return A list of DriveOrders that still need to be processed.
      */
     public List<DriveOrder> getFutureDriveOrders() {
-        return futureDriveOrders;
+        return new ArrayList<>(futureDriveOrders);
     }
 
     /**
@@ -507,7 +491,7 @@ public final class TransportOrder extends BaseEntity implements Serializable, Cl
      * @return The order sequence this order belongs to, or <code>null</code>, if
      * it doesn't belong to any sequence.
      */
-    public OrderSequence getWrappingSequence() {
+    public TCSObjectReference<OrderSequence> getWrappingSequence() {
         return wrappingSequence;
     }
 
@@ -518,7 +502,7 @@ public final class TransportOrder extends BaseEntity implements Serializable, Cl
      * <code>null</code> to indicate that this order does not belong to any
      * sequence.
      */
-    public void setWrappingSequence(OrderSequence sequence) {
+    public void setWrappingSequence(TCSObjectReference<OrderSequence> sequence) {
         wrappingSequence = sequence;
     }
 
@@ -544,7 +528,7 @@ public final class TransportOrder extends BaseEntity implements Serializable, Cl
     public TransportOrder clone() {
         TransportOrder clone = (TransportOrder) super.clone();
         clone.dependencies = new LinkedHashSet<>();
-        for (TransportOrder curRef : dependencies) {
+        for (TCSObjectReference<TransportOrder> curRef : dependencies) {
             clone.dependencies.add(curRef.clone());
         }
         clone.rejections = new LinkedList<>();
@@ -565,7 +549,6 @@ public final class TransportOrder extends BaseEntity implements Serializable, Cl
     /**
      * This enumeration defines the various states a transport order may be in.
      */
-    @XmlType(name = "transportOrderState")
     public static enum State {
 
         /**
@@ -649,11 +632,7 @@ public final class TransportOrder extends BaseEntity implements Serializable, Cl
                 result = 1;
             }
             else {
-                long ageDifference = 0L;
-                if (o1.getAuditor() != null && o2.getAuditor() != null) {
-                    ageDifference = o1.getAuditor().getCreatedAt().getTime() - o2.getAuditor().getCreatedAt().getTime();
-                }
-
+                long ageDifference = o1.getCreationTime() - o2.getCreationTime();
                 if (ageDifference < 0) {
                     result = -1;
                 }
@@ -684,10 +663,7 @@ public final class TransportOrder extends BaseEntity implements Serializable, Cl
         @Override
         public int compare(TransportOrder o1, TransportOrder o2) {
             int result;
-            long ageDifference = 0L;
-            if (o1.getAuditor() != null && o2.getAuditor() != null) {
-                ageDifference = o1.getAuditor().getCreatedAt().getTime() - o2.getAuditor().getCreatedAt().getTime();
-            }
+            long ageDifference = o1.getCreationTime() - o2.getCreationTime();
             if (ageDifference < 0) {
                 result = -1;
             }
@@ -695,7 +671,7 @@ public final class TransportOrder extends BaseEntity implements Serializable, Cl
                 result = 1;
             }
             else {
-                long idDifference = o1.getId() - o2.getId();
+                int idDifference = o1.getId() - o2.getId();
                 if (idDifference < 0) {
                     result = -1;
                 }

@@ -8,6 +8,7 @@ package com.mj.tcs.api.v1.dto;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -16,7 +17,7 @@ import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 
 import javax.persistence.*;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -25,13 +26,13 @@ import java.util.Set;
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
 @Entity(name = "tcs_model_location_link")
-//@Table(name = "tcs_model_location_link", uniqueConstraints =
-//@UniqueConstraint(columnNames = {"name", "scene"})
-//)
+@Table(name = "tcs_model_location_link", uniqueConstraints =
+    @UniqueConstraint(columnNames = {"name", "scene"})
+)
 public class LocationLinkDto extends BaseEntityDto {
 
     @JsonIgnore
-    @ManyToOne(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToOne(optional = false, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name = "scene", nullable = false)
     private SceneDto sceneDto;
 
@@ -44,17 +45,20 @@ public class LocationLinkDto extends BaseEntityDto {
     @JsonProperty("location")
     @JsonBackReference
     // Convert outside in case of stack overflow
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "location")
     private LocationDto locationDto;
 
     /**
      * A reference to the pointDto end of this link.
      */
     @JsonProperty("point")
-//    @DtoField(value = "pointDto",
+    @JsonIgnoreProperties({"version", "auditor", "properties", "position", "type", "display_position_x", "display_position_y", "label_offset_x", "label_offset_y", "vehicle_orientation_angle", "incoming_paths", "outgoing_paths", "attached_links"})
+    //    @DtoField(value = "pointDto",
 //            dtoBeanKey = "PointDto",
 //            entityBeanKeys = {"Point"})
-    @ManyToOne
+    @ManyToOne(optional = false/*, cascade = {CascadeType.PERSIST}*/)
+    @JoinColumn(name = "point")
     private PointDto pointDto;
 
     /**
@@ -62,8 +66,9 @@ public class LocationLinkDto extends BaseEntityDto {
      */
     @DtoField
     @ElementCollection
-    @CollectionTable(name = "tcs_model_rel_link_operations")
-    private Set<String> allowedOperations = new HashSet<>();
+    @CollectionTable(name = "tcs_model_location_link_operations", joinColumns = @JoinColumn(
+            nullable = false, name = "model_id", referencedColumnName = "id"))
+    private Set<String> allowedOperations = new LinkedHashSet<>();
 
     public LocationLinkDto() {
     }
@@ -117,7 +122,7 @@ public class LocationLinkDto extends BaseEntityDto {
 
     public boolean addAllowedOperation(String operation) {
         if (this.allowedOperations == null) {
-            this.allowedOperations = new HashSet<>();
+            this.allowedOperations = new LinkedHashSet<>();
         }
 
         return this.allowedOperations.add(operation);
@@ -125,7 +130,7 @@ public class LocationLinkDto extends BaseEntityDto {
 
     public boolean removeAllowedOperation(String operation) {
         if (this.allowedOperations == null) {
-            this.allowedOperations = new HashSet<>();
+            this.allowedOperations = new LinkedHashSet<>();
             return true;
         }
 

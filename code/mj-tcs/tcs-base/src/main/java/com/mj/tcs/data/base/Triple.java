@@ -5,6 +5,8 @@
  */
 package com.mj.tcs.data.base;
 
+import java.io.Serializable;
+
 /**
  * A generic 3-tuple of long integer values, usable for 3D coordinates and
  * vectors.
@@ -12,7 +14,7 @@ package com.mj.tcs.data.base;
  * @author liumin
  * @author Wang Zhen
  */
-public class Triple extends BaseEntity implements Cloneable {
+public class Triple implements Serializable, Cloneable {
 
     /**
      * The X coordinate.
@@ -112,8 +114,13 @@ public class Triple extends BaseEntity implements Cloneable {
 
     @Override
     public Triple clone() {
-        Triple clone = (Triple) super.clone();
-        return clone;
+        try {
+            Triple clone = (Triple) super.clone();
+            return clone;
+        }
+        catch (CloneNotSupportedException exc) {
+            throw new IllegalStateException("Unexpected exception", exc);
+        }
     }
 
     @Override

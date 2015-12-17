@@ -1,6 +1,6 @@
 package com.mj.tcs.algorithms;
 
-import com.mj.tcs.data.base.BaseResource;
+import com.mj.tcs.data.base.TCSResource;
 
 import java.util.List;
 import java.util.Set;
@@ -28,7 +28,7 @@ public interface DeadlockPredictor {
      * @param resourcesSequence The resource sequence, i.e. total claim.
      */
     void setRoute(ResourceHolder resourceHolder,
-                  List<Set<BaseResource>> resourcesSequence);
+                  List<Set<TCSResource>> resourcesSequence);
 
     /**
      * Updates the simulation state to the real system state.
@@ -50,8 +50,8 @@ public interface DeadlockPredictor {
      * @param remainingClaim The remaining claim of a given resource user.
      */
     void configureSystemData(ResourceHolder resourceHolder,
-                             Set<BaseResource> alloc,
-                             List<Set<BaseResource>> remainingClaim);
+                             Set<TCSResource> alloc,
+                             List<Set<TCSResource>> remainingClaim);
 
     /**
      * Checks if the resulting system state is safe if the given set of resources
@@ -63,5 +63,5 @@ public interface DeadlockPredictor {
      * resource allocation.
      */
     boolean isAllocationAdmissible(ResourceHolder resourceHolder,
-                                   Set<BaseResource> resSet);
+                                   Set<TCSResource> resSet);
 }

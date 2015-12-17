@@ -2,13 +2,15 @@ package com.mj.tcs.api.v1.dto;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoCollection;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
+import com.mj.tcs.api.v1.dto.base.EntityProperty;
 import com.mj.tcs.api.v1.dto.base.TripleDto;
-import com.mj.tcs.api.v1.dto.converter.value.converter.LocationLinkDto2LocationLinkMatcher;
 
 import javax.persistence.*;
 import java.util.*;
@@ -20,9 +22,9 @@ import java.util.*;
 //@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
 @Dto
 @Entity(name = "tcs_model_location")
-//@Table(name = "tcs_model_location", uniqueConstraints =
-//    @UniqueConstraint(columnNames = {"name", "scene"})
-//)
+@Table(name = "tcs_model_location", uniqueConstraints =
+    @UniqueConstraint(columnNames = {"name", "scene"})
+)
 public class LocationDto extends BaseEntityDto {
 
     @JsonIgnore
@@ -34,6 +36,13 @@ public class LocationDto extends BaseEntityDto {
     @Column
     private String name;
 
+    @JsonSerialize(as = LinkedHashSet.class)
+    @JsonDeserialize(as = LinkedHashSet.class)
+    @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
+    @CollectionTable(name = "tcs_model_location_properties", joinColumns = @JoinColumn(
+            nullable = false, name = "model_id", referencedColumnName = "id"))
+    private Set<EntityProperty> properties = new LinkedHashSet<>();
+
     /**
      * This locationDto's position in mm.
      */
@@ -41,16 +50,20 @@ public class LocationDto extends BaseEntityDto {
     @DtoField(value = "position",
             dtoBeanKey = "TripleDto",
             entityBeanKeys = {"Triple"})
-    @OneToOne(optional = false, cascade = {CascadeType.ALL})
+//    @OneToOne(optional = false, cascade = {CascadeType.ALL})
+    @Column
     private TripleDto position = new TripleDto();
 
     /**
      * A reference to this locationDto's locationTypeDto.
      */
+    @JsonProperty("location_type")
+    @JsonIgnoreProperties({"version", "auditor", "properties", "allowed_operations"})
     @DtoField(value = "locationTypeDto",
             dtoBeanKey = "LocationTypeDto",
             entityBeanKeys = {"LocationType"})
     @OneToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @JoinColumn(name = "location_type")
 //    @Column(name = "locationType")
     private LocationTypeDto locationTypeDto;
 
@@ -58,30 +71,29 @@ public class LocationDto extends BaseEntityDto {
      * A set of links attached to this locationDto.
      */
     @JsonManagedReference
-    @DtoCollection(value = "attachedLinks",
-            entityCollectionClass = HashSet.class,
-            dtoCollectionClass = HashSet.class,
-            dtoBeanKey = "LocationLinkDto",
-            entityBeanKeys = {"Location$Link"},
-            dtoToEntityMatcher = LocationLinkDto2LocationLinkMatcher.class)
-    @ElementCollection
-    @CollectionTable(name = "tcs_model_rel_attached_links")
-    private Set<LocationLinkDto> attachedLinks = new HashSet<>();
+    @JsonSerialize(as = LinkedHashSet.class)
+    @JsonDeserialize(as = LinkedHashSet.class)
+//    @ElementCollection
+    @OneToMany(cascade = {CascadeType.ALL})
+    @CollectionTable(name = "tcs_model_location_attached_links", joinColumns = @JoinColumn(
+            nullable = false, name = "model_id", referencedColumnName = "id"))
+    @OrderBy(value = "name ASC")
+    private Set<LocationLinkDto> attachedLinks = new LinkedHashSet<>();
 
-    @JsonProperty("displayPositionX")
-    @Column
+    @JsonProperty("display_position_x")
+    @Column(name = "display_position_x")
     private long displayPositionX;
 
-    @JsonProperty("displayPositionY")
-    @Column
+    @JsonProperty("display_position_y")
+    @Column(name = "display_position_y")
     private long displayPositionY;
 
-    @JsonProperty("labelOffsetX")
-    @Column
+    @JsonProperty("label_offset_x")
+    @Column(name = "label_offset_x")
     private long labelOffsetX;
 
-    @JsonProperty("labelOffsetY")
-    @Column
+    @JsonProperty("label_offset_y")
+    @Column(name = "label_offset_y")
     private long labelOffsetY;
 
 
@@ -114,6 +126,52 @@ public class LocationDto extends BaseEntityDto {
 
     public void setName(String inName) {
         this.name = inName;
+    }
+
+    /**
+     * Add property. It can be used to put any unknown property during deSerialization.
+     *
+     * Note: If value is null, then remove the property.
+     *
+     * @param name
+     * @param value
+     */
+    public void addProperty(String name, String value) {
+        Optional<EntityProperty> propertyOptional = properties.stream().filter(p -> p.getName().equals(name)).findFirst();
+        if (propertyOptional.isPresent()) {
+            if (value == null) {
+                properties.remove(propertyOptional.get());
+                return;
+            } else {
+                propertyOptional.get().setValue(Objects.requireNonNull(value));
+            }
+        } else {
+            if (value == null) {
+                return;
+            } else {
+                EntityProperty property = new EntityProperty();
+                property.setName(Objects.requireNonNull(name));
+                property.setValue(Objects.requireNonNull(value));
+                properties.add(property);
+            }
+        }
+    }
+
+    public String getProperty(String name) {
+        Optional<EntityProperty> propertyOptional = properties.stream().filter(p -> p.getName().equals(name)).findFirst();
+        if (propertyOptional.isPresent()) {
+            return propertyOptional.get().getValue();
+        }
+
+        return null;
+    }
+
+    public void setProperties(Set<EntityProperty> properties) {
+        this.properties = properties;
+    }
+
+    public Set<EntityProperty> getProperties() {
+        return properties;
     }
 
     /**

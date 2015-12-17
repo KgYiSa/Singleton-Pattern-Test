@@ -1,17 +1,21 @@
 package com.mj.tcs.api.v1.dto;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
+import com.mj.tcs.api.v1.dto.base.EntityProperty;
 import com.mj.tcs.api.v1.dto.base.TripleDto;
 
 import javax.persistence.*;
+import java.util.LinkedHashSet;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author Wang Zhen
@@ -20,9 +24,9 @@ import javax.persistence.*;
 //@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
 @Dto
 @Entity(name = "tcs_model_vehicle")
-//@Table(name = "tcs_model_vehicle", uniqueConstraints =
-//    @UniqueConstraint(columnNames = {"name", "scene"})
-//)
+@Table(name = "tcs_model_vehicle", uniqueConstraints =
+    @UniqueConstraint(columnNames = {"name", "scene"})
+)
 public class VehicleDto extends BaseEntityDto {
 
     @JsonIgnore
@@ -33,6 +37,11 @@ public class VehicleDto extends BaseEntityDto {
     @DtoField
     @Column
     private String name;
+
+    @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
+    @CollectionTable(name = "tcs_model_vehicle_properties", joinColumns = @JoinColumn(
+            nullable = false, name = "model_id", referencedColumnName = "id"))
+    private Set<EntityProperty> properties = new LinkedHashSet<>();
 
     @DtoField
     @Column
@@ -62,14 +71,16 @@ public class VehicleDto extends BaseEntityDto {
     @Column
     private double maxReverseVelocity;
 
+    @JsonIgnoreProperties({"version", "auditor", "properties", "position", "type", "display_position_x", "display_position_y", "label_offset_x", "label_offset_y", "vehicle_orientation_angle", "incoming_paths", "outgoing_paths", "attached_links"})
     @Column
-    private PointDto currentPosition;
+    private PointDto initialPoint;
 
     @JsonProperty("precise_position")
     @DtoField(value = "precisePosition",
             dtoBeanKey = "TripleDto",
             entityBeanKeys = {"Triple"})
-    @OneToOne
+//    @OneToOne
+    @Column
     private TripleDto precisePosition;
 
     @DtoField
@@ -90,6 +101,52 @@ public class VehicleDto extends BaseEntityDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * Add property. It can be used to put any unknown property during deSerialization.
+     *
+     * Note: If value is null, then remove the property.
+     *
+     * @param name
+     * @param value
+     */
+    public void addProperty(String name, String value) {
+        Optional<EntityProperty> propertyOptional = properties.stream().filter(p -> p.getName().equals(name)).findFirst();
+        if (propertyOptional.isPresent()) {
+            if (value == null) {
+                properties.remove(propertyOptional.get());
+                return;
+            } else {
+                propertyOptional.get().setValue(Objects.requireNonNull(value));
+            }
+        } else {
+            if (value == null) {
+                return;
+            } else {
+                EntityProperty property = new EntityProperty();
+                property.setName(Objects.requireNonNull(name));
+                property.setValue(Objects.requireNonNull(value));
+                properties.add(property);
+            }
+        }
+    }
+
+    public String getProperty(String name) {
+        Optional<EntityProperty> propertyOptional = properties.stream().filter(p -> p.getName().equals(name)).findFirst();
+        if (propertyOptional.isPresent()) {
+            return propertyOptional.get().getValue();
+        }
+
+        return null;
+    }
+
+    public void setProperties(Set<EntityProperty> properties) {
+        this.properties = properties;
+    }
+
+    public Set<EntityProperty> getProperties() {
+        return properties;
     }
 
     public double getLength() {
@@ -148,12 +205,12 @@ public class VehicleDto extends BaseEntityDto {
         this.maxReverseVelocity = maxReverseVelocity;
     }
 
-    public PointDto getCurrentPosition() {
-        return currentPosition;
+    public PointDto getInitialPoint() {
+        return initialPoint;
     }
 
-    public void setCurrentPosition(PointDto currentPosition) {
-        this.currentPosition = currentPosition;
+    public void setInitialPoint(PointDto initialPoint) {
+        this.initialPoint = initialPoint;
     }
 
     public TripleDto getPrecisePosition() {

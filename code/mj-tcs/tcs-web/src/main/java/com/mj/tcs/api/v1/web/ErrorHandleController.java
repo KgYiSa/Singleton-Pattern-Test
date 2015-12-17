@@ -13,6 +13,8 @@ public class ErrorHandleController implements ErrorController {
     @Override
     @RequestMapping("/error")
     public String getErrorPath() {
-        return "../404";
+
+        System.out.println("error ,.......,");
+        return "404";
     }
 }

@@ -2,12 +2,14 @@ package com.mj.tcs.api.v1.dto;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
+import com.mj.tcs.api.v1.dto.base.EntityProperty;
 import com.mj.tcs.api.v1.dto.base.TripleDto;
-import com.mj.tcs.data.model.Path;
 
 import javax.persistence.*;
 import java.util.*;
@@ -19,9 +21,9 @@ import java.util.*;
 //@JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class, property = "@UUID")
 @Dto
 @Entity(name = "tcs_model_point")
-//@Table(name = "tcs_model_point", uniqueConstraints =
-//    @UniqueConstraint(columnNames = {"name", "scene"})
-//)
+@Table(name = "tcs_model_point", uniqueConstraints =
+    @UniqueConstraint(columnNames = {"name", "scene"})
+)
 public class PointDto extends BaseEntityDto {
 
     @JsonIgnore
@@ -33,6 +35,13 @@ public class PointDto extends BaseEntityDto {
     @Column
     private String name;
 
+    @JsonSerialize(as = LinkedHashSet.class)
+    @JsonDeserialize(as = LinkedHashSet.class)
+    @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
+    @CollectionTable(name = "tcs_model_point_properties", joinColumns = @JoinColumn(
+            nullable = false, name = "model_id", referencedColumnName = "id"))
+    private Set<EntityProperty> properties = new LinkedHashSet<>();
+
     /**
      * This point's coordinates in mm.
      */
@@ -40,24 +49,25 @@ public class PointDto extends BaseEntityDto {
     @DtoField(value = "position",
                 dtoBeanKey = "TripleDto",
                 entityBeanKeys = {"Triple"})
-    @OneToOne(optional = false, cascade = {CascadeType.ALL})
+//    @OneToOne(optional = false, cascade = {CascadeType.ALL})
 //    @JoinColumn(name = "position_id")
+    @Column
     private TripleDto position;
 
     @JsonProperty("display_position_x")
-    @Column
+    @Column(name = "display_position_x")
     private long displayPositionX;
 
     @JsonProperty("display_position_y")
-    @Column
+    @Column(name = "display_position_y")
     private long displayPositionY;
 
     @JsonProperty("label_offset_x")
-    @Column
+    @Column(name = "label_offset_x")
     private long labelOffsetX;
 
     @JsonProperty("label_offset_y")
-    @Column
+    @Column(name = "label_offset_y")
     private long labelOffsetY;
 
     @DtoField()
@@ -70,26 +80,40 @@ public class PointDto extends BaseEntityDto {
 
     // convert outside
     @JsonProperty("incoming_paths")
-    @JsonIgnoreProperties({"version", "auditor", "properties", "sourcePoint", "destinationPoint", "control_points", "length", "routing_cost", "max_velocity", "max_reverse_velocity", "locked"})
+    @JsonSerialize(as = LinkedHashSet.class)
+    @JsonDeserialize(as = LinkedHashSet.class)
+//    @JsonManagedReference(value = "incoming_paths")
+//    @JsonIdentityInfo(generator = ObjectIdGenerators.UUIDGenerator.class)
+    @JsonIgnoreProperties({"version", "auditor", "properties", "source_point", "destination_point", "control_points", "length", "routing_cost", "max_velocity", "max_reverse_velocity", "locked"})
 //    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "destinationPoint")
     @ElementCollection
-    @CollectionTable(name = "tcs_model_rel_point_imcoming_paths")
-    private Set<PathDto> incomingPaths = new HashSet<>();
+    @CollectionTable(name = "tcs_model_point_imcoming_paths", joinColumns = @JoinColumn(
+            nullable = false, name = "model_id", referencedColumnName = "id"))
+    @OrderBy(value = "name ASC")
+    private Set<PathDto> incomingPaths = new LinkedHashSet<>();
 
     // convert outside
     @JsonProperty("outgoing_paths")
-    @JsonIgnoreProperties({"version", "auditor", "properties", "sourcePoint", "destinationPoint", "control_points", "length", "routing_cost", "max_velocity", "max_reverse_velocity", "locked"})
+    @JsonSerialize(as = LinkedHashSet.class)
+    @JsonDeserialize(as = LinkedHashSet.class)
+//    @JsonManagedReference(value = "outgoing_paths")
+    @JsonIgnoreProperties({"version", "auditor", "properties", "source_point", "destination_point", "control_points", "length", "routing_cost", "max_velocity", "max_reverse_velocity", "locked"})
 //    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "sourcePoint")
     @ElementCollection
-    @CollectionTable(name = "tcs_model_rel_point_outgoing_paths")
-    private Set<PathDto> outgoingPaths = new HashSet<>();
+    @CollectionTable(name = "tcs_model_point_outgoing_paths", joinColumns = @JoinColumn(
+            nullable = false, name = "model_id", referencedColumnName = "id"))
+    @OrderBy(value = "name ASC")
+    private Set<PathDto> outgoingPaths = new LinkedHashSet<>();
 
 //    @JsonIdentityReference(alwaysAsId = true)
-    @JsonIgnoreProperties({"version", "auditor", "properties", "location", "point"})
-//    @OneToMany(cascade = {CascadeType.ALL}, mappedBy = "point")
-    @ElementCollection
-    @CollectionTable(name = "tcs_model_rel_point_attached_links")
-    private Set<LocationLinkDto> attachedLinks = new HashSet<>();
+    @JsonIgnoreProperties({"version", "auditor", "properties", "location", "point", "allowed_operations"})
+    @JsonSerialize(as = LinkedHashSet.class)
+    @JsonDeserialize(as = LinkedHashSet.class)
+    @OneToMany(cascade = {CascadeType.ALL}/*, mappedBy = "point"*/)
+//    @ElementCollection
+//    @CollectionTable(name = "tcs_model_rel_point_attached_links")
+    @OrderBy(value = "name ASC")
+    private Set<LocationLinkDto> attachedLinks = new LinkedHashSet<>();
 
     public SceneDto getSceneDto() {
         return sceneDto;
@@ -110,6 +134,52 @@ public class PointDto extends BaseEntityDto {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * Add property. It can be used to put any unknown property during deSerialization.
+     *
+     * Note: If value is null, then remove the property.
+     *
+     * @param name
+     * @param value
+     */
+    public void addProperty(String name, String value) {
+        Optional<EntityProperty> propertyOptional = properties.stream().filter(p -> p.getName().equals(name)).findFirst();
+        if (propertyOptional.isPresent()) {
+            if (value == null) {
+                properties.remove(propertyOptional.get());
+                return;
+            } else {
+                propertyOptional.get().setValue(Objects.requireNonNull(value));
+            }
+        } else {
+            if (value == null) {
+                return;
+            } else {
+                EntityProperty property = new EntityProperty();
+                property.setName(Objects.requireNonNull(name));
+                property.setValue(Objects.requireNonNull(value));
+                properties.add(property);
+            }
+        }
+    }
+
+    public String getProperty(String name) {
+        Optional<EntityProperty> propertyOptional = properties.stream().filter(p -> p.getName().equals(name)).findFirst();
+        if (propertyOptional.isPresent()) {
+            return propertyOptional.get().getValue();
+        }
+
+        return null;
+    }
+
+    public void setProperties(Set<EntityProperty> properties) {
+        this.properties = properties;
+    }
+
+    public Set<EntityProperty> getProperties() {
+        return properties;
     }
 
     public TripleDto getPosition() {
@@ -206,6 +276,14 @@ public class PointDto extends BaseEntityDto {
 
     public void setAttachedLinks(Set<LocationLinkDto> attachedLinks) {
         this.attachedLinks = attachedLinks;
+    }
+
+    public void addAttachedLinks(LocationLinkDto linkDto) {
+        this.attachedLinks.add(Objects.requireNonNull(linkDto));
+    }
+
+    public void removeAttachedLinks(LocationLinkDto linkDto) {
+        this.attachedLinks.remove(Objects.requireNonNull(linkDto));
     }
 
     /**

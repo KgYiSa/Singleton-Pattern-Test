@@ -6,8 +6,10 @@
 
 package com.mj.tcs.data.model;
 
-import com.mj.tcs.data.base.BaseEntity;
+import com.mj.tcs.data.base.TCSObject;
+import com.mj.tcs.data.base.TCSObjectReference;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -16,30 +18,25 @@ import java.util.Objects;
  * A named static route that can be used as an alternative to dynamically
  * computing a route for a vehicle.
  *
- * @author Wang Zhen
+ * @author Stefan Walter (Fraunhofer IML)
  */
-public class StaticRoute extends BaseEntity implements Cloneable {
-
-    private Scene scene;
+public final class StaticRoute
+        extends TCSObject<StaticRoute>
+        implements Serializable, Cloneable {
 
     /**
      * The sequence of points this route consists of.
      */
-    private List<Point> hops = new LinkedList<>();
+    private List<TCSObjectReference<Point>> hops = new LinkedList<>();
 
-    public StaticRoute() {
-    }
-
-    public StaticRoute(String name) {
-        setName(name);
-    }
-
-    public Scene getScene() {
-        return scene;
-    }
-
-    public void setScene(Scene scene) {
-        this.scene = scene;
+    /**
+     * Creates a new StaticRoute with the given name and ID.
+     *
+     * @param objectID The route's object ID.
+     * @param name The route's name.
+     */
+    public StaticRoute(int objectID, String name) {
+        super(objectID, name);
     }
 
     /**
@@ -49,7 +46,7 @@ public class StaticRoute extends BaseEntity implements Cloneable {
      * @return The first element of the list of hops in this route, or
      * <code>null</code>, if the list of hops is empty.
      */
-    public Point getSourcePoint() {
+    public TCSObjectReference<Point> getSourcePoint() {
         if (hops.isEmpty()) {
             return null;
         }
@@ -65,7 +62,7 @@ public class StaticRoute extends BaseEntity implements Cloneable {
      * @return The final element of the list of hops in this route, or
      * <code>null</code>, if the list of hops is empty.
      */
-    public Point getDestinationPoint() {
+    public TCSObjectReference<Point> getDestinationPoint() {
         if (hops.isEmpty()) {
             return null;
         }
@@ -79,12 +76,8 @@ public class StaticRoute extends BaseEntity implements Cloneable {
      *
      * @return The sequence of points this route consists of.
      */
-    public List<Point> getHops() {
-        return hops;
-    }
-
-    public void setHops(List<Point> hops) {
-        this.hops = hops;
+    public List<TCSObjectReference<Point>> getHops() {
+        return new LinkedList<>(hops);
     }
 
     /**
@@ -92,7 +85,7 @@ public class StaticRoute extends BaseEntity implements Cloneable {
      *
      * @param newHop The hop to be added.
      */
-    public void addHop(Point newHop) {
+    public void addHop(TCSObjectReference<Point> newHop) {
         Objects.requireNonNull(newHop, "newHop");
         hops.add(newHop);
     }
@@ -115,16 +108,13 @@ public class StaticRoute extends BaseEntity implements Cloneable {
     }
 
     @Override
-    public StaticRoute clone() throws IllegalStateException {
-        StaticRoute clone = null;
-        clone = (StaticRoute) super.clone();
+    public StaticRoute clone() {
+        StaticRoute clone = (StaticRoute) super.clone();
         clone.hops = new LinkedList<>();
-        if (hops != null) {
-            for (Point curPoint : hops) {
-                clone.hops.add(curPoint);
-            }
+        for (TCSObjectReference<Point> curRef : hops) {
+            clone.hops.add(curRef);
         }
-
         return clone;
     }
 }
+

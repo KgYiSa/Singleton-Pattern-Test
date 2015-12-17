@@ -18,7 +18,7 @@
 //
 //        //TODO: Meaningful
 //        // href, ref (default is None)
-////        add(linkTo(methodOn(SceneController.class).getAllScenes()).withSelfRel());
+////        add(linkTo(methodOn(SceneController.class).findAll()).withSelfRel());
 ////        add(new LinkDto("http://localhost:8080/getAllScenes"));
 ////        add(new LinkDto("http://localhost:8080/scene/0", "item"));
 //    }

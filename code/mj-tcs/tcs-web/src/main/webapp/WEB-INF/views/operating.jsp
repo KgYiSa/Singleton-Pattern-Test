@@ -10,27 +10,136 @@
 	<link rel="stylesheet" type="text/css" href="${ctxStatic}/css/operating.css">
 	<link rel="stylesheet" href="${ctxStatic}/plugin/zTree/css/zTreeStyle/zTreeStyle.css" type="text/css">
     <link rel="stylesheet" href="${ctxStatic}/plugin/bootSideMenu/css/BootSideMenu.css" type="text/css">
-    
+	<link rel="stylesheet" href="${ctxStatic}/css/tcs-editor.css" type="text/css">
 	<title>Operating Model</title>
 </head>
 <body>
-	<header>
-		<!--<h1>AVG Operating-Model<a href="modelling.html">[modelling]</a></h1>-->
-		<div><img src="${ctxStatic}/images/mj-logo.png" alt="" class=""></div>
-		<div><p class="title">AVG Operating-Mode<a href="modelling.html">[modelling]</a></p></div>
+<header>
+	<!--<h1>AVG Modelling-Mode<a href="operating.html">[operating]</a></h1>-->
+	<div class="mj-logo"><img src="../images/mj-logo.png" alt="" class=""></div>
+	<div class="title">AVG Modelling<a href="operating.html">[operating]</a></div>
+	<div class="sys-info">
+		<!--<p class="sence"><a href="javascript:;">选择场景</a>|</p>-->
+		<div class="scene">
 
-		<div class="sys-info">
-			<p class="sence"><a href="javascript:;">选择场景</a>|</p>
-			<p class="user">用户：admin</p>
+			<button type="button" class="btn btn-primary btn-sm" data-toggle="modal"  data-target="#sceneselect">
+				选择场景
+			</button>
+			<span id="scenename">暂无</span>
+			<!-- Modal -->
+			<div class="modal fade" id="sceneselect" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title" id="myModalLabel">场景列表：</h4>
+						</div>
+						<div class="modal-body">
+
+							<table class="table table-bordered scenelist">
+								<col width="10%" />
+								<col width="40%" />
+								<col width="18%" />
+								<col width="18%" />
+								<col width="14%" />
+								<thead>
+								<tr>
+									<th>ID</th>
+									<th>NAME</th>
+									<th>STATUS</th>
+									<th>OPERATE</th>
+									<th>SELECT</th>
+								</tr>
+								</thead>
+								<tbody>
+								</tbody>
+							</table>
+						</div>
+
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+							<button type="button" class="btn btn-primary submmit">确定</button>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
-	</header>
+		<div class="userinfo">
+			<span class="label label-info">用户：admin</span>
+		</div>
+	</div>
+</header>
 
 	<div class="container-fluid">
 
 		<div class="col-md-9 left-container">
 			<div class="top-panel">
 				<div class="top-panel-view">
-				<div id="tcs-editor" class="tcs-editor"></div>
+					<div id="tcs-editor" class="tcs-editor">
+						<div id="rulers">
+							<div id="ruler_corner"></div>
+							<div id="ruler_x">
+								<div>
+									<canvas height="150"></canvas>
+								</div>
+							</div>
+							<div id="ruler_y">
+								<div>
+									<canvas width="150"></canvas>
+								</div>
+							</div>
+						</div>
+						<div class="workarea" id="workarea">
+							<div id="svgcanvas" style="position:relative;min-width: 800px;width: 100%;height: 100%;">
+								<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style="background-color: indianred">
+									<defs>
+										<!-- 用一个10*10方形路径填充 -->
+										<pattern id="grid1" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+											<path stroke="#BDBDBD" fill="none" d="M0,0H10V10"></path>
+										</pattern>
+									</defs>
+
+									<pattern id="grid2" patternUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">
+										<image x="0" y="0" width="100" height="100" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAB80lEQVR4Xu3c0U0DMRCE4UkZdMAzDSK6QCkGiQZ4pgPaQCAUBLGTlWLpfHcfz9ZJ7Hk9+884d0jykuQ11//uknxcXxbr2kUq1eWQ5DHJU6HQD0nerDurwNC6eCH9HTa00ElKz/NCvJBTBUo7prqztrJOh+gQHXJpMNIhOkSH6JC/FZh6mPg6sp6THAvAd5/k3bqzCgytCw2hITSEhqxMQ5iL7S27iPjTEBpCQ2gIDRFkNbqgpEk0ZEINQertlzKUwJOUnqdDJuwQHIJDvitQErm9rXNkObKAITAEhsAQGG5kSCDqE4o6UkfqOKTXmI6sCY8s1gnrxJHlyPqtwNQeGg2hIbwsXhYvi5d1i5eF1JG6sdfYa+y9NEvoEB2iQ3TIvwqUHAKkjtSROlJH6kgdqRdvl1dvoS+1jqgTdaJO1Ik6Ub9F1N06ceuEuchcZC4yF5mLG/jyti/K9Ru59Lvy0USP1JE6UkfqSB2pI3U/+uyehKUwf2+fzKj+v6YsU5Ypy5S1sinL7ff2lkXqnVbe1ZBA1Ik6USfqKxN1mbpMXaYuU5epy9Rl6jL1ZhcsQrijs+2lngcMgSEwBIbAUKYuU5epy9R/KjA0HjBlmbJMWaaslU1ZMnWZOvud/c5+Z7+z3zdiv8vUZepEnagTdaJO1Dcg6p9v/erTOjnYNAAAAABJRU5ErkJggg=="></image>
+									</pattern>
+									<rect id="rect1" x="20" y="20" width="500" height="300" stroke="green"  fill="url(#grid1)"></rect>
+									<rect id="rect2" x="20" y="330" width="500" height="300" stroke="green" fill="url(#grid2)"></rect>
+
+								</svg>
+
+							</div>
+						</div>
+					</div>
+					<div class="tcs-bottom">
+						<div class="zoom-label">
+							<input id="zoom" size="3" value="100%" type="text" readonly="readonly" />
+
+							<select id="zoom_select">
+								<option value="6">70%</option>
+								<option value="12">75%</option>
+								<option value="16">80%</option>
+								<option value="25">85%</option>
+								<option value="50">90%</option>
+								<option value="75">95%</option>
+								<option value="100" selected="selected">100%</option>
+								<option value="150">105%</option>
+								<option value="200">110%</option>
+								<option value="300">115%</option>
+								<option value="400">120%</option>
+								<option value="600">125%</option>
+								<option value="800">130%</option>
+								<option value="1600">135%</option>
+							</select>
+						</div>
+						<div class="show-reset selected"><img src="${ctxStatic}/images/zoom-fit.png" title=""></div>
+						<div class="show-splits selected"><img src="${ctxStatic}/images/view-split.png" title=""></div>
+						<div class="show-labels"><img src="${ctxStatic}/images/document-page-setup.16x16.png" title=""></div>
+						<div class="show-comment"><img src="${ctxStatic}/images/comment-add.16.png" title=""></div>
+						<div class="show-blocks"><img src="${ctxStatic}/images/block.18x18.png" title=""></div>
+						<div class="show-static-routes"><img src="${ctxStatic}/images/staticRoute.18x18.png" title=""></div>
+
+						<span class="show-position">x:0 y:0</span>
+					</div>
 				<div class="top-panel-to">
 					<div class="table-head">
 						<table>
@@ -305,6 +414,10 @@
 				</table>
 				</div>
 			</div>
+			<div class="side-button">
+				<!--<span class="glyphicon glyphicon-chevron-right" style="display: block;">&nbsp;</span>-->
+				<!--<span class="glyphicon glyphicon-chevron-left" style="display: inline-block;">&nbsp;</span>-->
+			</div>
 		</div>
 	</div>
 
@@ -400,6 +513,9 @@
 			
 		</div>
 	</div>
+<div id="loadingDiv">
+	<div>页面加载中，请等待...	</div>
+</div>
 
 	<script type="text/javascript" src="${ctxStatic}/js/jquery-1.11.3.js"></script>
 	<script type="text/javascript" src="${ctxStatic}/plugin/bootstrap/js/bootstrap.js"></script>
@@ -407,8 +523,12 @@
 	 <script src="${ctxStatic}/plugin/bootSideMenu/js/BootSideMenu.js"></script>
 	 <script type="text/javascript" src="${ctxStatic}/js/init.js"></script>
 	<script type="text/javascript" src="${ctxStatic}/js/operating.js"></script>
+	<script type="text/javascript" src="${ctxStatic}/js/mousewheel.js"></script>
+	<script type="text/javascript" src="${ctxStatic}/js/tcs-editor.js"></script>
+	<script type="text/javascript" src="${ctxStatic}/js/tcscanvas.js"></script>
 	<script type="text/javascript">
 	  $(document).ready(function(){
+		  startLoading();
 	      $('#left-sidebar').BootSideMenu({side:"left", autoClose:true});
 
 
@@ -454,6 +574,23 @@
 
 
 	  });
+
+		function startLoading(){
+			var _PageHeight = document.documentElement.clientHeight;
+			var _PageWidth = document.documentElement.clientWidth;
+			//计算loading框距离顶部和左部的距离（loading框的宽度为215px，高度为61px）
+			var _LoadingTop = _PageHeight > 61 ? (_PageHeight - 61) / 2 : 0;
+			var _LoadingLeft = _PageWidth > 215 ? (_PageWidth - 215) / 2 : 0;
+			$("#loadingDiv").attr("display", "block");
+			$("#loadingDiv").attr("height", _PageHeight);
+			$("#loadingDiv > div").attr("left", _LoadingLeft);
+			$("#loadingDiv > div").attr("top", _LoadingTop);
+
+		}
+
+		function endingLoading(){
+			$("#loadingDiv").attr("display", "none");
+		}
 	</script>
 </body>
 </html>

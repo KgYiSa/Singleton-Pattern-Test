@@ -2,9 +2,9 @@ package com.mj.tcs;
 
 import com.mj.tcs.data.ObjectExistsException;
 import com.mj.tcs.data.ObjectUnknownException;
+import com.mj.tcs.data.base.TCSObjectReference;
+import com.mj.tcs.data.base.TCSResourceReference;
 import com.mj.tcs.data.model.*;
-import com.mj.tcs.data.base.BaseEntity;
-import com.mj.tcs.data.base.BaseResource;
 import com.mj.tcs.data.base.Triple;
 import com.mj.tcs.data.order.DriveOrder;
 import com.mj.tcs.data.order.OrderSequence;
@@ -192,9 +192,9 @@ public interface Kernel extends EventSource<TcsEvent> {
             throws IOException, CredentialsException;
 
     /**
-     * Returns a single BaseEntity of the given class.
+     * Returns a single TCSObjectReference<?> of the given class.
      *
-     * @param <T> The BaseEntity's actual type.
+     * @param <T> The TCSObjectReference<?>'s actual type.
      * @param clazz The class of the object to be returned.
      * @param id The id of the object to be returned.
      * @return A copy of the referenced object, or <code>null</code> if no such
@@ -203,14 +203,14 @@ public interface Kernel extends EventSource<TcsEvent> {
      * @throws CredentialsException If the calling client is not allowed to
      * execute this method.
      */
-    <T extends BaseEntity> T getTcsModel(Class<T> clazz,
+    <T extends TCSObjectReference<?>> T getTcsModel(Class<T> clazz,
                                             long id)
             throws CredentialsException;
 
     /**
-     * Returns a single BaseEntity of the given class.
+     * Returns a single TCSObjectReference<?> of the given class.
      *
-     * @param <T> The BaseEntity's actual type.
+     * @param <T> The TCSObjectReference<?>'s actual type.
      * @param clazz The class of the object to be returned.
      * @param name The name of the object to be returned.
      * @return A copy of the named object, or <code>null</code> if no such
@@ -219,7 +219,7 @@ public interface Kernel extends EventSource<TcsEvent> {
      * @throws CredentialsException If the calling client is not allowed to
      * execute this method.
      */
-    <T extends BaseEntity> T getTcsModel(Class<T> clazz,
+    <T extends TCSObjectReference<?>> T getTcsModel(Class<T> clazz,
                                             String name)
             throws CredentialsException;
 
@@ -232,7 +232,7 @@ public interface Kernel extends EventSource<TcsEvent> {
      * @throws CredentialsException If the calling client is not allowed to
      * execute this method.
      */
-    <T extends BaseEntity> Set<T> getTcsModels(Class<T> clazz)
+    <T extends TCSObjectReference<?>> Set<T> getTcsModels(Class<T> clazz)
             throws CredentialsException;
 
     /**
@@ -250,11 +250,11 @@ public interface Kernel extends EventSource<TcsEvent> {
      * @throws CredentialsException If the calling client is not allowed to
      * execute this method.
      */
-    <T extends BaseEntity> Set<T> getTcsModels(Class<T> clazz, Pattern regexp)
+    <T extends TCSObjectReference<?>> Set<T> getTcsModels(Class<T> clazz, Pattern regexp)
             throws CredentialsException;
 
     /**
-     * Rename a BaseEntity.
+     * Rename a TCSObjectReference<?>.
      *
      * @param ref A reference to the object to be renamed.
      * @param newName The object's new name.
@@ -264,7 +264,7 @@ public interface Kernel extends EventSource<TcsEvent> {
      * @throws ObjectExistsException If the object cannot be renamed because there
      * is already an object with the given new name.
      */
-    void renameTcsModel(BaseEntity ref, String newName)
+    void renameTcsModel(TCSObjectReference<?> ref, String newName)
             throws CredentialsException, ObjectUnknownException, ObjectExistsException;
 
     /**
@@ -278,7 +278,7 @@ public interface Kernel extends EventSource<TcsEvent> {
      * @throws CredentialsException If the calling client is not allowed to
      * execute this method.
      */
-    void setTcsModelProperty(BaseEntity ref, String key, String value)
+    void setTcsModelProperty(TCSObjectReference<?> ref, String key, String value)
             throws ObjectUnknownException, CredentialsException;
 
     /**
@@ -289,18 +289,18 @@ public interface Kernel extends EventSource<TcsEvent> {
      * @throws CredentialsException If the calling client is not allowed to
      * execute this method.
      */
-    void clearTcsModelProperties(BaseEntity ref)
+    void clearTcsModelProperties(TCSObjectReference<?> ref)
             throws ObjectUnknownException, CredentialsException;
 
     /**
-     * Remove a BaseEntity.
+     * Remove a TCSObjectReference<?>.
      *
      * @param ref A reference to the object to be removed.
      * @throws CredentialsException If the calling client is not allowed to
      * execute this method.
      * @throws ObjectUnknownException If the referenced object does not exist.
      */
-    void removeTcsModel(BaseEntity ref)
+    void removeTcsModel(TCSObjectReference<?> ref)
             throws CredentialsException, ObjectUnknownException;
 
     /**
@@ -769,7 +769,7 @@ public interface Kernel extends EventSource<TcsEvent> {
      * execute this method.
      */
     void addBlockMember(Block block,
-                        BaseResource newMember)
+                        TCSResourceReference<?> newMember)
             throws ObjectUnknownException, CredentialsException;
 
     /**
@@ -782,7 +782,7 @@ public interface Kernel extends EventSource<TcsEvent> {
      * execute this method.
      */
     void removeBlockMember(Block block,
-                           BaseResource rmMember)
+                           TCSResourceReference<?> rmMember)
             throws ObjectUnknownException, CredentialsException;
 
 //    /**
@@ -808,7 +808,7 @@ public interface Kernel extends EventSource<TcsEvent> {
 //     * execute this method.
 //     */
 //    void addGroupMember(Group order,
-//                        BaseEntity newMemberRef)
+//                        TCSObjectReference<?> newMemberRef)
 //            throws ObjectUnknownException, CredentialsException;
 //
 //    /**
@@ -821,7 +821,7 @@ public interface Kernel extends EventSource<TcsEvent> {
 //     * execute this method.
 //     */
 //    void removeGroupMember(Group order,
-//                           BaseEntity rmMemberRef)
+//                           TCSObjectReference<?> rmMemberRef)
 //            throws ObjectUnknownException, CredentialsException;
 
     /**
@@ -872,8 +872,8 @@ public interface Kernel extends EventSource<TcsEvent> {
 //     * @throws CredentialsException If the calling client is not allowed to
 //     * execute this method.
 //     */
-//    void attachResource(BaseEntity resource,
-//                        BaseEntity newResource)
+//    void attachResource(TCSObjectReference<?> resource,
+//                        TCSObjectReference<?> newResource)
 //            throws ObjectUnknownException, CredentialsException;
 //
 //    /**
@@ -887,8 +887,8 @@ public interface Kernel extends EventSource<TcsEvent> {
 //     * @throws CredentialsException If the calling client is not allowed to
 //     * execute this method.
 //     */
-//    void detachResource(BaseEntity resource,
-//                        BaseEntity rmResource)
+//    void detachResource(TCSObjectReference<?> resource,
+//                        TCSObjectReference<?> rmResource)
 //            throws ObjectUnknownException, CredentialsException;
 
     /**

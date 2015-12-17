@@ -1,12 +1,13 @@
 package com.mj.tcs.api.v1.rest;
 
 import com.mj.tcs.api.v1.dto.SceneDto;
+import com.mj.tcs.api.v1.dto.communication.TcsResponseEntity;
 import com.mj.tcs.api.v1.web.ServiceController;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.mj.tcs.util.TcsDtoUtils;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collection;
+import java.util.*;
 
 /**
  * The class maintains the complete static topology of a scene model
@@ -25,121 +26,144 @@ public class SceneRestfulController extends ServiceController {
 //    @Autowired
 //    private EntityLinks entityLinks;
 
-    @RequestMapping(value = "/scenes", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllScenes() {
-        Collection<SceneDto> sceneDtos = getModellingService().getAllScenes();
+    @RequestMapping(value = "/scenes/profile", method = RequestMethod.GET)
+    public TcsResponseEntity<?> getAllScenesProfile() {
+        Collection<SceneDto> sceneDtos = getService().findAllScene();
         if (sceneDtos == null || sceneDtos.size() == 0) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new TcsResponseEntity<>(TcsResponseEntity.Status.INFORMATION, "No Content");
         }
 
-//        List<SceneDto> sceneDtos = sceneDtoEntities.stream()
-//                .map(item -> (SceneDto) dtoConverter.convertToDto(item))
-//                .collect(Collectors.toList());
+        List<Map<String, String>> sceneDtosProfile = new ArrayList<>();
+        for (SceneDto sceneDto : sceneDtos) {
+            Map<String, String> item = new LinkedHashMap<>();
+            item.put("id", sceneDto.getId().toString());
+            item.put("name", sceneDto.getName());
+            item.put("status", getService().isSceneDtoRunning(sceneDto) ? "running" : "stopped");
+            sceneDtosProfile.add(item);
+        }
 
-        return new ResponseEntity<>(/*
-                new Resources<>(
-                        new SceneDtoResourceAssembler().toResources(sceneDtos)
-                )*/sceneDtos,
-                HttpStatus.OK);
+        return new TcsResponseEntity<>(
+                TcsResponseEntity.Status.SUCCESS,
+                sceneDtosProfile);
+    }
+
+    ///////////////// MODELLING /////////////////////
+    @RequestMapping(value = "/scenes", method = RequestMethod.GET)
+    public TcsResponseEntity<?> getAllScenes() {
+        Collection<SceneDto> sceneDtos = getService().findAllScene();
+        if (sceneDtos == null || sceneDtos.size() == 0) {
+            return new TcsResponseEntity<>(
+                    TcsResponseEntity.Status.INFORMATION).setStatusMessage("No Content");
+        }
+
+        return new TcsResponseEntity<>(
+                TcsResponseEntity.Status.SUCCESS,
+                sceneDtos);
     }
 
     @RequestMapping(value = "/scenes", method = RequestMethod.POST)
-    public ResponseEntity<?> createScene(@RequestBody SceneDto sceneDto) {
-        SceneDto newSceneDto = null;
+    public TcsResponseEntity<?> createScene(@RequestBody SceneDto sceneDto) {
+        SceneDto newSceneDto = TcsDtoUtils.resolveSceneDtoRelationships(sceneDto);
 
-        if (sceneDto.getPointDtos() != null) {
-            sceneDto.getPointDtos().forEach(p -> p.setSceneDto(sceneDto));
-        }
-        if (sceneDto.getPathDtos() != null) {
-            sceneDto.getPathDtos().forEach(p -> p.setSceneDto(sceneDto));
-        }
-        if (sceneDto.getLocationTypeDtos() != null) {
-            sceneDto.getLocationTypeDtos().forEach(t -> t.setSceneDto(sceneDto));
-        }
-        if (sceneDto.getLocationDtos() != null) {
-            sceneDto.getLocationDtos().forEach(l -> {
-                l.setSceneDto(sceneDto);
-                if (l.getAttachedLinks() != null) {
-                    l.getAttachedLinks().forEach(li -> li.setSceneDto(sceneDto));
-                }
-            });
-        }
-        if (sceneDto.getStaticRouteDtos() != null) {
-            sceneDto.getStaticRouteDtos().forEach(r -> r.setSceneDto(sceneDto));
-        }
         // Creating new scene
-        newSceneDto = getModellingService().createScene(sceneDto);
+        newSceneDto = getService().createScene(newSceneDto);
 
-        return new ResponseEntity<>(
-//                new SceneDtoResourceAssembler().toResource((SceneDto) dtoConverter.convertToDto(newSceneDto)),
-                newSceneDto,
-                HttpStatus.CREATED);
+        return new TcsResponseEntity<>(
+                TcsResponseEntity.Status.SUCCESS,
+                newSceneDto);
     }
 
     @RequestMapping(value = "/scenes/{sceneId}", method = RequestMethod.GET)
-    public ResponseEntity<?> getOneScene(@PathVariable("sceneId") Long sceneId) {
-        SceneDto sceneDto = getModellingService().getSceneDto(sceneId);
+    public TcsResponseEntity<?> getOneScene(@PathVariable("sceneId") Long sceneId) {
+        SceneDto sceneDto = getService().getSceneDto(sceneId);
 
         if (sceneDto == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new TcsResponseEntity<>(TcsResponseEntity.Status.ALERT).setStatusMessage("Not Found!");
         }
 
-        return new ResponseEntity<>(
-//                new SceneDtoResourceAssembler().toResource((SceneDto) dtoConverter.convertToDto(sceneDto)),
-                sceneDto,
-                HttpStatus.OK);
+        return new TcsResponseEntity<>(
+                TcsResponseEntity.Status.SUCCESS,
+                sceneDto);
     }
 
-//    @RequestMapping(value = "/scenes/{sceneId}", method = RequestMethod.PUT)
-//    public ResponseEntity<?> updateScene(@PathVariable("sceneId") Long sceneId, SceneDto sceneDto) {
-////        sceneDto.setId(sceneId);
-//
-//        if (sceneDto.getState() == null ||
-//            (!"OPERATING".equals(sceneDto.getState())) &&
-//            (!"MODELLING".equals(sceneDto.getState())) &&
-//            (!"UNKNOWN".equals(sceneDto.getState()))) {
-//            throw new TcsServerRuntimeException("upsupported scene state: " + sceneDto.getState() +
-//                "when put new scene.");
-//        }
-//
-//        // OPTION 1
-//        // TODO: Check why PUT arguments are null ?
-////        Map<String, Object> resourceMap = new BeanMap(sceneDto);
-////        SceneDto scene = getModellingService().getSceneDto(sceneId);
-////        dtoConverter.mergePropertiesToEntity(scene, resMap);
-//
-//        // OPTION 2 (RECOMMEND)
-//        SceneDto scene = (SceneDto)dtoConverter.convertToEntity(sceneDto);
-//
-//        getModellingService().updateScene(scene);
-//
-//        return new ResponseEntity<>(
-//                new SceneDtoResourceAssembler().toResource((SceneDto) dtoConverter.convertToDto(scene)),
-//                HttpStatus.OK);
-//    }
-//
+    @RequestMapping(value = "/scenes/{sceneId}", method = RequestMethod.PUT)
+    public TcsResponseEntity<?> updateScene(@PathVariable("sceneId") Long sceneId, SceneDto newSceneDto) {
+        SceneDto sceneDto = getService().getSceneDto(sceneId);
+
+        if (sceneDto == null) {
+            return new TcsResponseEntity<>(TcsResponseEntity.Status.ERROR)
+                    .setStatusMessage("The scene can not be found by ID [" + sceneId + "].");
+        }
+
+        newSceneDto.setId(sceneId);
+        if (getService().isSceneDtoRunning(sceneDto)) {
+            return new TcsResponseEntity<>(TcsResponseEntity.Status.ERROR)
+                    .setStatusMessage("The scene is running, please stop it first!");
+        }
+        TcsDtoUtils.copyProperties(sceneDto, newSceneDto);
+
+        sceneDto = getService().updateScene(sceneDto);
+
+        return new TcsResponseEntity<>(TcsResponseEntity.Status.SUCCESS, sceneDto);
+    }
+
 //    @RequestMapping(value = "/scenes/{sceneId}", method = RequestMethod.PATCH)
-//    public ResponseEntity<?> updateScenePartial(@PathVariable("sceneId") Long sceneId, EntityAuditorDto entityAuditorDto) {
+//    public TcsResponseEntity<?> updateScenePartial(@PathVariable("sceneId") Long sceneId, EntityAuditorDto entityAuditorDto) {
 //        entityAuditorDto.setId(sceneId);
 //
-//        SceneDto scene = getModellingService().getSceneDto(sceneId);
+//        SceneDto scene = getService().getSceneDto(sceneId);
 //        // TODO: find a way to found which attribute should be updated!!! (merge new attributes (Map) to the current valueconverter)
 //        scene = (SceneDto) dtoConverter.mergePropertiesToEntity(scene, entityAuditorDto.getProperties());
 //
 //        // TODO: Should update the updated time properties?
 //
 //        // save
-//        getModellingService().updateScene(scene);
+//        getService().updateScene(scene);
 //
-//        return new ResponseEntity<>(
+//        return new TcsResponseEntity<>(
 //                new SceneDtoResourceAssembler().toResource((SceneDto) dtoConverter.convertToDto(scene)),
 //                HttpStatus.OK);
 //    }
-//
-//    @RequestMapping(value = "/scenes/{sceneId}", method = RequestMethod.DELETE)
-//    public ResponseEntity<?> deleteScene(@PathVariable("sceneId") Long sceneId) {
-//        getModellingService().deleteScene(sceneId);
-//
-//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//    }
+
+    @RequestMapping(value = "/scenes/{sceneId}", method = RequestMethod.DELETE)
+    public TcsResponseEntity<?> deleteScene(@PathVariable("sceneId") Long sceneId) {
+        SceneDto sceneDto = getService().getSceneDto(sceneId);
+
+        if (sceneDto == null) {
+            return new TcsResponseEntity<>(TcsResponseEntity.Status.ALERT)
+                    .setStatusMessage("The scene can not be found by ID [" + sceneId + "].");
+        }
+
+        if (getService().isSceneDtoRunning(sceneDto)) {
+            return new TcsResponseEntity<>(TcsResponseEntity.Status.ERROR)
+                    .setStatusMessage("The scene is running, please stop it first!");
+        }
+
+        try {
+            getService().deleteScene(sceneId);
+        } catch (EmptyResultDataAccessException e) {
+            return new TcsResponseEntity<>(TcsResponseEntity.Status.ALERT).setStatusMessage("Not found!");
+        }
+
+        return new TcsResponseEntity<>(TcsResponseEntity.Status.SUCCESS);
+    }
+
+    //////////////// ACTIONS ///////////////////////////
+    @RequestMapping(value = "/scenes/{sceneId}/actions/start"/*, method = RequestMethod.POST*/)
+    public TcsResponseEntity<?> startScene(@PathVariable("sceneId") Long sceneId/*,
+                                        @RequestBody Map<String,String> params*/) {
+        SceneDto sceneDto = getService().getSceneDto(sceneId);
+        getService().loadSceneDto(sceneDto);
+
+        return new TcsResponseEntity<Object>(TcsResponseEntity.Status.SUCCESS);
+    }
+
+    @RequestMapping(value = "/scenes/{sceneId}/actions/stop"/*, method = RequestMethod.POST*/)
+    public TcsResponseEntity<?> stopScene(@PathVariable("sceneId") Long sceneId/*,
+                                       @RequestBody Map<String,String> params*/) {
+        SceneDto sceneDto = getService().getSceneDto(sceneId);
+        getService().unloadSceneDto(sceneDto);
+
+        return new TcsResponseEntity<Object>(TcsResponseEntity.Status.SUCCESS);
+    }
 }

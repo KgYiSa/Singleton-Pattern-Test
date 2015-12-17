@@ -20,7 +20,7 @@ public class ServiceGateFactory {
     @Bean
     public ServiceGateway serviceGateway() {
         if (serviceGateway == null) {
-            serviceGateway = ServiceGateway.getInstance();
+            serviceGateway = new ServiceGateway();
         }
 
         return serviceGateway;

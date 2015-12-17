@@ -8,8 +8,8 @@
  */
 package com.mj.tcs.data.order;
 
-import com.mj.tcs.data.base.BaseEntity;
-import com.mj.tcs.data.model.Scene;
+import com.mj.tcs.data.base.TCSObject;
+import com.mj.tcs.data.base.TCSObjectReference;
 import com.mj.tcs.data.model.Vehicle;
 
 import java.io.Serializable;
@@ -56,15 +56,15 @@ import java.util.Objects;
  *
  * @author Stefan Walter (Fraunhofer IML)
  */
-public final class OrderSequence extends BaseEntity implements Serializable, Cloneable {
-
-    private Scene scene;
+public final class OrderSequence
+        extends TCSObject<OrderSequence>
+        implements Serializable, Cloneable {
 
     /**
      * Transport orders belonging to this sequence that still need to be
      * processed.
      */
-    private List<TransportOrder> orders = new LinkedList<>();
+    private List<TCSObjectReference<TransportOrder>> orders = new LinkedList<>();
     /**
      * The index of the order that was last finished in the sequence. -1 if none
      * was finished, yet.
@@ -89,27 +89,21 @@ public final class OrderSequence extends BaseEntity implements Serializable, Clo
      * The vehicle that is intended to process this order sequence. If this
      * sequence is free to be processed by any vehicle, this is <code>null</code>.
      */
-    private Vehicle intendedVehicle;
+    private TCSObjectReference<Vehicle> intendedVehicle;
     /**
      * The vehicle processing this order sequence, or <code>null</code>, if no
      * vehicle has been assigned to it, yet.
      */
-    private Vehicle processingVehicle;
+    private TCSObjectReference<Vehicle> processingVehicle;
 
     /**
      * Creates a new OrderSequence.
      *
+     * @param objectID This sequence's ID.
      * @param name This sequence's name.
      */
-    public OrderSequence(String name) {
-    }
-
-    public Scene getScene() {
-        return scene;
-    }
-
-    public void setScene(Scene scene) {
-        this.scene = scene;
+    public OrderSequence(int objectID, String name) {
+        super(objectID, name);
     }
 
     /**
@@ -117,7 +111,7 @@ public final class OrderSequence extends BaseEntity implements Serializable, Clo
      *
      * @return The list of orders making up this sequence.
      */
-    public List<TransportOrder> getOrders() {
+    public List<TCSObjectReference<TransportOrder>> getOrders() {
         return new LinkedList<>(orders);
     }
 
@@ -128,7 +122,7 @@ public final class OrderSequence extends BaseEntity implements Serializable, Clo
      * @throws IllegalArgumentException If this sequence is already marked as
      * <em>complete</em> or if this sequence already contains the given order.
      */
-    public void addOrder(TransportOrder newOrder)
+    public void addOrder(TCSObjectReference<TransportOrder> newOrder)
             throws IllegalArgumentException {
         Objects.requireNonNull(newOrder, "newOrder is null");
         if (complete) {
@@ -146,7 +140,7 @@ public final class OrderSequence extends BaseEntity implements Serializable, Clo
      *
      * @param order The order to be removed.
      */
-    public void removeOrder(TransportOrder order) {
+    public void removeOrder(TCSObjectReference<TransportOrder> order) {
         Objects.requireNonNull(order, "order is null");
         orders.remove(order);
     }
@@ -158,7 +152,7 @@ public final class OrderSequence extends BaseEntity implements Serializable, Clo
      * currently doesn't have any unfinished orders, else the order after the one
      * that was last finished.
      */
-    public TransportOrder getNextUnfinishedOrder() {
+    public TCSObjectReference<TransportOrder> getNextUnfinishedOrder() {
         // If the whole sequence has been finished already, return null.
         if (finished) {
             return null;
@@ -264,7 +258,7 @@ public final class OrderSequence extends BaseEntity implements Serializable, Clo
      * order sequence. If this sequence is free to be processed by any vehicle,
      * <code>null</code> is returned.
      */
-    public Vehicle getIntendedVehicle() {
+    public TCSObjectReference<Vehicle> getIntendedVehicle() {
         return intendedVehicle;
     }
 
@@ -274,7 +268,7 @@ public final class OrderSequence extends BaseEntity implements Serializable, Clo
      * @param vehicle The reference to the vehicle intended to process this
      * sequence.
      */
-    public void setIntendedVehicle(Vehicle vehicle) {
+    public void setIntendedVehicle(TCSObjectReference<Vehicle> vehicle) {
         intendedVehicle = vehicle;
     }
 
@@ -285,7 +279,7 @@ public final class OrderSequence extends BaseEntity implements Serializable, Clo
      * this sequence has not been processed, yet, <code>null</code> is
      * returned.
      */
-    public Vehicle getProcessingVehicle() {
+    public TCSObjectReference<Vehicle> getProcessingVehicle() {
         return processingVehicle;
     }
 
@@ -295,7 +289,7 @@ public final class OrderSequence extends BaseEntity implements Serializable, Clo
      * @param vehicle The reference to the vehicle currently processing this
      * sequence.
      */
-    public void setProcessingVehicle(Vehicle vehicle) {
+    public void setProcessingVehicle(TCSObjectReference<Vehicle> vehicle) {
         processingVehicle = vehicle;
     }
 

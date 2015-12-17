@@ -81,13 +81,59 @@ $(function(){
 
     // select 与 input数据一致
     $(".zoom-label #zoom_select").change(function(){
-        $(".zoom-label #zoom").val($(this).val()+"%")
+        $(".zoom-label #zoom").val($(this).val())
+        $(".zoom-label #zoom").change();
+    })
 
+    //场景加载
+    $('#sceneselect').on('show.bs.modal', function () {
+        getSceneBaseList();
+
+    })
+
+    $('#sceneselect').on('hide.bs.modal', function () {
+       alert("ready hide")
+        $("#sceneselect .modal-body tbody").html("");
     })
 
 
 
 })
+
+// 查询所有场景（id,name,status）
+var getSceneBaseList = function() {
+    $.ajax({
+        type: "GET",
+        url: "/tcs-web/rest/scenes/profile",
+        dataType: "json",
+        cache: false,//false时，会自动添加时间戳
+        timeout: 1000,
+        success: function (data) {
+
+            var trContent;
+            $.each(data, function(idx, obj){
+                trContent += "<tr style='vertical-align: inherit;'>";
+                trContent += "<td><span>" +obj.id +"</span></td>";
+                trContent += "<td><span>"+obj.name+"</span></td>";
+
+                if(obj.status == 'running') {
+                    trContent += "<td><span class='label label-success'>"+obj.status+"</span></td>"
+                    trContent += "<td><button>stop</button></td>"
+                } else {
+                    trContent += "<td><span class='label label-default'>"+obj.status+"</span></td>"
+                    trContent += "<td><button>running</button></td>"
+                }
+
+                trContent += "<td><span><input type='radio' name='selectId' id='selectId' value='"+obj.id+"'></span></td>";
+                trContent += "</tr>"
+            });
+            $("#sceneselect .modal-body tbody").append(trContent);
+        },
+        error: function (xhr) {
+            alert("error！")
+        }
+    });
+}
 
 
 //基准网格的显示/隐藏 1:显示 0不显示

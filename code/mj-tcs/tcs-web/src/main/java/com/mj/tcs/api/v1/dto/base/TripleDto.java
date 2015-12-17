@@ -6,33 +6,35 @@ import com.inspiresoftware.lib.dto.geda.annotations.Dto;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.Embeddable;
+import java.io.Serializable;
 
 /**
  * @author Wang Zhen
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @Dto
-@Entity(name = "tcs_model_triple")
+//@Entity(name = "tcs_model_triple")
 //@Table(name = "tcs_model_triple")
-public class TripleDto extends BaseEntityDto {
+@Embeddable
+public class TripleDto /*extends BaseEntityDto*/ implements Serializable, Cloneable {
     /**
      * The X coordinate.
      */
     @DtoField
-    @Column(nullable = false)
+    @Column/*(nullable = false)*/ // TODO: To be compatible with VehicleDto.precisePosition attribute
     private long x;
     /**
      * The Y coordinate.
      */
     @DtoField
-    @Column(nullable = false)
+    @Column/*(nullable = false)*/
     private long y;
     /**
      * The Z coordinate.
      */
     @DtoField
-    @Column(nullable = false)
+    @Column/*(nullable = false)*/
     private long z;
 
     /**

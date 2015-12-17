@@ -30,7 +30,7 @@ public class SceneController extends ServiceController {
 
     @RequestMapping(value = "/scenes", method = RequestMethod.GET)
     public ResponseEntity<?> getAllScenes() {
-        Collection<SceneDto> sceneDtos = getModellingService().getAllScenes();
+        Collection<SceneDto> sceneDtos = getService().findAllScene();
         if (sceneDtos == null || sceneDtos.size() == 0) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -61,7 +61,7 @@ public class SceneController extends ServiceController {
 //        scene.clearId();
 
         // Creating new scene
-        newSceneDto = getModellingService().createScene(newSceneDto);
+        newSceneDto = getService().createScene(newSceneDto);
 
         return new ResponseEntity<>(
 //                new SceneDtoResourceAssembler().toResource((SceneDto) dtoConverter.convertToDto(newSceneDto)),
@@ -69,9 +69,9 @@ public class SceneController extends ServiceController {
                 HttpStatus.CREATED);
     }
 
-    @RequestMapping(value = "/scene/{sceneId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/scenes/{sceneId}", method = RequestMethod.GET)
     public ResponseEntity<?> getOneScene(@PathVariable("sceneId") Long sceneId) {
-        SceneDto sceneDto = getModellingService().getSceneDto(sceneId);
+        SceneDto sceneDto = getService().getSceneDto(sceneId);
 
         if (sceneDto == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -98,40 +98,40 @@ public class SceneController extends ServiceController {
 //        // OPTION 1
 //        // TODO: Check why PUT arguments are null ?
 ////        Map<String, Object> resourceMap = new BeanMap(sceneDto);
-////        SceneDto scene = getModellingService().getSceneDto(sceneId);
+////        SceneDto scene = getService().getSceneDto(sceneId);
 ////        dtoConverter.mergePropertiesToEntity(scene, resMap);
 //
 //        // OPTION 2 (RECOMMEND)
 //        SceneDto scene = (SceneDto)dtoConverter.convertToEntity(sceneDto);
 //
-//        getModellingService().updateScene(scene);
+//        getService().updateScene(scene);
 //
 //        return new ResponseEntity<>(
 //                new SceneDtoResourceAssembler().toResource((SceneDto) dtoConverter.convertToDto(scene)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}", method = RequestMethod.PATCH)
 //    public ResponseEntity<?> updateScenePartial(@PathVariable("sceneId") Long sceneId, EntityAuditorDto entityAuditorDto) {
 //        entityAuditorDto.setId(sceneId);
 //
-//        SceneDto scene = getModellingService().getSceneDto(sceneId);
+//        SceneDto scene = getService().getSceneDto(sceneId);
 //        // TODO: find a way to found which attribute should be updated!!! (merge new attributes (Map) to the current valueconverter)
 //        scene = (SceneDto) dtoConverter.mergePropertiesToEntity(scene, entityAuditorDto.getProperties());
 //
 //        // TODO: Should update the updated time properties?
 //
 //        // save
-//        getModellingService().updateScene(scene);
+//        getService().updateScene(scene);
 //
 //        return new ResponseEntity<>(
 //                new SceneDtoResourceAssembler().toResource((SceneDto) dtoConverter.convertToDto(scene)),
-//                HttpStatus.OK);
+//                HttpStatus.SUCCESS);
 //    }
 //
 //    @RequestMapping(value = "/scenes/{sceneId}", method = RequestMethod.DELETE)
 //    public ResponseEntity<?> deleteScene(@PathVariable("sceneId") Long sceneId) {
-//        getModellingService().deleteScene(sceneId);
+//        getService().deleteScene(sceneId);
 //
 //        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 //    }

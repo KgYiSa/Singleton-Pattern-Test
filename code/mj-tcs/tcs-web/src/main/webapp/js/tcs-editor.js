@@ -96,6 +96,7 @@
 
             var accumulatedDelta = 0
             $('#workarea').on('mousewheel', function(e, delta, deltaX, deltaY){
+
                 if (e.altKey || e.ctrlKey) {
                     e.preventDefault();
 
@@ -448,6 +449,18 @@
                         $('#ruler_y')[0].scrollTop = workarea[0].scrollTop;
                     }
                 });
+
+
+                // 鼠标位置信息显示
+                $(".tcs-editor").on('mousemove', function(e){
+                    e.preventDefault();
+
+                    var x = e.pageX;
+                    var y = e.pageY;
+                    var x2 = e.clientX;
+                    var y2 = e.clientY;
+                    $(".left-container .operate-content .tcs-bottom .show-position").html("X:"+x+", Y:"+y+"CX: "+x2+", CY: "+y2);
+                })
             }());
 
             $('#rulers').on("dblclick", function(e){

@@ -1,9 +1,17 @@
 package com.mj.tcs.data.model;
 
-import com.mj.tcs.data.base.BaseEntity;
+import com.mj.tcs.data.base.TCSObjectReference;
+import com.mj.tcs.data.base.TCSResource;
+import com.mj.tcs.data.base.TCSResourceReference;
 import com.mj.tcs.data.base.Triple;
 
-import java.util.*;
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Objects;
+import static java.util.Objects.requireNonNull;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * A location at which a vehicle may perform an action.
@@ -13,62 +21,43 @@ import java.util.*;
  * <li>It may be linked to multiple <code>Point</code>s.</li>
  * <li>As long as a link's specific set of allowed operations is empty (which is
  * the default), all operations defined by the <code>Location</code>'s
- * referenced <code>LocationTypeDto</code> are allowed at the linked
+ * referenced <code>LocationType</code> are allowed at the linked
  * <code>Point</code>. If the link's set of allowed operations is not empty,
  * only the operations contained in it are allowed at the linked
  * <code>Point</code>.</li>
  * </ul>
  *
- * @author Wang Zhen
+ * @author Stefan Walter (Fraunhofer IML)
  */
-public class Location extends BaseLocation {
-    private Scene scene;
+public final class Location
+        extends TCSResource<Location>
+        implements Serializable, Cloneable {
 
     /**
      * This location's position in mm.
      */
     private Triple position = new Triple();
-
+    /**
+     * A reference to this location's type.
+     */
+    private TCSObjectReference<LocationType> type;
     /**
      * A set of links attached to this location.
      */
     private Set<Link> attachedLinks = new HashSet<>();
 
-    public Location(){
-    }
     /**
      * Creates a new Location.
      *
+     * @param objectID The new location's object ID.
      * @param name The new location's name.
      * @param locationType The new location's type.
      */
-    public Location(String name,
-                    LocationType locationType) {
-        setName(name);
-        setType(locationType);
-    }
-
-    @Override
-    public void clearId() {
-        setId(null);
-        if (getPosition() != null) {
-            getPosition().clearId();
-        }
-        if (getAttachedLinks() != null) {
-            getAttachedLinks().forEach(l -> l.clearId());
-        }
-        // Location type should NOT be changed.
-//        if (getType() != null) {
-//            getType().clearId();
-//        }
-    }
-
-    public Scene getScene() {
-        return scene;
-    }
-
-    public void setScene(Scene scene) {
-        this.scene = scene;
+    public Location(int objectID,
+                    String name,
+                    TCSObjectReference<LocationType> locationType) {
+        super(objectID, name);
+        type = Objects.requireNonNull(locationType, "locationType is null");
     }
 
     /**
@@ -77,7 +66,7 @@ public class Location extends BaseLocation {
      * @return The physical coordinates of this location in mm.
      */
     public Triple getPosition() {
-      return position;
+        return position;
     }
 
     /**
@@ -87,7 +76,25 @@ public class Location extends BaseLocation {
      * be <code>null</code>.
      */
     public void setPosition(Triple newPosition) {
-      position = Objects.requireNonNull(newPosition, "newPosition is null");
+        position = requireNonNull(newPosition, "newPosition is null");
+    }
+
+    /**
+     * Returns a reference to the type of this location.
+     *
+     * @return A reference to the type of this location.
+     */
+    public TCSObjectReference<LocationType> getType() {
+        return type;
+    }
+
+    /**
+     * Sets this location's type.
+     *
+     * @param newType This location's new type.
+     */
+    public void setType(TCSObjectReference<LocationType> newType) {
+        type = Objects.requireNonNull(newType, "newType is null");
     }
 
     /**
@@ -96,19 +103,7 @@ public class Location extends BaseLocation {
      * @return A set of links attached to this location.
      */
     public Set<Link> getAttachedLinks() {
-      return attachedLinks;
-    }
-
-    public void setAttachedLinks(Set<Link> attachedLinks) {
-        this.attachedLinks = attachedLinks;
-    }
-
-    public Optional<Link> getAttachedLinkById(long id) {
-        if (this.attachedLinks == null) {
-            return Optional.ofNullable(null);
-        }
-
-        return attachedLinks.stream().filter(l -> l.getId() == id).findFirst();
+        return new HashSet<>(attachedLinks);
     }
 
     /**
@@ -122,9 +117,7 @@ public class Location extends BaseLocation {
      */
     public boolean attachLink(Link newLink) {
         Objects.requireNonNull(newLink, "newLink is null");
-        Location linkLocation = Objects.requireNonNull(newLink.getLocation(), "newLink's location is null");
-
-        if (!linkLocation.equals(this)) {
+        if (!newLink.getLocation().equals(this.getReference())) {
             throw new IllegalArgumentException(
                     "location end of link is not this location");
         }
@@ -134,161 +127,56 @@ public class Location extends BaseLocation {
     /**
      * Detaches a link from this location.
      *
-     * @param point The point end of the link to be detached from this
+     * @param pointRef The point end of the link to be detached from this
      * location.
      * @return <code>true</code> if, and only if, there was a link to the given
      * point attached to this location.
      */
-    public boolean detachLink(Point point) {
-      Objects.requireNonNull(point, "point is null");
-      Iterator<Link> linkIter = attachedLinks.iterator();
-      while (linkIter.hasNext()) {
-          Link curLink = linkIter.next();
-        if (point.equals(curLink.getPoint())) {
-          linkIter.remove();
-          return true;
+    public boolean detachLink(TCSObjectReference<Point> pointRef) {
+        Objects.requireNonNull(pointRef, "pointRef is null");
+        Iterator<Link> linkIter = attachedLinks.iterator();
+        while (linkIter.hasNext()) {
+            Link curLink = linkIter.next();
+            if (pointRef.equals(curLink.getPoint())) {
+                linkIter.remove();
+                return true;
+            }
         }
-      }
-      return false;
-    }
-
-    /**
-     * Adds an allowed operation to a link between a location and a point.
-     *
-     * @param point
-     * @param operation
-     */
-    public void addLocationLinkAllowedOperation(Point point, String operation) {
-        Objects.requireNonNull(point, "point is null");
-        Objects.requireNonNull(operation, "operation is null");
-
-        Optional<Link> referredLink = attachedLinks.stream()
-                .filter(l -> point.equals(l.getPoint())).findFirst();
-        if (!referredLink.isPresent()) {
-            throw new NullPointerException("Described link is not in this model");
-        }
-
-        referredLink.get().addAllowedOperation(operation);
-    }
-
-    /**
-     * Removes an allowed operation from a link between a location and a point.
-     *
-     * @param point
-     * @param operation
-     */
-    public void removeLocationLinkAllowedOperation(Point point, String operation) {
-        Objects.requireNonNull(point, "point is null");
-        Objects.requireNonNull(operation, "operation is null");
-
-        Optional<Link> referredLink = attachedLinks.stream()
-                .filter(l -> point.equals(l.getPoint())).findFirst();
-        if (!referredLink.isPresent()) {
-            throw new NullPointerException("Described link not in this model");
-        }
-
-        referredLink.get().removeAllowedOperation(operation);
-    }
-
-    /**
-     * Removes all allowed operations (for all vehicle types) from a link between
-     * a location and a point.
-     *
-     * @param point
-     */
-    public void clearLocationLinkAllowedOperations(Point point) {
-        Objects.requireNonNull(point, "point is null");
-
-        Optional<Link> referredLink = attachedLinks.stream()
-                .filter(l -> point.equals(l.getPoint())).findFirst();
-        if (!referredLink.isPresent()) {
-            throw new NullPointerException("Described link not in this model");
-        }
-
-        referredLink.get().clearAllowedOperations();
+        return false;
     }
 
     @Override
     public Location clone() {
-        Location clone = null;
-        clone = (Location) super.clone();
-        clone.position = (position == null) ? null : position;
+        Location clone = (Location) super.clone();
+        clone.position = (position == null) ? null : position.clone();
         clone.type = type.clone();
         clone.attachedLinks = new HashSet<>();
-        if (attachedLinks != null) {
-            for (Link curLink : attachedLinks) {
-                clone.attachedLinks.add(curLink.clone());
-            }
+        for (Link curLink : attachedLinks) {
+            clone.attachedLinks.add(curLink.clone());
         }
-
         return clone;
     }
 
-    public static class Link extends BaseEntity implements Cloneable {
 
-        private Scene scene;
+    /**
+     * A link connecting a point and a location, expressing that the location is
+     * reachable from the point.
+     */
+    public static final class Link
+            implements Serializable, Cloneable {
 
         /**
          * A reference to the location end of this link.
          */
-        private Location location;
+        private TCSResourceReference<Location> location;
         /**
          * A reference to the point end of this link.
          */
-        private Point point;
+        private TCSResourceReference<Point> point;
         /**
          * The operations allowed at this link.
          */
-        // divided by ;
-        private String allowedOperations = "";
-
-        public Link() {
-        }
-
-        /**
-         * Clear its ID only!
-         */
-        @Override
-        public void clearId() {
-            setId(null);
-        }
-
-        public Scene getScene() {
-            return scene;
-        }
-
-        public void setScene(Scene scene) {
-            this.scene = scene;
-        }
-
-        public void setLocation(Location location) {
-            this.location = location;
-        }
-
-        public void setPoint(Point point) {
-            this.point = point;
-        }
-
-        public void setAllowedOperations(Set<String> allowedOperations) {
-            if (allowedOperations == null || allowedOperations.size() == 0) {
-                this.allowedOperations = "";
-            }
-
-            final  StringBuffer buffer = new StringBuffer();
-            for (String op : allowedOperations) {
-                if (op == null || op.trim().isEmpty()) {
-                    continue;
-                }
-
-                if (buffer.length() != 0) {
-                    buffer.append(";");
-                }
-
-                buffer.append(op.trim());
-            }
-
-            this.allowedOperations = buffer.toString();
-        }
+        private Set<String> allowedOperations = new TreeSet<>();
 
         /**
          * Creates a new Link.
@@ -296,7 +184,8 @@ public class Location extends BaseLocation {
          * @param linkLocation A reference to the location end of this link.
          * @param linkPoint A reference to the point end of this link.
          */
-        public Link(Location linkLocation, Point linkPoint) {
+        public Link(TCSResourceReference<Location> linkLocation,
+                    TCSResourceReference<Point> linkPoint) {
             location = Objects.requireNonNull(linkLocation, "linkLocation is null");
             point = Objects.requireNonNull(linkPoint, "linkPoint is null");
         }
@@ -306,7 +195,7 @@ public class Location extends BaseLocation {
          *
          * @return A reference to the location end of this link.
          */
-        public Location getLocation() {
+        public TCSResourceReference<Location> getLocation() {
             return location;
         }
 
@@ -315,7 +204,7 @@ public class Location extends BaseLocation {
          *
          * @return A reference to the point end of this link.
          */
-        public Point getPoint() {
+        public TCSResourceReference<Point> getPoint() {
             return point;
         }
 
@@ -325,7 +214,7 @@ public class Location extends BaseLocation {
          * @return The operations allowed at this link.
          */
         public Set<String> getAllowedOperations() {
-            return stringToSet(allowedOperations);
+            return new TreeSet<>(allowedOperations);
         }
 
         /**
@@ -337,19 +226,14 @@ public class Location extends BaseLocation {
          */
         public boolean hasAllowedOperation(String operation) {
             Objects.requireNonNull(operation, "operation is null");
-            Set<String> ops = getAllowedOperations();
-            if (ops == null) {
-                return false;
-            }
-
-            return ops.contains(operation);
+            return allowedOperations.contains(operation);
         }
 
         /**
          * Removes all allowed operations from this link.
          */
         public void clearAllowedOperations() {
-            allowedOperations = "";
+            allowedOperations.clear();
         }
 
         /**
@@ -361,16 +245,7 @@ public class Location extends BaseLocation {
          */
         public boolean addAllowedOperation(String operation) {
             Objects.requireNonNull(operation, "operation is null");
-            Set<String> ops = getAllowedOperations();
-            if (ops == null) {
-                return false;
-            }
-
-            boolean answer = ops.add(operation);
-
-            allowedOperations = setToString(ops);
-
-            return answer;
+            return allowedOperations.add(operation);
         }
 
         /**
@@ -382,15 +257,7 @@ public class Location extends BaseLocation {
          */
         public boolean removeAllowedOperation(String operation) {
             Objects.requireNonNull(operation, "operation is null");
-            Set<String> ops = getAllowedOperations();
-            if (ops == null) {
-                return true;
-            }
-
-            boolean answer = ops.remove(operation);
-
-            allowedOperations = setToString(ops);
-            return answer;
+            return allowedOperations.remove(operation);
         }
 
         /**
@@ -415,55 +282,31 @@ public class Location extends BaseLocation {
             }
         }
 
-        private String setToString(Set<String> strList) {
-            if (strList == null || strList.size() == 0) {
-                return "";
-            }
-
-            StringBuffer buffer = new StringBuffer();
-            // FORMAT: xxx;yyy;zzz
-            for (String str : strList) {
-                if (str == null || str.trim().length() == 0) {
-                    continue;
-                }
-
-                if(buffer.length() != 0) { // not the first time
-                    buffer.append(";");
-                }
-                buffer.append(str.trim());
-            }
-
-            return buffer.toString();
-        }
-
-        private Set<String> stringToSet(String inString) {
-            if (inString == null || inString.trim().length() == 0) {
-                return new TreeSet<>();
-            }
-
-            String[] texts = inString.trim().split(";");
-            if (texts == null || texts.length == 0) {
-                return new TreeSet<>();
-            }
-
-            Set<String> answer = new TreeSet<>();
-            for (String str : texts) {
-                if (str == null || str.length() == 0) {
-                    continue;
-                }
-
-                answer.add(str);
-            }
-            return answer;
+        /**
+         * Returns a hash code for this link.
+         * The hash code of a <code>Location.Link</code> is computed as the
+         * exclusive OR (XOR) of the hash codes of the associated location and point
+         * references.
+         *
+         * @return A hash code for this link.
+         */
+        @Override
+        public int hashCode() {
+            return location.hashCode() ^ point.hashCode();
         }
 
         @Override
         public Link clone() {
             Link clone;
-            clone = (Link) super.clone();
+            try {
+                clone = (Link) super.clone();
+            }
+            catch (CloneNotSupportedException exc) {
+                throw new IllegalStateException("Unexpected exception", exc);
+            }
             clone.location = location.clone();
             clone.point = point.clone();
-            clone.allowedOperations = setToString(getAllowedOperations());
+            clone.allowedOperations = getAllowedOperations();
             return clone;
         }
     }

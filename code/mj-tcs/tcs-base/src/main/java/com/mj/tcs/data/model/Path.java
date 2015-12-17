@@ -5,9 +5,11 @@
  */
 package com.mj.tcs.data.model;
 
-import com.mj.tcs.data.base.BaseResource;
+import com.mj.tcs.data.base.TCSObjectReference;
+import com.mj.tcs.data.base.TCSResource;
 import com.mj.tcs.data.base.Triple;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,19 +19,19 @@ import java.util.Objects;
  * @author liumin
  * @author Wang Zhen
  */
-public class Path extends BaseResource implements Cloneable {
-
-    private Scene scene;
+public class Path
+        extends TCSResource<Path>
+        implements Serializable, Cloneable {
 
     /**
      * A reference to the point which this point originates in.
      */
-    private Point sourcePoint;
+    private TCSObjectReference<Point> sourcePoint;
 
     /**
      * A reference to the point which this point ends in.
      */
-    private Point destinationPoint;
+    private TCSObjectReference<Point> destinationPoint;
 
     private List<Triple> controlPoints = new ArrayList<>();
 
@@ -62,43 +64,34 @@ public class Path extends BaseResource implements Cloneable {
      */
     private boolean locked;
 
-    public Path() {
-    }
-
-    public Path(Point srcPoint, Point destPoint) {
-        setSourcePoint(srcPoint);
-        setDestinationPoint(destPoint);
-    }
-
     /**
-     * Clear its ID only
+     * Creates a new Path.
+     *
+     * @param objectID The new path's object ID.
+     * @param name The new path's name.
+     * @param srcPoint A reference to this path's starting point.
+     * @param destPoint A reference to this path's destination point.
      */
-    @Override
-    public void clearId() {
-        setId(null);
+    public Path(int objectID, String name, TCSObjectReference<Point> srcPoint,
+                TCSObjectReference<Point> destPoint) {
+        super(objectID, name);
+        sourcePoint = Objects.requireNonNull(srcPoint, "srcPoint is null");
+        destinationPoint = Objects.requireNonNull(destPoint, "destPoint is null");
     }
 
-    public Scene getScene() {
-        return scene;
-    }
-
-    public void setScene(Scene scene) {
-        this.scene = scene;
-    }
-
-    public Point getSourcePoint() {
+    public TCSObjectReference<Point> getSourcePoint() {
         return sourcePoint;
     }
 
-    public void setSourcePoint(Point sourcePoint) {
+    public void setSourcePoint(TCSObjectReference<Point> sourcePoint) {
         this.sourcePoint = sourcePoint;
     }
 
-    public Point getDestinationPoint() {
+    public TCSObjectReference<Point> getDestinationPoint() {
         return destinationPoint;
     }
 
-    public void setDestinationPoint(Point destinationPoint) {
+    public void setDestinationPoint(TCSObjectReference<Point> destinationPoint) {
         this.destinationPoint = destinationPoint;
     }
 

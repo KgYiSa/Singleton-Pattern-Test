@@ -10,7 +10,6 @@ import com.inspiresoftware.lib.dto.geda.annotations.DtoCollection;
 import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.api.v1.dto.base.EntityProperty;
-import com.mj.tcs.api.v1.dto.converter.value.converter.*;
 
 import javax.persistence.*;
 import java.util.*;
@@ -37,12 +36,6 @@ public class SceneDto extends BaseEntityDto {
     @JsonProperty("points")
     @JsonSerialize(as = LinkedHashSet.class)
     @JsonDeserialize(as = LinkedHashSet.class)
-    @DtoCollection(value = "pointDtos",
-                    entityCollectionClass = HashSet.class,
-                    dtoCollectionClass = HashSet.class,
-                    dtoBeanKey = "PointDto",
-                    entityBeanKeys = {"PointDto"},
-                    dtoToEntityMatcher = PointDto2PointMatcher.class)
     @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
     @OrderBy(value = "name ASC")
     private Set<PointDto> pointDtos;
@@ -50,12 +43,6 @@ public class SceneDto extends BaseEntityDto {
     @JsonProperty("paths")
     @JsonSerialize(as = LinkedHashSet.class)
     @JsonDeserialize(as = LinkedHashSet.class)
-    @DtoCollection(value = "pathDtos",
-            entityCollectionClass = HashSet.class,
-            dtoCollectionClass = HashSet.class,
-            dtoBeanKey = "PathDto",
-            entityBeanKeys = {"Path"},
-            dtoToEntityMatcher = PathDto2PathMatcher.class)
     @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
     @OrderBy(value = "name ASC")
     private Set<PathDto> pathDtos;
@@ -63,12 +50,6 @@ public class SceneDto extends BaseEntityDto {
     @JsonProperty("locations")
     @JsonSerialize(as = LinkedHashSet.class)
     @JsonDeserialize(as = LinkedHashSet.class)
-    @DtoCollection(value = "locationDtos",
-            entityCollectionClass = HashSet.class,
-            dtoCollectionClass = HashSet.class,
-            dtoBeanKey = "LocationDto",
-            entityBeanKeys = {"Location"},
-            dtoToEntityMatcher = LocationDto2LocationMatcher.class)
     @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
     @OrderBy(value = "name ASC")
     private Set<LocationDto> locationDtos;
@@ -76,12 +57,6 @@ public class SceneDto extends BaseEntityDto {
     @JsonProperty("location_types")
     @JsonSerialize(as = LinkedHashSet.class)
     @JsonDeserialize(as = LinkedHashSet.class)
-    @DtoCollection(value = "locationTypeDtos",
-            entityCollectionClass = HashSet.class,
-            dtoCollectionClass = HashSet.class,
-            dtoBeanKey = "LocationTypeDto",
-            entityBeanKeys = {"LocationType"},
-            dtoToEntityMatcher = LocationTypeDto2LocationTypeMatcher.class)
     @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
     @OrderBy(value = "name ASC")
     private Set<LocationTypeDto> locationTypeDtos;
@@ -89,12 +64,6 @@ public class SceneDto extends BaseEntityDto {
     @JsonProperty("blocks")
     @JsonSerialize(as = LinkedHashSet.class)
     @JsonDeserialize(as = LinkedHashSet.class)
-    @DtoCollection(value = "staticRouteDtos",
-            entityCollectionClass = HashSet.class,
-            dtoCollectionClass = HashSet.class,
-            dtoBeanKey = "StaticRouteDto",
-            entityBeanKeys = {"StaticRoute"},
-            dtoToEntityMatcher = StaticRouteDto2StaticRouteMatcher.class)
     @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
     @OrderBy(value = "name ASC")
     private Set<BlockDto> blockDtos;
@@ -102,12 +71,6 @@ public class SceneDto extends BaseEntityDto {
     @JsonProperty("static_routes")
     @JsonSerialize(as = LinkedHashSet.class)
     @JsonDeserialize(as = LinkedHashSet.class)
-    @DtoCollection(value = "staticRouteDtos",
-            entityCollectionClass = HashSet.class,
-            dtoCollectionClass = HashSet.class,
-            dtoBeanKey = "StaticRouteDto",
-            entityBeanKeys = {"StaticRoute"},
-            dtoToEntityMatcher = StaticRouteDto2StaticRouteMatcher.class)
     @OneToMany(mappedBy = "sceneDto", cascade = {CascadeType.ALL})
     @OrderBy(value = "name ASC")
     private Set<StaticRouteDto> staticRouteDtos;

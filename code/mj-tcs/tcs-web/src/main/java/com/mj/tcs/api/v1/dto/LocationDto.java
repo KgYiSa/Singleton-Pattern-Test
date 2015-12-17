@@ -11,7 +11,6 @@ import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.api.v1.dto.base.EntityProperty;
 import com.mj.tcs.api.v1.dto.base.TripleDto;
-import com.mj.tcs.api.v1.dto.converter.value.converter.LocationLinkDto2LocationLinkMatcher;
 
 import javax.persistence.*;
 import java.util.*;
@@ -74,12 +73,6 @@ public class LocationDto extends BaseEntityDto {
     @JsonManagedReference
     @JsonSerialize(as = LinkedHashSet.class)
     @JsonDeserialize(as = LinkedHashSet.class)
-    @DtoCollection(value = "attachedLinks",
-            entityCollectionClass = HashSet.class,
-            dtoCollectionClass = HashSet.class,
-            dtoBeanKey = "LocationLinkDto",
-            entityBeanKeys = {"Location$Link"},
-            dtoToEntityMatcher = LocationLinkDto2LocationLinkMatcher.class)
 //    @ElementCollection
     @OneToMany(cascade = {CascadeType.ALL})
     @CollectionTable(name = "tcs_model_location_attached_links", joinColumns = @JoinColumn(

@@ -30,8 +30,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         // 设置不拦截规则
         web.ignoring()
-                // TODO: Add "/**" to avoid ClientAbortException
-                .antMatchers("/css/**", "/plugin/**", "/static/**", "/**.jsp", "/**/*.jsp", "/**");
+            // TODO: Add "/**" to avoid ClientAbortException
+            .antMatchers("/css/**", "/plugin/**", "/static/**", "/**.jsp", "/**/*.jsp", "/**");
     }
 
     @Override

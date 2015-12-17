@@ -202,7 +202,7 @@ $(function(){
 var getSceneBaseList = function() {
     $.ajax({
         type: "GET",
-        url: "/tcs-web/rest/scenes/profile",
+        url: "/rest/scenes/profile",
         dataType: "json",
         cache: false,//false时，会自动添加时间戳
         timeout: 1000,
@@ -237,7 +237,7 @@ var getSceneBaseList = function() {
 var operateSceneById = function(id, operate, obj){
     $.ajax({
         type: "GET",
-        url: "/tcs-web/rest/scenes/" + id + "/actions/" + operate,
+        url: "/rest/scenes/" + id + "/actions/" + operate,
         dataType: "text",
         cache: false,//false时，会自动添加时间戳
         timeout: 1000,
@@ -281,7 +281,7 @@ var showGrid = function(flg){
 var getSceneContent = function (id) {
     $.ajax({
         type: "GET",
-        url: "/tcs-web/web/scenes/"+id,
+        url: "/web/scenes/"+id,
         dataType: "json",
         cache: false,//false时，会自动添加时间戳
         timeout: 1000,

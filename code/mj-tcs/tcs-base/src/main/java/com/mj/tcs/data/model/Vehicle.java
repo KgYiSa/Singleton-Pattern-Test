@@ -1,34 +1,38 @@
 package com.mj.tcs.data.model;
 
-import com.mj.tcs.data.base.BaseEntity;
+
+import com.mj.tcs.data.base.TCSObject;
+import com.mj.tcs.data.base.TCSObjectReference;
 import com.mj.tcs.data.base.Triple;
 import com.mj.tcs.data.order.OrderSequence;
 import com.mj.tcs.data.order.TransportOrder;
 import com.mj.tcs.drivers.CommunicationAdapter;
 import com.mj.tcs.drivers.LoadHandlingDevice;
 
-import java.util.Arrays;
+import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 /**
- * @author Wang Zhen
+ * Instances of this class keep information about a vehicle's current state.
+ *
+ * @author Stefan Walter (Fraunhofer IML)
  */
-public class Vehicle extends BaseEntity implements Cloneable {
-
-    private Scene scene;
+public final class Vehicle
+        extends TCSObject<Vehicle>
+        implements Serializable, Cloneable {
 
     /**
      * A value indicating that no route steps have been travelled for the current
      * drive order, yet.
      */
-    public final int ROUTE_INDEX_DEFAULT = -1;
+    public static final int ROUTE_INDEX_DEFAULT = -1;
     /**
      * The key for a property to store the class name of the preferred
      * communication adapter (factory) for this vehicle.
      */
-    public final String PREFERRED_ADAPTER = "tcs:preferredAdapterClass";
+    public static final String PREFERRED_ADAPTER = "tcs:preferredAdapterClass";
     /**
      * This vehicle's current length (in mm).
      */
@@ -54,7 +58,7 @@ public class Vehicle extends BaseEntity implements Cloneable {
     /**
      * The current (state of the) load handling devices of this vehicle.
      */
-    private List<LoadHandlingDevice> loadHandlingDevices;
+    private List<LoadHandlingDevice> loadHandlingDevices = new LinkedList<>();
     /**
      * This vehicle's maximum velocity (in mm/s).
      */
@@ -80,11 +84,11 @@ public class Vehicle extends BaseEntity implements Cloneable {
     /**
      * A reference to the transport order this vehicle is currently processing.
      */
-    private TransportOrder transportOrder;
+    private TCSObjectReference<TransportOrder> transportOrder;
     /**
      * A reference to the order sequence this vehicle is currently processing.
      */
-    private OrderSequence orderSequence;
+    private TCSObjectReference<OrderSequence> orderSequence;
     /**
      * The index of the last route step travelled for the current drive order of
      * the current transport order.
@@ -93,15 +97,23 @@ public class Vehicle extends BaseEntity implements Cloneable {
     /**
      * A reference to the point which this vehicle currently occupies.
      */
-    private Point currentPosition;
-    /**
-     * Accumulated distance from currentPosition to nextPosition
-     */
-    private int accumulatedDistance;
+    private TCSObjectReference<Point> currentPosition;
     /**
      * A reference to the point which this vehicle is expected to be seen at next.
      */
-    private Point nextPosition;
+    private TCSObjectReference<Point> nextPosition;
+    /**
+     * Indicator of the vehicle position (whether on Point position or on Path position)
+     */
+    private boolean currentOnPointPosition;
+    /**
+     * A reference to the path which this vehicle currently occupies.
+     */
+    private TCSObjectReference<Path> currentPath;
+    /**
+     * The vehicle's current position on path
+     */
+    private long currentPathOffset;
     /**
      * The vehicle's precise position in world coordinates [mm], independent from
      * logical positions/point names.
@@ -113,41 +125,19 @@ public class Vehicle extends BaseEntity implements Cloneable {
      * Set to <code>Double.NaN</code> if the vehicle hasn't provided an
      * orientation angle.
      */
-    private double orientationAngle = 0.0d;
+    private double orientationAngle = Double.NaN;
 
     /**
      * Creates a new vehicle.
      *
+     * @param objectID The new vehicle's object ID.
+     * @param name The new vehicle's name.
      */
-    public Vehicle(){
-        //do nothing
-    }
-
-    @Override
-    public void clearId() {
-        setId(null);
-    }
-
-    @Override
-    public String getName() {
-        return this.name;
-    }
-
-    @Override
-    public void setName(String inName) {
-        this.name = Objects.requireNonNull(inName, "name is null");
-    }
-
-    public Scene getScene() {
-        return scene;
-    }
-
-    public void setScene(Scene scene) {
-        this.scene = scene;
+    public Vehicle(int objectID, String name) {
+        super(objectID, name);
     }
 
     // Methods not declared in any interface start here
-
     /**
      * Returns this vehicle's remaining energy (in percent of the maximum).
      *
@@ -177,7 +167,7 @@ public class Vehicle extends BaseEntity implements Cloneable {
      * @return <code>true</code> if, and only if, the vehicle's energy level is
      * critical.
      */
-    public boolean isEnergyCriticalLevel() {
+    public boolean isEnergyLevelCritical() {
         return energyLevel <= energyLevelCritical;
     }
 
@@ -188,7 +178,7 @@ public class Vehicle extends BaseEntity implements Cloneable {
      * @return <code>true</code> if, and only if, the vehicle's energy level is
      * degraded.
      */
-    public boolean isEnergyDegradedLevel() {
+    public boolean isEnergyLevelDegraded() {
         return energyLevel <= energyLevelGood;
     }
 
@@ -198,7 +188,7 @@ public class Vehicle extends BaseEntity implements Cloneable {
      * @return <code>true</code> if, and only if, the vehicle's energy level is
      * good.
      */
-    public boolean isEnergyGoodLevel() {
+    public boolean isEnergyLevelGood() {
         return energyLevel > energyLevelGood;
     }
 
@@ -448,7 +438,7 @@ public class Vehicle extends BaseEntity implements Cloneable {
      * processing, or <code>null</code>, if it is not processing any transport
      * order at the moment.
      */
-    public TransportOrder getTransportOrder() {
+    public TCSObjectReference<TransportOrder> getTransportOrder() {
         return transportOrder;
     }
 
@@ -459,7 +449,7 @@ public class Vehicle extends BaseEntity implements Cloneable {
      * processing from now on. If <code>null</code>, this vehicle will not be
      * processing any transport order.
      */
-    public void setTransportOrder(TransportOrder newOrder) {
+    public void setTransportOrder(TCSObjectReference<TransportOrder> newOrder) {
         transportOrder = newOrder;
     }
 
@@ -471,7 +461,7 @@ public class Vehicle extends BaseEntity implements Cloneable {
      * processing, or <code>null</code>, if it is not processing any order
      * sequence at the moment.
      */
-    public OrderSequence getOrderSequence() {
+    public TCSObjectReference<OrderSequence> getOrderSequence() {
         return orderSequence;
     }
 
@@ -482,7 +472,7 @@ public class Vehicle extends BaseEntity implements Cloneable {
      * processing from now on. If <code>null</code>, this vehicle will not be
      * processing any order sequence.
      */
-    public void setOrderSequence(OrderSequence newSeq) {
+    public void setOrderSequence(TCSObjectReference<OrderSequence> newSeq) {
         orderSequence = newSeq;
     }
 
@@ -514,7 +504,7 @@ public class Vehicle extends BaseEntity implements Cloneable {
      * <code>null</code>, if this vehicle's position is unknown or the vehicle is
      * currently not in the system.
      */
-    public Point getCurrentPosition() {
+    public TCSObjectReference<Point> getCurrentPosition() {
         return currentPosition;
     }
 
@@ -523,8 +513,53 @@ public class Vehicle extends BaseEntity implements Cloneable {
      *
      * @param newPosition A reference to the new position.
      */
-    public void setCurrentPosition(Point newPosition) {
+    public void setCurrentPosition(TCSObjectReference<Point> newPosition) {
+        currentOnPointPosition = true;
         currentPosition = newPosition;
+    }
+
+    /**
+     * Sets this vehicle's current position on path.
+     * @param pathRef A reference to the path the vehicle occupied.
+     * @param pathOffset The offset value from the source point on path.
+     */
+    public void setCurrentPositionOnPath(TCSObjectReference<Path> pathRef,
+                                         long pathOffset) {
+        currentOnPointPosition = false;
+        currentPath = pathRef;
+        currentPathOffset = pathOffset;
+    }
+
+    /**
+     * Returns the current path the vehicle is on.
+     * @return The path the vehicle occupies or null
+     */
+    public TCSObjectReference<Path> getCurrentPath() {
+        if (currentOnPointPosition) {
+            return null;
+        }
+
+        return currentPath;
+    }
+
+    /**
+     * Returns the current path offset from the source point
+     * @return The path offset
+     */
+    public long getCurrentPathOffset() {
+        if (currentOnPointPosition) {
+            return 0L;
+        }
+
+        return currentPathOffset;
+    }
+
+    /**
+     * Indicates the vehicle is on a point or on a path.
+     * @return The vehicle is on a point or on a path
+     */
+    public boolean isOnPointPosition() {
+        return currentOnPointPosition;
     }
 
     /**
@@ -534,7 +569,7 @@ public class Vehicle extends BaseEntity implements Cloneable {
      * @return A reference to the point this vehicle is expected to be seen at
      * next, or <code>null</code>, if this vehicle's next position is unknown.
      */
-    public Point getNextPosition() {
+    public TCSObjectReference<Point> getNextPosition() {
         return nextPosition;
     }
 
@@ -543,7 +578,7 @@ public class Vehicle extends BaseEntity implements Cloneable {
      *
      * @param newPosition A reference to the new position.
      */
-    public void setNextPosition(Point newPosition) {
+    public void setNextPosition(TCSObjectReference<Point> newPosition) {
         nextPosition = newPosition;
     }
 
@@ -608,25 +643,24 @@ public class Vehicle extends BaseEntity implements Cloneable {
         return transportOrder != null;
     }
 
-
-    public int getAccumulatedDistance() {
-        return accumulatedDistance;
-    }
-
-    public void setAccumulatedDistance(int accumulatedDistance) {
-        this.accumulatedDistance = accumulatedDistance;
+    /**
+     * Clears all of this vehicle's communication adapter properties.
+     */
+    public void clearCommAdapterProperties() {
+        clearProperties();
     }
 
     @Override
     public Vehicle clone() {
-        Vehicle clone = null;
-            clone = (Vehicle) super.clone();
-            clone.transportOrder = (transportOrder == null) ? null : transportOrder.clone();
-            clone.orderSequence = (orderSequence == null) ? null : orderSequence.clone();
-            clone.currentPosition = (currentPosition == null) ? null : currentPosition.clone();
-            clone.precisePosition = (precisePosition == null) ? null : precisePosition;
-            clone.accumulatedDistance = accumulatedDistance;
-
+        Vehicle clone = (Vehicle) super.clone();
+        clone.transportOrder =
+                (transportOrder == null) ? null : transportOrder.clone();
+        clone.orderSequence =
+                (orderSequence == null) ? null : orderSequence.clone();
+        clone.currentPosition =
+                (currentPosition == null) ? null : currentPosition.clone();
+        clone.precisePosition =
+                (precisePosition == null) ? null : precisePosition.clone();
         return clone;
     }
 
@@ -640,97 +674,53 @@ public class Vehicle extends BaseEntity implements Cloneable {
          * The vehicle's current state is unknown, e.g. because communication with
          * it is currently not possible for some reason.
          */
-        UNKNOWN("UNKNOWN"),
+        UNKNOWN,
         /**
          * The vehicle's state is known and it's not in an error state, but it is
          * not available for receiving orders.
          */
-        UNAVAILABLE("UNAVAILABLE"),
+        UNAVAILABLE,
         /**
          * There is a problem with the vehicle.
          */
-        ERROR("ERROR"),
+        ERROR,
         /**
          * The vehicle is currently idle/available for processing movement orders.
          */
-        IDLE("IDLE"),
+        IDLE,
         /**
          * The vehicle is processing a movement order.
          */
-        EXECUTING("EXECUTING"),
+        EXECUTING,
         /**
          * The vehicle is currently recharging its battery/refilling fuel.
          */
-        CHARGING("CHARGING");
-
-        private String text;
-
-        State(String text) {
-            this.text = text;
-        }
-
-        @Override
-        public String toString() {
-            return this.text;
-        }
-
-        public static State fromString(String text) {
-            Optional<State> state = Arrays.stream(State.values())
-                    .filter(s -> s.toString().compareToIgnoreCase(text) == 0).findFirst();
-
-            if (state.isPresent()) {
-                return state.get();
-            }
-
-            return UNAVAILABLE;
-        }
+        CHARGING
     }
 
     /**
      * A vehicle's processing state as seen by the dispatcher.
      */
-    public enum  ProcState {
+    public enum ProcState {
 
         /**
          * The vehicle is currently unavailable for order processing and cannot be
          * dispatched. This is a vehicle's initial state.
          */
-        UNAVAILABLE("UNAVAILABLE"),
+        UNAVAILABLE,
         /**
          * The vehicle is currently not processing a transport order.
          */
-        IDLE("IDLE"),
+        IDLE,
         /**
          * The vehicle is currently processing a transport order and is waiting for
          * the next drive order to be assigned to it.
          */
-        AWAITING_ORDER("AWAITING_ORDER"),
+        AWAITING_ORDER,
         /**
          * The vehicle is currently processing a drive order.
          */
-        PROCESSING_ORDER("PROCESSING_ORDER");
-
-        private String text;
-
-        ProcState(String text) {
-            this.text = text;
-        }
-
-        @Override
-        public String toString() {
-            return this.text;
-        }
-
-        public static ProcState fromString(String text) {
-            Optional<ProcState> procState = Arrays.stream(ProcState.values())
-                    .filter(s -> s.toString().compareToIgnoreCase(text) == 0).findFirst();
-
-            if (procState.isPresent()) {
-                return procState.get();
-            }
-
-            return UNAVAILABLE;
-        }
+        PROCESSING_ORDER
     }
 
     /**
@@ -743,37 +733,15 @@ public class Vehicle extends BaseEntity implements Cloneable {
          * Indicates that the vehicle is driving/standing oriented towards its
          * front.
          */
-        FORWARD("FORWARD"),
+        FORWARD,
         /**
          * Indicates that the vehicle is driving/standing oriented towards its
          * back.
          */
-        BACKWARD("BACKWARD"),
+        BACKWARD,
         /**
          * Indicates that the vehicle's orientation is undefined/unknown.
          */
-        UNDEFINED("UNDEFINED");
-
-        private String text;
-
-        Orientation(String text) {
-            this.text = text;
-        }
-
-        @Override
-        public String toString() {
-            return this.text;
-        }
-
-        public static Orientation fromString(String text) {
-            Optional<Orientation> orientation = Arrays.stream(Orientation.values())
-                    .filter(s -> s.toString().compareToIgnoreCase(text) == 0).findFirst();
-
-            if (orientation.isPresent()) {
-                return orientation.get();
-            }
-
-            return UNDEFINED;
-        }
+        UNDEFINED
     }
 }

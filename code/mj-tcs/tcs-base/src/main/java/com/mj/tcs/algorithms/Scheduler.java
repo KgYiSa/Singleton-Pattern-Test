@@ -1,6 +1,6 @@
 package com.mj.tcs.algorithms;
 
-import com.mj.tcs.data.base.BaseResource;
+import com.mj.tcs.data.base.TCSResource;
 import com.mj.tcs.data.order.Route;
 
 import java.util.Map;
@@ -39,7 +39,7 @@ public interface Scheduler {
      * @param resourceUser The <code>ResourceHolder</code> claiming the resources.
      * @param resources The resources claimed.
      */
-    void claim(ResourceHolder resourceUser, Set<BaseResource> resources);
+    void claim(ResourceHolder resourceUser, Set<TCSResource> resources);
 
     /**
      * Allocates a set of resources for a vehicle.
@@ -47,7 +47,7 @@ public interface Scheduler {
      * @param resourceUser The <code>ResourceHolder</code> requesting the resources.
      * @param resources The resources requested.
      */
-    void allocate(ResourceHolder resourceUser, Set<BaseResource> resources);
+    void allocate(ResourceHolder resourceUser, Set<TCSResource> resources);
 
     /**
      * Informs the scheduler that a set of resources are to be allocated for the
@@ -66,7 +66,7 @@ public interface Scheduler {
      * @throws ResourceAllocationException If it's impossible to allocate the
      * given set of resources for the given <code>ResourceHolder</code>.
      */
-    void allocateNow(ResourceHolder resourceUser, Set<BaseResource> resources)
+    void allocateNow(ResourceHolder resourceUser, Set<TCSResource> resources)
             throws ResourceAllocationException;
 
     /**
@@ -76,7 +76,7 @@ public interface Scheduler {
      * @param resources The resources released. Any resources in the given set not
      * allocated by the given <code>ResourceHolder</code> are ignored.
      */
-    void free(ResourceHolder resourceUser, Set<BaseResource> resources);
+    void free(ResourceHolder resourceUser, Set<TCSResource> resources);
 
     /**
      * Unclaims a set of resources claimed by a vehicle.
@@ -84,7 +84,7 @@ public interface Scheduler {
      * @param resourceUser The <code>ResourceHolder</code> unclaiming the resources.
      * @param resources The resources unclaimed.
      */
-    void unclaim(ResourceHolder resourceUser, Set<BaseResource> resources);
+    void unclaim(ResourceHolder resourceUser, Set<TCSResource> resources);
 
     /**
      * Returns all resource allocations as a map of <code>ResourceHolder</code> IDs
@@ -93,6 +93,6 @@ public interface Scheduler {
      * @return All resource allocations as a map of <code>ResourceHolder</code> IDs
      * to resources.
      */
-    Map<String, Set<BaseResource>> getAllocations();
+    Map<String, Set<TCSResource>> getAllocations();
 }
 

@@ -1,8 +1,10 @@
 package com.mj.tcs.data.model;
 
-import com.mj.tcs.data.base.BaseResource;
+import com.mj.tcs.data.base.TCSResource;
+import com.mj.tcs.data.base.TCSResourceReference;
 
-import java.util.LinkedHashSet;
+import java.io.Serializable;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -11,16 +13,22 @@ import java.util.Set;
  *
  * @author Stefan Walter (Fraunhofer IML)
  */
-public final class Block extends BaseResource implements Cloneable {
-
-    private Scene scene;
-
+public final class Block
+        extends TCSResource<Block>
+        implements Serializable, Cloneable {
     /**
      * The resources aggregated in this block.
      */
-    private Set<BaseResource> members = new LinkedHashSet<>();
+    private Set<TCSResourceReference<?>> members = new HashSet<>();
 
-    public Block() {
+    /**
+     * Creates a new, empty Block.
+     *
+     * @param objectID This block's ID.
+     * @param name This block's name.
+     */
+    public Block(int objectID, String name) {
+        super(objectID, name);
     }
 
     /**
@@ -28,16 +36,8 @@ public final class Block extends BaseResource implements Cloneable {
      *
      * @return A set of all members of this block.
      */
-    public Set<BaseResource> getMembers() {
-        return members;
-    }
-
-    public Scene getScene() {
-        return scene;
-    }
-
-    public void setScene(Scene scene) {
-        this.scene = scene;
+    public Set<TCSResourceReference<?>> getMembers() {
+        return new HashSet<>(members);
     }
 
     /**
@@ -45,7 +45,7 @@ public final class Block extends BaseResource implements Cloneable {
      *
      * @param newMember The new member to be added to this block.
      */
-    public void addMember(BaseResource newMember) {
+    public void addMember(TCSResourceReference<?> newMember) {
         if (newMember == null) {
             throw new NullPointerException("newMember is null");
         }
@@ -57,7 +57,7 @@ public final class Block extends BaseResource implements Cloneable {
      *
      * @param rmMember The member to be removed from this block.
      */
-    public void removeMember(BaseResource rmMember) {
+    public void removeMember(TCSResourceReference<?> rmMember) {
         if (rmMember == null) {
             throw new NullPointerException("rmMember is null");
         }
@@ -71,7 +71,7 @@ public final class Block extends BaseResource implements Cloneable {
      * @return <code>true</code> if, and only if, the given object is a member of
      * this block.
      */
-    public boolean containsMember(BaseResource chkMember) {
+    public boolean containsMember(TCSResourceReference<?> chkMember) {
         if (chkMember == null) {
             throw new NullPointerException("chkMember is null");
         }
@@ -80,9 +80,12 @@ public final class Block extends BaseResource implements Cloneable {
 
     @Override
     public Block clone() {
-        Block clone = null;
-        clone = (Block) super.clone();
-        clone.members = new LinkedHashSet<>(members);
+        Block clone = (Block) super.clone();
+        clone.members = new HashSet<>();
+        for (TCSResourceReference curRef : members) {
+            clone.members.add(curRef);
+        }
         return clone;
     }
 }
+

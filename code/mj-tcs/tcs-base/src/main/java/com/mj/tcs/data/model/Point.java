@@ -5,9 +5,10 @@
  */
 package com.mj.tcs.data.model;
 
-import com.mj.tcs.data.base.BaseResource;
+import com.mj.tcs.data.base.TCSResource;
 import com.mj.tcs.data.base.Triple;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -16,9 +17,9 @@ import java.util.*;
  * @author liumin
  * @author Wang Zhen
  */
-public class Point extends BaseResource implements Cloneable {
-
-    private Scene scene;
+public class Point
+        extends TCSResource<Point>
+        implements Serializable, Cloneable {
 
     /**
      * This point's coordinates in mm.
@@ -48,31 +49,15 @@ public class Point extends BaseResource implements Cloneable {
 
     private Set<Location.Link> attachedLinks = new LinkedHashSet<>();
 
+
     /**
-     * Creates a new point
+     * Creates a new point with the given name.
      *
+     * @param objectID This point's object ID.
+     * @param name This point's name.
      */
-    public Point() {
-        // Do nothing
-    }
-
-    public Scene getScene() {
-        return scene;
-    }
-
-    public void setScene(Scene scene) {
-        this.scene = scene;
-    }
-
-    /**
-     * Clear its ID & position's ID only
-     */
-    @Override
-    public void clearId() {
-        setId(null);
-        if (getPosition() != null) {
-            getPosition().setId(null);
-        }
+    public Point(int objectID, String name) {
+        super(objectID, name);
     }
 
     // Methods not declared in any interface start here
@@ -310,20 +295,20 @@ public class Point extends BaseResource implements Cloneable {
          * Indicates a position at which a vehicle is expected to report in.
          * Halting or even parking at such a position is not allowed.
          */
-        REPORT_POSITION("REPORT_POSITION"),
+        REPORT_POSITION("REPORT"),
         /**
          * Indicates a position at which a vehicle may halt temporarily, e.g.
          * for executing an operating. The vehicle is also expected to report in
          * when it arrives at such a position. It may not park here for longer
          * than necessary, though.
          */
-        HALT_POSITION("HALT_POSITION"),
+        HALT_POSITION("HALT"),
         /**
          * Indicates a position at which a vehicle may halt for longer periods
          * of time when it is not processing orders. The vehicle is also
          * expected to report in when it arrives at such a position.
          */
-        PARK_POSITION("PARK_POSITION");
+        PARK_POSITION("PARK");
 
         private String text;
 

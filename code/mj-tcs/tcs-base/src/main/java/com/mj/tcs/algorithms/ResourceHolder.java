@@ -1,6 +1,6 @@
 package com.mj.tcs.algorithms;
 
-import com.mj.tcs.data.base.BaseResource;
+import com.mj.tcs.data.base.TCSResource;
 
 import java.util.Set;
 
@@ -28,7 +28,7 @@ public interface ResourceHolder {
      * indicates this <code>ResourceHolder</code> does not need the given resources
      * (any more), freeing them implicitly.
      */
-    boolean allocationSuccessful(Set<BaseResource> resources);
+    boolean allocationSuccessful(Set<TCSResource> resources);
 
     /**
      * Called if it was impossible to allocate resources for this
@@ -36,5 +36,5 @@ public interface ResourceHolder {
      *
      * @param resources The resources which could not be reserved.
      */
-    void allocationFailed(Set<BaseResource> resources);
+    void allocationFailed(Set<TCSResource> resources);
 }

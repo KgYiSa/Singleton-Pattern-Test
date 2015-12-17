@@ -27,6 +27,10 @@ var setting = {
 };
 
 
+// format json
+var fJosn = {};
+
+
 $(function(){
 
 
@@ -76,7 +80,7 @@ $(function(){
                     // TODO
                     break;
                 case 'show-splits':
-                    showGrid(0);
+                    showGrid(true);
                     break;
 
             }
@@ -87,7 +91,7 @@ $(function(){
                     // TODO
                     break;
                 case 'show-splits':
-                    showGrid(1);
+                    showGrid(false);
                     break;
 
             }
@@ -264,16 +268,23 @@ var operateSceneById = function(id, operate, obj){
 
 //基准网格的显示/隐藏 1:显示 0不显示
 var showGrid = function(flg){
-    var rect1 = document.getElementById("rect1");
-    var rect2 = document.getElementById("rect2");
-    if(flg == 1) {
-        rect1.setAttribute("fill", "url(#grid1)");
-        rect2.setAttribute("fill", "url(#grid2)");
-    } else {
-        rect1.setAttribute("fill", "none");
-        rect2.setAttribute("fill", "none");
-    }
+    //var rect1 = document.getElementById("rect1");
+    //var rect2 = document.getElementById("rect2");
+    //if(flg == 1) {
+    //    rect1.setAttribute("fill", "url(#grid1)");
+    //    rect2.setAttribute("fill", "url(#grid2)");
+    //} else {
+    //    rect1.setAttribute("fill", "none");
+    //    rect2.setAttribute("fill", "none");
+    //}
 
+    for (var p in lineh) {
+        lineh[p].opacity = flg ? 0 : 0.3;
+    }
+    for (var p in linew) {
+        linew[p].opacity = flg ? 0 : 0.3;
+    }
+    two.update();
 }
 
 
@@ -325,6 +336,8 @@ var buildTree = function(data) {
 
     }
 
+
+
     var eleNodes=[];
     //locations --> attached_links
     var initElementsObj = ["vehicles", "points", "paths", "locations", "location_types", "attached_links", "static_routes"];
@@ -332,14 +345,14 @@ var buildTree = function(data) {
 
     //--------------------------elements-----------------------------------------
     // elements[vehicles & Layout VLayout-01]
-    var rootVehicles = { id:1, pId:0, name:'Vehicles', title:'Vehicles', open:false};
-    var rootLayout = { id:2, pId:0, name:'Layout one', title:'Layout one', icon:"../images/figure.18x18.png", open:true};
+    var rootVehicles = { id:1, pId:0, name:'Vehicles', click:false, title:'Vehicles', open:false};
+    var rootLayout = { id:2, pId:0, name:'Layout one', click:false, title:'Layout one', icon:"../images/figure.18x18.png", open:true};
     eleNodes.push(rootVehicles);
     eleNodes.push(rootLayout);
 
     //init sub folder
     for(var idx in initElementsObj) {
-        var treeNode = {id: 0, pId: 0, name: "", title: "", click: true, icon: "", open: false};
+        var treeNode = {id: 0, pId: 0, name: "", title: "", click: false, icon: "", open: false};
 
         var elem = initElementsObj[idx];
         var array = data[elem];
@@ -358,11 +371,13 @@ var buildTree = function(data) {
                 pointObj.id = parseInt(rootVehicles.id + "" + attr.id);
                 pointObj.pId = rootVehicles.id;
                 pointObj.name = attr.name;
-                pointObj.title = attr.name + attr.type;
+                pointObj.title = elem;
                 pointObj.click = true;
                 pointObj.icon = "./images/" + elem + ".18x18.png";
-                pointObj.elemId = attr.id;
+                pointObj.elemId = attr.UUID;
                 eleNodes.push(pointObj);
+                fJosn[attr.UUID] = attr;
+
 
             })
 
@@ -372,7 +387,7 @@ var buildTree = function(data) {
             treeNode.pId = rootLayout.id;
             treeNode.name = elem;
             treeNode.title = elem;
-            treeNode.click = true;
+            treeNode.click = false;
             treeNode.icon = "";
             treeNode.open = false;
             eleNodes.push(treeNode);
@@ -387,10 +402,12 @@ var buildTree = function(data) {
                                 pointObj.id = treeNode.id + "" + link.id;
                                 pointObj.pId = treeNode.id;
                                 pointObj.name = link.name;
-                                pointObj.title = link.name + link.type;
+                                pointObj.title = elem;
                                 pointObj.click = true;
+                                pointObj.elemId = attr.UUID
                                 pointObj.icon = "./images/"+elem+".18x18.png";
                                 eleNodes.push(pointObj);
+                                fJosn[attr.UUID] = attr;
                         });
                     }
                 )
@@ -402,7 +419,7 @@ var buildTree = function(data) {
             treeNode.pId = rootLayout.id;
             treeNode.name = elem;
             treeNode.title = elem;
-            treeNode.click = true;
+            treeNode.click = false;
             treeNode.icon = "";
             treeNode.open = false;
             eleNodes.push(treeNode);
@@ -412,11 +429,12 @@ var buildTree = function(data) {
                     pointObj.id = treeNode.id + "" + attr.id;
                     pointObj.pId = treeNode.id;
                     pointObj.name = attr.name;
-                    pointObj.title = attr.name + attr.type;
+                    pointObj.title = elem;
                     pointObj.click = true;
                     pointObj.icon = "./images/" + elem + ".18x18.png";
-                    pointObj.elemId = attr.id;
+                    pointObj.elemId = attr.UUID;
                     eleNodes.push(pointObj);
+                    fJosn[attr.UUID] = attr;
 
                 })
             }
@@ -424,7 +442,7 @@ var buildTree = function(data) {
         }
 
     }
-
+console.log(fJosn)
     console.log(eleNodes)
     $.fn.zTree.init($("#elements-tree"), setting, eleNodes);
 
@@ -488,25 +506,79 @@ function beforeClick(treeId, treeNode, clickFlag) {
     return (treeNode.click != false);
 }
 
+
+// 树节点响应信息
 function onClick(event, treeId, treeNode, clickFlag) {
      // alert(event, treeId, treeNode, clickFlag)
-     console.log(treeNode)
+    var comProNotDis = ["id", "version", "UUID", "outgoing_paths", "incoming_paths", "attached_links"];
+    var reArryProValueDis = ["hops"];   //array
+    var reJsonProValueDis = ["location_type", "source_point", "destination_point"];  //object
+    var reProDis = ["properties", "locked"];
 
-     var count = 1;
-     var str = "";
-     $.each(treeNode, function(key, value) {
-        if(count < 10){
-            console.log(key+"--"+value);
-            str+="<tr><td>"+key+"</td><td>"+value+"</td></tr>"
-            count ++;
-        } else {
-            return;
+
+    var uuid = treeNode.elemId;
+    var treeNodeInfo = fJosn[uuid];
+    var str = "";
+
+     $.each(treeNodeInfo, function(key, value) {
+
+        if(comProNotDis.indexOf(key) < 0 ) {
+
+            if(reArryProValueDis.indexOf(key) >= 0) {
+                var hopsStr = "";
+
+                $.each(value, function(id, obj){
+                    hopsStr += obj.name + ",";
+                })
+                value = hopsStr;
+            } else if(key == "properties") {
+                var proStr = "";
+                if(value && value.length > 0 ) {
+                    $.each(value, function(obj, id){
+                        proStr += obj.key+":"+obj.value;
+                    })
+                    value = proStr;
+                } else {
+                    value = "";
+                }
+            } else if(reJsonProValueDis.indexOf(key) >= 0) {
+                value = value.name;
+            } else if(key == "locked") {
+                if(!value){
+                    value = "<input type='checkbox' name='locked' value='locked' checked='checked' disabled='disabled'/>";
+                } else {
+                    value = "<input type='checkbox' name='locked' value='unlocked' disabled='disabled' />";
+                }
+
+            } else {
+                if(!value){
+                    value = "";
+                } else if( isJson(value)) {
+                    value = JSON.stringify(value)
+                }
+
+            }
+            str+="<tr><td>"+key+"</td><td>"+value+"</td></tr>";
+
         }
-        
+
+
+
     });
 
      showAttr(str)
 }
+
+// 判断数组
+function isArray(obj) {
+    return Object.prototype.toString.call(obj) === '[object Array]';
+}
+
+// 判断是否是json对象
+function isJson(obj) {
+    return typeof(obj) == "object" && Object.prototype.toString.call(obj).toLowerCase() == "[object object]" && !obj.length;
+}
+
 
 // function showPro(str) {
 //     if (!pro) pro = $("#pro");
@@ -526,11 +598,11 @@ function onClick(event, treeId, treeNode, clickFlag) {
 
 var showAttr = function(str){
     // $("#table1 tr th:not(:nth-child(1))").remove();
-    var cont = $(".properties .table-body tbody tr:not(:nth-child(1))");
-     console.log(cont)
-
-     cont.remove();
-
-     $(".properties .table-body tbody tr:last").after(str);
+    //var cont = $(".properties .table-body tbody tr:not(:nth-child(1))");
+    // console.log(cont)
+    //var cont = $(".properties .table-body tbody");
+    // cont.remove();
+    $(".properties .table-body tbody ").html("")
+     $(".properties .table-body tbody ").append(str);
 
 }

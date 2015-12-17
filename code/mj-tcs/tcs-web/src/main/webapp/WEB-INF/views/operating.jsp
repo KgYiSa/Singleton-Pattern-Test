@@ -406,10 +406,6 @@
 				<div class="table-body">
 				<table>
 				<tbody>
-					<tr>
-						<td>name</td>
-						<td>hsl</td>
-					</tr>
 				</tbody>
 				</table>
 				</div>

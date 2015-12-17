@@ -73,10 +73,12 @@ function Point(x,y,type,name,textOffsetX,textOffsetY,two){
 
 
     textTitle =  name;
-    var text = two.makeText(textTitle,x+textOffsetX,y+textOffsetY,styles);
+    // todo + to - for textOffsetX && textOffsetY
+    var text = two.makeText(textTitle,x-textOffsetX,y-textOffsetY,styles);
     this.selectedText = false;
-    this.textOffsetX = x+textOffsetX - this.point.translation.x;
-    this.textOffsetY = y+textOffsetY - this.point.translation.x;
+    // todo refer to the above operations
+    this.textOffsetX = x-textOffsetX - this.point.translation.x;
+    this.textOffsetY = y-textOffsetY - this.point.translation.x;
 
     this.text = text;
     this.two = two;

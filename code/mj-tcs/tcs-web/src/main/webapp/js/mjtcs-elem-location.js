@@ -60,10 +60,12 @@ function Location(x,y,type,name,textOffsetXX,textOffsetYY,two){
 
 
     textTitle =  name;
-    var text = two.makeText(textTitle,x+textOffsetXX,y+textOffsetYY,styles);
+    // todo + to - for textOffsetX && textOffsetY
+    var text = two.makeText(textTitle,x-textOffsetXX,y-textOffsetYY,styles);
     this.selectedText = false;
-    this.textOffsetX = x+textOffsetXX - this.point.translation.x;
-    this.textOffsetY = y+textOffsetYY - this.point.translation.x;
+    // todo refer to the above operations
+    this.textOffsetX = x-textOffsetXX - this.point.translation.x;
+    this.textOffsetY = y-textOffsetYY - this.point.translation.x;
 
     this.text = text;
     this.two = two;

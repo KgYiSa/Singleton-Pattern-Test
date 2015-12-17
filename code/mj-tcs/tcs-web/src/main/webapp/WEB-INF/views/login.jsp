@@ -11,14 +11,17 @@
     <title>用户登录</title>
 </head>
 <body>
-<header><h1>明匠智能</h1></header>
+<header>
+    <div><img src="../images/mj-logo.png" alt="" class=""></div>
+    <div><p class="title"></p></div>
+</header>
 
 <div class="container-fluid">
 
     <div class="row">
         <div class="login-form form-horizontal" >
             <div class="login-form-title form-group">
-                <h3>用户登录${date }</h3>
+                <h3>用户登录dd${date }</h3>
             </div>
             <div class="form-group">
                 <label for="inputEmail3" class="col-sm-offset-1 col-sm-2 control-label">Email</label>
@@ -32,7 +35,7 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-2 col-sm-2">
-                    <button type="submit" class="btn btn-default" onclick="location.href='/tcs-web/operating'">登录</button>
+                    <button type="submit" class="btn btn-default" onclick="location.href='/operating'">登录</button>
                 </div>
                 <div class="col-sm-offset-3 col-sm-2">
                     <button type="button" class="btn btn-default">注册</button>

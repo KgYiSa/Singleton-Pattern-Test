@@ -9,7 +9,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
         <script src="/plugin/socket/sockjs-1.0.3.js"></script>
-        <script src="/plugin/stomp/stomp.js"></script>
+        <script src="/plugin/socket/stomp.js"></script>
         <script type="text/javascript">
             var wsUrl = "http://localhost:8080/tcs-web/stomp";
             var stompClient = null;

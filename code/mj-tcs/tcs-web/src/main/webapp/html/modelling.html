@@ -13,12 +13,59 @@
 <body>
 	<header>
 		<!--<h1>AVG Modelling-Mode<a href="operating.html">[operating]</a></h1>-->
-		<div><img src="../images/mj-logo.png" alt="" class=""></div>
-		<div><p class="title">AVG Modelling-Mode<a href="operating.html">[operating]</a></p></div>
+		<div><p class="title">AGV Modelling-Mode<a href="operating.html">[operating]</a></p></div>
+		<div class="mj-logo"><img src="../images/mj-logo.png" alt="" class=""></div>
+		<div class="title">AVG Modelling<a href="operating.html">[operating]</a></div>
 
 		<div class="sys-info">
-			<p class="sence"><a href="javascript:;">选择场景</a>|</p>
-			<p class="user">用户：admin</p>
+			<!--<p class="sence"><a href="javascript:;">选择场景</a>|</p>-->
+			<div class="scene">
+
+				<button type="button" class="btn btn-primary btn-sm" data-toggle="modal"  data-target="#sceneselect">
+					选择场景
+				</button>
+				<span>场景一</span>
+				<!-- Modal -->
+				<div class="modal fade" id="sceneselect" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+					<div class="modal-dialog" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+								<h4 class="modal-title" id="myModalLabel">场景列表：</h4>
+							</div>
+							<div class="modal-body">
+
+								<table class="table table-bordered scenelist">
+									<col width="10%" />
+									<col width="40%" />
+									<col width="18%" />
+									<col width="18%" />
+									<col width="14%" />
+									<thead>
+									<tr>
+										<th>ID</th>
+										<th>NAME</th>
+										<th>STATUS</th>
+										<th>OPERATE</th>
+										<th>SELECT</th>
+									</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+								<button type="button" class="btn btn-primary">确定</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="userinfo">
+				<span class="label label-info">用户：admin</span>
+			</div>
 		</div>
 	</header>
 

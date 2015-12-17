@@ -96,6 +96,7 @@
 
             var accumulatedDelta = 0
             $('#workarea').on('mousewheel', function(e, delta, deltaX, deltaY){
+
                 if (e.altKey || e.ctrlKey) {
                     e.preventDefault();
 
@@ -257,14 +258,6 @@
                 }
             }
 
-            var updateWireFrame = function() {
-                // Test support
-                //if(supportsNonSS) return;
-
-                var rule = "#workarea.wireframe #svgcontent * { stroke-width: " + 1/svgCanvas.getZoom() + "px; }";
-                $('#wireframe_rules').text(workarea.hasClass('wireframe') ? rule : "");
-            }
-
             var zoomDone = function() {
                 //    updateBgImage();
                 updateWireFrame();
@@ -359,15 +352,14 @@
                         }
                     }
 
-                    var real_interval = multi * u_multi;
+                    var big_int = multi * u_multi;
                     ctx.font = "normal 9px 'Lucida Grande', sans-serif";
                     ctx.fillStyle = "#777";
 
                     var ruler_d = ((content_d / u_multi) % multi) * u_multi;
-                    console.log("ruler_d: " + ruler_d + ", content_d: "+content_d+", u_multi: "+u_multi+", multi: "+multi);
-                    var label_pos = ruler_d - real_interval;
-                    for (; ruler_d < total_len; ruler_d += real_interval) {
-                        label_pos += real_interval;
+                    var label_pos = ruler_d - big_int;
+                    for (; ruler_d < total_len; ruler_d += big_int) {
+                        label_pos += big_int;
                         var real_d = ruler_d - content_d;
 
                         var cur_d = Math.round(ruler_d) + .5;
@@ -408,7 +400,7 @@
                             }
                         }
 
-                        var part = real_interval / 10;
+                        var part = big_int / 10;
                         for(var i = 1; i < 10; i++) {
                             var sub_d = Math.round(ruler_d + part * i) + .5;
                             if(ctx_arr && sub_d > ruler_len) {
@@ -439,6 +431,14 @@
                 }
             }
 
+            var updateWireFrame = function() {
+                // Test support
+                //if(supportsNonSS) return;
+
+                var rule = "#workarea.wireframe #svgcontent * { stroke-width: " + 1/svgCanvas.getZoom() + "px; }";
+                $('#wireframe_rules').text(workarea.hasClass('wireframe') ? rule : "");
+            }
+
             (function() {
                 workarea.scroll(function() {
                     // TODO:  jQuery's scrollLeft/Top() wouldn't require a null check
@@ -451,7 +451,7 @@
                 });
 
 
-                // 榧犳爣浣嶇疆淇℃伅鏄剧ず
+                // 鼠标位置信息显示
                 $(".tcs-editor").on('mousemove', function(e){
                     e.preventDefault();
 

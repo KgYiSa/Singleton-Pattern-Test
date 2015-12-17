@@ -115,20 +115,20 @@
 							<input id="zoom" size="3" value="100%" type="text" readonly="readonly" />
 
 							<select id="zoom_select">
-								<option value="6">70%</option>
-								<option value="12">75%</option>
-								<option value="16">80%</option>
-								<option value="25">85%</option>
-								<option value="50">90%</option>
-								<option value="75">95%</option>
+								<option value="40">40%</option>
+								<option value="50">50%</option>
+								<option value="60">60%</option>
+								<option value="70">70%</option>
+								<option value="80">80%</option>
+								<option value="90">90%</option>
 								<option value="100" selected="selected">100%</option>
-								<option value="150">105%</option>
-								<option value="200">110%</option>
-								<option value="300">115%</option>
-								<option value="400">120%</option>
-								<option value="600">125%</option>
-								<option value="800">130%</option>
-								<option value="1600">135%</option>
+								<option value="110">110%</option>
+								<option value="120">120%</option>
+								<option value="150">150%</option>
+								<option value="170">170%</option>
+								<option value="200">200%</option>
+								<option value="220">220%</option>
+								<option value="250">250%</option>
 							</select>
 						</div>
 						<div class="show-reset selected"><img src="${ctxStatic}/images/zoom-fit.png" title=""></div>
@@ -406,10 +406,6 @@
 				<div class="table-body">
 				<table>
 				<tbody>
-					<tr>
-						<td>name</td>
-						<td>hsl</td>
-					</tr>
 				</tbody>
 				</table>
 				</div>

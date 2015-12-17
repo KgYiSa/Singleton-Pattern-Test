@@ -18,23 +18,30 @@
         <processorPath useClasspath="true" />
       </profile>
       <profile default="false" name="Annotation profile for tcs-web-server" enabled="true">
-        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
-        <module name="tcs-web-server" />
       </profile>
       <profile default="false" name="Annotation profile for tcs-base" enabled="true">
-        <sourceOutputDir name="target\generated-sources\annotations" />
+        <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
         <module name="tcs-base" />
       </profile>
+      <profile default="false" name="Annotation profile for tcs-web" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target\generated-test-sources\test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="tcs-web" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="mj-tcs" target="1.8" />
       <module name="tcs-base" target="1.8" />
+      <module name="tcs-web" target="1.8" />
       <module name="tcs-web-server" target="1.8" />
     </bytecodeTargetLevel>
   </component>

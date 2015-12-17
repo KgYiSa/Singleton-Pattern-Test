@@ -288,6 +288,7 @@ var getSceneContent = function (id) {
         success: function (data) {
             if(data){
                 buildTree(data);
+                buildSceneEditor(data);
             }
 
         },

@@ -520,12 +520,7 @@
 	<script type="text/javascript" src="${ctxStatic}/js/jquery-1.11.3.js"></script>
 	<script type="text/javascript" src="${ctxStatic}/plugin/bootstrap/js/bootstrap.js"></script>
 	<script type="text/javascript" src="${ctxStatic}/plugin/zTree/js/jquery.ztree.core-3.5.js"></script>
-	 <script src="${ctxStatic}/plugin/bootSideMenu/js/BootSideMenu.js"></script>
-	 <script type="text/javascript" src="${ctxStatic}/js/init.js"></script>
-	<script type="text/javascript" src="${ctxStatic}/js/operating.js"></script>
-	<script type="text/javascript" src="${ctxStatic}/js/mousewheel.js"></script>
-	<script type="text/javascript" src="${ctxStatic}/js/tcs-editor.js"></script>
-	<script type="text/javascript" src="${ctxStatic}/js/tcscanvas.js"></script>
+	<script type="text/javascript" src="${ctxStatic}/plugin/bootSideMenu/js/BootSideMenu.js"></script>
 	<script type="text/javascript" src="${ctxStatic}/plugin/draw2d/backbone.js"></script>
 	<script type="text/javascript" src="${ctxStatic}/plugin/draw2d/events.js"></script>
 	<script type="text/javascript" src="${ctxStatic}/plugin/draw2d/underscore.js"></script>
@@ -535,6 +530,11 @@
 	<script type="text/javascript" src="${ctxStatic}/js/mjtcs-elem-location.js"></script>
 	<script type="text/javascript" src="${ctxStatic}/js/mjtcs-elem-link.js"></script>
 	<script type="text/javascript" src="${ctxStatic}/js/mjtcs-modelling.js"></script>
+	 <script type="text/javascript" src="${ctxStatic}/js/init.js"></script>
+	<script type="text/javascript" src="${ctxStatic}/js/operating.js"></script>
+	<script type="text/javascript" src="${ctxStatic}/js/mousewheel.js"></script>
+	<script type="text/javascript" src="${ctxStatic}/js/tcs-editor.js"></script>
+	<script type="text/javascript" src="${ctxStatic}/js/tcscanvas.js"></script>
 	<script type="text/javascript">
 	  $(document).ready(function(){
 		  startLoading();

@@ -171,7 +171,7 @@ function createLocation(){
 
 
 
-var jsonObject =   {
+var jsondata =   {
                         "id": 5,
                         "version": 0,
                         "name": "test_scene_15_12_08_22_02_33_1",
@@ -467,38 +467,53 @@ var jsonObject =   {
                             }
                         ]
                     };
+//buildSceneEditor(jsondata);
 //alert(jsonObject.points[2].display_position_x);
+function buildSceneEditor(jsonObject){
 
-for(var i= 0; i<jsonObject.points.length; i++){
-    var jsonPoint = jsonObject.points[i];
-    new Point(jsonPoint.display_position_x,jsonPoint.display_position_y,jsonPoint.type,jsonPoint.name,jsonPoint.label_offset_x,jsonPoint.label_offset_y,two);
-}
-for(var i= 0; i<jsonObject.locations.length; i++){
-    var jsonLocation = jsonObject.locations[i];
-    new Location(jsonLocation.display_position_x,jsonLocation.display_position_y,jsonLocation.type,jsonLocation.name,jsonLocation.label_offset_x,jsonLocation.label_offset_y,two);
-    for(var j=0; j<jsonLocation.attached_links.length; j++){
-        var startX,startY;
-        for(var k=0; k<jsonObject.points.length; k++){
-            if(jsonObject.points[k].UUID == jsonLocation.attached_links[j].point.UUID){
-                startX = jsonObject.points[k].display_position_x;
-                startY = jsonObject.points[k].display_position_y;
-                break;
+    for(var i= 0; i<jsonObject.points.length; i++){
+        var jsonPoint = jsonObject.points[i];
+        new Point(jsonPoint.display_position_x,jsonPoint.display_position_y,jsonPoint.type,jsonPoint.name,jsonPoint.label_offset_x,jsonPoint.label_offset_y,two);
+    }
+    for(var i= 0; i<jsonObject.locations.length; i++){
+        var jsonLocation = jsonObject.locations[i];
+        new Location(jsonLocation.display_position_x,jsonLocation.display_position_y,jsonLocation.type,jsonLocation.name,jsonLocation.label_offset_x,jsonLocation.label_offset_y,two);
+        for(var j=0; j<jsonLocation.attached_links.length; j++){
+            var startX,startY;
+            for(var k=0; k<jsonObject.points.length; k++){
+                if(jsonObject.points[k].UUID == jsonLocation.attached_links[j].point.UUID){
+                    startX = jsonObject.points[k].display_position_x;
+                    startY = jsonObject.points[k].display_position_y;
+                    break;
+                }
             }
+            new Link(startX,startY,jsonLocation.display_position_x,jsonLocation.display_position_y,two);
         }
-        new Link(startX,startY,jsonLocation.display_position_x,jsonLocation.display_position_y,two);
+    }
+    for(var i= 0; i<jsonObject.paths.length; i++){
+        var jsonPath = jsonObject.paths[i];
+        var startX,startY,endX,endY;
+        var sourceUUID = jsonPath.source_point.UUID,
+            destinationUUID = jsonPath.destination_point.UUID;
+        for(var j=0; j<jsonObject.points.length; j++){
+            startX = jsonObject.points[j].UUID == sourceUUID?jsonObject.points[j].display_position_x : startX ;
+            startY = jsonObject.points[j].UUID == sourceUUID?jsonObject.points[j].display_position_y : startY ;
+            endX = jsonObject.points[j].UUID == destinationUUID?jsonObject.points[j].display_position_x : endX ;
+            endY = jsonObject.points[j].UUID == destinationUUID?jsonObject.points[j].display_position_y : endY ;
+        }
+        new Path(startX,startY,endX,endY,two);
     }
 }
-for(var i= 0; i<jsonObject.paths.length; i++){
-    var jsonPath = jsonObject.paths[i];
-    var startX,startY,endX,endY;
-    var sourceUUID = jsonPath.source_point.UUID,
-        destinationUUID = jsonPath.destination_point.UUID;
-    for(var j=0; j<jsonObject.points.length; j++){
-        startX = jsonObject.points[j].UUID == sourceUUID?jsonObject.points[j].display_position_x : startX ;
-        startY = jsonObject.points[j].UUID == sourceUUID?jsonObject.points[j].display_position_y : startY ;
-        endX = jsonObject.points[j].UUID == destinationUUID?jsonObject.points[j].display_position_x : endX ;
-        endY = jsonObject.points[j].UUID == destinationUUID?jsonObject.points[j].display_position_y : endY ;
-    }
-    new Path(startX,startY,endX,endY,two);
-}
-
+//$(".show-splits div").toggle(function(){
+//        gridShowOrHideGrid(true);
+//},function(){
+//        gridShowOrHideGrid(false);
+//});
+//function gridShowOrHideGrid(val){
+//    for(var p in lineh){
+//        lineh[p].opacity = val?0.3:0;
+//    }
+//    for(var p in linew){
+//        linew[p].opacity = val?0.3:0;
+//    }
+//}

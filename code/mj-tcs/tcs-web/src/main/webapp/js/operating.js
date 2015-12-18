@@ -103,8 +103,8 @@ $(function(){
 
     // 鼠标位置信息显示
     $(".tcs-editor").mousemove(function(e){
-        var x = e.pageX;
-        var y = e.pageY;
+        var x = e.pageX - $(this).offset().left;
+        var y = e.pageY - $(this).offset().top;
         $(".left-container .top-panel .top-panel-view .tcs-bottom .show-position").html("X:"+x+", Y:"+y);
     })
 
@@ -330,10 +330,21 @@ var buildTree = function(data) {
 
 
 
+
     var eleNodes=[];
     //locations --> attached_links
     var initElementsObj = ["vehicles", "points", "paths", "locations", "location_types", "attached_links", "static_routes"];
     var initBlocksObj = ["blocks"];
+
+
+    // init vehicle list
+    if(data[initElementsObj[0]]) {
+        initVehicleList(data[initElementsObj[0]])
+    }
+
+
+
+
 
     //--------------------------elements-----------------------------------------
     // elements[vehicles & Layout VLayout-01]
@@ -434,7 +445,7 @@ var buildTree = function(data) {
         }
 
     }
-console.log(fJosn)
+    console.log(fJosn)
     console.log(eleNodes)
     $.fn.zTree.init($("#elements-tree"), setting, eleNodes);
 
@@ -485,6 +496,41 @@ var initTree = function(){
     } else {
         alert("this browser does not support localStorage!")
     }
+
+}
+
+
+var initVehicleList = function(vehicleArray){
+    var vehicleListStr ="<div class='col-xs-6 col-sm-4 col-md-3 col-lg-2'>";
+    for(var i = 0 ; i < vehicleArray.length ; i ++ ) {
+        vehicleListStr += "<div class='vehicle' vehicle-uuid='" + vehicleArray[i].UUID + "'>";
+        vehicleListStr += "<div class='name'>" + vehicleArray[i].name + "</div>";
+        var el = vehicleArray[i].energy_level;
+        switch (el){
+            case el = 0:
+                el = "000-2";
+                break;
+            case el > 0 && el <= 30:
+                el = "030-2";
+                break;
+            case el > 0 && el <= 30:
+                el = "030-2";
+                break;
+            case el > 30 && el <= 60:
+                el = "060-2";
+                break;
+            case el > 60 && el <= 100:
+                el = "100-2";
+                break;
+            default: el = "100-2";
+
+        }
+        vehicleListStr += " <div class='battery'><img src='/images/battery/battery-"+el+".png' /></div>";
+        vehicleListStr += "<div class='status'> running </div>";
+        vehicleListStr += "</div>";
+    }
+    vehicleListStr += "</div>"
+    $(".left-container .bottom-panel .bottom-panel-list").html(vehicleListStr)
 
 }
 
@@ -553,8 +599,6 @@ function onClick(event, treeId, treeNode, clickFlag) {
             str+="<tr><td>"+key+"</td><td>"+value+"</td></tr>";
 
         }
-
-
 
     });
 

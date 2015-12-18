@@ -444,8 +444,8 @@
 				<table>
 				<tbody>
 					<tr>
-						<td><a href="javascript:;">name</a></td>
-						<td title="hslhslhslhslhslhsl">hslhslhslhslhslhsl</td>
+						<td><a href="javascript:;">小车</a></td>
+						<td title="stop">stop</td>
 						<td>
 							<select>
 								<option value="">请选择</option>
@@ -457,8 +457,8 @@
 						<td>name</td>
 					</tr>
 					<tr>
-						<td><a href="javascript:;">name</a></td>
-						<td>hsl</td>
+						<td><a href="javascript:;">叉车</a></td>
+						<td>stop</td>
 						<td>
 							<select>
 								<option value="">请选择</option>
@@ -467,11 +467,11 @@
 							</select>
 						</td>
 						<td><input type="checkbox" name="2" class="startflg" value="2"/></td>
-						<td>name</td>
+						<td>location1</td>
 					</tr>
 					<tr>
-						<td><a href="javascript:;">name</a></td>
-						<td>hsl</td>
+						<td><a href="javascript:;">小车</a></td>
+						<td>running</td>
 						<td>
 							<select>
 								<option value="">请选择</option>
@@ -480,7 +480,7 @@
 							</select>
 						</td>
 						<td><input type="checkbox" name="3" checked="" class="startflg" value="3"/></td>
-						<td>name</td>
+						<td>location2</td>
 					</tr>
 				</tbody>
 				</table>

@@ -242,7 +242,7 @@
                 var unit = 1;//units[curConfig.baseUnit]; // 1 = 1px
                 var u_multi = unit * zoom;
 
-                var multi = Editor.calculateZoomMultiplier(u_multi);
+                var multi = tcsCanvas.calculateZoomMultiplier(u_multi);
 
                 for(var d = 0; d < 2; d++) {
                     var is_x = (d === 0);
@@ -392,10 +392,10 @@
 
             // 鼠标位置信息显示
             $(".tcs-editor").mousemove(function(e){
-                var x = e.pageX + $('#workarea').scrollLeft() - $('#ruler_y').offset().left;
-                var y = e.pageY + $('#workarea').scrollTop()  - $('#ruler_x').offset().top;
+                var x = e.pageX + $('#workarea').scrollLeft() - $(this).offset().left;
+                var y = e.pageY + $('#workarea').scrollTop()  - $(this).offset().top;
 
-                var edit_pos = Editor.mouseCoordinatesToEditorCoordinates([x, y]);
+                var edit_pos = tcsCanvas.mouseCoordinatesToEditorCoordinates([x, y]);
 
                 $(".left-container .top-panel .top-panel-view .tcs-bottom .show-position").html("X: "+edit_pos[0]+", Y: "+edit_pos[1]);
             });
@@ -413,106 +413,107 @@
             updateCanvas(true);
         };
 
-        // u_multi = unit * zoom
-        Editor.calculateZoomMultiplier = function(u_multi) {
-            // Calculate the main number interval
-            // Make [1,2,5] array
-            var r_intervals = [];
-            for(var i = .1; i < 1E5; i *= 10) {
-                r_intervals.push(1 * i);
-                r_intervals.push(2 * i);
-                r_intervals.push(5 * i);
-            }
-
-            function _calculateMultiplier(u_multi) {
-                // Calculate the main number interval
-                var raw_m = 50 / u_multi;
-                var multi = 1;
-                for(var i = 0; i < r_intervals.length; i++) {
-                    var num = r_intervals[i];
-                    multi = num;
-                    if(raw_m <= num) {
-                        break;
-                    }
-                }
-
-                return multi;
-            };
-
-            return _calculateMultiplier(u_multi);
-        };
-
-        // mouse_coords = [x, y]
-        Editor.mouseCoordinatesToEditorCoordinates = function(mouse_coords) {
-            var editor_coords = [0, 0];
-
-            var zoom = tcsCanvas.getZoom();
-
-            // todo
-            //var units = tcsEdit.units.getTypeMap();
-            var unit = 1;//units[curConfig.baseUnit]; // 1 = 1px
-            var u_multi = unit * zoom;
-
-            var multi = Editor.calculateZoomMultiplier(u_multi);
-
-            for(var d = 0; d < 2; d++) {
-                var is_x = (d === 0);
-
-                // TODO:
-                var canvasOffset = tcsCanvas.getContentOffset()[d];//tcsCanvas.contentOffset[d];
-
-                var num = (mouse_coords[d] - canvasOffset) / u_multi;
-                num = (is_x ? num : -num);
-
-                var label;
-                if(multi >= 1) {
-                    label = Math.round(num);
-                } else {
-                    var decs = (multi+'').split('.')[1].length;
-                    label = num.toFixed(decs)-0;
-                }
-
-                editor_coords[d] = label;
-            }
-
-            return editor_coords;
-        };
-
-        // editor_coords = [x, y]
-        Editor.editorCoordinatesToMouseCoordinates = function(editor_coords) {
-            var mouse_coords = [0, 0];
-
-            var zoom = tcsCanvas.getZoom();
-
-            // todo
-            //var units = tcsEdit.units.getTypeMap();
-            var unit = 1;//units[curConfig.baseUnit]; // 1 = 1px
-            var u_multi = unit * zoom;
-
-            var multi = Editor.calculateZoomMultiplier(u_multi);
-
-            for(var d = 0; d < 2; d++) {
-                var is_x = (d === 0);
-
-                // TODO:
-                var canvasOffset = tcsCanvas.getContentOffset()[d];//tcsCanvas.contentOffset[d];
-
-                var num = (editor_coords[d] * u_multi + canvasOffset);
-                num = (is_x ? num : -num);
-
-                var label;
-                if(multi >= 1) {
-                    label = Math.round(num);
-                } else {
-                    var decs = (multi+'').split('.')[1].length;
-                    label = num.toFixed(decs)-0;
-                }
-
-                mouse_coords[d] = label;
-            }
-
-            return mouse_coords;
-        };
+        // NOTE: Moved to tcs-canvas for the ease of use during drawing elements.
+        //// u_multi = unit * zoom
+        //Editor.calculateZoomMultiplier = function(u_multi) {
+        //    // Calculate the main number interval
+        //    // Make [1,2,5] array
+        //    var r_intervals = [];
+        //    for(var i = .1; i < 1E5; i *= 10) {
+        //        r_intervals.push(1 * i);
+        //        r_intervals.push(2 * i);
+        //        r_intervals.push(5 * i);
+        //    }
+        //
+        //    function _calculateMultiplier(u_multi) {
+        //        // Calculate the main number interval
+        //        var raw_m = 50 / u_multi;
+        //        var multi = 1;
+        //        for(var i = 0; i < r_intervals.length; i++) {
+        //            var num = r_intervals[i];
+        //            multi = num;
+        //            if(raw_m <= num) {
+        //                break;
+        //            }
+        //        }
+        //
+        //        return multi;
+        //    };
+        //
+        //    return _calculateMultiplier(u_multi);
+        //};
+        //
+        //// mouse_coords = [x, y]
+        //Editor.mouseCoordinatesToEditorCoordinates = function(mouse_coords) {
+        //    var editor_coords = [0, 0];
+        //
+        //    var zoom = tcsCanvas.getZoom();
+        //
+        //    // todo
+        //    //var units = tcsEdit.units.getTypeMap();
+        //    var unit = 1;//units[curConfig.baseUnit]; // 1 = 1px
+        //    var u_multi = unit * zoom;
+        //
+        //    var multi = Editor.calculateZoomMultiplier(u_multi);
+        //
+        //    for(var d = 0; d < 2; d++) {
+        //        var is_x = (d === 0);
+        //
+        //        // TODO:
+        //        var canvasOffset = tcsCanvas.getContentOffset()[d];//tcsCanvas.contentOffset[d];
+        //
+        //        var num = (mouse_coords[d] - canvasOffset) / u_multi;
+        //        num = (is_x ? num : -num);
+        //
+        //        var label;
+        //        if(multi >= 1) {
+        //            label = Math.round(num);
+        //        } else {
+        //            var decs = (multi+'').split('.')[1].length;
+        //            label = num.toFixed(decs)-0;
+        //        }
+        //
+        //        editor_coords[d] = label;
+        //    }
+        //
+        //    return editor_coords;
+        //};
+        //
+        //// editor_coords = [x, y]
+        //Editor.editorCoordinatesToMouseCoordinates = function(editor_coords) {
+        //    var mouse_coords = [0, 0];
+        //
+        //    var zoom = tcsCanvas.getZoom();
+        //
+        //    // todo
+        //    //var units = tcsEdit.units.getTypeMap();
+        //    var unit = 1;//units[curConfig.baseUnit]; // 1 = 1px
+        //    var u_multi = unit * zoom;
+        //
+        //    var multi = Editor.calculateZoomMultiplier(u_multi);
+        //
+        //    for(var d = 0; d < 2; d++) {
+        //        var is_x = (d === 0);
+        //
+        //        // TODO:
+        //        var canvasOffset = tcsCanvas.getContentOffset()[d];//tcsCanvas.contentOffset[d];
+        //
+        //        var num = (editor_coords[d] * u_multi + canvasOffset);
+        //        num = (is_x ? num : -num);
+        //
+        //        var label;
+        //        if(multi >= 1) {
+        //            label = Math.round(num);
+        //        } else {
+        //            var decs = (multi+'').split('.')[1].length;
+        //            label = num.toFixed(decs)-0;
+        //        }
+        //
+        //        mouse_coords[d] = label;
+        //    }
+        //
+        //    return mouse_coords;
+        //};
 
         var callbacks = [];
 

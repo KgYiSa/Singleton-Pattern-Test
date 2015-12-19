@@ -24,7 +24,7 @@
         var is_ready = false;
         curConfig = {
             canvas_expansion: 1,
-            dimensions: [580,400],
+            dimensions: [640,480],
             showRulers: true,
             initFill: {color: 'fff', opacity: 1},
             initStroke: {width: 1.5, color: '000', opacity: 1},
@@ -87,7 +87,7 @@
             if(opts.extensions) {
                 curConfig.extensions = opts.extensions;
             }
-        }
+        };
 
         Editor.init = function() {
             Editor.canvas = tcsCanvas = new $.TCSCanvas(document.getElementById('tcs-canvas'), curConfig);
@@ -116,7 +116,6 @@
                     return;
                 }
                 var zoom = tcsCanvas.getZoom();
-                var workarea = $("#workarea")
                 var w_area = workarea;
                 zoomChanged(window, {
                     width: 0,
@@ -126,13 +125,12 @@
                     y: (w_area[0].scrollTop + w_area.height()/2)/zoom,
                     zoom: zoomlevel
                 }, true);
-            }
+            };
 
             var zoomChanged = function(window, bbox, autoCenter) {
                 var scrbar = 15,
                     res = tcsCanvas.getResolution(),
-                    w_area = workarea,
-                    canvas_pos = $('#tcs-canvas').position();
+                    w_area = workarea;
                 var z_info = tcsCanvas.setBBoxZoom(bbox, w_area.width()-scrbar, w_area.height()-scrbar);
                 if(!z_info) return;
                 var zoomlevel = z_info.zoom,
@@ -141,7 +139,7 @@
                 if(zoomlevel < .001) {
                     changeZoom({value: .1});
                     return;
-                }
+                };
                 if (typeof animatedZoom != 'undefined') window.cancelAnimationFrame(animatedZoom)
                 // zoom duration 500ms
                 var start = Date.now();
@@ -159,12 +157,15 @@
                         window.animatedZoom = requestAnimationFrame(animateZoom)
                     }
                     else {
+                        var canvas = $("#tcs-canvas");
+                        tcsCanvas.resizeTwoCanvas(canvas.width(), canvas.height());
+                        tcsCanvas.setZoom(zoomlevel);
                         $("#zoom").val(parseInt(zoomlevel*100) + "%")
                         $("option", "#zoom_select").removeAttr("selected")
                         $("option[value="+ parseInt(zoomlevel*100) +"]", "#zoom_select").attr("selected", "selected")
                     }
-                }
-                animateZoom()
+                };
+                animateZoom();
 
                 //if(autoCenter) {
                 //  updateCanvas();
@@ -178,7 +179,7 @@
                 //}
 
                 zoomDone();
-            }
+            };
 
             var updateCanvas = Editor.updateCanvas = function(center, new_ctr) {
                 var w = workarea.width(), h = workarea.height();
@@ -220,21 +221,13 @@
                     updateRulers(cnvs, zoom);
                     workarea.scroll();
                 }
-            }
+            };
 
             var zoomDone = function() {
                 //    updateBgImage();
                 updateWireFrame();
                 //updateCanvas(); // necessary?
-            }
-
-            // Make [1,2,5] array
-            var r_intervals = [];
-            for(var i = .1; i < 1E5; i *= 10) {
-                r_intervals.push(1 * i);
-                r_intervals.push(2 * i);
-                r_intervals.push(5 * i);
-            }
+            };
 
             function updateRulers(scanvas, zoom) {
                 var workarea = document.getElementById("workarea");
@@ -244,18 +237,20 @@
 
                 var limit = 30000;
 
-                //var c_elem = svgCanvas.getContentElem();
-
-                //var units = svgedit.units.getTypeMap();
+                // todo
+                //var units = tcsEdit.units.getTypeMap();
                 var unit = 1;//units[curConfig.baseUnit]; // 1 = 1px
+                var u_multi = unit * zoom;
+
+                var multi = Editor.calculateZoomMultiplier(u_multi);
 
                 for(var d = 0; d < 2; d++) {
                     var is_x = (d === 0);
                     var dim = is_x ? 'x' : 'y';
                     var lentype = is_x?'width':'height';
                     // TODO:
-                    var content_d = tcsCanvas.contentOffset[d];
-                    console.log("offset x = " + tcsCanvas.contentOffset[0] + ", y = " + tcsCanvas.contentOffset[1]);
+                    var canvasOffset = tcsCanvas.getContentOffset()[d];//tcsCanvas.contentOffset[d];
+
                     var $hcanv_orig = $('#ruler_' + dim + ' canvas:first');
 
                     // Bit of a hack to fully clear the canvas in Safari & IE9
@@ -268,8 +263,6 @@
                     var ruler_len = scanvas[lentype]()*2;
                     var total_len = ruler_len;
                     hcanv.parentNode.style[lentype] = total_len + 'px';
-                    //console.log("total_len: " +total_len);
-                    var canv_count = 1;
                     var ctx_num = 0;
                     var ctx_arr;
                     var ctx = hcanv.getContext("2d");
@@ -300,28 +293,15 @@
 
                     hcanv[lentype] = ruler_len;
 
-                    var u_multi = unit * zoom;
-
-                    // Calculate the main number interval
-                    var raw_m = 50 / u_multi;
-                    var multi = 1;
-                    for(var i = 0; i < r_intervals.length; i++) {
-                        var num = r_intervals[i];
-                        multi = num;
-                        if(raw_m <= num) {
-                            break;
-                        }
-                    }
-
                     var big_int = multi * u_multi;
                     ctx.font = "normal 9px 'Lucida Grande', sans-serif";
                     ctx.fillStyle = "#777";
 
-                    var ruler_d = ((content_d / u_multi) % multi) * u_multi;
+                    var ruler_d = ((canvasOffset / u_multi) % multi) * u_multi;
                     var label_pos = ruler_d - big_int;
                     for (; ruler_d < total_len; ruler_d += big_int) {
                         label_pos += big_int;
-                        var real_d = ruler_d - content_d;
+                        var real_d = ruler_d - canvasOffset;
 
                         var cur_d = Math.round(ruler_d) + .5;
                         if(is_x) {
@@ -332,7 +312,9 @@
                             ctx.lineTo(0, cur_d);
                         }
 
-                        var num = (label_pos - content_d) / u_multi;
+                        var num = (label_pos - canvasOffset) / u_multi;
+                        num = (is_x ? num : -num);
+
                         var label;
                         if(multi >= 1) {
                             label = Math.round(num);
@@ -340,10 +322,6 @@
                             var decs = (multi+'').split('.')[1].length;
                             label = num.toFixed(decs)-0;
                         }
-
-                        // Do anything special for negative numbers?
-//            var is_neg = label < 0;
-//            real_d2 = Math.abs(real_d2);
 
                         // Change 1000s to Ks
                         if(label !== 0 && label !== 1000 && label % 1000 === 0) {
@@ -390,7 +368,7 @@
                     ctx.strokeStyle = "#666";
                     ctx.stroke();
                 }
-            }
+            };
 
             var updateWireFrame = function() {
                 // Test support
@@ -410,19 +388,17 @@
                         $('#ruler_y')[0].scrollTop = workarea[0].scrollTop;
                     }
                 });
-
-
-                // ���λ����Ϣ��ʾ
-                $(".tcs-editor").on('mousemove', function(e){
-                    e.preventDefault();
-
-                    var x = e.pageX;
-                    var y = e.pageY;
-                    var x2 = e.clientX;
-                    var y2 = e.clientY;
-                    $(".left-container .operate-content .tcs-bottom .show-position").html("X:"+x+", Y:"+y+"CX: "+x2+", CY: "+y2);
-                })
             }());
+
+            // 鼠标位置信息显示
+            $(".tcs-editor").mousemove(function(e){
+                var x = e.pageX + $('#workarea').scrollLeft() - $('#ruler_y').offset().left;
+                var y = e.pageY + $('#workarea').scrollTop()  - $('#ruler_x').offset().top;
+
+                var edit_pos = Editor.mouseCoordinatesToEditorCoordinates([x, y]);
+
+                $(".left-container .top-panel .top-panel-view .tcs-bottom .show-position").html("X: "+edit_pos[0]+", Y: "+edit_pos[1]);
+            });
 
             $('#rulers').on("dblclick", function(e){
                 // TODO: RULER GUIDE
@@ -435,6 +411,107 @@
 
             // INVOKE
             updateCanvas(true);
+        };
+
+        // u_multi = unit * zoom
+        Editor.calculateZoomMultiplier = function(u_multi) {
+            // Calculate the main number interval
+            // Make [1,2,5] array
+            var r_intervals = [];
+            for(var i = .1; i < 1E5; i *= 10) {
+                r_intervals.push(1 * i);
+                r_intervals.push(2 * i);
+                r_intervals.push(5 * i);
+            }
+
+            function _calculateMultiplier(u_multi) {
+                // Calculate the main number interval
+                var raw_m = 50 / u_multi;
+                var multi = 1;
+                for(var i = 0; i < r_intervals.length; i++) {
+                    var num = r_intervals[i];
+                    multi = num;
+                    if(raw_m <= num) {
+                        break;
+                    }
+                }
+
+                return multi;
+            };
+
+            return _calculateMultiplier(u_multi);
+        };
+
+        // mouse_coords = [x, y]
+        Editor.mouseCoordinatesToEditorCoordinates = function(mouse_coords) {
+            var editor_coords = [0, 0];
+
+            var zoom = tcsCanvas.getZoom();
+
+            // todo
+            //var units = tcsEdit.units.getTypeMap();
+            var unit = 1;//units[curConfig.baseUnit]; // 1 = 1px
+            var u_multi = unit * zoom;
+
+            var multi = Editor.calculateZoomMultiplier(u_multi);
+
+            for(var d = 0; d < 2; d++) {
+                var is_x = (d === 0);
+
+                // TODO:
+                var canvasOffset = tcsCanvas.getContentOffset()[d];//tcsCanvas.contentOffset[d];
+
+                var num = (mouse_coords[d] - canvasOffset) / u_multi;
+                num = (is_x ? num : -num);
+
+                var label;
+                if(multi >= 1) {
+                    label = Math.round(num);
+                } else {
+                    var decs = (multi+'').split('.')[1].length;
+                    label = num.toFixed(decs)-0;
+                }
+
+                editor_coords[d] = label;
+            }
+
+            return editor_coords;
+        };
+
+        // editor_coords = [x, y]
+        Editor.editorCoordinatesToMouseCoordinates = function(editor_coords) {
+            var mouse_coords = [0, 0];
+
+            var zoom = tcsCanvas.getZoom();
+
+            // todo
+            //var units = tcsEdit.units.getTypeMap();
+            var unit = 1;//units[curConfig.baseUnit]; // 1 = 1px
+            var u_multi = unit * zoom;
+
+            var multi = Editor.calculateZoomMultiplier(u_multi);
+
+            for(var d = 0; d < 2; d++) {
+                var is_x = (d === 0);
+
+                // TODO:
+                var canvasOffset = tcsCanvas.getContentOffset()[d];//tcsCanvas.contentOffset[d];
+
+                var num = (editor_coords[d] * u_multi + canvasOffset);
+                num = (is_x ? num : -num);
+
+                var label;
+                if(multi >= 1) {
+                    label = Math.round(num);
+                } else {
+                    var decs = (multi+'').split('.')[1].length;
+                    label = num.toFixed(decs)-0;
+                }
+
+                mouse_coords[d] = label;
+            }
+
+            return mouse_coords;
         };
 
         var callbacks = [];

@@ -90,22 +90,7 @@
 							</div>
 						</div>
 						<div class="workarea" id="workarea">
-							<div id="svgcanvas" style="position:relative;min-width: 800px;width: 100%;height: 100%;">
-								<%--<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" style="background-color: indianred">--%>
-									<%--<defs>--%>
-										<%--<!-- 用一个10*10方形路径填充 -->--%>
-										<%--<pattern id="grid1" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">--%>
-											<%--<path stroke="#BDBDBD" fill="none" d="M0,0H10V10"></path>--%>
-										<%--</pattern>--%>
-									<%--</defs>--%>
-
-									<%--<pattern id="grid2" patternUnits="userSpaceOnUse" x="0" y="0" width="100" height="100">--%>
-										<%--<image x="0" y="0" width="100" height="100" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAAAB80lEQVR4Xu3c0U0DMRCE4UkZdMAzDSK6QCkGiQZ4pgPaQCAUBLGTlWLpfHcfz9ZJ7Hk9+884d0jykuQ11//uknxcXxbr2kUq1eWQ5DHJU6HQD0nerDurwNC6eCH9HTa00ElKz/NCvJBTBUo7prqztrJOh+gQHXJpMNIhOkSH6JC/FZh6mPg6sp6THAvAd5/k3bqzCgytCw2hITSEhqxMQ5iL7S27iPjTEBpCQ2gIDRFkNbqgpEk0ZEINQertlzKUwJOUnqdDJuwQHIJDvitQErm9rXNkObKAITAEhsAQGG5kSCDqE4o6UkfqOKTXmI6sCY8s1gnrxJHlyPqtwNQeGg2hIbwsXhYvi5d1i5eF1JG6sdfYa+y9NEvoEB2iQ3TIvwqUHAKkjtSROlJH6kgdqRdvl1dvoS+1jqgTdaJO1Ik6Ub9F1N06ceuEuchcZC4yF5mLG/jyti/K9Ru59Lvy0USP1JE6UkfqSB2pI3U/+uyehKUwf2+fzKj+v6YsU5Ypy5S1sinL7ff2lkXqnVbe1ZBA1Ik6USfqKxN1mbpMXaYuU5epy9Rl6jL1ZhcsQrijs+2lngcMgSEwBIbAUKYuU5epy9R/KjA0HjBlmbJMWaaslU1ZMnWZOvud/c5+Z7+z3zdiv8vUZepEnagTdaJO1Dcg6p9v/erTOjnYNAAAAABJRU5ErkJggg=="></image>--%>
-									<%--</pattern>--%>
-									<%--<rect id="rect1" x="20" y="20" width="500" height="300" stroke="green"  fill="url(#grid1)"></rect>--%>
-									<%--<rect id="rect2" x="20" y="330" width="500" height="300" stroke="green" fill="url(#grid2)"></rect>--%>
-
-								<%--</svg>--%>
+							<div id="tcs-canvas" style="position:relative;min-width: 800px;width: 100%;height: 100%;">
 
 							</div>
 						</div>
@@ -500,24 +485,24 @@
 	<div>页面加载中，请等待...	</div>
 </div>
 
-	<script type="text/javascript" src="${ctxStatic}/js/jquery-1.11.3.js"></script>
-	<script type="text/javascript" src="${ctxStatic}/plugin/bootstrap/js/bootstrap.js"></script>
-	<script type="text/javascript" src="${ctxStatic}/plugin/zTree/js/jquery.ztree.core-3.5.js"></script>
-	<script type="text/javascript" src="${ctxStatic}/plugin/bootSideMenu/js/BootSideMenu.js"></script>
-	<script type="text/javascript" src="${ctxStatic}/plugin/draw2d/backbone.js"></script>
-	<script type="text/javascript" src="${ctxStatic}/plugin/draw2d/events.js"></script>
-	<script type="text/javascript" src="${ctxStatic}/plugin/draw2d/underscore.js"></script>
-	<script type="text/javascript" src="${ctxStatic}/plugin/draw2d/two.js"></script>
-	<script type="text/javascript" src="${ctxStatic}/js/mjtcs-elem-point.js"></script>
-	<script type="text/javascript" src="${ctxStatic}/js/mjtcs-elem-path.js"></script>
-	<script type="text/javascript" src="${ctxStatic}/js/mjtcs-elem-location.js"></script>
-	<script type="text/javascript" src="${ctxStatic}/js/mjtcs-elem-link.js"></script>
-	<script type="text/javascript" src="${ctxStatic}/js/mjtcs-modelling.js"></script>
-	 <script type="text/javascript" src="${ctxStatic}/js/init.js"></script>
-	<script type="text/javascript" src="${ctxStatic}/js/operating.js"></script>
-	<script type="text/javascript" src="${ctxStatic}/js/mousewheel.js"></script>
-	<script type="text/javascript" src="${ctxStatic}/js/tcs-editor.js"></script>
-	<script type="text/javascript" src="${ctxStatic}/js/tcs-canvas.js"></script>
+	<script type="text/javascript" src="../js/jquery-1.11.3.js"></script>
+	<script type="text/javascript" src="../plugin/bootstrap/js/bootstrap.js"></script>
+	<script type="text/javascript" src="../plugin/zTree/js/jquery.ztree.core-3.5.js"></script>
+	<script type="text/javascript" src="../plugin/bootSideMenu/js/BootSideMenu.js"></script>
+	<script type="text/javascript" src="../plugin/draw2d/backbone.js"></script>
+	<script type="text/javascript" src="../plugin/draw2d/events.js"></script>
+	<script type="text/javascript" src="../plugin/draw2d/underscore.js"></script>
+	<script type="text/javascript" src="../plugin/draw2d/two_dev.js"></script>
+	<script type="text/javascript" src="../js/init.js"></script>
+	<script type="text/javascript" src="../js/operating.js"></script>
+	<script type="text/javascript" src="../js/mousewheel.js"></script>
+	<script type="text/javascript" src="../js/tcs-editor.js"></script>
+	<script type="text/javascript" src="../js/tcs-canvas.js"></script>
+	<!--<script type="text/javascript" src="../js/mjtcs-elem-point.js"></script>-->
+	<!--<script type="text/javascript" src="../js/mjtcs-elem-path.js"></script>-->
+	<!--<script type="text/javascript" src="../js/mjtcs-elem-location.js"></script>-->
+	<!--<script type="text/javascript" src="../js/mjtcs-elem-link.js"></script>-->
+	<!--<script type="text/javascript" src="../js/mjtcs-modelling.js"></script>-->
 	<script type="text/javascript">
 	  $(document).ready(function(){
 		  startLoading();

@@ -101,12 +101,13 @@ $(function(){
     })
 
 
-    // 鼠标位置信息显示
-    $(".tcs-editor").mousemove(function(e){
-        var x = e.pageX - $(this).offset().left;
-        var y = e.pageY - $(this).offset().top;
-        $(".left-container .top-panel .top-panel-view .tcs-bottom .show-position").html("X:"+x+", Y:"+y);
-    })
+    // Already moved to tcs-editor.js
+    //// 鼠标位置信息显示
+    //$(".tcs-editor").mousemove(function(e){
+    //    var x = e.pageX - $(this).offset().left;
+    //    var y = e.pageY - $(this).offset().top;
+    //    $(".left-container .top-panel .top-panel-view .tcs-bottom .show-position").html("X:"+x+", Y:"+y);
+    //})
 
 
     // select 与 input数据一致

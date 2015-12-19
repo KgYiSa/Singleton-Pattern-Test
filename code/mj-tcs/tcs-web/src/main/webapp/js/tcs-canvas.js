@@ -40,20 +40,23 @@ $.TCSCanvas = function(container, config) {
     var tcsCanvas = this;
 
     // The actual scene
-    var params = { width: curConfig.dimensions[0],
-                   height: curConfig.dimensions[1],
-                   type: Two.Types.webgl
+    var params = { fullscreen: false, // must be false !!!
+                   width: dimensions[0],
+                   height: dimensions[1],
+                   type: Two.Types.webgl,
+                   antialias: true
     };
     var twoCanvas = new Two(params).appendTo(document.querySelector('#tcs-canvas'));
 
-    this.contentOffset = curConfig.offset;
-
     // two axes
+    var contentOffset = curConfig.offset;
+    var axisOffsetX = contentOffset[0] - ($('#workarea').offset().left - $('#ruler_y').offset().left);
+    var axisOffsetY = contentOffset[1] - ($('#workarea').offset().top - $('#ruler_x').offset().top);
     var axisLen = 100;
-    var axisX = twoCanvas.makeLine(this.contentOffset[0], this.contentOffset[1], this.contentOffset[0] + axisLen, this.contentOffset[1]);
-    axisX.linewidth = 1.0;
+    var axisX = twoCanvas.makeLine(axisOffsetX, axisOffsetY, axisOffsetX + axisLen, axisOffsetY);
+    axisX.linewidth = 0.5;
     axisX.stroke = 'red';
-    var axisY = twoCanvas.makeLine(this.contentOffset[0], this.contentOffset[1], this.contentOffset[0], this.contentOffset[1] - axisLen);
+    var axisY = twoCanvas.makeLine(axisOffsetX, axisOffsetY, axisOffsetX, axisOffsetY - axisLen);
     axisY.linewidth = 0.5;
     axisY.stroke = 'green';
 
@@ -61,7 +64,6 @@ $.TCSCanvas = function(container, config) {
 
     // Float displaying the current zoom level (1 = 100%, .5 = 50%, etc)
     var current_zoom = 1;
-
 
     // Object containing data for the currently selected styles
     var all_properties = {
@@ -103,14 +105,19 @@ $.TCSCanvas = function(container, config) {
     // Function: getResolution
     // Returns the current dimensions and zoom level in an object
     var getResolution = this.getResolution = function() {
-        var width = twoCanvas.width/current_zoom;
-        var height = twoCanvas.height/current_zoom;
+        var width = dimensions[0]/current_zoom;
+        var height = dimensions[1]/current_zoom;
 
         return {
             'w': width,
             'h': height,
             'zoom': current_zoom
         };
+    };
+
+    this.resizeTwoCanvas = function(w, h) {
+        twoCanvas.width = w;
+        twoCanvas.height = h;
     };
 
     // Function: setZoom
@@ -136,6 +143,9 @@ $.TCSCanvas = function(container, config) {
     // Returns the current zoom level
     this.getZoom = function() {return current_zoom;};
 
+    this.getContentOffset = function() {return contentOffset;};
+
+    // Note: use method to return not function !!!
     this.contentW = getResolution().w;
     this.contentH = getResolution().h;
 

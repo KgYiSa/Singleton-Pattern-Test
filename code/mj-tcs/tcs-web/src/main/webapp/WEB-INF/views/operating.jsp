@@ -115,20 +115,7 @@
 							<input id="zoom" size="3" value="100%" type="text" readonly="readonly" />
 
 							<select id="zoom_select">
-								<option value="6">70%</option>
-								<option value="12">75%</option>
-								<option value="16">80%</option>
-								<option value="25">85%</option>
-								<option value="50">90%</option>
-								<option value="75">95%</option>
 								<option value="100" selected="selected">100%</option>
-								<option value="150">105%</option>
-								<option value="200">110%</option>
-								<option value="300">115%</option>
-								<option value="400">120%</option>
-								<option value="600">125%</option>
-								<option value="800">130%</option>
-								<option value="1600">135%</option>
 							</select>
 						</div>
 						<div class="show-reset selected"><img src="${ctxStatic}/images/zoom-fit.png" title=""></div>
@@ -444,8 +431,8 @@
 				<table>
 				<tbody>
 					<tr>
-						<td><a href="javascript:;">name</a></td>
-						<td title="hslhslhslhslhslhsl">hslhslhslhslhslhsl</td>
+						<td><a href="javascript:;">小车</a></td>
+						<td title="stop">stop</td>
 						<td>
 							<select>
 								<option value="">请选择</option>
@@ -457,8 +444,8 @@
 						<td>name</td>
 					</tr>
 					<tr>
-						<td><a href="javascript:;">name</a></td>
-						<td>hsl</td>
+						<td><a href="javascript:;">叉车</a></td>
+						<td>stop</td>
 						<td>
 							<select>
 								<option value="">请选择</option>
@@ -467,11 +454,11 @@
 							</select>
 						</td>
 						<td><input type="checkbox" name="2" class="startflg" value="2"/></td>
-						<td>name</td>
+						<td>location1</td>
 					</tr>
 					<tr>
-						<td><a href="javascript:;">name</a></td>
-						<td>hsl</td>
+						<td><a href="javascript:;">小车</a></td>
+						<td>running</td>
 						<td>
 							<select>
 								<option value="">请选择</option>
@@ -480,7 +467,7 @@
 							</select>
 						</td>
 						<td><input type="checkbox" name="3" checked="" class="startflg" value="3"/></td>
-						<td>name</td>
+						<td>location2</td>
 					</tr>
 				</tbody>
 				</table>
@@ -530,7 +517,7 @@
 	<script type="text/javascript" src="${ctxStatic}/js/operating.js"></script>
 	<script type="text/javascript" src="${ctxStatic}/js/mousewheel.js"></script>
 	<script type="text/javascript" src="${ctxStatic}/js/tcs-editor.js"></script>
-	<script type="text/javascript" src="${ctxStatic}/js/tcscanvas.js"></script>
+	<script type="text/javascript" src="${ctxStatic}/js/tcs-canvas.js"></script>
 	<script type="text/javascript">
 	  $(document).ready(function(){
 		  startLoading();

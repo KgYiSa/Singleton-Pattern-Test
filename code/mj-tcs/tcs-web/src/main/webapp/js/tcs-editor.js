@@ -13,13 +13,13 @@
 
 // Dependencies:
 // 1) mousewheel.js
-// 2) tcscanvas.js
+// 2) tcs-canvas.js
 //
 
 (function() {
     if(!window.tcsDraw)
         window.tcsDraw = function($) {
-        var svgCanvas;
+        var tcsCanvas;
         var Editor = {};
         var is_ready = false;
         curConfig = {
@@ -90,7 +90,7 @@
         }
 
         Editor.init = function() {
-            Editor.canvas = svgCanvas = new $.TCSCanvas(document.getElementById('svgcanvas'), curConfig);
+            Editor.canvas = tcsCanvas = new $.TCSCanvas(document.getElementById('tcs-canvas'), curConfig);
 
             var workarea = $("#workarea");
 
@@ -115,7 +115,7 @@
                     ctl.value = .1;
                     return;
                 }
-                var zoom = svgCanvas.getZoom();
+                var zoom = tcsCanvas.getZoom();
                 var workarea = $("#workarea")
                 var w_area = workarea;
                 zoomChanged(window, {
@@ -130,10 +130,10 @@
 
             var zoomChanged = function(window, bbox, autoCenter) {
                 var scrbar = 15,
-                    res = svgCanvas.getResolution(),
+                    res = tcsCanvas.getResolution(),
                     w_area = workarea,
-                    canvas_pos = $('#svgcanvas').position();
-                var z_info = svgCanvas.setBBoxZoom(bbox, w_area.width()-scrbar, w_area.height()-scrbar);
+                    canvas_pos = $('#tcs-canvas').position();
+                var z_info = tcsCanvas.setBBoxZoom(bbox, w_area.width()-scrbar, w_area.height()-scrbar);
                 if(!z_info) return;
                 var zoomlevel = z_info.zoom,
                     bb = z_info.bbox;
@@ -153,7 +153,7 @@
                     var progress = Date.now() - start
                     var tick = progress / duration
                     tick = (Math.pow((tick-1), 3) +1);
-                    svgCanvas.setZoom(current_zoom + (diff*tick));
+                    tcsCanvas.setZoom(current_zoom + (diff*tick));
                     updateCanvas();
                     if (tick < 1 && tick > -.90) {
                         window.animatedZoom = requestAnimationFrame(animateZoom)
@@ -183,9 +183,9 @@
             var updateCanvas = Editor.updateCanvas = function(center, new_ctr) {
                 var w = workarea.width(), h = workarea.height();
                 var w_orig = w, h_orig = h;
-                var zoom = svgCanvas.getZoom();
+                var zoom = tcsCanvas.getZoom();
                 var w_area = workarea;
-                var cnvs = $("#svgcanvas");
+                var cnvs = $("#tcs-canvas");
 
                 var old_ctr = {
                     x: w_area[0].scrollLeft + w_orig/2,
@@ -193,8 +193,8 @@
                 };
 
                 var multi = curConfig.canvas_expansion;
-                w = Math.max(w_orig, svgCanvas.contentW * zoom * multi);
-                h = Math.max(h_orig, svgCanvas.contentH * zoom * multi);
+                w = Math.max(w_orig, tcsCanvas.contentW * zoom * multi);
+                h = Math.max(h_orig, tcsCanvas.contentH * zoom * multi);
                 //console.log("w_orig: " + w_orig + ", contentW: " + svgCanvas.contentW + ", zoom: " + zoom + ", multi: "+multi);
                 //console.log("" + w + " " + h);
 
@@ -209,49 +209,13 @@
                 cnvs.width(w).height(h);
                 var new_can_y = h/2;
                 var new_can_x = w/2;
-                var offset = svgCanvas.updateCanvas(w, h);
+                //var offset = tcsCanvas.updateCanvas(w, h);
 
                 var ratio = new_can_x / old_can_x;
 
                 var scroll_x = w/2 - w_orig/2;
                 var scroll_y = h/2 - h_orig/2;
 
-                if(!new_ctr) {
-
-                    var old_dist_x = old_ctr.x - old_can_x;
-                    var new_x = new_can_x + old_dist_x * ratio;
-
-                    var old_dist_y = old_ctr.y - old_can_y;
-                    var new_y = new_can_y + old_dist_y * ratio;
-
-                    new_ctr = {
-                        x: new_x,
-                        y: new_y
-                    };
-
-                } else {
-                    new_ctr.x += offset.x,
-                        new_ctr.y += offset.y;
-                }
-
-                //width.val(offset.x)
-                //height.val(offset.y)
-
-                if(center) {
-                    // Go to top-left for larger documents
-                    if(svgCanvas.contentW > w_area.width()) {
-                        // Top-left
-                        w_area[0].scrollLeft = offset.x - 10;
-                        w_area[0].scrollTop = offset.y - 10;
-                    } else {
-                        // Center
-                        w_area[0].scrollLeft = scroll_x;
-                        w_area[0].scrollTop = scroll_y;
-                    }
-                } else {
-                    w_area[0].scrollLeft = new_ctr.x - w_orig/2;
-                    w_area[0].scrollTop = new_ctr.y - h_orig/2;
-                }
                 if(curConfig.showRulers) {
                     updateRulers(cnvs, zoom);
                     workarea.scroll();
@@ -275,10 +239,8 @@
             function updateRulers(scanvas, zoom) {
                 var workarea = document.getElementById("workarea");
                 var title_show = document.getElementById("title_show");
-                var offset_x = 66;
-                var offset_y = 48;
-                if(!zoom) zoom = svgCanvas.getZoom();
-                if(!scanvas) scanvas = $("#svgcanvas");
+                if(!zoom) zoom = tcsCanvas.getZoom();
+                if(!scanvas) scanvas = $("#tcs-canvas");
 
                 var limit = 30000;
 
@@ -292,9 +254,8 @@
                     var dim = is_x ? 'x' : 'y';
                     var lentype = is_x?'width':'height';
                     // TODO:
-                    //var content_d = c_elem.getAttribute(dim)-0;
-                    var content_d = 150;//0.0;
-
+                    var content_d = tcsCanvas.contentOffset[d];
+                    console.log("offset x = " + tcsCanvas.contentOffset[0] + ", y = " + tcsCanvas.contentOffset[1]);
                     var $hcanv_orig = $('#ruler_' + dim + ' canvas:first');
 
                     // Bit of a hack to fully clear the canvas in Safari & IE9
@@ -307,7 +268,7 @@
                     var ruler_len = scanvas[lentype]()*2;
                     var total_len = ruler_len;
                     hcanv.parentNode.style[lentype] = total_len + 'px';
-                    console.log("total_len: " +total_len);
+                    //console.log("total_len: " +total_len);
                     var canv_count = 1;
                     var ctx_num = 0;
                     var ctx_arr;
@@ -435,9 +396,9 @@
                 // Test support
                 //if(supportsNonSS) return;
 
-                var rule = "#workarea.wireframe #svgcontent * { stroke-width: " + 1/svgCanvas.getZoom() + "px; }";
+                var rule = "#workarea.wireframe #svgcontent * { stroke-width: " + 1/tcsCanvas.getZoom() + "px; }";
                 $('#wireframe_rules').text(workarea.hasClass('wireframe') ? rule : "");
-            }
+            };
 
             (function() {
                 workarea.scroll(function() {
@@ -451,7 +412,7 @@
                 });
 
 
-                // Êó±êÎ»ÖÃÐÅÏ¢ÏÔÊ¾
+                // ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½Ê¾
                 $(".tcs-editor").on('mousemove', function(e){
                     e.preventDefault();
 

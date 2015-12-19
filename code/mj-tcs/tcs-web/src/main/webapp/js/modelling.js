@@ -104,7 +104,7 @@ $(function(){
 var getSceneBaseList = function() {
     $.ajax({
         type: "GET",
-        url: "/tcs-web/rest/scenes/profile",
+        url: "/rest/scenes/profile",
         dataType: "json",
         cache: false,//false时，会自动添加时间戳
         timeout: 1000,

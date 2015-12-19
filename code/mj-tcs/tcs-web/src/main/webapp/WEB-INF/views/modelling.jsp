@@ -231,7 +231,7 @@
 <script type="text/javascript" src="${ctxStatic}/js/modelling.js"></script>
 <script type="text/javascript" src="${ctxStatic}/js/mousewheel.js"></script>
 <script type="text/javascript" src="${ctxStatic}/js/tcs-editor.js"></script>
-<script type="text/javascript" src="${ctxStatic}/js/tcscanvas.js"></script>
+<script type="text/javascript" src="${ctxStatic}/js/tcs-canvas.js"></script>
 
 </body>
 </html>

@@ -26,7 +26,7 @@ public class ServiceGateway {
 
     //////////////////////// MODELLING ///////////////////////////////
 
-    public final <T extends BaseEntityDto> T getTCSObjectDto(long sceneId,
+    public <T extends BaseEntityDto> T getTCSObjectDto(long sceneId,
                                                              Class<T> clazz,
                                                              long id)
             throws ObjectUnknownException {
@@ -62,7 +62,7 @@ public class ServiceGateway {
         throw new ObjectUnknownException(clazz);
     }
 
-    public final <T extends BaseEntityDto> T getTCSObjectDto(long sceneId,
+    public <T extends BaseEntityDto> T getTCSObjectDto(long sceneId,
                                                              Class<T> clazz,
                                                              String name)
             throws ObjectUnknownException {
@@ -100,7 +100,7 @@ public class ServiceGateway {
     }
 
 
-    public final <T extends BaseEntityDto> Set<T> getTcsObjectDtos(long sceneId,
+    public <T extends BaseEntityDto> Set<T> getTcsObjectDtos(long sceneId,
                                                                     Class<T> clazz)
             throws ObjectUnknownException {
         SceneDto sceneDto = sceneDtoService.findOne(sceneId);
@@ -158,7 +158,7 @@ public class ServiceGateway {
         throw new ObjectUnknownException(clazz);
     }
 
-    public final <T extends BaseEntityDto> Set<T> getTCSObjectDtos(long sceneId,
+    public <T extends BaseEntityDto> Set<T> getTCSObjectDtos(long sceneId,
                                                                     Class<T> clazz,
                                                                     Pattern regexp)
             throws ObjectUnknownException {

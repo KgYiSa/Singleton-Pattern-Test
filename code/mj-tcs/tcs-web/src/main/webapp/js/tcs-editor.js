@@ -1,16 +1,3 @@
-/*
- * svg-editor.js
- *
- * Licensed under the MIT License
- *
- * Copyright(c) 2010 Alexis Deveria
- * Copyright(c) 2010 Pavol Rusnak
- * Copyright(c) 2010 Jeff Schiller
- * Copyright(c) 2010 Narendra Sisodiya
- * Copyright(c)  2012 Mark MacKay
- *
- */
-
 // Dependencies:
 // 1) mousewheel.js
 // 2) tcs-canvas.js
@@ -90,14 +77,17 @@
         };
 
         Editor.init = function() {
-            Editor.canvas = tcsCanvas = new $.TCSCanvas(document.getElementById('tcs-canvas'), curConfig);
-
             var workarea = $("#workarea");
+            var canvas = $("#tcs-canvas");
+
+            curConfig.dimensions = [canvas.width(), canvas.height()];
+            Editor.canvas = tcsCanvas = new $.TCSCanvas(canvas, curConfig);
 
             var accumulatedDelta = 0
-            $('#workarea').on('mousewheel', function(e, delta, deltaX, deltaY){
+            $(workarea).on('mousewheel', function(e, delta, deltaX, deltaY){
 
                 if (e.altKey || e.ctrlKey) {
+                    e.stopPropagation();
                     e.preventDefault();
 
                     zoom = parseInt($("#zoom").val())
@@ -114,7 +104,11 @@
                 if(zoomlevel < .001) {
                     ctl.value = .1;
                     return;
+                } else if (zoomlevel > 5.0 ) {
+                    ctl.value = 500.0;
+                    return;
                 }
+
                 var zoom = tcsCanvas.getZoom();
                 var w_area = workarea;
                 zoomChanged(window, {
@@ -148,6 +142,7 @@
                 var zoom = $('#zoom')[0]
                 var current_zoom = res.zoom
                 var animateZoom = function(timestamp) {
+                    tcsCanvas.pause();
                     var progress = Date.now() - start
                     var tick = progress / duration
                     tick = (Math.pow((tick-1), 3) +1);
@@ -157,9 +152,10 @@
                         window.animatedZoom = requestAnimationFrame(animateZoom)
                     }
                     else {
-                        var canvas = $("#tcs-canvas");
+                        //console.log("w: " + canvas.width() + ", h: " + canvas.height());
                         tcsCanvas.resizeTwoCanvas(canvas.width(), canvas.height());
                         tcsCanvas.setZoom(zoomlevel);
+                        tcsCanvas.play();
                         $("#zoom").val(parseInt(zoomlevel*100) + "%")
                         $("option", "#zoom_select").removeAttr("selected")
                         $("option[value="+ parseInt(zoomlevel*100) +"]", "#zoom_select").attr("selected", "selected")
@@ -186,7 +182,6 @@
                 var w_orig = w, h_orig = h;
                 var zoom = tcsCanvas.getZoom();
                 var w_area = workarea;
-                var cnvs = $("#tcs-canvas");
 
                 var old_ctr = {
                     x: w_area[0].scrollLeft + w_orig/2,
@@ -205,9 +200,9 @@
                     workarea.css('overflow','scroll');
                 }
 
-                var old_can_y = cnvs.height()/2;
-                var old_can_x = cnvs.width()/2;
-                cnvs.width(w).height(h);
+                var old_can_y = canvas.height()/2;
+                var old_can_x = canvas.width()/2;
+                canvas.width(w).height(h);
                 var new_can_y = h/2;
                 var new_can_x = w/2;
                 //var offset = tcsCanvas.updateCanvas(w, h);
@@ -218,7 +213,7 @@
                 var scroll_y = h/2 - h_orig/2;
 
                 if(curConfig.showRulers) {
-                    updateRulers(cnvs, zoom);
+                    updateRulers(canvas, zoom);
                     workarea.scroll();
                 }
             };
@@ -229,11 +224,9 @@
                 //updateCanvas(); // necessary?
             };
 
-            function updateRulers(scanvas, zoom) {
-                var workarea = document.getElementById("workarea");
+            function updateRulers(canvas, zoom) {
                 var title_show = document.getElementById("title_show");
                 if(!zoom) zoom = tcsCanvas.getZoom();
-                if(!scanvas) scanvas = $("#tcs-canvas");
 
                 var limit = 30000;
 
@@ -260,7 +253,7 @@
                     var hcanv = $hcanv[0];
 
                     // Set the canvas size to the width of the container
-                    var ruler_len = scanvas[lentype]()*2;
+                    var ruler_len = canvas[lentype]()*2;
                     var total_len = ruler_len;
                     hcanv.parentNode.style[lentype] = total_len + 'px';
                     var ctx_num = 0;
@@ -379,6 +372,7 @@
             };
 
             (function() {
+
                 workarea.scroll(function() {
                     // TODO:  jQuery's scrollLeft/Top() wouldn't require a null check
                     if ($('#ruler_x').length != 0) {
@@ -392,8 +386,8 @@
 
             // 鼠标位置信息显示
             $(".tcs-editor").mousemove(function(e){
-                var x = e.pageX + $('#workarea').scrollLeft() - $(this).offset().left;
-                var y = e.pageY + $('#workarea').scrollTop()  - $(this).offset().top;
+                var x = e.pageX + workarea.scrollLeft() - $(this).offset().left;
+                var y = e.pageY + workarea.scrollTop()  - $(this).offset().top;
 
                 var edit_pos = tcsCanvas.mouseCoordinatesToEditorCoordinates([x, y]);
 
@@ -412,108 +406,6 @@
             // INVOKE
             updateCanvas(true);
         };
-
-        // NOTE: Moved to tcs-canvas for the ease of use during drawing elements.
-        //// u_multi = unit * zoom
-        //Editor.calculateZoomMultiplier = function(u_multi) {
-        //    // Calculate the main number interval
-        //    // Make [1,2,5] array
-        //    var r_intervals = [];
-        //    for(var i = .1; i < 1E5; i *= 10) {
-        //        r_intervals.push(1 * i);
-        //        r_intervals.push(2 * i);
-        //        r_intervals.push(5 * i);
-        //    }
-        //
-        //    function _calculateMultiplier(u_multi) {
-        //        // Calculate the main number interval
-        //        var raw_m = 50 / u_multi;
-        //        var multi = 1;
-        //        for(var i = 0; i < r_intervals.length; i++) {
-        //            var num = r_intervals[i];
-        //            multi = num;
-        //            if(raw_m <= num) {
-        //                break;
-        //            }
-        //        }
-        //
-        //        return multi;
-        //    };
-        //
-        //    return _calculateMultiplier(u_multi);
-        //};
-        //
-        //// mouse_coords = [x, y]
-        //Editor.mouseCoordinatesToEditorCoordinates = function(mouse_coords) {
-        //    var editor_coords = [0, 0];
-        //
-        //    var zoom = tcsCanvas.getZoom();
-        //
-        //    // todo
-        //    //var units = tcsEdit.units.getTypeMap();
-        //    var unit = 1;//units[curConfig.baseUnit]; // 1 = 1px
-        //    var u_multi = unit * zoom;
-        //
-        //    var multi = Editor.calculateZoomMultiplier(u_multi);
-        //
-        //    for(var d = 0; d < 2; d++) {
-        //        var is_x = (d === 0);
-        //
-        //        // TODO:
-        //        var canvasOffset = tcsCanvas.getContentOffset()[d];//tcsCanvas.contentOffset[d];
-        //
-        //        var num = (mouse_coords[d] - canvasOffset) / u_multi;
-        //        num = (is_x ? num : -num);
-        //
-        //        var label;
-        //        if(multi >= 1) {
-        //            label = Math.round(num);
-        //        } else {
-        //            var decs = (multi+'').split('.')[1].length;
-        //            label = num.toFixed(decs)-0;
-        //        }
-        //
-        //        editor_coords[d] = label;
-        //    }
-        //
-        //    return editor_coords;
-        //};
-        //
-        //// editor_coords = [x, y]
-        //Editor.editorCoordinatesToMouseCoordinates = function(editor_coords) {
-        //    var mouse_coords = [0, 0];
-        //
-        //    var zoom = tcsCanvas.getZoom();
-        //
-        //    // todo
-        //    //var units = tcsEdit.units.getTypeMap();
-        //    var unit = 1;//units[curConfig.baseUnit]; // 1 = 1px
-        //    var u_multi = unit * zoom;
-        //
-        //    var multi = Editor.calculateZoomMultiplier(u_multi);
-        //
-        //    for(var d = 0; d < 2; d++) {
-        //        var is_x = (d === 0);
-        //
-        //        // TODO:
-        //        var canvasOffset = tcsCanvas.getContentOffset()[d];//tcsCanvas.contentOffset[d];
-        //
-        //        var num = (editor_coords[d] * u_multi + canvasOffset);
-        //        num = (is_x ? num : -num);
-        //
-        //        var label;
-        //        if(multi >= 1) {
-        //            label = Math.round(num);
-        //        } else {
-        //            var decs = (multi+'').split('.')[1].length;
-        //            label = num.toFixed(decs)-0;
-        //        }
-        //
-        //        mouse_coords[d] = label;
-        //    }
-        //
-        //    return mouse_coords;
-        //};
 
         var callbacks = [];
 

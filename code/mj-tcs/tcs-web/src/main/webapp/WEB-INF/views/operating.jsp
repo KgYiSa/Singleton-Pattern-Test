@@ -489,19 +489,20 @@
 	<script type="text/javascript" src="../plugin/bootstrap/js/bootstrap.js"></script>
 	<script type="text/javascript" src="../plugin/zTree/js/jquery.ztree.core-3.5.js"></script>
 	<script type="text/javascript" src="../plugin/bootSideMenu/js/BootSideMenu.js"></script>
+	<script type="text/javascript" src="../plugin/draw2d/underscore.js"></script>
 	<script type="text/javascript" src="../plugin/draw2d/backbone.js"></script>
 	<script type="text/javascript" src="../plugin/draw2d/events.js"></script>
-	<script type="text/javascript" src="../plugin/draw2d/underscore.js"></script>
 	<script type="text/javascript" src="../plugin/draw2d/two_dev.js"></script>
 	<script type="text/javascript" src="../js/init.js"></script>
-	<script type="text/javascript" src="../js/operating.js"></script>
 	<script type="text/javascript" src="../js/mousewheel.js"></script>
-	<script type="text/javascript" src="../js/tcs-editor.js"></script>
+	<script type="text/javascript" src="../js/mjtcs-elem-point.js"></script>
+	<script type="text/javascript" src="../js/mjtcs-elem-path.js"></script>
+	<script type="text/javascript" src="../js/mjtcs-elem-location.js"></script>
+	<script type="text/javascript" src="../js/mjtcs-elem-link.js"></script>
+	<script type="text/javascript" src="../js/has.js"></script>
 	<script type="text/javascript" src="../js/tcs-canvas.js"></script>
-	<!--<script type="text/javascript" src="../js/mjtcs-elem-point.js"></script>-->
-	<!--<script type="text/javascript" src="../js/mjtcs-elem-path.js"></script>-->
-	<!--<script type="text/javascript" src="../js/mjtcs-elem-location.js"></script>-->
-	<!--<script type="text/javascript" src="../js/mjtcs-elem-link.js"></script>-->
+	<script type="text/javascript" src="../js/tcs-editor.js"></script>
+	<script type="text/javascript" src="../js/operating.js"></script>
 	<!--<script type="text/javascript" src="../js/mjtcs-modelling.js"></script>-->
 	<script type="text/javascript">
 	  $(document).ready(function(){

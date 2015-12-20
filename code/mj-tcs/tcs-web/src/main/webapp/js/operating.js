@@ -112,7 +112,7 @@ $(function(){
 
     // select 与 input数据一致
     $(".zoom-label #zoom_select").change(function(){
-        alert($(this).val())
+        //alert($(this).val())
         $(".zoom-label #zoom").val($(this).val())
         $(".zoom-label #zoom").change();
     })
@@ -300,7 +300,7 @@ var getSceneContent = function (id) {
         success: function (data) {
             if(data){
                 buildTree(data);
-                buildSceneEditor(data);
+                window.tcsDraw.canvas.buildSceneEditor(data);
             }
 
         },

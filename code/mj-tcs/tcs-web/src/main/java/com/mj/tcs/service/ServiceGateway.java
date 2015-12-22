@@ -230,6 +230,10 @@ public class ServiceGateway {
         }
     }
 
+    public Collection<SceneDto> getRunningSceneDtos() {
+        return sceneDtoRuntimeMapping.values();
+    }
+
     public boolean isSceneDtoRunning(SceneDto sceneDto) {
         Objects.requireNonNull(sceneDto);
         Long idKey = Objects.requireNonNull(sceneDto.getId());

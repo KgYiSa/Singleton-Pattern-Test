@@ -7,8 +7,8 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <script src="../plugin/socket/sockjs-1.0.3.js"></script>
-        <script src="../plugin/socket/stomp.js"></script>
+        <script src="../plugin/sockjs/sockjs.js"></script>
+        <script src="../plugin/stomp/stomp.min.js"></script>
         <script type="text/javascript">
             var wsUrl = "http://localhost:8080/stomp";
             var stompClient = null;
@@ -24,9 +24,9 @@
                 stompClient.connect({}, function(frame) {
                     setConnected(true);
                     console.log('Connected: ' + frame);
-//                stompClient.subscribe('/topic/greetings', function(greeting){
-//                    showMessage(JSON.parse(greeting.body).content);
-//                });
+                stompClient.subscribe('/topic/scene/1', function(greeting){
+                    showMessage(JSON.parse(greeting.body).content);
+                });
                 });
             }
 

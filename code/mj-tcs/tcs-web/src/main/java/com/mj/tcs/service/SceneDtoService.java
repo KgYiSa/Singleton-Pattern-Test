@@ -1,10 +1,8 @@
 package com.mj.tcs.service;
 
 import com.mj.tcs.api.v1.dto.SceneDto;
-import com.mj.tcs.api.v1.dto.connectity.SceneExtDto;
 import com.mj.tcs.exception.TcsServerRuntimeException;
 import com.mj.tcs.repository.SceneDtoRepository;
-import com.mj.tcs.repository.SceneExtDtoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,8 +19,8 @@ public class SceneDtoService {
     @Autowired
     private SceneDtoRepository sceneDtoRepository;
 
-    @Autowired
-    private SceneExtDtoRepository sceneExtDtoRepository;
+//    @Autowired
+//    private SceneExtDtoRepository sceneExtDtoRepository;
 
     public Iterable<SceneDto> findAll() {
         return sceneDtoRepository.findAll();
@@ -43,10 +41,10 @@ public class SceneDtoService {
 
         SceneDto answer = sceneDtoRepository.save(dto);
 
-        SceneExtDto extDto = new SceneExtDto();
-        extDto.setSceneDto(answer);
-
-        sceneExtDtoRepository.save(extDto);
+//        SceneExtDto extDto = new SceneExtDto();
+//        extDto.setSceneDto(answer);
+//
+//        sceneExtDtoRepository.save(extDto);
 
         return answer;
     }

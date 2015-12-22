@@ -3,7 +3,9 @@ package com.mj.tcs.service;
 import com.mj.tcs.api.v1.dto.SceneDto;
 import com.mj.tcs.exception.TcsServerRuntimeException;
 import com.mj.tcs.repository.SceneDtoRepository;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -27,7 +29,18 @@ public class SceneDtoService {
     }
 
     public SceneDto findOne(long id) {
-        return sceneDtoRepository.findOne(id);
+        SceneDto sceneDto = sceneDtoRepository.findOne(id);
+
+        // TODO: FOR Lazy loading issues
+        Hibernate.initialize(sceneDto.getBlockDtos());
+        Hibernate.initialize(sceneDto.getLocationDtos());
+        Hibernate.initialize(sceneDto.getLocationTypeDtos());
+        Hibernate.initialize(sceneDto.getPathDtos());
+        Hibernate.initialize(sceneDto.getPointDtos());
+        Hibernate.initialize(sceneDto.getStaticRouteDtos());
+        Hibernate.initialize(sceneDto.getVehicleDtos());
+
+        return sceneDto;
     }
 
     public SceneDto create(SceneDto dto) {

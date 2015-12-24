@@ -62,7 +62,7 @@ public class LocationDto extends BaseEntityDto {
     @DtoField(value = "locationTypeDto",
             dtoBeanKey = "LocationTypeDto",
             entityBeanKeys = {"LocationType"})
-    @OneToOne(optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinColumn(name = "location_type")
 //    @Column(name = "locationType")
     private LocationTypeDto locationTypeDto;

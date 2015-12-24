@@ -12,26 +12,26 @@ import java.util.Optional;
  * @author Wang Zhen
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
-public class TcsResponseEntity<T> extends TcsCommEntity<T> {
+public class TCSResponseEntity<T> extends TCSCommEntity<T> {
 
     @JsonProperty("uuid")
     private String responseUUID;
     private final Status statusCode;
     private String statusMessage;
 
-    public TcsResponseEntity() {
+    public TCSResponseEntity() {
         this(Status.ERROR, null, Status.ERROR.toString());
     }
 
-    public TcsResponseEntity(Status statusCode) {
+    public TCSResponseEntity(Status statusCode) {
         this(statusCode, null, statusCode.toString());
     }
 
-    public TcsResponseEntity(Status statusCode, T body) {
+    public TCSResponseEntity(Status statusCode, T body) {
         this(statusCode, body, statusCode.toString());
     }
 
-    public TcsResponseEntity(Status statusCode, T body, String statusMessage) {
+    public TCSResponseEntity(Status statusCode, T body, String statusMessage) {
         super(body);
 
         this.statusCode = statusCode;
@@ -54,7 +54,7 @@ public class TcsResponseEntity<T> extends TcsCommEntity<T> {
         return statusMessage;
     }
 
-    public TcsResponseEntity setStatusMessage(String statusMessage) {
+    public TCSResponseEntity setStatusMessage(String statusMessage) {
         this.statusMessage = statusMessage;
         return this;
     }
@@ -67,7 +67,7 @@ public class TcsResponseEntity<T> extends TcsCommEntity<T> {
         if (other == null || !other.getClass().equals(getClass())) {
             return false;
         }
-        TcsResponseEntity<?> otherEntity = (TcsResponseEntity<?>) other;
+        TCSResponseEntity<?> otherEntity = (TCSResponseEntity<?>) other;
         return (super.equals(other)) &&
                 (ObjectUtils.nullSafeEquals(this.responseUUID, otherEntity.responseUUID)) &&
                 (ObjectUtils.nullSafeEquals(this.statusCode, otherEntity.statusCode)) &&
@@ -129,7 +129,7 @@ public class TcsResponseEntity<T> extends TcsCommEntity<T> {
 //                return type.get();
 //            }
 //
-//            throw new IllegalArgumentException("The TcsResponseEntity.Type enum is no recognizable [text=" + text + "]");
+//            throw new IllegalArgumentException("The TCSResponseEntity.Type enum is no recognizable [text=" + text + "]");
 //        }
 //    }
 
@@ -162,7 +162,7 @@ public class TcsResponseEntity<T> extends TcsCommEntity<T> {
                 return type.get();
             }
 
-            throw new IllegalArgumentException("The TcsResponseEntity.Action enum is no recognizable [text=" + text + "]");
+            throw new IllegalArgumentException("The TCSResponseEntity.Action enum is no recognizable [text=" + text + "]");
         }
     }
 }

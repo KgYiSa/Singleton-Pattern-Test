@@ -1,7 +1,7 @@
 package com.mj.tcs.api.v1.rest;
 
 import com.mj.tcs.api.v1.dto.SceneDto;
-import com.mj.tcs.api.v1.dto.communication.TcsResponseEntity;
+import com.mj.tcs.api.v1.dto.communication.TCSResponseEntity;
 import com.mj.tcs.api.v1.web.ServiceController;
 import com.mj.tcs.util.TcsDtoUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -27,10 +27,10 @@ public class SceneRestfulController extends ServiceController {
 //    private EntityLinks entityLinks;
 
     @RequestMapping(value = "/scenes/profile", method = RequestMethod.GET)
-    public TcsResponseEntity<?> getAllScenesProfile() {
+    public TCSResponseEntity<?> getAllScenesProfile() {
         Collection<SceneDto> sceneDtos = getService().findAllScene();
         if (sceneDtos == null || sceneDtos.size() == 0) {
-            return new TcsResponseEntity<>(TcsResponseEntity.Status.INFORMATION, "No Content");
+            return new TCSResponseEntity<>(TCSResponseEntity.Status.INFORMATION, "No Content");
         }
 
         List<Map<String, String>> sceneDtosProfile = new ArrayList<>();
@@ -42,73 +42,73 @@ public class SceneRestfulController extends ServiceController {
             sceneDtosProfile.add(item);
         }
 
-        return new TcsResponseEntity<>(
-                TcsResponseEntity.Status.SUCCESS,
+        return new TCSResponseEntity<>(
+                TCSResponseEntity.Status.SUCCESS,
                 sceneDtosProfile);
     }
 
     ///////////////// MODELLING /////////////////////
     @RequestMapping(value = "/scenes", method = RequestMethod.GET)
-    public TcsResponseEntity<?> getAllScenes() {
+    public TCSResponseEntity<?> getAllScenes() {
         Collection<SceneDto> sceneDtos = getService().findAllScene();
         if (sceneDtos == null || sceneDtos.size() == 0) {
-            return new TcsResponseEntity<>(
-                    TcsResponseEntity.Status.INFORMATION).setStatusMessage("No Content");
+            return new TCSResponseEntity<>(
+                    TCSResponseEntity.Status.INFORMATION).setStatusMessage("No Content");
         }
 
-        return new TcsResponseEntity<>(
-                TcsResponseEntity.Status.SUCCESS,
+        return new TCSResponseEntity<>(
+                TCSResponseEntity.Status.SUCCESS,
                 sceneDtos);
     }
 
     @RequestMapping(value = "/scenes", method = RequestMethod.POST)
-    public TcsResponseEntity<?> createScene(@RequestBody SceneDto sceneDto) {
+    public TCSResponseEntity<?> createScene(@RequestBody SceneDto sceneDto) {
         SceneDto newSceneDto = TcsDtoUtils.resolveSceneDtoRelationships(sceneDto);
 
         // Creating new scene
         newSceneDto = getService().createScene(newSceneDto);
 
-        return new TcsResponseEntity<>(
-                TcsResponseEntity.Status.SUCCESS,
+        return new TCSResponseEntity<>(
+                TCSResponseEntity.Status.SUCCESS,
                 newSceneDto);
     }
 
     @RequestMapping(value = "/scenes/{sceneId}", method = RequestMethod.GET)
-    public TcsResponseEntity<?> getOneScene(@PathVariable("sceneId") Long sceneId) {
+    public TCSResponseEntity<?> getOneScene(@PathVariable("sceneId") Long sceneId) {
         SceneDto sceneDto = getService().getSceneDto(sceneId);
 
         if (sceneDto == null) {
-            return new TcsResponseEntity<>(TcsResponseEntity.Status.ALERT).setStatusMessage("Not Found!");
+            return new TCSResponseEntity<>(TCSResponseEntity.Status.ALERT).setStatusMessage("Not Found!");
         }
 
-        return new TcsResponseEntity<>(
-                TcsResponseEntity.Status.SUCCESS,
+        return new TCSResponseEntity<>(
+                TCSResponseEntity.Status.SUCCESS,
                 sceneDto);
     }
 
     @RequestMapping(value = "/scenes/{sceneId}", method = RequestMethod.PUT)
-    public TcsResponseEntity<?> updateScene(@PathVariable("sceneId") Long sceneId, SceneDto newSceneDto) {
+    public TCSResponseEntity<?> updateScene(@PathVariable("sceneId") Long sceneId, SceneDto newSceneDto) {
         SceneDto sceneDto = getService().getSceneDto(sceneId);
 
         if (sceneDto == null) {
-            return new TcsResponseEntity<>(TcsResponseEntity.Status.ERROR)
+            return new TCSResponseEntity<>(TCSResponseEntity.Status.ERROR)
                     .setStatusMessage("The scene can not be found by ID [" + sceneId + "].");
         }
 
         newSceneDto.setId(sceneId);
         if (getService().isSceneDtoRunning(sceneDto)) {
-            return new TcsResponseEntity<>(TcsResponseEntity.Status.ERROR)
+            return new TCSResponseEntity<>(TCSResponseEntity.Status.ERROR)
                     .setStatusMessage("The scene is running, please stop it first!");
         }
         TcsDtoUtils.copyProperties(sceneDto, newSceneDto);
 
         sceneDto = getService().updateScene(sceneDto);
 
-        return new TcsResponseEntity<>(TcsResponseEntity.Status.SUCCESS, sceneDto);
+        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS, sceneDto);
     }
 
 //    @RequestMapping(value = "/scenes/{sceneId}", method = RequestMethod.PATCH)
-//    public TcsResponseEntity<?> updateScenePartial(@PathVariable("sceneId") Long sceneId, EntityAuditorDto entityAuditorDto) {
+//    public TCSResponseEntity<?> updateScenePartial(@PathVariable("sceneId") Long sceneId, EntityAuditorDto entityAuditorDto) {
 //        entityAuditorDto.setId(sceneId);
 //
 //        SceneDto scene = getService().getSceneDto(sceneId);
@@ -120,50 +120,50 @@ public class SceneRestfulController extends ServiceController {
 //        // save
 //        getService().updateScene(scene);
 //
-//        return new TcsResponseEntity<>(
+//        return new TCSResponseEntity<>(
 //                new SceneDtoResourceAssembler().toResource((SceneDto) dtoConverter.convertToDto(scene)),
 //                HttpStatus.OK);
 //    }
 
     @RequestMapping(value = "/scenes/{sceneId}", method = RequestMethod.DELETE)
-    public TcsResponseEntity<?> deleteScene(@PathVariable("sceneId") Long sceneId) {
+    public TCSResponseEntity<?> deleteScene(@PathVariable("sceneId") Long sceneId) {
         SceneDto sceneDto = getService().getSceneDto(sceneId);
 
         if (sceneDto == null) {
-            return new TcsResponseEntity<>(TcsResponseEntity.Status.ALERT)
+            return new TCSResponseEntity<>(TCSResponseEntity.Status.ALERT)
                     .setStatusMessage("The scene can not be found by ID [" + sceneId + "].");
         }
 
         if (getService().isSceneDtoRunning(sceneDto)) {
-            return new TcsResponseEntity<>(TcsResponseEntity.Status.ERROR)
+            return new TCSResponseEntity<>(TCSResponseEntity.Status.ERROR)
                     .setStatusMessage("The scene is running, please stop it first!");
         }
 
         try {
             getService().deleteScene(sceneId);
         } catch (EmptyResultDataAccessException e) {
-            return new TcsResponseEntity<>(TcsResponseEntity.Status.ALERT).setStatusMessage("Not found!");
+            return new TCSResponseEntity<>(TCSResponseEntity.Status.ALERT).setStatusMessage("Not found!");
         }
 
-        return new TcsResponseEntity<>(TcsResponseEntity.Status.SUCCESS);
+        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS);
     }
 
     //////////////// ACTIONS ///////////////////////////
     @RequestMapping(value = "/scenes/{sceneId}/actions/start"/*, method = RequestMethod.POST*/)
-    public TcsResponseEntity<?> startScene(@PathVariable("sceneId") Long sceneId/*,
+    public TCSResponseEntity<?> startScene(@PathVariable("sceneId") Long sceneId/*,
                                         @RequestBody Map<String,String> params*/) {
         SceneDto sceneDto = getService().getSceneDto(sceneId);
         getService().loadSceneDto(sceneDto);
 
-        return new TcsResponseEntity<Object>(TcsResponseEntity.Status.SUCCESS);
+        return new TCSResponseEntity<Object>(TCSResponseEntity.Status.SUCCESS);
     }
 
     @RequestMapping(value = "/scenes/{sceneId}/actions/stop"/*, method = RequestMethod.POST*/)
-    public TcsResponseEntity<?> stopScene(@PathVariable("sceneId") Long sceneId/*,
+    public TCSResponseEntity<?> stopScene(@PathVariable("sceneId") Long sceneId/*,
                                        @RequestBody Map<String,String> params*/) {
         SceneDto sceneDto = getService().getSceneDto(sceneId);
         getService().unloadSceneDto(sceneDto);
 
-        return new TcsResponseEntity<Object>(TcsResponseEntity.Status.SUCCESS);
+        return new TCSResponseEntity<Object>(TCSResponseEntity.Status.SUCCESS);
     }
 }

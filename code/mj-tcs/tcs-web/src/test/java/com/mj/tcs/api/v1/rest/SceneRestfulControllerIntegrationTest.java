@@ -2,7 +2,7 @@ package com.mj.tcs.api.v1.rest;
 
 import com.mj.tcs.TcsWebServerApplication;
 import com.mj.tcs.api.v1.dto.SceneDto;
-import com.mj.tcs.api.v1.dto.communication.TcsResponseEntity;
+import com.mj.tcs.api.v1.dto.communication.TCSResponseEntity;
 import com.mj.tcs.util.SceneDtoModelGenerator;
 import org.junit.*;
 import org.junit.Test;
@@ -12,11 +12,9 @@ import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.Assert.*;
@@ -53,13 +51,13 @@ public class SceneRestfulControllerIntegrationTest {
         SceneDto dto = DATA_GENERATOR.createSceneDto();
         HttpEntity<SceneDto> request = new HttpEntity<>(dto);
 
-        ResponseEntity<TcsResponseEntity> response = REST_TEMPLATE.exchange(
+        ResponseEntity<TCSResponseEntity> response = REST_TEMPLATE.exchange(
                 BASE_URI + "/scenes/",
-                HttpMethod.POST, request, TcsResponseEntity.class
+                HttpMethod.POST, request, TCSResponseEntity.class
         );
 
         assertNotNull(response.getBody());
-        assertTrue(response.getBody().getStatusCode() == TcsResponseEntity.Status.SUCCESS);
+        assertTrue(response.getBody().getStatusCode() == TCSResponseEntity.Status.SUCCESS);
         assertNotNull(response.getBody().getBody());
         return (Map) response.getBody().getBody();
     }
@@ -73,22 +71,22 @@ public class SceneRestfulControllerIntegrationTest {
         Long sceneId = Long.parseLong(SCENE_DATA_MAPPING.get("id").toString());
         assertNotNull(sceneId);
 
-        ResponseEntity<TcsResponseEntity> response = REST_TEMPLATE.exchange(
+        ResponseEntity<TCSResponseEntity> response = REST_TEMPLATE.exchange(
                 BASE_URI + "/scenes/" + sceneId,
-                HttpMethod.DELETE, entity, TcsResponseEntity.class
+                HttpMethod.DELETE, entity, TCSResponseEntity.class
         );
 
-        assertTrue(response.getBody().getStatusCode() == TcsResponseEntity.Status.SUCCESS);
+        assertTrue(response.getBody().getStatusCode() == TCSResponseEntity.Status.SUCCESS);
 
         // Try get once to double check !
         HttpEntity<String> newRequest = prepareHttpEntity(null);
 
-        ResponseEntity<TcsResponseEntity> newResponse = REST_TEMPLATE.exchange(
+        ResponseEntity<TCSResponseEntity> newResponse = REST_TEMPLATE.exchange(
                 BASE_URI + "/scenes/" + sceneId,
-                HttpMethod.GET, newRequest, TcsResponseEntity.class
+                HttpMethod.GET, newRequest, TCSResponseEntity.class
         );
 
-        assertTrue (newResponse.getBody().getStatusCode() != TcsResponseEntity.Status.ERROR);
+        assertTrue (newResponse.getBody().getStatusCode() != TCSResponseEntity.Status.ERROR);
         assertNull(newResponse.getBody().getBody());
     }
 
@@ -96,13 +94,13 @@ public class SceneRestfulControllerIntegrationTest {
     public void testGetProfile() throws Exception {
         HttpEntity<String> entity = prepareHttpEntity(null);
 
-        ResponseEntity<TcsResponseEntity> response = REST_TEMPLATE.exchange(
+        ResponseEntity<TCSResponseEntity> response = REST_TEMPLATE.exchange(
                 BASE_URI + "/scenes/profile",
-                HttpMethod.GET, entity, TcsResponseEntity.class
+                HttpMethod.GET, entity, TCSResponseEntity.class
         );
 
         assertTrue(response.getStatusCode() == HttpStatus.OK);
-        assertTrue(response.getBody().getStatusCode() == TcsResponseEntity.Status.SUCCESS);
+        assertTrue(response.getBody().getStatusCode() == TCSResponseEntity.Status.SUCCESS);
     }
 
     @Test
@@ -119,13 +117,13 @@ public class SceneRestfulControllerIntegrationTest {
         // Tesing
         HttpEntity<String> newRequest = prepareHttpEntity(null);
 
-        ResponseEntity<TcsResponseEntity> response = REST_TEMPLATE.exchange(
+        ResponseEntity<TCSResponseEntity> response = REST_TEMPLATE.exchange(
                 BASE_URI + "/scenes/" + sceneId,
-                HttpMethod.GET, newRequest, TcsResponseEntity.class
+                HttpMethod.GET, newRequest, TCSResponseEntity.class
         );
 
         assertNotNull(response.getBody());
-        assertTrue(response.getBody().getStatusCode() == TcsResponseEntity.Status.SUCCESS);
+        assertTrue(response.getBody().getStatusCode() == TCSResponseEntity.Status.SUCCESS);
         assertNotNull(response.getBody().getBody());
         assertEquals(name, ((Map) response.getBody().getBody()).get("name").toString());
     }
@@ -150,13 +148,13 @@ public class SceneRestfulControllerIntegrationTest {
 //
 //        HttpEntity<SceneDto> request = prepareHttpEntity(dto);
 //
-//        ResponseEntity<TcsResponseEntity> response = REST_TEMPLATE.exchange(
+//        ResponseEntity<TCSResponseEntity> response = REST_TEMPLATE.exchange(
 //                BASE_URI + "/scenes/" + sceneId,
-//                HttpMethod.PUT, request, TcsResponseEntity.class
+//                HttpMethod.PUT, request, TCSResponseEntity.class
 //        );
 //
 //        assertNotNull(response.getBody());
-//        assertTrue(response.getBody().getStatusCode() == TcsResponseEntity.Status.SUCCESS);
+//        assertTrue(response.getBody().getStatusCode() == TCSResponseEntity.Status.SUCCESS);
 //
 //        assertNotNull(response.getBody().getBody());
 //        assertEquals(name, ((Map) response.getBody().getBody()).get("name").toString());

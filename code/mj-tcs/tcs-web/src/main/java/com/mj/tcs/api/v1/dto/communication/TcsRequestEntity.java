@@ -12,17 +12,17 @@ import java.util.Optional;
  * @author Wang Zhen
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
-public class TcsRequestEntity<T> extends TcsCommEntity<T> {
+public class TCSRequestEntity<T> extends TCSCommEntity<T> {
 
     @JsonProperty("uuid")
     private String requestUUID;
     private Action actionCode;
 
-    public TcsRequestEntity() {
+    public TCSRequestEntity() {
         this(null);
     }
 
-    public TcsRequestEntity(T body) {
+    public TCSRequestEntity(T body) {
         super(body);
     }
 
@@ -50,7 +50,7 @@ public class TcsRequestEntity<T> extends TcsCommEntity<T> {
         if (other == null || !other.getClass().equals(getClass())) {
             return false;
         }
-        TcsRequestEntity<?> otherEntity = (TcsRequestEntity<?>) other;
+        TCSRequestEntity<?> otherEntity = (TCSRequestEntity<?>) other;
         return (ObjectUtils.nullSafeEquals(this.requestUUID, otherEntity.requestUUID)) &&
                 (ObjectUtils.nullSafeEquals(this.actionCode, otherEntity.actionCode)) &&
                 (super.equals(other));
@@ -101,7 +101,7 @@ public class TcsRequestEntity<T> extends TcsCommEntity<T> {
             if (type.isPresent()) {
                 return type.get();
             }
-            throw new IllegalArgumentException("The TcsRequestEntity.Action enum is no recognizable [text=" + text + "]");
+            throw new IllegalArgumentException("The TCSRequestEntity.Action enum is no recognizable [text=" + text + "]");
         }
     }
 }

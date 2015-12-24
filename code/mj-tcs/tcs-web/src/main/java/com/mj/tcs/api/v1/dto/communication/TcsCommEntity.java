@@ -11,17 +11,17 @@ import java.util.Date;
  * @author Wang Zhen
  */
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
-public class TcsCommEntity<T> {
+public class TCSCommEntity<T> {
 
     private final T body;
 
     private String timestamp;
 
-    public TcsCommEntity() {
+    public TCSCommEntity() {
         this(null);
     }
 
-    public TcsCommEntity(T body) {
+    public TCSCommEntity(T body) {
         this.body = body;
 
         timestamp = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss:SS").format(new Date());
@@ -43,7 +43,7 @@ public class TcsCommEntity<T> {
         if (other == null || !other.getClass().equals(getClass())) {
             return false;
         }
-        TcsCommEntity<?> otherEntity = (TcsCommEntity<?>) other;
+        TCSCommEntity<?> otherEntity = (TCSCommEntity<?>) other;
         return (ObjectUtils.nullSafeEquals(this.body, otherEntity.body));
     }
 

@@ -132,7 +132,7 @@ public final class TransportOrder
      * @param destinations A list of destinations that are to be travelled to
      * when processing this transport order.
      */
-    public TransportOrder(int objectID, String name,
+    public TransportOrder(long objectID, String name,
                           List<DriveOrder.Destination> destinations) {
         super(objectID, name);
         if (destinations == null) {
@@ -671,7 +671,7 @@ public final class TransportOrder
                 result = 1;
             }
             else {
-                int idDifference = o1.getId() - o2.getId();
+                long idDifference = o1.getId() - o2.getId();
                 if (idDifference < 0) {
                     result = -1;
                 }

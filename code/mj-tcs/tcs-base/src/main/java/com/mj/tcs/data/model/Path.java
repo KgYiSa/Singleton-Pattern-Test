@@ -173,7 +173,7 @@ public class Path
      * @throws IllegalArgumentException If the given point is neither the source
      * point nor the destination point of this path.
      */
-    public boolean isNavigableTo(Point navPoint)
+    public boolean isNavigableTo(TCSObjectReference<Point> navPoint)
             throws IllegalArgumentException {
         if (Objects.equals(navPoint, destinationPoint)) {
             return isNavigableForward();

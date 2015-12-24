@@ -17,7 +17,7 @@ import java.util.Objects;
  *
  * @author Stefan Walter (Fraunhofer IML)
  */
-public final class TcsMessageEvent extends TcsEvent implements Serializable {
+public final class TCSMessageEvent extends TCSEvent implements Serializable {
 
     /**
      * The published message.
@@ -29,7 +29,7 @@ public final class TcsMessageEvent extends TcsEvent implements Serializable {
      *
      * @param message The message being published.
      */
-    public TcsMessageEvent(Message message) {
+    public TCSMessageEvent(Message message) {
         this.message = Objects.requireNonNull(message, "message is null");
     }
 

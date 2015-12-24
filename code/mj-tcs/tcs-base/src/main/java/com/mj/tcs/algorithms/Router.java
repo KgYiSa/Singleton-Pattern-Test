@@ -1,5 +1,6 @@
 package com.mj.tcs.algorithms;
 
+import com.mj.tcs.data.base.TCSObjectReference;
 import com.mj.tcs.data.model.Location;
 import com.mj.tcs.data.model.Point;
 import com.mj.tcs.data.model.Vehicle;
@@ -79,6 +80,33 @@ public interface Router {
      * route exists.
      */
     long getCosts(Vehicle vehicle, Point sourcePoint, Point destinationPoint);
+
+    /**
+     * Returns the costs for travelling a route from one point to another with a
+     * given vehicle.
+     *
+     * @param vehicle The vehicle for which the route must be passable.
+     * @param srcPointRef The starting point reference of the route.
+     * @param dstPointRef The end point reference of the route.
+     * @return The costs of the route, or <code>Long.MAX_VALUE</code>, if no such
+     * route exists.
+     */
+    long getCostsByPointRef(Vehicle vehicle,
+                            TCSObjectReference<Point> srcPointRef,
+                            TCSObjectReference<Point> dstPointRef);
+
+    /**
+     * Returns the costs for travelling a route from one location to another with
+     * a given vehicle.
+     *
+     * @param vehicle The vehicle the costs shall be calculated for.
+     * @param srcRef A reference to the source location
+     * @param destRef A reference to the destination location
+     * @return The costs of the route, or
+     * <code>Long.MAX_VALUE</code>, if no such route exists.
+     */
+    long getCosts(Vehicle vehicle, TCSObjectReference<Location> srcRef,
+                  TCSObjectReference<Location> destRef);
 
     /**
      * Notifies the router of a route being selected for a vehicle.

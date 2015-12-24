@@ -59,13 +59,13 @@ public class MessageBuffer {
     /**
      * A listener for events concerning the stored messages.
      */
-    private final EventListener<TcsEvent> messageEventListener;
+    private final EventListener<TCSEvent> messageEventListener;
 
     /**
      * Creates a new MessageBuffer.
      */
     public MessageBuffer() {
-        this(new DummyEventListener<TcsEvent>());
+        this(new DummyEventListener<TCSEvent>());
     }
 
     /**
@@ -73,7 +73,7 @@ public class MessageBuffer {
      *
      * @param eventListener The event listener to be used.
      */
-    public MessageBuffer(@CentralEventHub EventListener<TcsEvent> eventListener) {
+    public MessageBuffer(@CentralEventHub EventListener<TCSEvent> eventListener) {
         messageEventListener = requireNonNull(eventListener, "eventListener");
         cutBackCount = capacity;
     }
@@ -227,7 +227,7 @@ public class MessageBuffer {
      * @param message The message to emit an event for.
      */
     public void emitMessageEvent(Message message) {
-        TcsMessageEvent event = new TcsMessageEvent(message);
+        TCSMessageEvent event = new TCSMessageEvent(message);
         messageEventListener.processEvent(event);
     }
 }

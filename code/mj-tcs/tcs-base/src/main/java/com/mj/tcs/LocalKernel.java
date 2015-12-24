@@ -1,18 +1,20 @@
 package com.mj.tcs;
 
 import com.mj.tcs.algorithms.Scheduler;
+import com.mj.tcs.data.ObjectUnknownException;
+import com.mj.tcs.data.base.TCSObjectReference;
 import com.mj.tcs.data.base.TCSResource;
+import com.mj.tcs.data.base.TCSResourceReference;
+import com.mj.tcs.data.base.Triple;
+import com.mj.tcs.data.model.Point;
+import com.mj.tcs.data.model.Vehicle;
+import com.mj.tcs.data.order.OrderSequence;
 import com.mj.tcs.data.order.Rejection;
+import com.mj.tcs.data.order.TransportOrder;
 import com.mj.tcs.data.user.CredentialsException;
 import com.mj.tcs.drivers.CommunicationAdapter;
 import com.mj.tcs.drivers.CommunicationAdapterRegistry;
 import com.mj.tcs.drivers.LoadHandlingDevice;
-import com.mj.tcs.data.ObjectUnknownException;
-import com.mj.tcs.data.model.Point;
-import com.mj.tcs.data.model.Vehicle;
-import com.mj.tcs.data.base.Triple;
-import com.mj.tcs.data.order.OrderSequence;
-import com.mj.tcs.data.order.TransportOrder;
 
 import java.util.List;
 import java.util.Set;
@@ -63,123 +65,124 @@ public interface LocalKernel extends Kernel {
      */
     Scheduler getScheduler();
 
+
     /**
      * Sets a vehicle's energy level.
      *
-     * @param vehicle A reference to the vehicle to be modified.
+     * @param ref A reference to the vehicle to be modified.
      * @param energyLevel The vehicle's new energy level.
      * @throws ObjectUnknownException If the referenced vehicle does not exist.
      */
-    void setVehicleEnergyLevel(Vehicle vehicle, int energyLevel)
+    void setVehicleEnergyLevel(TCSObjectReference<Vehicle> ref, int energyLevel)
             throws ObjectUnknownException;
 
     /**
      * Sets a vehicle's recharge operation.
      *
-     * @param vehicle A reference to the vehicle to be modified.
+     * @param ref A reference to the vehicle to be modified.
      * @param rechargeOperation The vehicle's new recharge action.
      * @throws ObjectUnknownException If the referenced vehicle does not exist.
      */
-    void setVehicleRechargeOperation(Vehicle vehicle,
+    void setVehicleRechargeOperation(TCSObjectReference<Vehicle> ref,
                                      String rechargeOperation)
             throws ObjectUnknownException;
 
     /**
      * Sets a vehicle's load handling devices.
      *
-     * @param vehicle The vehicle to be modified.
+     * @param ref A reference to the vehicle to be modified.
      * @param devices The vehicle's new load handling devices.
      * @throws ObjectUnknownException If the referenced vehicle does not exist.
      */
-    void setVehicleLoadHandlingDevices(Vehicle vehicle,
+    void setVehicleLoadHandlingDevices(TCSObjectReference<Vehicle> ref,
                                        List<LoadHandlingDevice> devices)
             throws ObjectUnknownException;
 
     /**
      * Sets a vehicle's maximum velocity.
      *
-     * @param vehicle The vehicle to be modified.
+     * @param ref A reference to the vehicle to be modified.
      * @param velocity The vehicle's new maximum velocity.
      * @throws ObjectUnknownException If the referenced vehicle does not exist.
      */
-    void setVehicleMaxVelocity(Vehicle vehicle, int velocity)
+    void setVehicleMaxVelocity(TCSObjectReference<Vehicle> ref, int velocity)
             throws ObjectUnknownException;
 
     /**
      * Sets a vehicle's maximum velocity.
      *
-     * @param vehicle The vehicle to be modified.
+     * @param ref A reference to the vehicle to be modified.
      * @param velocity The vehicle's new maximum velocity.
      * @throws ObjectUnknownException If the referenced vehicle does not exist.
      */
-    void setVehicleMaxReverseVelocity(Vehicle vehicle,
+    void setVehicleMaxReverseVelocity(TCSObjectReference<Vehicle> ref,
                                       int velocity)
             throws ObjectUnknownException;
 
     /**
      * Sets a vehicle's state.
      *
-     * @param vehicle The vehicle to be modified.
+     * @param ref A reference to the vehicle to be modified.
      * @param newState The vehicle's new state.
      * @throws ObjectUnknownException If the referenced vehicle does not exist.
      */
-    void setVehicleState(Vehicle vehicle, Vehicle.State newState)
+    void setVehicleState(TCSObjectReference<Vehicle> ref, Vehicle.State newState)
             throws ObjectUnknownException;
 
     /**
      * Sets a vehicle's processing state.
      *
-     * @param vehicle The vehicle to be modified.
+     * @param ref A reference to the vehicle to be modified.
      * @param newState The vehicle's new processing state.
      * @throws ObjectUnknownException If the referenced vehicle does not exist.
      */
-    void setVehicleProcState(Vehicle vehicle,
+    void setVehicleProcState(TCSObjectReference<Vehicle> ref,
                              Vehicle.ProcState newState)
             throws ObjectUnknownException;
 
     /**
      * Sets a vehicle's communication adapter's state.
      *
-     * @param vehicle The vehicle to be modified.
+     * @param ref A reference to the vehicle to be modified.
      * @param newState The vehicle's communication adapter's new state.
      * @throws ObjectUnknownException If the referenced vehicle does not exist.
      */
-    void setVehicleAdapterState(Vehicle vehicle,
+    void setVehicleAdapterState(TCSObjectReference<Vehicle> ref,
                                 CommunicationAdapter.State newState)
             throws ObjectUnknownException;
 
     /**
      * Places a vehicle on a point.
      *
-     * @param vehicle The vehicle to be modified.
-     * @param point The point on which the vehicle is to be
+     * @param vehicleRef A reference to the vehicle to be modified.
+     * @param pointRef A reference to the point on which the vehicle is to be
      * placed.
      * @throws ObjectUnknownException If the referenced vehicle does not exist.
      */
-    void setVehiclePosition(Vehicle vehicle,
-                            Point point)
+    void setVehiclePosition(TCSObjectReference<Vehicle> vehicleRef,
+                            TCSObjectReference<Point> pointRef)
             throws ObjectUnknownException;
 
     /**
      * Sets the point which a vehicle is expected to occupy next.
      *
-     * @param vehicle The vehicle to be modified.
-     * @param point The point which the vehicle is expected to
+     * @param vehicleRef A reference to the vehicle to be modified.
+     * @param pointRef A reference to the point which the vehicle is expected to
      * occupy next.
      * @throws ObjectUnknownException If the referenced vehicle does not exist.
      */
-    void setVehicleNextPosition(Vehicle vehicle,
-                                Point point)
+    void setVehicleNextPosition(TCSObjectReference<Vehicle> vehicleRef,
+                                TCSObjectReference<Point> pointRef)
             throws ObjectUnknownException;
 
     /**
      * Sets the vehicle's current precise position in mm.
      *
-     * @param vehicle The vehicle to be modified.
+     * @param vehicleRef A reference to the vehicle to be modified.
      * @param newPosition The vehicle's precise position in mm.
      * @throws ObjectUnknownException If the referenced vehicle does not exist.
      */
-    void setVehiclePrecisePosition(Vehicle vehicle,
+    void setVehiclePrecisePosition(TCSObjectReference<Vehicle> vehicleRef,
                                    Triple newPosition)
             throws ObjectUnknownException;
 
@@ -187,83 +190,83 @@ public interface LocalKernel extends Kernel {
      * Sets the vehicle's current orientation angle (-360..360�, or Double.NaN, if
      * the vehicle doesn't provide an angle).
      *
-     * @param vehicle The vehicle to be modified.
+     * @param vehicleRef A reference to the vehicle to be modified.
      * @param angle The vehicle's orientation angle.
      * @throws ObjectUnknownException If the referenced vehicle does not exist.
      */
-    void setVehicleOrientationAngle(Vehicle vehicle,
+    void setVehicleOrientationAngle(TCSObjectReference<Vehicle> vehicleRef,
                                     double angle)
             throws ObjectUnknownException;
 
     /**
      * Sets a vehicle's transport order.
      *
-     * @param vehicle The vehicle to be modified.
-     * @param order The transport order the vehicle processes.
+     * @param vehicleRef A reference to the vehicle to be modified.
+     * @param orderRef A reference to the transport order the vehicle processes.
      * @throws ObjectUnknownException If the referenced vehicle does not exist.
      */
-    void setVehicleTransportOrder(Vehicle vehicle,
-                                  TransportOrder order)
+    void setVehicleTransportOrder(TCSObjectReference<Vehicle> vehicleRef,
+                                  TCSObjectReference<TransportOrder> orderRef)
             throws ObjectUnknownException;
 
     /**
      * Sets a vehicle's order sequence.
      *
-     * @param vehicle The vehicle to be modified.
-     * @param seq The order sequence the vehicle processes.
+     * @param vehicleRef A reference to the vehicle to be modified.
+     * @param seqRef A reference to the order sequence the vehicle processes.
      * @throws ObjectUnknownException If the referenced vehicle does not exist.
      */
-    void setVehicleOrderSequence(Vehicle vehicle,
-                                 OrderSequence seq)
+    void setVehicleOrderSequence(TCSObjectReference<Vehicle> vehicleRef,
+                                 TCSObjectReference<OrderSequence> seqRef)
             throws ObjectUnknownException;
 
     /**
      * Sets a vehicle's index of the last route step travelled for the current
      * drive order of its current transport order.
      *
-     * @param vehicle The vehicle to be modified.
+     * @param vehicleRef A reference to the vehicle to be modified.
      * @param index The new index.
      * @throws ObjectUnknownException If the referenced vehicle does not exist.
      */
-    void setVehicleRouteProgressIndex(Vehicle vehicle,
+    void setVehicleRouteProgressIndex(TCSObjectReference<Vehicle> vehicleRef,
                                       int index)
             throws ObjectUnknownException;
 
     /**
      * Adds a rejection to a transport order.
      *
-     * @param transportOrder The transport order to be modified.
+     * @param ref A reference to the transport order to be modified.
      * @param newRejection The rejection to be added.
      * @throws ObjectUnknownException If the referenced transport order does not
      * exist.
      */
-    void addTransportOrderRejection(TransportOrder transportOrder,
+    void addTransportOrderRejection(TCSObjectReference<TransportOrder> ref,
                                     Rejection newRejection)
             throws ObjectUnknownException;
 
     /**
      * Sets a transport order's state.
      *
-     * @param transportOrder The transport order to be modified.
+     * @param ref A reference to the transport order to be modified.
      * @param newState The transport order's new state.
      * @throws ObjectUnknownException If the referenced transport order does not
      * exist.
      */
-    void setTransportOrderState(TransportOrder transportOrder,
+    void setTransportOrderState(TCSObjectReference<TransportOrder> ref,
                                 TransportOrder.State newState)
             throws ObjectUnknownException;
 
     /**
      * Sets a transport order's processing vehicle.
      *
-     * @param order The transport order to be modified.
-     * @param vehicle The vehicle processing the order.
+     * @param orderRef A reference to the transport order to be modified.
+     * @param vehicleRef A reference to the vehicle processing the order.
      * @throws ObjectUnknownException If the referenced transport order does not
      * exist.
      */
     void setTransportOrderProcessingVehicle(
-            TransportOrder order,
-            Vehicle vehicle)
+            TCSObjectReference<TransportOrder> orderRef,
+            TCSObjectReference<Vehicle> vehicleRef)
             throws ObjectUnknownException;
 
     /**
@@ -272,14 +275,14 @@ public interface LocalKernel extends Kernel {
      * transport order. Fails if there already is a current drive order or if the
      * list of future drive orders is empty.
      *
-     * @param transportOrder The transport order to be modified.
+     * @param ref A reference to the transport order to be modified.
      * @throws ObjectUnknownException If the referenced transport order does not
      * exist.
      * @throws IllegalStateException If there already is a current drive order or
      * if the list of future drive orders is empty.
      */
     void setTransportOrderInitialDriveOrder(
-            TransportOrder transportOrder)
+            TCSObjectReference<TransportOrder> ref)
             throws ObjectUnknownException, IllegalStateException;
 
     /**
@@ -290,80 +293,80 @@ public interface LocalKernel extends Kernel {
      * If the current drive order is <code>null</code> because all drive orders
      * have been finished already or none has been started, yet, nothing happens.
      *
-     * @param transportOrder The transport order to be modified.
+     * @param ref A reference to the transport order to be modified.
      * @throws ObjectUnknownException If the referenced transport order is not
      * in this pool.
      */
-    void setTransportOrderNextDriveOrder(TransportOrder transportOrder)
+    void setTransportOrderNextDriveOrder(TCSObjectReference<TransportOrder> ref)
             throws ObjectUnknownException;
 
     /**
      * Sets the order sequence a transport order belongs to.
      *
-     * @param order The transport order to be modified.
-     * @param seq The sequence the transport order belongs to.
+     * @param orderRef A reference to the transport order to be modified.
+     * @param seqRef A reference to the sequence the transport order belongs to.
      * @throws ObjectUnknownException If any of the referenced objects do not
      * exist.
      * @throws CredentialsException If the calling client is not allowed to
      * execute this method.
      */
     void setTransportOrderWrappingSequence(
-            TransportOrder order,
-            OrderSequence seq)
+            TCSObjectReference<TransportOrder> orderRef,
+            TCSObjectReference<OrderSequence> seqRef)
             throws ObjectUnknownException, CredentialsException;
 
     /**
      * Sets a transport order's <em>dispensable</em> flag.
      *
-     * @param order The transport order to be modified.
+     * @param orderRef A reference to the transport order to be modified.
      * @param dispensable The new dispensable flag.
      * @throws ObjectUnknownException If any of the referenced objects do not
      * exist.
      * @throws CredentialsException If the calling client is not allowed to
      * execute this method.
      */
-    void setTransportOrderDispensable(TransportOrder order,
+    void setTransportOrderDispensable(TCSObjectReference<TransportOrder> orderRef,
                                       boolean dispensable)
             throws ObjectUnknownException, CredentialsException;
 
     /**
      * Sets an order sequence's finished index.
      *
-     * @param seq The order sequence to be modified.
+     * @param seqRef A reference to the order sequence to be modified.
      * @param index The sequence's new finished index.
      * @throws ObjectUnknownException If the referenced transport order is not
      * in this pool.
      * @throws CredentialsException If the calling client is not allowed to
      * execute this method.
      */
-    void setOrderSequenceFinishedIndex(OrderSequence seq,
+    void setOrderSequenceFinishedIndex(TCSObjectReference<OrderSequence> seqRef,
                                        int index)
             throws ObjectUnknownException, CredentialsException;
 
     /**
      * Sets an order sequence's finished flag.
      *
-     * @param seq The order sequence to be modified.
+     * @param seqRef A reference to the order sequence to be modified.
      * @throws ObjectUnknownException If the referenced transport order is not
      * in this pool.
      * @throws CredentialsException If the calling client is not allowed to
      * execute this method.
      */
-    void setOrderSequenceFinished(OrderSequence seq)
+    void setOrderSequenceFinished(TCSObjectReference<OrderSequence> seqRef)
             throws ObjectUnknownException, CredentialsException;
 
     /**
      * Sets an order sequence's processing vehicle.
      *
-     * @param seq The order sequence to be modified.
-     * @param vehicle The vehicle processing the order sequence.
+     * @param seqRef A reference to the order sequence to be modified.
+     * @param vehicleRef A reference to the vehicle processing the order sequence.
      * @throws ObjectUnknownException If the referenced transport order is not
      * in this pool.
      * @throws CredentialsException If the calling client is not allowed to
      * execute this method.
      */
-    void setOrderSequenceProcessingVehicle(OrderSequence seq,
-                                           Vehicle vehicle)
+    void setOrderSequenceProcessingVehicle(TCSObjectReference<OrderSequence> seqRef,
+                                           TCSObjectReference<Vehicle> vehicleRef)
             throws ObjectUnknownException, CredentialsException;
 
     /**
@@ -379,7 +382,7 @@ public interface LocalKernel extends Kernel {
      * @throws CredentialsException If the calling client is not allowed to
      * execute this method.
      */
-    Set<TCSResource> expandResources(Set<TCSResource> resources)
+    Set<TCSResource> expandResources(Set<TCSResourceReference> resources)
             throws ObjectUnknownException, CredentialsException;
 
     /**

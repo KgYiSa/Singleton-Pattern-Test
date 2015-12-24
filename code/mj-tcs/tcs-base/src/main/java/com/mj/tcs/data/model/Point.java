@@ -5,6 +5,7 @@
  */
 package com.mj.tcs.data.model;
 
+import com.mj.tcs.data.base.TCSObjectReference;
 import com.mj.tcs.data.base.TCSResource;
 import com.mj.tcs.data.base.Triple;
 
@@ -36,16 +37,16 @@ public class Point
     /**
      * The vehicle occupying this point.
      */
-    private Vehicle occupyingVehicle;
+    private TCSObjectReference<Vehicle> occupyingVehicle;
 
     /**
      * This point's type.
      */
     private Type type = Type.HALT_POSITION;
 
-    private Set<Path> incomingPaths = new LinkedHashSet<>();
+    private Set<TCSObjectReference<Path>> incomingPaths = new LinkedHashSet<>();
 
-    private Set<Path> outgoingPaths = new LinkedHashSet<>();
+    private Set<TCSObjectReference<Path>> outgoingPaths = new LinkedHashSet<>();
 
     private Set<Location.Link> attachedLinks = new LinkedHashSet<>();
 
@@ -109,11 +110,11 @@ public class Point
         vehicleOrientationAngle = angle;
     }
 
-    public Vehicle getOccupyingVehicle() {
+    public TCSObjectReference<Vehicle> getOccupyingVehicle() {
         return occupyingVehicle;
     }
 
-    public void setOccupyingVehicle(Vehicle occupyingVehicle) {
+    public void setOccupyingVehicle(TCSObjectReference<Vehicle> occupyingVehicle) {
         this.occupyingVehicle = occupyingVehicle;
     }
 
@@ -167,19 +168,19 @@ public class Point
         return Type.PARK_POSITION.equals(type) || Type.HALT_POSITION.equals(type);
     }
 
-    public Set<Path> getIncomingPaths() {
+    public Set<TCSObjectReference<Path>> getIncomingPaths() {
         return incomingPaths;
     }
 
-    public void setIncomingPaths(Set<Path> incomingPaths) {
+    public void setIncomingPaths(Set<TCSObjectReference<Path>> incomingPaths) {
         this.incomingPaths = incomingPaths;
     }
 
-    public Set<Path> getOutgoingPaths() {
+    public Set<TCSObjectReference<Path>> getOutgoingPaths() {
         return outgoingPaths;
     }
 
-    public void setOutgoingPaths(Set<Path> outgoingPaths) {
+    public void setOutgoingPaths(Set<TCSObjectReference<Path>> outgoingPaths) {
         this.outgoingPaths = outgoingPaths;
     }
 
@@ -190,7 +191,7 @@ public class Point
      *
      * @param newPath The path to be added.
      */
-    public void addIncomingPath(Path newPath) {
+    public void addIncomingPath(TCSObjectReference<Path> newPath) {
         if (newPath == null) {
             throw new NullPointerException("newPath is null");
         }
@@ -204,7 +205,7 @@ public class Point
      *
      * @param rmPath The path to be removed.
      */
-    public void removeIncomingPath(Path rmPath) {
+    public void removeIncomingPath(TCSObjectReference<Path> rmPath) {
         if (rmPath == null) {
             throw new NullPointerException("rmPath is null");
         }
@@ -218,7 +219,7 @@ public class Point
      *
      * @param newPath The path to be added.
      */
-    public void addOutgoingPath(Path newPath) {
+    public void addOutgoingPath(TCSObjectReference<Path> newPath) {
         if (newPath == null) {
             throw new NullPointerException("newPath is null");
         }
@@ -232,7 +233,7 @@ public class Point
      *
      * @param rmPath A reference to the path to be removed.
      */
-    public void removeOutgoingPath(Path rmPath) {
+    public void removeOutgoingPath(TCSObjectReference<Path> rmPath) {
         if (rmPath == null) {
             throw new NullPointerException("rmPath is null");
         }

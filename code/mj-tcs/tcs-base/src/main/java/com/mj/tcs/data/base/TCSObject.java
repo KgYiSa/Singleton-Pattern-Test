@@ -44,7 +44,11 @@ public abstract class TCSObject<E extends TCSObject<E>>
     /**
      * This object's ID.
      */
-    private final int id;
+    private final long id;
+    /**
+     * This object's UUID.
+     */
+    private final String uuid;
     /**
      * The name of the business object.
      */
@@ -56,7 +60,7 @@ public abstract class TCSObject<E extends TCSObject<E>>
      * @param objectID The new object's ID.
      * @param objectName The new object's name.
      */
-    protected TCSObject(int objectID, String objectName) {
+    protected TCSObject(long objectID, String objectName) {
         log.finer("method entry");
         if (objectID < 0) {
             throw new IllegalArgumentException("objectID is negative");
@@ -68,6 +72,7 @@ public abstract class TCSObject<E extends TCSObject<E>>
             throw new IllegalArgumentException("objectName is empty String");
         }
         id = objectID;
+        uuid = getClass().getName() + "-" + id;
         name = objectName;
         reference = new TCSObjectReference<>(this);
     }
@@ -78,9 +83,14 @@ public abstract class TCSObject<E extends TCSObject<E>>
      *
      * @return This object's ID.
      */
-    public final int getId() {
+    public final long getId() {
         log.finer("method entry");
         return id;
+    }
+
+    public final String getUUID() {
+        log.finer("method entry");
+        return uuid;
     }
 
     /**
@@ -240,7 +250,7 @@ public abstract class TCSObject<E extends TCSObject<E>>
 
         @Override
         public int compare(TCSObject<?> o1, TCSObject<?> o2) {
-            return o1.getId() - o2.getId();
+            return (int)(o1.getId() - o2.getId());
         }
     }
 

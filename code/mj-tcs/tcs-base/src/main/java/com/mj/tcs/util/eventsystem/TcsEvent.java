@@ -13,11 +13,11 @@ package com.mj.tcs.util.eventsystem;
  *
  * @author Stefan Walter (Fraunhofer IML)
  */
-public abstract class TcsEvent extends Event {
+public abstract class TCSEvent extends Event {
 
   /**
-   * Creates a empty TcsEvent.
+   * Creates a empty TCSEvent.
    */
-  public TcsEvent() {
+  public TCSEvent() {
   }
 }

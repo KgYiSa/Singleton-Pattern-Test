@@ -104,9 +104,7 @@
     <orderEntry type="library" name="Maven: jakarta-regexp:jakarta-regexp:1.4" level="project" />
     <orderEntry type="library" name="Maven: com.inspire-software.lib.dto.geda:geda.spring-integration:3.1.0" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-context-support:4.1.8.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.commons:com.springsource.org.apache.commons.beanutils:1.8.3" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.commons:com.springsource.org.apache.commons.collections:3.2.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.commons:com.springsource.org.apache.commons.logging:1.1.1" level="project" />
+    <orderEntry type="library" name="Maven: commons-beanutils:commons-beanutils:1.9.2" level="project" />
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.36" level="project" />
     <orderEntry type="module" module-name="tcs-base" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-test:1.2.7.RELEASE" level="project" />

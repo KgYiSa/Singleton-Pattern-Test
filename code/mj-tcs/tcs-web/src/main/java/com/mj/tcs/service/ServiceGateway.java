@@ -12,15 +12,12 @@ import com.mj.tcs.data.order.DriveOrder;
 import com.mj.tcs.data.order.TransportOrder;
 import com.mj.tcs.drivers.BasicCommunicationAdapter;
 import com.mj.tcs.drivers.CommunicationAdapterFactory;
-import com.mj.tcs.eventsystem.AcceptingTCSEventFilter;
 import com.mj.tcs.eventsystem.EventHub;
 import com.mj.tcs.eventsystem.SynchronousEventHub;
-import com.mj.tcs.eventsystem.TCSObjectEvent;
 import com.mj.tcs.exception.ObjectUnknownException;
 import com.mj.tcs.exception.TCSServerRuntimeException;
 import com.mj.tcs.kernel.Scene;
 import com.mj.tcs.kernel.StandardKernel;
-import com.mj.tcs.util.eventsystem.EventListener;
 import com.mj.tcs.util.eventsystem.TCSEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -128,7 +125,7 @@ public class ServiceGateway {
 
 
     public <T extends BaseEntityDto> Set<T> getTcsObjectDtos(long sceneId,
-                                                                    Class<T> clazz)
+                                                             Class<T> clazz)
             throws ObjectUnknownException {
         SceneDto sceneDto;
         synchronized (sceneDtoService) {
@@ -189,8 +186,8 @@ public class ServiceGateway {
     }
 
     public <T extends BaseEntityDto> Set<T> getTCSObjectDtos(long sceneId,
-                                                                    Class<T> clazz,
-                                                                    Pattern regexp)
+                                                             Class<T> clazz,
+                                                             Pattern regexp)
             throws ObjectUnknownException {
         // TODO:
         throw new ObjectUnknownException(clazz);
@@ -254,38 +251,31 @@ public class ServiceGateway {
         // TODO:
         Scene scene = sceneDtoConverter.convertToEntity(sceneDto);
         EventHub<TCSEvent> eventHub = new SynchronousEventHub<>();
-        eventHub.addEventListener(new EventListener<TCSEvent>() {
-            @Override
-            public void processEvent(TCSEvent event) {
-                if (event instanceof TCSObjectEvent) {
-                    TCSObjectEvent objectEvent = (TCSObjectEvent) event;
-                    System.out.println(objectEvent.getPreviousObjectState() +" --> " +
-                    objectEvent.getCurrentObjectState() + ": " + objectEvent.getType());
-                } else {
-                    System.out.println(event.toString());
-                }
-            }
-        }, new AcceptingTCSEventFilter());
+        KernelEventHandler eventHandler = new KernelEventHandler();
+        eventHub.addEventListener(eventHandler, eventHandler);
         LocalKernel kernel = new StandardKernel(eventHub, scene);
-        kernel.initialize();
-        final Vehicle v = (Vehicle)kernel.getTCSObjects(Vehicle.class).toArray()[0];
-        final Point p = ((Point) kernel.getTCSObjects(Point.class).toArray()[0]);
-        kernel.setVehiclePosition(v.getReference(),
-                p.getReference());
-        // adapter
-        CommunicationAdapterFactory adapterFactory = kernel.getCommAdapterRegistry().findFactoriesFor(v).get(0);
-        BasicCommunicationAdapter adapter = adapterFactory.getAdapterFor(v);
-        adapter.enable();
-        kernel.getVehicleManagerPool().getVehicleManager(v.getUUID(), adapter);
-        // transport order
-        List<DriveOrder.Destination> destinations = new ArrayList<>();
-        TCSObjectReference<Location> locRef = TCSObjectReference.getDummyReference(Point.class, p.getUUID());
-        destinations.add(new DriveOrder.Destination(locRef, "MOVE"));
-        TransportOrder torder = kernel.createTransportOrder(destinations);
-        kernel.activateTransportOrder(torder.getReference());
-        // dispatch vehicle
-        kernel.dispatchVehicle(v.getReference(), true);
-
+        try {
+            kernel.initialize();
+            final Vehicle v = (Vehicle) kernel.getTCSObjects(Vehicle.class).toArray()[0];
+            final Point p = ((Point) kernel.getTCSObjects(Point.class).toArray()[0]);
+            kernel.setVehiclePosition(v.getReference(),
+                    p.getReference());
+            // adapter
+            CommunicationAdapterFactory adapterFactory = kernel.getCommAdapterRegistry().findFactoriesFor(v).get(0);
+            BasicCommunicationAdapter adapter = adapterFactory.getAdapterFor(v);
+            adapter.enable();
+            kernel.getVehicleManagerPool().getVehicleManager(v.getUUID(), adapter);
+            // transport order
+            List<DriveOrder.Destination> destinations = new ArrayList<>();
+            TCSObjectReference<Location> locRef = TCSObjectReference.getDummyReference(Point.class, p.getUUID());
+            destinations.add(new DriveOrder.Destination(locRef, "MOVE"));
+            TransportOrder torder = kernel.createTransportOrder(destinations);
+            kernel.activateTransportOrder(torder.getReference());
+            // dispatch vehicle
+            kernel.dispatchVehicle(v.getReference(), true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         kernelRuntimeMapping.put(idKey, kernel);
 
         return true;

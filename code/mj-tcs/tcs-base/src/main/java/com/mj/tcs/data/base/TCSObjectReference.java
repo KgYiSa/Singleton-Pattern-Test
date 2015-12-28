@@ -195,6 +195,9 @@ public class TCSObjectReference<E extends TCSObject<E>>
      */
     public static <T extends TCSObject<T>> TCSObjectReference<T>
     getDummyReference(Class<?> clazz, String uuid) {
-        return new TCSObjectReference<>(clazz, uuid);
+        TCSObjectReference<T> answer = new TCSObjectReference<>(clazz, uuid);
+        // TODO: Optimize
+        answer.setName("");
+        return answer;
     }
 }

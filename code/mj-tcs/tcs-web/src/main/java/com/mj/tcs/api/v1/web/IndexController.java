@@ -24,6 +24,11 @@ public class IndexController {
         return "login";
     }
 
+    @RequestMapping("favicon.ico")
+    String favicon() {
+        return "forward:/resources/images/favicon.ico";
+    }
+
 //    @RequestMapping(value = "/hello")
 //    public String hello(HttpServletRequest req, Principal principal, Model model) {
 //        System.out.println("come to hello ");

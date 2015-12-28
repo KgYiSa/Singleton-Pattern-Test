@@ -48,7 +48,7 @@
             <artifactId>tcs-kernel</artifactId>
             <version>1.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/tcs-kernel-1.0.jar</systemPath>
+            <systemPath>${project.basedir}/src/main/resources/lib/tcs-kernel-1.0.jar</systemPath>
         </dependency>
 
         <dependency>
@@ -95,10 +95,13 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <!-- FOR WAR Packaging -->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework.boot</groupId>-->
-            <!--<artifactId>spring-boot-starter-tomcat</artifactId>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <!-- Intellij only!!! -->
+            <scope>compile</scope>
+            <!--<scope>provided</scope>-->
+        </dependency>
 
         <!--JSP Use  -->
         <dependency>
@@ -219,31 +222,52 @@
         </dependency>
     </dependencies>
 
-    <!--<build>-->
-        <!--<finalName>tcs-web</finalName>-->
-        <!--<plugins>-->
-            <!--&lt;!&ndash;JDK Versions & source code encoding&ndash;&gt;-->
-            <!--&lt;!&ndash;<plugin>&ndash;&gt;-->
-                <!--&lt;!&ndash;<groupId>org.apache.maven.plugins</groupId>&ndash;&gt;-->
-                <!--&lt;!&ndash;<artifactId>maven-compiler-plugin</artifactId>&ndash;&gt;-->
-                <!--&lt;!&ndash;<version>3.3</version>&ndash;&gt;-->
-                <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<source>1.8</source>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<target>1.8</target>&ndash;&gt;-->
-                    <!--&lt;!&ndash;<encoding>UTF-8</encoding>&ndash;&gt;-->
-                    <!--&lt;!&ndash;&lt;!&ndash;<compilerArgument>-proc:none</compilerArgument>&ndash;&gt;&ndash;&gt;-->
-                <!--&lt;!&ndash;</configuration>&ndash;&gt;-->
-            <!--&lt;!&ndash;</plugin>&ndash;&gt;-->
-            <!--&lt;!&ndash;Resource encoding&ndash;&gt;-->
-            <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-resources-plugin</artifactId>-->
-                <!--<version>2.7</version>-->
-                <!--<configuration>-->
-                    <!--<encoding>UTF-8</encoding>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
-        <!--</plugins>-->
-    <!--</build>-->
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <!-- 释放将项目的类文件打成jar放到lib目录中。
+                打成jar的好处是：只修改class时，可以只更新jar。 -->
+                    <archiveClasses>true</archiveClasses>
+                    <webResources>
+                        <!--
+                            src/main/resources是默认的资源目录。
+                            当archiveClasses=true时，resources中的文件资源会被打到jar中；
+                            当archiveClasses=false时，resources中的文件资源在war的根目录。
+                        -->
+                        <resource>
+                            <!-- config作为source folder，不会被打到jar中。 -->
+                            <directory>src/main/resources/lib</directory>
+                            <targetPath>WEB-INF/lib</targetPath>
+                            <!--<filtering>true</filtering>-->
+                        </resource>
+                    </webResources>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>com.mj.tcs.TCSWebServerApplication</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

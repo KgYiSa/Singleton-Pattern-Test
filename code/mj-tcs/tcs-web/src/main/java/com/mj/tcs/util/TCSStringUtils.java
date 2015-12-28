@@ -9,7 +9,7 @@ import java.util.Map;
  *
  * @author Wang Zhen
  */
-public class TcsStringUtils {
+public class TCSStringUtils {
     private static final String SEPARATOR = "_";
     private static final String SEP1 = ";";
     private static final String SEP2 = ",";

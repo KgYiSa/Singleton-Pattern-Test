@@ -3,7 +3,7 @@ package com.mj.tcs.api.v1.rest;
 import com.mj.tcs.api.v1.dto.SceneDto;
 import com.mj.tcs.api.v1.dto.communication.TCSResponseEntity;
 import com.mj.tcs.api.v1.web.ServiceController;
-import com.mj.tcs.util.TcsDtoUtils;
+import com.mj.tcs.util.TCSDtoUtils;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,7 +63,7 @@ public class SceneRestfulController extends ServiceController {
 
     @RequestMapping(value = "/scenes", method = RequestMethod.POST)
     public TCSResponseEntity<?> createScene(@RequestBody SceneDto sceneDto) {
-        SceneDto newSceneDto = TcsDtoUtils.resolveSceneDtoRelationships(sceneDto);
+        SceneDto newSceneDto = TCSDtoUtils.resolveSceneDtoRelationships(sceneDto);
 
         // Creating new scene
         newSceneDto = getService().createScene(newSceneDto);
@@ -100,7 +100,7 @@ public class SceneRestfulController extends ServiceController {
             return new TCSResponseEntity<>(TCSResponseEntity.Status.ERROR)
                     .setStatusMessage("The scene is running, please stop it first!");
         }
-        TcsDtoUtils.copyProperties(sceneDto, newSceneDto);
+        TCSDtoUtils.copyProperties(sceneDto, newSceneDto);
 
         sceneDto = getService().updateScene(sceneDto);
 

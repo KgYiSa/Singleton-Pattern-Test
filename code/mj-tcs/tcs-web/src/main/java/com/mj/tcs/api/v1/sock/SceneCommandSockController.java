@@ -6,7 +6,7 @@ import com.mj.tcs.api.v1.dto.SceneDto;
 import com.mj.tcs.api.v1.dto.communication.TCSRequestEntity;
 import com.mj.tcs.api.v1.dto.communication.TCSResponseEntity;
 import com.mj.tcs.api.v1.web.ServiceController;
-import com.mj.tcs.util.TcsDtoUtils;
+import com.mj.tcs.util.TCSDtoUtils;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.annotation.SendToUser;
@@ -83,7 +83,7 @@ public class SceneCommandSockController extends ServiceController {
         try {
             String json = mapper.writeValueAsString(jsonBody);
             SceneDto sceneDto = mapper.readValue(json, SceneDto.class);
-            newSceneDto = TcsDtoUtils.resolveSceneDtoRelationships(sceneDto);
+            newSceneDto = TCSDtoUtils.resolveSceneDtoRelationships(sceneDto);
 
             // Creating new scene
             newSceneDto = getService().createScene(newSceneDto);

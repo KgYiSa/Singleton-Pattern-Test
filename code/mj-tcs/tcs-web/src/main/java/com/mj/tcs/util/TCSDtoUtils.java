@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 /**
  * @author Wang Zhen
  */
-public class TcsDtoUtils {
+public class TCSDtoUtils {
 
     public static SceneDto resolveSceneDtoRelationships(SceneDto sceneDto) {
         if (sceneDto.getPointDtos() != null) {

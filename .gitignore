@@ -1,5 +1,7 @@
 # Created by https://www.gitignore.io/api/java,intellij,eclipse,webstorm
 
+!tcs-kernel-1.0.jar
+
 ### Java ###
 *.class
 

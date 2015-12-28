@@ -36,20 +36,20 @@ public final class Vehicle
     /**
      * This vehicle's current length (in mm).
      */
-    private int length = 1000;
+    private double length = 1000;
     /**
      * This vehicle's remaining energy (in percent of the maximum).
      */
-    private int energyLevel = 100;
+    private double energyLevel = 100.0;
     /**
      * The energy level value at/below which the vehicle should be recharged.
      */
-    private int energyLevelCritical = 30;
+    private double energyLevelCritical = 30;
     /**
      * The energy level value at/above which the vehicle can be dispatched again
      * when charging.
      */
-    private int energyLevelGood = 90;
+    private double energyLevelGood = 90;
     /**
      * The operation the vehicle's current communication adapter accepts as a
      * command to recharge the vehicle.
@@ -62,11 +62,11 @@ public final class Vehicle
     /**
      * This vehicle's maximum velocity (in mm/s).
      */
-    private int maxVelocity = 1000;
+    private double maxVelocity = 1000;
     /**
      * This vehicle's maximum reverse velocity (in mm/s).
      */
-    private int maxReverseVelocity = 1000;
+    private double maxReverseVelocity = 1000;
     /**
      * This vehicle's current state.
      */
@@ -130,11 +130,11 @@ public final class Vehicle
     /**
      * Creates a new vehicle.
      *
-     * @param objectID The new vehicle's object ID.
+     * @param objectUUID The new vehicle's object UUID.
      * @param name The new vehicle's name.
      */
-    public Vehicle(int objectID, String name) {
-        super(objectID, name);
+    public Vehicle(String objectUUID, String name) {
+        super(objectUUID, name);
     }
 
     // Methods not declared in any interface start here
@@ -143,7 +143,7 @@ public final class Vehicle
      *
      * @return This vehicle's remaining energy.
      */
-    public int getEnergyLevel() {
+    public double getEnergyLevel() {
         return energyLevel;
     }
 
@@ -153,7 +153,7 @@ public final class Vehicle
      * @param newEnergyLevel The new energy level. Must not be smaller than 0 or
      * greater than 100.
      */
-    public void setEnergyLevel(int newEnergyLevel) {
+    public void setEnergyLevel(double newEnergyLevel) {
         if (newEnergyLevel < 0 || newEnergyLevel > 100) {
             throw new IllegalArgumentException("newEnergyLevel not in [0..100]: "
                     + newEnergyLevel);
@@ -199,7 +199,7 @@ public final class Vehicle
      *
      * @return This vehicle's critical energy level.
      */
-    public int getEnergyLevelCritical() {
+    public double getEnergyLevelCritical() {
         return energyLevelCritical;
     }
 
@@ -211,7 +211,7 @@ public final class Vehicle
      * @param newEnergyLevel The new critical energy level. Must not be smaller
      * than 0 or greater than 100.
      */
-    public void setEnergyLevelCritical(int newEnergyLevel) {
+    public void setEnergyLevelCritical(double newEnergyLevel) {
         if (newEnergyLevel < 0 || newEnergyLevel > 100) {
             throw new IllegalArgumentException("newEnergyLevel not in [0..100]: "
                     + newEnergyLevel);
@@ -226,7 +226,7 @@ public final class Vehicle
      *
      * @return This vehicle's good energy level.
      */
-    public int getEnergyLevelGood() {
+    public double getEnergyLevelGood() {
         return energyLevelGood;
     }
 
@@ -238,7 +238,7 @@ public final class Vehicle
      * @param newEnergyLevel The new good energy level. Must not be smaller than 0
      * or greater than 100.
      */
-    public void setEnergyLevelGood(int newEnergyLevel) {
+    public void setEnergyLevelGood(double newEnergyLevel) {
         if (newEnergyLevel < 0 || newEnergyLevel > 100) {
             throw new IllegalArgumentException("newEnergyLevel not in [0..100]: "
                     + newEnergyLevel);
@@ -292,7 +292,7 @@ public final class Vehicle
      *
      * @return This vehicle's maximum velocity (in mm/s).
      */
-    public int getMaxVelocity() {
+    public double getMaxVelocity() {
         return maxVelocity;
     }
 
@@ -301,7 +301,7 @@ public final class Vehicle
      *
      * @param newVelocity The new velocity.
      */
-    public void setMaxVelocity(int newVelocity) {
+    public void setMaxVelocity(double newVelocity) {
         if (newVelocity < 0) {
             throw new IllegalArgumentException("newVelocity < 0: " + newVelocity);
         }
@@ -313,7 +313,7 @@ public final class Vehicle
      *
      * @return This vehicle's maximum reverse velocity (in mm/s).
      */
-    public int getMaxReverseVelocity() {
+    public double getMaxReverseVelocity() {
         return maxReverseVelocity;
     }
 
@@ -322,7 +322,7 @@ public final class Vehicle
      *
      * @param newVelocity The new velocity.
      */
-    public void setMaxReverseVelocity(int newVelocity) {
+    public void setMaxReverseVelocity(double newVelocity) {
         if (newVelocity < 0) {
             throw new IllegalArgumentException("newVelocity < 0: " + newVelocity);
         }
@@ -413,7 +413,7 @@ public final class Vehicle
      *
      * @return this vehicle's current length.
      */
-    public int getLength() {
+    public double getLength() {
         return length;
     }
 
@@ -423,7 +423,7 @@ public final class Vehicle
      * @param newLength This vehicle's current length. Must be at least 1.
      * @throws IllegalArgumentException If <code>newLength</code> is less than 1.
      */
-    public void setLength(int newLength) {
+    public void setLength(double newLength) {
         if (length < 1) {
             throw new IllegalArgumentException("newLength is less than 1");
         }

@@ -78,11 +78,11 @@ public class PathDto extends BaseEntityDto {
 
     @DtoField
     @Column
-    private double maxVelocity;
+    private int maxVelocity;
 
     @DtoField
     @Column
-    private double maxReverseVelocity;
+    private int maxReverseVelocity;
 
     @DtoField
     @Column
@@ -197,19 +197,19 @@ public class PathDto extends BaseEntityDto {
         this.routingCost = routingCost;
     }
 
-    public double getMaxVelocity() {
+    public int getMaxVelocity() {
         return maxVelocity;
     }
 
-    public void setMaxVelocity(double maxVelocity) {
+    public void setMaxVelocity(int maxVelocity) {
         this.maxVelocity = maxVelocity;
     }
 
-    public double getMaxReverseVelocity() {
+    public int getMaxReverseVelocity() {
         return maxReverseVelocity;
     }
 
-    public void setMaxReverseVelocity(double maxReverseVelocity) {
+    public void setMaxReverseVelocity(int maxReverseVelocity) {
         this.maxReverseVelocity = maxReverseVelocity;
     }
 

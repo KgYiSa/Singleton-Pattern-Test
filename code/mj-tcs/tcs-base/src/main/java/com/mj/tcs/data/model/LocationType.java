@@ -26,11 +26,11 @@ public final class LocationType
     /**
      * Creates a new LocationType.
      *
-     * @param objectID The new location type's object ID.
+     * @param objectUUID The new location type's object UUID.
      * @param name The new location type's name.
      */
-    public LocationType(int objectID, String name) {
-        super(objectID, name);
+    public LocationType(String objectUUID, String name) {
+        super(objectUUID, name);
     }
 
     /**

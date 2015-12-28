@@ -42,13 +42,13 @@ public interface Kernel extends EventSource<TCSEvent> {
      *
      * @param <T> The TCSObjectReference<?>'s actual type.
      * @param clazz The class of the object to be returned.
-     * @param id The id of the object to be returned.
+     * @param uuid The uuid of the object to be returned.
      * @return A copy of the referenced object, or <code>null</code> if no such
      * object exists or if an object exists but is not an instance of the given
      * class.
      */
     <T extends TCSObject<T>> T getTCSObject(Class<T> clazz,
-                                                     long id);
+                                                     String uuid);
 
     /**
      * Returns all existing TcsModels of the given class.
@@ -73,6 +73,20 @@ public interface Kernel extends EventSource<TCSEvent> {
      */
     <T extends TCSObject<T>> T getTCSObject(Class<T> clazz,
                                             TCSObjectReference<T> ref);
+
+    /**
+     * Sets an object's property.
+     *
+     * @param ref A reference to the object to be modified.
+     * @param key The property's key.
+     * @param value The property's (new) value. If <code>null</code>, removes the
+     * property from the object.
+     * @throws ObjectUnknownException If the referenced object does not exist.
+     * @throws CredentialsException If the calling client is not allowed to
+     * execute this method.
+     */
+    void setTCSObjectProperty(TCSObjectReference<?> ref, String key, String value)
+            throws ObjectUnknownException;
 
     /**
      * Creates a new message with the given content and type.
@@ -119,22 +133,6 @@ public interface Kernel extends EventSource<TCSEvent> {
     void setVehicleEnergyLevelGood(TCSObjectReference<Vehicle> ref,
                                    int energyLevel)
             throws ObjectUnknownException, CredentialsException;
-
-    /**
-     * Creates a new transport order.
-     * A new transport order is created with a generated unique ID and name,
-     * containing the given <code>DriveOrder</code>s and with all other attributes
-     * set to their default values. A copy of the newly created transport order
-     * is then returned.
-     *
-     * @param destinations The list of destinations that have to be travelled to
-     * when processing this transport order.
-     * @return A copy of the newly created transport order.
-     * @throws CredentialsException If the calling client is not allowed to
-     * execute this method.
-     */
-    TransportOrder createTransportOrder(List<DriveOrder.Destination> destinations)
-            throws CredentialsException;
 
     /**
      * Sets a transport order's deadline.
@@ -401,6 +399,22 @@ public interface Kernel extends EventSource<TCSEvent> {
             throws ObjectUnknownException, CredentialsException;
 
     /**
+     * Creates a new transport order.
+     * A new transport order is created with a generated unique UUID and name,
+     * containing the given <code>DriveOrder</code>s and with all other attributes
+     * set to their default values. A copy of the newly created transport order
+     * is then returned.
+     *
+     * @param destinations The list of destinations that have to be travelled to
+     * when processing this transport order.
+     * @return A copy of the newly created transport order.
+     * @throws CredentialsException If the calling client is not allowed to
+     * execute this method.
+     */
+    TransportOrder createTransportOrder(List<DriveOrder.Destination> destinations)
+            throws CredentialsException;
+
+    /**
      * Creates and returns a list of transport orders defined in a script file.
      *
      * @param fileName The name of the script file defining the transport orders
@@ -489,4 +503,19 @@ public interface Kernel extends EventSource<TCSEvent> {
 //    void setConfigurationItem(ConfigurationItemTO itemTO)
 //            throws CredentialsException;
 
+    /**
+     * The various states a kernel instance may be running in.
+     */
+    public enum State {
+        STARTED,
+        /**
+         * The normal mode of operation in which transport orders may be accepted
+         * and dispatched to vehicles.
+         */
+        RUNNING,
+        /**
+         * A transitional state the kernel is in while shutting down.
+         */
+        SHUTDOWN
+    }
 }

@@ -7,12 +7,12 @@ import java.io.Serializable;
  *
  * @author Wang Zhen
  */
-public class TcsServerRuntimeException extends RuntimeException implements Serializable {
+public class TCSServerRuntimeException extends RuntimeException implements Serializable {
 
     /**
      * Constructs a new instance with no detail message.
      */
-    public TcsServerRuntimeException() {
+    public TCSServerRuntimeException() {
         super();
     }
 
@@ -21,7 +21,7 @@ public class TcsServerRuntimeException extends RuntimeException implements Seria
      *
      * @param message The detail message.
      */
-    public TcsServerRuntimeException(String message) {
+    public TCSServerRuntimeException(String message) {
         super(message);
     }
 
@@ -31,7 +31,7 @@ public class TcsServerRuntimeException extends RuntimeException implements Seria
      * @param message The detail message.
      * @param cause The exception's cause.
      */
-    public TcsServerRuntimeException(String message, Throwable cause) {
+    public TCSServerRuntimeException(String message, Throwable cause) {
         super(message, cause);
     }
 
@@ -42,7 +42,7 @@ public class TcsServerRuntimeException extends RuntimeException implements Seria
      *
      * @param cause The exception's cause.
      */
-    public TcsServerRuntimeException(Throwable cause) {
+    public TCSServerRuntimeException(Throwable cause) {
         super(cause);
     }
 

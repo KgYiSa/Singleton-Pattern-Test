@@ -3,7 +3,7 @@ package com.mj.tcs.exception;
 /**
  * @author Wang Zhen
  */
-public class ObjectAccessViolationException extends TcsServerRuntimeException {
+public class ObjectAccessViolationException extends TCSServerRuntimeException {
 
     public ObjectAccessViolationException(Long sceneId, Long elementId) {
         super(

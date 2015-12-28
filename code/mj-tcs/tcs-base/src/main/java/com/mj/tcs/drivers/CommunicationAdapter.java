@@ -73,7 +73,7 @@ public interface CommunicationAdapter {
      * This method provides a generic one-way communication channel to the
      * communication adapter. The message can be anything, including
      * <code>null</code>, and since
-     * {@link Kernel#sendCommAdapterMessage(com.mj.tcs.data.TCSObjectReference, java.lang.Object)}
+     * {@link Kernel#sendCommAdapterMessage(com.mj.tcs.data.base.TCSObjectReference, java.lang.Object)}
      * provides a way to send a message from outside the kernel, it can basically
      * originate from any source. The message thus does not necessarily have to be
      * meaningful to the communication adapter at all; meaningless messages should

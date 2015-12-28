@@ -30,7 +30,6 @@ public class TCSObjectReference<E extends TCSObject<E>>
     private static final Logger log =
             Logger.getLogger(TCSObjectReference.class.getName());
 
-    private final long id;
     /**
      * The referenced object's UUID.
      */
@@ -55,8 +54,7 @@ public class TCSObjectReference<E extends TCSObject<E>>
     protected TCSObjectReference(TCSObject<E> newReferent) {
         log.finer("method entry");
         Objects.requireNonNull(newReferent);
-        this.id = newReferent.getId();
-        this.uuid = newReferent.getClass().getCanonicalName() + "-" + newReferent.getId();
+        this.uuid = newReferent.getUUID();
         this.name = newReferent.getName();
         referentClass = newReferent.getClass();
         this.dummy = false;
@@ -70,16 +68,10 @@ public class TCSObjectReference<E extends TCSObject<E>>
      */
     private TCSObjectReference(Class<?> clazz, String uuid) {
         log.finer("method entry");
-        this.id = Integer.MAX_VALUE;
         this.uuid = Objects.requireNonNull(uuid, "uuid is null");
         referentClass = Objects.requireNonNull(clazz, "clazz is null");
         this.dummy = true;
     }
-
-    public long getId() {
-        return id;
-    }
-
 
     /**
      * Returns the referenced object's UUID.

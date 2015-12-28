@@ -50,15 +50,14 @@ public class Point
 
     private Set<Location.Link> attachedLinks = new LinkedHashSet<>();
 
-
     /**
      * Creates a new point with the given name.
      *
-     * @param objectID This point's object ID.
+     * @param objectUUID This point's object UUID.
      * @param name This point's name.
      */
-    public Point(int objectID, String name) {
-        super(objectID, name);
+    public Point(String objectUUID, String name) {
+        super(objectUUID, name);
     }
 
     // Methods not declared in any interface start here
@@ -250,7 +249,7 @@ public class Point
 
     public boolean attachLink(Location.Link link) {
         Objects.requireNonNull(link, "link is null");
-        if (!this.equals(link.getPoint())) {
+        if (!getUUID().equals(link.getPoint().getUUID())) {
             throw new IllegalArgumentException("point end of link is not this point");
         }
         return attachedLinks.add(link);

@@ -25,17 +25,9 @@ public interface VehicleManager {
     /**
      * Informs the vehicle manager about the physical vehicle's current position.
      *
-     * @param position The name of the vehicle's current position.
+     * @param positionUUID The id of the vehicle's current position.
      */
-    void setVehiclePosition(String position);
-
-    /**
-     * Informs the vehicle manager about the physical vehicle's current path.
-     *
-     * @param pathName The name of the path on which vehicle's current position.
-     * @param pathOffset The path offset value from the source point.
-     */
-    void setVehiclePositionOnPath(String pathName, long pathOffset);
+    void setVehiclePosition(String positionUUID);
 
     /**
      * Informs the vehicle manager about the physical vehicle's current precise

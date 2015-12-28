@@ -23,11 +23,11 @@ public class TCSResource<E extends TCSResource<E>>
     /**
      * Creates a new TCSResource.
      *
-     * @param objectID The new resource's object ID.
+     * @param objectUUID The new resource's object UUID.
      * @param name The new resource's name.
      */
-    protected TCSResource(int objectID, String name) {
-        super(objectID, name);
+    protected TCSResource(String objectUUID, String name) {
+        super(objectUUID, name);
         reference = new TCSResourceReference<>(this);
     }
 

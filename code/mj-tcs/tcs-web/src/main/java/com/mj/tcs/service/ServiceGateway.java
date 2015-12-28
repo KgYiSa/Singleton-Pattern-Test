@@ -1,9 +1,27 @@
 package com.mj.tcs.service;
 
+import com.mj.tcs.LocalKernel;
 import com.mj.tcs.api.v1.dto.*;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
+import com.mj.tcs.api.v1.dto.converter.SceneDtoConverter;
+import com.mj.tcs.data.base.TCSObjectReference;
+import com.mj.tcs.data.model.Location;
+import com.mj.tcs.data.model.Point;
+import com.mj.tcs.data.model.Vehicle;
+import com.mj.tcs.data.order.DriveOrder;
+import com.mj.tcs.data.order.TransportOrder;
+import com.mj.tcs.drivers.BasicCommunicationAdapter;
+import com.mj.tcs.drivers.CommunicationAdapterFactory;
+import com.mj.tcs.eventsystem.AcceptingTCSEventFilter;
+import com.mj.tcs.eventsystem.EventHub;
+import com.mj.tcs.eventsystem.SynchronousEventHub;
+import com.mj.tcs.eventsystem.TCSObjectEvent;
 import com.mj.tcs.exception.ObjectUnknownException;
-import com.mj.tcs.exception.TcsServerRuntimeException;
+import com.mj.tcs.exception.TCSServerRuntimeException;
+import com.mj.tcs.kernel.Scene;
+import com.mj.tcs.kernel.StandardKernel;
+import com.mj.tcs.util.eventsystem.EventListener;
+import com.mj.tcs.util.eventsystem.TCSEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
@@ -11,15 +29,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @author Wang Zhen
  */
-@Transactional(isolation = Isolation.DEFAULT, rollbackFor = Exception.class)
+@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
 @Component
 public class ServiceGateway {
+    private final static SceneDtoConverter sceneDtoConverter = new SceneDtoConverter();
+
     // ID <--> running SceneDto
-    private Map<Long, SceneDto> sceneDtoRuntimeMapping = new LinkedHashMap<>();
+    private Map<Long, LocalKernel> kernelRuntimeMapping = new LinkedHashMap<>();
 
     @Autowired
     SceneDtoService sceneDtoService;
@@ -27,10 +48,13 @@ public class ServiceGateway {
     //////////////////////// MODELLING ///////////////////////////////
 
     public <T extends BaseEntityDto> T getTCSObjectDto(long sceneId,
-                                                             Class<T> clazz,
-                                                             long id)
+                                                       Class<T> clazz,
+                                                       long id)
             throws ObjectUnknownException {
-        SceneDto sceneDto = sceneDtoService.findOne(sceneId);
+        SceneDto sceneDto;
+        synchronized (sceneDtoService) {
+            sceneDto = sceneDtoService.findOne(sceneId);
+        }
         Objects.requireNonNull(sceneDto);
         Objects.requireNonNull(clazz, "clazz is null");
 
@@ -63,10 +87,13 @@ public class ServiceGateway {
     }
 
     public <T extends BaseEntityDto> T getTCSObjectDto(long sceneId,
-                                                             Class<T> clazz,
-                                                             String name)
+                                                       Class<T> clazz,
+                                                       String name)
             throws ObjectUnknownException {
-        SceneDto sceneDto = sceneDtoService.findOne(sceneId);
+        SceneDto sceneDto;
+        synchronized (sceneDtoService) {
+            sceneDto = sceneDtoService.findOne(sceneId);
+        }
         Objects.requireNonNull(sceneDto);
         Objects.requireNonNull(clazz, "clazz is null");
 
@@ -103,7 +130,10 @@ public class ServiceGateway {
     public <T extends BaseEntityDto> Set<T> getTcsObjectDtos(long sceneId,
                                                                     Class<T> clazz)
             throws ObjectUnknownException {
-        SceneDto sceneDto = sceneDtoService.findOne(sceneId);
+        SceneDto sceneDto;
+        synchronized (sceneDtoService) {
+            sceneDto = sceneDtoService.findOne(sceneId);
+        }
         Objects.requireNonNull(sceneDto);
         Objects.requireNonNull(clazz, "clazz is null");
 
@@ -168,32 +198,47 @@ public class ServiceGateway {
 
     //SCENES
     public SceneDto getSceneDto(long sceneId) {
-        return sceneDtoService.findOne(sceneId);
+        SceneDto sceneDto;
+        synchronized (sceneDtoService) {
+            sceneDto = sceneDtoService.findOne(sceneId);
+        }
+        return sceneDto;
     }
 
     public Collection<SceneDto> findAllScene() {
-        return (Collection)sceneDtoService.findAll();
+        synchronized (sceneDtoService) {
+            return (Collection) sceneDtoService.findAll();
+        }
     }
 
     public SceneDto createScene(SceneDto dto) {
-        return sceneDtoService.create(dto);
+        synchronized (sceneDtoService) {
+            return sceneDtoService.create(dto);
+        }
     }
 
     public SceneDto updateScene(SceneDto dto) {
         checkSceneDtoRunning(dto);
 
-        return sceneDtoService.update(dto);
+        synchronized (sceneDtoService) {
+            return sceneDtoService.update(dto);
+        }
     }
 
     public void deleteScene(long sceneId) {
         checkSceneDtoRunning(sceneId);
 
-        sceneDtoService.delete(sceneId);
+        synchronized (sceneDtoService) {
+            sceneDtoService.delete(sceneId);
+        }
     }
 
     ////////////////////////////// OPERATTING /////////////////////////////////
     public boolean loadSceneDto(long sceneId) {
-        SceneDto sceneDto = sceneDtoService.findOne(sceneId);
+        SceneDto sceneDto;
+        synchronized (sceneDtoService) {
+            sceneDto = sceneDtoService.findOne(sceneId);
+        }
         return loadSceneDto(sceneDto);
     }
 
@@ -207,13 +252,50 @@ public class ServiceGateway {
 
         // load kernel for the sceneDto
         // TODO:
+        Scene scene = sceneDtoConverter.convertToEntity(sceneDto);
+        EventHub<TCSEvent> eventHub = new SynchronousEventHub<>();
+        eventHub.addEventListener(new EventListener<TCSEvent>() {
+            @Override
+            public void processEvent(TCSEvent event) {
+                if (event instanceof TCSObjectEvent) {
+                    TCSObjectEvent objectEvent = (TCSObjectEvent) event;
+                    System.out.println(objectEvent.getPreviousObjectState() +" --> " +
+                    objectEvent.getCurrentObjectState() + ": " + objectEvent.getType());
+                } else {
+                    System.out.println(event.toString());
+                }
+            }
+        }, new AcceptingTCSEventFilter());
+        LocalKernel kernel = new StandardKernel(eventHub, scene);
+        kernel.initialize();
+        final Vehicle v = (Vehicle)kernel.getTCSObjects(Vehicle.class).toArray()[0];
+        final Point p = ((Point) kernel.getTCSObjects(Point.class).toArray()[0]);
+        kernel.setVehiclePosition(v.getReference(),
+                p.getReference());
+        // adapter
+        CommunicationAdapterFactory adapterFactory = kernel.getCommAdapterRegistry().findFactoriesFor(v).get(0);
+        BasicCommunicationAdapter adapter = adapterFactory.getAdapterFor(v);
+        adapter.enable();
+        kernel.getVehicleManagerPool().getVehicleManager(v.getUUID(), adapter);
+        // transport order
+        List<DriveOrder.Destination> destinations = new ArrayList<>();
+        TCSObjectReference<Location> locRef = TCSObjectReference.getDummyReference(Point.class, p.getUUID());
+        destinations.add(new DriveOrder.Destination(locRef, "MOVE"));
+        TransportOrder torder = kernel.createTransportOrder(destinations);
+        kernel.activateTransportOrder(torder.getReference());
+        // dispatch vehicle
+        kernel.dispatchVehicle(v.getReference(), true);
 
-        sceneDtoRuntimeMapping.put(idKey, sceneDto);
+        kernelRuntimeMapping.put(idKey, kernel);
+
         return true;
     }
 
     public void unloadSceneDto(long sceneId) {
-        SceneDto sceneDto = sceneDtoService.findOne(sceneId);
+        SceneDto sceneDto;
+        synchronized (sceneDtoService) {
+            sceneDto = sceneDtoService.findOne(sceneId);
+        }
         updateScene(sceneDto);
     }
 
@@ -226,19 +308,21 @@ public class ServiceGateway {
             // TODO:
 
             // remove it
-            sceneDtoRuntimeMapping.remove(idKey);
+            LocalKernel kernel = kernelRuntimeMapping.remove(idKey);
+            kernel.terminate();
         }
     }
 
-    public Collection<SceneDto> getRunningSceneDtos() {
-        return sceneDtoRuntimeMapping.values();
+    public Set<SceneDto> getRunningSceneDtos() {
+        return kernelRuntimeMapping.keySet().stream()
+                .map(v -> getSceneDto(v)).collect(Collectors.toSet());
     }
 
     public boolean isSceneDtoRunning(SceneDto sceneDto) {
         Objects.requireNonNull(sceneDto);
         Long idKey = Objects.requireNonNull(sceneDto.getId());
 
-        return sceneDtoRuntimeMapping.containsKey(idKey);
+        return kernelRuntimeMapping.containsKey(idKey);
     }
 
     public boolean isSceneDtoRunning(long sceneId) {
@@ -254,7 +338,7 @@ public class ServiceGateway {
 
         if (isSceneDtoRunning(sceneDto)) {
             Objects.requireNonNull(sceneDto.getId());
-            throw new TcsServerRuntimeException("The scene by id [" + sceneDto.getId() + "] is running!");
+            throw new TCSServerRuntimeException("The scene by id [" + sceneDto.getId() + "] is running!");
         }
     }
 }

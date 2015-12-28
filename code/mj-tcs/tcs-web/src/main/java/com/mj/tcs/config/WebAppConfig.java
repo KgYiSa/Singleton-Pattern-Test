@@ -8,7 +8,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
-import org.springframework.web.servlet.view.JstlView;
 
 /**
  * @author Wang Zhen
@@ -40,7 +39,6 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
        // resolver.setViewClass(JstlView.class);
         resolver.setPrefix("/WEB-INF/views/");
         resolver.setSuffix(".jsp");
-        System.out.println("resolver......");
         return resolver;
     }
 
@@ -56,8 +54,8 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public TcsServletContextListener getTcsServletContextListener() {
-        return new TcsServletContextListener();
+    public TCSServletContextListener getTcsServletContextListener() {
+        return new TCSServletContextListener();
     }
 
     @Override

@@ -156,8 +156,8 @@ public abstract class BasicCommunicationAdapter implements CommunicationAdapter,
      *
      * @return Current position
      */
-    public synchronized String getVehiclePosition() {
-        return vehicleModel.getPosition();
+    public synchronized String getVehiclePositionUUID() {
+        return vehicleModel.getPositionUUID();
     }
 
     // Implementation of interface VelocityListener starts here.
@@ -282,12 +282,12 @@ public abstract class BasicCommunicationAdapter implements CommunicationAdapter,
      * Notifies the <code>VehicleStatusUpdater</code> about the vehicle's new
      * position.
      *
-     * @param position The vehicle's new position.
+     * @param positionUUID The vehicle's new position.
      */
-    public final synchronized void setVehiclePosition(String position) {
+    public final synchronized void setVehiclePosition(String positionUUID) {
         log.info("method entry");
         if (vehicleModel != null) {
-            vehicleModel.setVehiclePosition(position);
+            vehicleModel.setVehiclePositionUUID(positionUUID);
         }
         else {
             log.info("vehicleModel is null, not called");
@@ -365,7 +365,7 @@ public abstract class BasicCommunicationAdapter implements CommunicationAdapter,
     }
 
     /**
-     * Sets the vehicle's orientation angle (-360..360�). May be Double.NaN if the
+     * Sets the vehicle's orientation angle (-360..360 deg). May be 0 if the
      * vehicle doesn't provide an angle.
      *
      * @param angle The angle.

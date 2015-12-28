@@ -24,11 +24,11 @@ public final class Block
     /**
      * Creates a new, empty Block.
      *
-     * @param objectID This block's ID.
+     * @param objectUUID This block's UUID.
      * @param name This block's name.
      */
-    public Block(int objectID, String name) {
-        super(objectID, name);
+    public Block(String objectUUID, String name) {
+        super(objectUUID, name);
     }
 
     /**

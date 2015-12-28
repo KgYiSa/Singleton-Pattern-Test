@@ -32,11 +32,11 @@ public final class StaticRoute
     /**
      * Creates a new StaticRoute with the given name and ID.
      *
-     * @param objectID The route's object ID.
+     * @param objectUUID The route's object UUID.
      * @param name The route's name.
      */
-    public StaticRoute(int objectID, String name) {
-        super(objectID, name);
+    public StaticRoute(String objectUUID, String name) {
+        super(objectUUID, name);
     }
 
     /**

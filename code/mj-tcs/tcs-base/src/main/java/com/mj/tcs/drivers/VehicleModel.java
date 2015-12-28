@@ -51,7 +51,7 @@ public final class VehicleModel extends Observable implements VelocityListener {
     /**
      * The vehicle's current position.
      */
-    private String vehiclePosition;
+    private String vehiclePositionUUID;
     /**
      * Indicator of the vehicle position (whether on Point position or on Path position)
      */
@@ -165,8 +165,8 @@ public final class VehicleModel extends Observable implements VelocityListener {
      *
      * @return The positon
      */
-    public String getPosition() {
-        return vehiclePosition;
+    public String getPositionUUID() {
+        return vehiclePositionUUID;
     }
 
     /**
@@ -190,19 +190,19 @@ public final class VehicleModel extends Observable implements VelocityListener {
     /**
      * Updates the vehicle position.
      *
-     * @param position The new position
+     * @param positionUUID The new position
      */
-    public void setVehiclePosition(String position) {
+    public void setVehiclePositionUUID(String positionUUID) {
         // If the new position is not different from the previous one, do nothing.
-        if (Objects.equals(vehiclePosition, position)) {
+        if (Objects.equals(vehiclePositionUUID, positionUUID)) {
             return;
         }
         // Otherwise update the position, notify listeners and let the kernel know.
         currentOnPointPosition = true;
-        vehiclePosition = position;
+        vehiclePositionUUID = positionUUID;
         setChanged();
         notifyObservers();
-        vehicleManager.setVehiclePosition(position);
+        vehicleManager.setVehiclePosition(positionUUID);
     }
 
     /**
@@ -222,7 +222,6 @@ public final class VehicleModel extends Observable implements VelocityListener {
         currentPathOffset = pathOffset;
         setChanged();
         notifyObservers();
-        vehicleManager.setVehiclePositionOnPath(pathName, pathOffset);
     }
 
     /**

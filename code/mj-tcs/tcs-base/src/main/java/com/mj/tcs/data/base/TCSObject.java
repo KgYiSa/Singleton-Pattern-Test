@@ -17,12 +17,12 @@ import java.util.logging.Logger;
 public abstract class TCSObject<E extends TCSObject<E>>
         implements Serializable, Cloneable {
 
-    /**
-     * A <code>Comparator</code> for ordering <code>TCSObject</code>s ascendingly
-     * by their IDs.
-     */
-    public static final Comparator<TCSObject<?>> idComparator =
-            new IDComparator();
+//    /**
+//     * A <code>Comparator</code> for ordering <code>TCSObject</code>s ascendingly
+//     * by their IDs.
+//     */
+//    public static final Comparator<TCSObject<?>> idComparator =
+//            new IDComparator();
     /**
      * A <code>Comparator</code> for ordering <code>TCSObject</code>s ascendingly
      * by their names.
@@ -41,10 +41,10 @@ public abstract class TCSObject<E extends TCSObject<E>>
      * A set of properties (key-value pairs) associated with this object.
      */
     private Map<String, String> properties = new HashMap<>();
-    /**
-     * This object's ID.
-     */
-    private final long id;
+//    /**
+//     * This object's ID.
+//     */
+//    private final long id;
     /**
      * This object's UUID.
      */
@@ -57,36 +57,54 @@ public abstract class TCSObject<E extends TCSObject<E>>
     /**
      * Creates a new TCSObject.
      *
-     * @param objectID The new object's ID.
+     * @param objectUUID The new object's UUID.
      * @param objectName The new object's name.
      */
-    protected TCSObject(long objectID, String objectName) {
+    protected TCSObject(String objectUUID, String objectName) {
         log.finer("method entry");
-        if (objectID < 0) {
-            throw new IllegalArgumentException("objectID is negative");
+        Objects.requireNonNull(objectUUID);
+        Objects.requireNonNull(objectName);
+        if (objectUUID.isEmpty() || objectName.isEmpty()) {
+            throw new IllegalArgumentException("objectUUID or objectName is an empty String");
         }
-        if (objectName == null) {
-            throw new NullPointerException("objectName is null");
-        }
-        if (objectName.isEmpty()) {
-            throw new IllegalArgumentException("objectName is empty String");
-        }
-        id = objectID;
-        uuid = getClass().getName() + "-" + id;
+        uuid = objectUUID;
         name = objectName;
         reference = new TCSObjectReference<>(this);
     }
 
-    // Methods not declared in any interface start here
-    /**
-     * Returns this object's ID.
-     *
-     * @return This object's ID.
-     */
-    public final long getId() {
-        log.finer("method entry");
-        return id;
-    }
+//    /**
+//     * Creates a new TCSObject.
+//     *
+//     * @param objectID The new object's ID.
+//     * @param objectName The new object's name.
+//     */
+//    protected TCSObject(long objectID, String objectName) {
+//        log.finer("method entry");
+//        if (objectID < 0) {
+//            throw new IllegalArgumentException("objectID is negative");
+//        }
+//        if (objectName == null) {
+//            throw new NullPointerException("objectName is null");
+//        }
+//        if (objectName.isEmpty()) {
+//            throw new IllegalArgumentException("objectName is empty String");
+//        }
+//        id = objectID;
+//        uuid = getClass().getName() + "-" + id;
+//        name = objectName;
+//        reference = new TCSObjectReference<>(this);
+//    }
+//
+//    // Methods not declared in any interface start here
+//    /**
+//     * Returns this object's ID.
+//     *
+//     * @return This object's ID.
+//     */
+//    public final long getId() {
+//        log.finer("method entry");
+//        return id;
+//    }
 
     public final String getUUID() {
         log.finer("method entry");
@@ -190,7 +208,8 @@ public abstract class TCSObject<E extends TCSObject<E>>
         log.finer("method entry");
         if (obj instanceof TCSObject) {
             TCSObject other = (TCSObject) obj;
-            return id == other.id && this.getClass().equals(other.getClass());
+//            return id == other.id && this.getClass().equals(other.getClass());
+            return uuid.equals(other.uuid) && this.getClass().equals(other.getClass());
         }
         else {
             return false;
@@ -207,7 +226,8 @@ public abstract class TCSObject<E extends TCSObject<E>>
     @Override
     public int hashCode() {
         log.finer("method entry");
-        return Long.valueOf(id).hashCode()
+//        return Long.valueOf(id).hashCode()
+        return uuid.hashCode()
                 ^ this.getClass().getName().hashCode();
     }
 
@@ -235,24 +255,24 @@ public abstract class TCSObject<E extends TCSObject<E>>
     }
 
     // Private classes start here.
-    /**
-     * A <code>Comparator</code> for ordering <code>TCSObject</code>s ascendingly
-     * by their IDs.
-     */
-    private static final class IDComparator
-            implements Comparator<TCSObject<?>> {
-
-        /**
-         * Creates a new IDComparator.
-         */
-        private IDComparator() {
-        }
-
-        @Override
-        public int compare(TCSObject<?> o1, TCSObject<?> o2) {
-            return (int)(o1.getId() - o2.getId());
-        }
-    }
+//    /**
+//     * A <code>Comparator</code> for ordering <code>TCSObject</code>s ascendingly
+//     * by their IDs.
+//     */
+//    private static final class IDComparator
+//            implements Comparator<TCSObject<?>> {
+//
+//        /**
+//         * Creates a new IDComparator.
+//         */
+//        private IDComparator() {
+//        }
+//
+//        @Override
+//        public int compare(TCSObject<?> o1, TCSObject<?> o2) {
+//            return (int)(o1.getId() - o2.getId());
+//        }
+//    }
 
     /**
      * A <code>Comparator</code> for ordering <code>TCSObject</code>s ascendingly

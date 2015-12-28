@@ -91,7 +91,7 @@ public class SceneController extends ServiceController {
 //            (!"OPERATING".equals(sceneDto.getState())) &&
 //            (!"MODELLING".equals(sceneDto.getState())) &&
 //            (!"UNKNOWN".equals(sceneDto.getState()))) {
-//            throw new TcsServerRuntimeException("upsupported scene state: " + sceneDto.getState() +
+//            throw new TCSServerRuntimeException("upsupported scene state: " + sceneDto.getState() +
 //                "when put new scene.");
 //        }
 //

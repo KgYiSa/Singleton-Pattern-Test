@@ -26,11 +26,11 @@ public final class Group
     /**
      * Creates a new, empty group.
      *
-     * @param objectID This group's ID.
+     * @param objectUUID This group's UUID.
      * @param name This group's name.
      */
-    public Group(int objectID, String name) {
-        super(objectID, name);
+    public Group(String objectUUID, String name) {
+        super(objectUUID, name);
     }
 
     /**

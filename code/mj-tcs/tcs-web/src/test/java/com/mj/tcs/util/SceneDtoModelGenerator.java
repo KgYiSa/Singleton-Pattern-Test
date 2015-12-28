@@ -74,8 +74,8 @@ public class SceneDtoModelGenerator {
         length = length < 10 ? 10 : length;
         pathDto.setLength(length);
         pathDto.setLocked(false);
-        pathDto.setMaxReverseVelocity(1);
-        pathDto.setMaxVelocity(1);
+        pathDto.setMaxReverseVelocity(1000);
+        pathDto.setMaxVelocity(1000);
         pathDto.addProperty("key", "value");
 
         srcPointDto.addOutgoingPath(pathDto);
@@ -192,7 +192,7 @@ public class SceneDtoModelGenerator {
         List<PointDto> hops = new ArrayList<>();
         hops.add(((PointDto) pointDtos.toArray()[0]));
         hops.add(((PointDto) pointDtos.toArray()[1]));
-        hops.add(((PointDto) pointDtos.toArray()[2]));
+//        hops.add(((PointDto) pointDtos.toArray()[2]));
         StaticRouteDto staticRouteDto = createStaticRouteDto(hops);
         sceneDto.addStaticRouteDto(staticRouteDto);
 

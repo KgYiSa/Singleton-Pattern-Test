@@ -6,12 +6,9 @@ import com.mj.tcs.data.base.TCSResourceReference;
 import com.mj.tcs.data.base.Triple;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Objects;
+import java.util.*;
+
 import static java.util.Objects.requireNonNull;
-import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * A location at which a vehicle may perform an action.
@@ -49,14 +46,14 @@ public final class Location
     /**
      * Creates a new Location.
      *
-     * @param objectID The new location's object ID.
+     * @param objectUUID The new location's object UUID.
      * @param name The new location's name.
      * @param locationType The new location's type.
      */
-    public Location(int objectID,
+    public Location(String objectUUID,
                     String name,
                     TCSObjectReference<LocationType> locationType) {
-        super(objectID, name);
+        super(objectUUID, name);
         type = Objects.requireNonNull(locationType, "locationType is null");
     }
 

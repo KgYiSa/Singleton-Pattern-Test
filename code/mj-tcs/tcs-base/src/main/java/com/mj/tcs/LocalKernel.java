@@ -12,9 +12,7 @@ import com.mj.tcs.data.order.OrderSequence;
 import com.mj.tcs.data.order.Rejection;
 import com.mj.tcs.data.order.TransportOrder;
 import com.mj.tcs.data.user.CredentialsException;
-import com.mj.tcs.drivers.CommunicationAdapter;
-import com.mj.tcs.drivers.CommunicationAdapterRegistry;
-import com.mj.tcs.drivers.LoadHandlingDevice;
+import com.mj.tcs.drivers.*;
 
 import java.util.List;
 import java.util.Set;
@@ -37,19 +35,21 @@ public interface LocalKernel extends Kernel {
      */
     void waitForTermination();
 
-//    /**
-//     * Returns the kernel's vehicle manager pool.
-//     *
-//     * @return The kernel's vehicle manager pool.
-//     */
-//    VehicleManagerPool getVehicleManagerPool();
-//
-//    /**
-//     * Returns the kernel's vehicle controller pool.
-//     *
-//     * @return The kernel's vehicle controller pool.
-//     */
-//    VehicleControllerPool getVehicleControllerPool();
+    void terminate();
+
+    /**
+     * Returns the kernel's vehicle manager pool.
+     *
+     * @return The kernel's vehicle manager pool.
+     */
+    VehicleManagerPool getVehicleManagerPool();
+
+    /**
+     * Returns the kernel's vehicle controller pool.
+     *
+     * @return The kernel's vehicle controller pool.
+     */
+    VehicleControllerPool getVehicleControllerPool();
 
     /**
      * Returns the kernel's communication adapter registry.

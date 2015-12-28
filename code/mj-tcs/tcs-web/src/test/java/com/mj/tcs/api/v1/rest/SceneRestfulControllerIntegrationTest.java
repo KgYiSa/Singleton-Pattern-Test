@@ -1,6 +1,6 @@
 package com.mj.tcs.api.v1.rest;
 
-import com.mj.tcs.TcsWebServerApplication;
+import com.mj.tcs.TCSWebServerApplication;
 import com.mj.tcs.api.v1.dto.SceneDto;
 import com.mj.tcs.api.v1.dto.communication.TCSResponseEntity;
 import com.mj.tcs.util.SceneDtoModelGenerator;
@@ -23,7 +23,7 @@ import static org.junit.Assert.*;
  * Created by xiaobai on 2015/11/30.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = TcsWebServerApplication.class)
+@SpringApplicationConfiguration(classes = TCSWebServerApplication.class)
 @WebAppConfiguration
 @IntegrationTest({"server.port=0", "management.port=0"})
 public class SceneRestfulControllerIntegrationTest {
@@ -43,7 +43,7 @@ public class SceneRestfulControllerIntegrationTest {
 
     @AfterClass
     public static void tearDown() throws Exception {
-        delete();
+//        delete();
     }
 
 //    @Test

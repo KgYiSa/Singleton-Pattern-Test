@@ -127,14 +127,14 @@ public final class TransportOrder
     /**
      * Creates a new TransportOrder.
      *
-     * @param objectID This transport order's ID.
+     * @param objectUUID This transport order's UUID.
      * @param name This transport order's name.
      * @param destinations A list of destinations that are to be travelled to
      * when processing this transport order.
      */
-    public TransportOrder(long objectID, String name,
+    public TransportOrder(String objectUUID, String name,
                           List<DriveOrder.Destination> destinations) {
-        super(objectID, name);
+        super(objectUUID, name);
         if (destinations == null) {
             throw new NullPointerException("destinations is null");
         }
@@ -663,7 +663,7 @@ public final class TransportOrder
         @Override
         public int compare(TransportOrder o1, TransportOrder o2) {
             int result;
-            long ageDifference = o1.getCreationTime() - o2.getCreationTime();
+            long ageDifference = o1.getDeadline() - o2.getDeadline();
             if (ageDifference < 0) {
                 result = -1;
             }
@@ -671,16 +671,17 @@ public final class TransportOrder
                 result = 1;
             }
             else {
-                long idDifference = o1.getId() - o2.getId();
-                if (idDifference < 0) {
-                    result = -1;
-                }
-                else if (idDifference > 0) {
-                    result = 1;
-                }
-                else {
-                    result = 0;
-                }
+                result = 0;
+//                long idDifference = o1.getId() - o2.getId();
+//                if (idDifference < 0) {
+//                    result = -1;
+//                }
+//                else if (idDifference > 0) {
+//                    result = 1;
+//                }
+//                else {
+//                    result = 0;
+//                }
             }
             return result;
         }

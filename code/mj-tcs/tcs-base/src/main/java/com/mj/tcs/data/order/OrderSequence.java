@@ -99,11 +99,11 @@ public final class OrderSequence
     /**
      * Creates a new OrderSequence.
      *
-     * @param objectID This sequence's ID.
+     * @param objectUUID This sequence's UUID.
      * @param name This sequence's name.
      */
-    public OrderSequence(int objectID, String name) {
-        super(objectID, name);
+    public OrderSequence(String objectUUID, String name) {
+        super(objectUUID, name);
     }
 
     /**

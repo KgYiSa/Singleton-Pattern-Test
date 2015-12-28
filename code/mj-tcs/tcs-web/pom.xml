@@ -15,7 +15,7 @@
     <packaging>war</packaging>
 
     <properties>
-        <start-class>com.mj.tcs.TcsWebServerApplication</start-class>
+        <start-class>com.mj.tcs.TCSWebServerApplication</start-class>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
 
@@ -37,6 +37,20 @@
     </dependencyManagement>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.mj.tcs</groupId>
+            <artifactId>tcs-base</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mj.tcs</groupId>
+            <artifactId>tcs-kernel</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/src/main/resources/tcs-kernel-1.0.jar</systemPath>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -191,11 +205,6 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.mj.tcs</groupId>
-            <artifactId>tcs-base</artifactId>
-            <version>1.0</version>
         </dependency>
 
         <!-- for testing -->

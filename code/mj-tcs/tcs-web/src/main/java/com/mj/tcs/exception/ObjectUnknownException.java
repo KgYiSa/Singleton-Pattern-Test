@@ -6,7 +6,7 @@ package com.mj.tcs.exception;
  *
  * @author Wang Zhen
  */
-public class ObjectUnknownException extends TcsServerRuntimeException {
+public class ObjectUnknownException extends TCSServerRuntimeException {
 
     /**
      * Creates a new ObjectExistsException with the given detail message.

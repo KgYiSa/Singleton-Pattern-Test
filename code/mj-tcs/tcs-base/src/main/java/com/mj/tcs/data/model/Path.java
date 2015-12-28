@@ -67,14 +67,14 @@ public class Path
     /**
      * Creates a new Path.
      *
-     * @param objectID The new path's object ID.
+     * @param objectUUID The new path's object UUID.
      * @param name The new path's name.
      * @param srcPoint A reference to this path's starting point.
      * @param destPoint A reference to this path's destination point.
      */
-    public Path(int objectID, String name, TCSObjectReference<Point> srcPoint,
+    public Path(String objectUUID, String name, TCSObjectReference<Point> srcPoint,
                 TCSObjectReference<Point> destPoint) {
-        super(objectID, name);
+        super(objectUUID, name);
         sourcePoint = Objects.requireNonNull(srcPoint, "srcPoint is null");
         destinationPoint = Objects.requireNonNull(destPoint, "destPoint is null");
     }

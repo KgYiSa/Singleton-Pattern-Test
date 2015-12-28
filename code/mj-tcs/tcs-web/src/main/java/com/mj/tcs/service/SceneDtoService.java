@@ -1,11 +1,10 @@
 package com.mj.tcs.service;
 
 import com.mj.tcs.api.v1.dto.SceneDto;
-import com.mj.tcs.exception.TcsServerRuntimeException;
+import com.mj.tcs.exception.TCSServerRuntimeException;
 import com.mj.tcs.repository.SceneDtoRepository;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
@@ -31,14 +30,17 @@ public class SceneDtoService {
     public SceneDto findOne(long id) {
         SceneDto sceneDto = sceneDtoRepository.findOne(id);
 
-        // TODO: FOR Lazy loading issues
-        Hibernate.initialize(sceneDto.getBlockDtos());
-        Hibernate.initialize(sceneDto.getLocationDtos());
-        Hibernate.initialize(sceneDto.getLocationTypeDtos());
-        Hibernate.initialize(sceneDto.getPathDtos());
-        Hibernate.initialize(sceneDto.getPointDtos());
-        Hibernate.initialize(sceneDto.getStaticRouteDtos());
-        Hibernate.initialize(sceneDto.getVehicleDtos());
+        if (sceneDto != null) {
+            // TODO: FOR Lazy loading issues (properties!!!)
+            Hibernate.initialize(sceneDto.getProperties());
+            Hibernate.initialize(sceneDto.getBlockDtos());
+            Hibernate.initialize(sceneDto.getLocationDtos());
+            Hibernate.initialize(sceneDto.getLocationTypeDtos());
+            Hibernate.initialize(sceneDto.getPathDtos());
+            Hibernate.initialize(sceneDto.getPointDtos());
+            Hibernate.initialize(sceneDto.getStaticRouteDtos());
+            Hibernate.initialize(sceneDto.getVehicleDtos());
+        }
 
         return sceneDto;
     }
@@ -49,7 +51,7 @@ public class SceneDtoService {
         // check if we already have one name of the new scene, otherwise throw an exception
         final Collection<SceneDto> sceneDtos = (Collection)findAll();
         if (sceneDtos != null && sceneDtos.stream().anyMatch(v -> Objects.equals(v.getName(), dto.getName()))) {
-            throw new TcsServerRuntimeException("The name of the new scene should be unique!");
+            throw new TCSServerRuntimeException("The name of the new scene should be unique!");
         }
 
         SceneDto answer = sceneDtoRepository.save(dto);

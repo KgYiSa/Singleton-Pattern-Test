@@ -1,7 +1,5 @@
 package com.mj.tcs.config;
 
-import org.springframework.stereotype.Component;
-
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.sql.Driver;
@@ -17,7 +15,7 @@ import java.util.Enumeration;
  * Reference:
  * http://stackoverflow.com/questions/3320400/to-prevent-a-memory-leak-the-jdbc-driver-has-been-forcibly-unregistered/6576394#6576394
  */
-public class TcsServletContextListener implements ServletContextListener {
+public class TCSServletContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {

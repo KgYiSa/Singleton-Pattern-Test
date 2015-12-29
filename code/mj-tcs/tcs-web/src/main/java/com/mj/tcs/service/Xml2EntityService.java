@@ -99,11 +99,11 @@ public class Xml2EntityService {
     public PathDto Map2PathDto(Map<String,String> map){
         PathDto pathDto = new PathDto();
         pathDto.setName(map.get("Name"));
-        pathDto.setMaxVelocity(Double.parseDouble(map.get("maxVelocity")));
+        pathDto.setMaxVelocity(Integer.parseInt(map.get("maxVelocity").split("\\.")[0]));
         pathDto.setRoutingCost((long)Double.parseDouble(map.get("cost")));
         pathDto.setSourcePointDto(sceneDto.getPointDtoByName(map.get("startComponent")));
         pathDto.setDestinationPointDto(sceneDto.getPointDtoByName(map.get("endComponent")));
-        pathDto.setMaxReverseVelocity(Double.parseDouble(map.get("maxReverseVelocity")));
+        pathDto.setMaxReverseVelocity(Integer.parseInt(map.get("maxReverseVelocity").split("\\.")[0]));
         pathDto.setLength((long)Double.parseDouble(map.get("length")));
         pathDto.setLocked(map.get("locked").equals("false"));
         return pathDto;

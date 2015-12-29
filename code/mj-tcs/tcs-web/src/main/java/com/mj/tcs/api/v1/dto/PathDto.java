@@ -28,7 +28,7 @@ import java.util.*;
 @Dto
 @Entity(name = "tcs_model_path")
 @Table(name = "tcs_model_path", uniqueConstraints =
-    @UniqueConstraint(columnNames = {"name", "scene"})
+@UniqueConstraint(columnNames = {"name", "scene"})
 )
 public class PathDto extends BaseEntityDto {
     @JsonIgnore
@@ -78,11 +78,11 @@ public class PathDto extends BaseEntityDto {
 
     @DtoField
     @Column
-    private double maxVelocity;
+    private int maxVelocity;
 
     @DtoField
     @Column
-    private double maxReverseVelocity;
+    private int maxReverseVelocity;
 
     @DtoField
     @Column
@@ -201,7 +201,7 @@ public class PathDto extends BaseEntityDto {
         return maxVelocity;
     }
 
-    public void setMaxVelocity(double maxVelocity) {
+    public void setMaxVelocity(int maxVelocity) {
         this.maxVelocity = maxVelocity;
     }
 
@@ -209,7 +209,7 @@ public class PathDto extends BaseEntityDto {
         return maxReverseVelocity;
     }
 
-    public void setMaxReverseVelocity(double maxReverseVelocity) {
+    public void setMaxReverseVelocity(int maxReverseVelocity) {
         this.maxReverseVelocity = maxReverseVelocity;
     }
 

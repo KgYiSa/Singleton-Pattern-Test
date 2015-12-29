@@ -22,7 +22,7 @@ import java.security.NoSuchAlgorithmException;
 /**
  * @author Wang Zhen
  */
-public class TcsHttpWrapper {
+public class TCSHttpWrapper {
     private static final MediaType TYPE = MediaType.APPLICATION_JSON;
     private RestTemplate restTemplate = null;
 

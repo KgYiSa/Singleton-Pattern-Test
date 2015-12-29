@@ -468,6 +468,7 @@
 	<script type="text/javascript" src="../js/mjtcs-elem-path.js"></script>
 	<script type="text/javascript" src="../js/mjtcs-elem-location.js"></script>
 	<script type="text/javascript" src="../js/mjtcs-elem-link.js"></script>
+	<script type="text/javascript" src="../js/mjtcs-elem-vehicle.js"></script>
 	<script type="text/javascript" src="../js/has.js"></script>
 	<script type="text/javascript" src="../js/tcs-canvas.js"></script>
 	<script type="text/javascript" src="../js/tcs-editor.js"></script>

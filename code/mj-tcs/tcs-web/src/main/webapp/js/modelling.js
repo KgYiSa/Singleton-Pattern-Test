@@ -270,7 +270,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 
 var showAttr = function(str){
     // $("#table1 tr th:not(:nth-child(1))").remove();  
-    var cont = $(".properties .table-body tbody tr:not(:nth-child(1)");
+    var cont = $(".properties .table-body tbody tr:not(:nth-child(1))");
      //console.log(cont)
      
      cont.remove()

@@ -88,7 +88,7 @@
 								<option value="250">250%</option>
 							</select>
 						</div>
-						<div class="show-reset selected"><img src="${ctxStatic}/images/zoom-fit.png" title=""></div>
+						<div class="reset-zoom"><img src="${ctxStatic}/images/zoom-fit.png" title=""></div>
 						<div class="show-splits selected"><img src="${ctxStatic}/images/view-split.png" title=""></div>
 						<div class="show-labels"><img src="${ctxStatic}/images/document-page-setup.16x16.png" title=""></div>
 						<div class="show-comment"><img src="${ctxStatic}/images/comment-add.16.png" title=""></div>

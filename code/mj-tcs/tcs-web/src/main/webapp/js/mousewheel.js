@@ -1,3 +1,6 @@
+// Dependencies:
+// 1) jquery-1.11.3.js
+
 /*! Copyright (c) 2011 Brandon Aaron (http://brandonaaron.net)
  * Licensed under the MIT License (LICENSE.txt).
  *

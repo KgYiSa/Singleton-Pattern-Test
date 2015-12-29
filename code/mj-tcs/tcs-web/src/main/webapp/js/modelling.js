@@ -1,3 +1,10 @@
+// Dependencies:
+// 1) jquery-1.11.3.js
+// 2) bootstrap.min.js
+// 3) jquery.ztree.core-3.5.js
+// 4) mousewheel.js
+// 5) tcs-editor.js
+
 $(function(){
 
     initTree()

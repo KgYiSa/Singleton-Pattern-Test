@@ -1,4 +1,9 @@
-
+// Dependencies:
+// 1) jquery-1.11.3.js
+// 2) bootstrap.min.js
+// 3) jquery.ztree.core-3.5.js
+// 4) mousewheel.js
+// 5) tcs-editor.js
 
 //基本设定
 var setting = {
@@ -11,15 +16,6 @@ var setting = {
         }
     },
 
-    //async:{
-    //    enable:true,
-    //    url:"/tcs-web/web/scene/12",
-    //    type:"get",
-    //    contentType:"application/json",
-    //    autoParam:["id","name"],
-    //    otherParam:{},
-    //    dataFilter:filter
-    //},
     callback: {
         beforeClick: beforeClick,
         onClick: onClick
@@ -67,17 +63,26 @@ $(function(){
     	
     })
 
+
+    // reset zoom
+    $(".left-container .top-panel .top-panel-view .tcs-bottom .reset-zoom").click(function(){
+        $(".zoom-label #zoom").val(100).change();
+    });
+
+
+
     // operating，针对editor的共通操作eg：缩放，显示/隐藏网格线,title,blocks等
     $(".left-container .top-panel .top-panel-view .tcs-bottom div[class^=show-]").click(function(){
         //console.log(this.className);
+
         if($(this).hasClass("selected")) {
 
             $(this).removeClass("selected");
             switch(this.className){
-                case 'show-reset':
-
-                    // TODO
-                    break;
+                //case 'show-reset':
+                //
+                //    // TODO
+                //    break;
                 case 'show-splits':
                     showGrid(true);
                     break;
@@ -85,10 +90,10 @@ $(function(){
             }
         } else {
             switch(this.className){
-                case 'show-reset':
-                    $(".zoom-label #zoom").val(100).change();
-                    // TODO
-                    break;
+                //case 'show-reset':
+                //    $(".zoom-label #zoom").val(100).change();
+                //    // TODO
+                //    break;
                 case 'show-splits':
                     showGrid(false);
                     break;

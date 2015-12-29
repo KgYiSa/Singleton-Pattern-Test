@@ -84,6 +84,7 @@
 .left-container .top-panel .top-panel-view .tcs-bottom > div > img{
 	width:21px;
 	height: 21px;
+	vertical-align: inherit;
 }
 
 /*.left-container .operate-content .tcs-bottom > div > img:hover{*/

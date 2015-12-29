@@ -83,7 +83,8 @@
             }
 
             function createScene() {
-                var body = {"id":null,"version":null,"name":"test_scene_15_12_08_22_02_33","properties":[{"name":"key","value":"value","type":"java.lang.String"}],"UUID":"scenedto-b2796efe-ab5f-44b1-aae9-6e16fedf1ccc",
+
+                var body = {"id":null,"version":null,"name":"test_scene_15_12_08_22_02_34","properties":[{"name":"key","value":"value","type":"java.lang.String"}],"UUID":"scenedto-b2796efe-ab5f-44b1-aae9-6e16fedf1ccc",
                     "points":[{"id":null,"version":null,"name":"test_point_0","properties":[],"vehicle_orientation_angle":0.0,"type":"HALT_POSITION","attached_links":[{"UUID":"locationlinkdto-94836d25-29fc-44a0-911d-86014dfac8ca"}],"UUID":"pointdto-6949b047-97fa-4104-818b-56a5b5c4066e","position":{"x":658,"y":482,"z":0},"display_position_x":658,"display_position_y":482,"label_offset_x":0,"label_offset_y":20,"incoming_paths":[],"outgoing_paths":[{"UUID":"pathdto-b9066c29-ce55-4b79-b2ee-baa8999658ef"}]},{"id":null,"version":null,"name":"test_point_1","properties":[],"vehicle_orientation_angle":0.0,"type":"HALT_POSITION","attached_links":[],"UUID":"pointdto-eacd255a-9bf2-4848-bc65-cdbac41352c5","position":{"x":827,"y":264,"z":0},"display_position_x":827,"display_position_y":264,"label_offset_x":0,"label_offset_y":20,"incoming_paths":[{"UUID":"pathdto-b9066c29-ce55-4b79-b2ee-baa8999658ef"}],"outgoing_paths":[]},{"id":null,"version":null,"name":"test_point_2","properties":[],"vehicle_orientation_angle":0.0,"type":"HALT_POSITION","attached_links":[],"UUID":"pointdto-9fae4650-88fd-4731-bc0a-c4e29c2cc2fe","position":{"x":346,"y":61,"z":0},"display_position_x":346,"display_position_y":61,"label_offset_x":0,"label_offset_y":20,"incoming_paths":[],"outgoing_paths":[]}],
                     "paths":[{"id":null,"version":null,"name":"test_path_0","properties":[],"control_points":[],"length":426,"routing_cost":1,"max_velocity":1.0,"max_reverse_velocity":1.0,"locked":false,"UUID":"pathdto-b9066c29-ce55-4b79-b2ee-baa8999658ef","source_point":{"UUID":"pointdto-6949b047-97fa-4104-818b-56a5b5c4066e"},"destination_point":{"UUID":"pointdto-eacd255a-9bf2-4848-bc65-cdbac41352c5"}}],
                     "locations":[{"id":null,"version":null,"name":"test_location_3785","properties":[],"attached_links":[{"id":null,"version":null,"name":"test_link_3785","allowed_operations":[],"UUID":"locationlinkdto-94836d25-29fc-44a0-911d-86014dfac8ca","point":{"UUID":"pointdto-6949b047-97fa-4104-818b-56a5b5c4066e"}}],"UUID":"locationdto-0206deb6-919c-4911-b1c2-5989655c2b30","position":{"x":100,"y":100,"z":0},"location_type":{"UUID":"locationtypedto-ec1c05be-153a-4e0b-9314-724c0ab03ae4"},"display_position_x":100,"display_position_y":100,"label_offset_x":0,"label_offset_y":20}],
@@ -159,17 +160,17 @@
 
                 var n = noty({
                     text        : new_text,
-                    type        : type, // ��Ϣ����
-                    dismissQueue: true, // ʹ������
-                    layout      : 'bottomRight', // ��ʾ��λ��
-                    theme       : 'relax', // ʹ�õ�����
+                    type        : type, // 消息类型
+                    dismissQueue: true, // 使用序列
+                    layout      : 'bottomRight', // 显示的位置
+                    theme       : 'relax', // 使用的主题
                     template    : '<div class="noty_message"><span class="noty_text"></span><div class="noty_close"></div></div>',
                     maxVisible  : 10,
                     modal: false,
-                    maxVisible: 5, // �������������ʾ���ٸ�֪ͨ��Ϣ
-                    killer: false, // ����ʾ���noty֮ǰ�������е�noty�ص�
-                    closeWith: ['click'], // �رյķ�ʽ��Ĭ����click['click', 'button', 'hover']
-                    killer: false, // ����ʾ���noty֮ǰ�������е�noty�ص�
+                    maxVisible: 5, // 可以设置最多显示多少个通知消息
+                    killer: false, // 在显示这个noty之前，将所有的noty关掉
+                    closeWith: ['click'], // 关闭的方式，默认是click['click', 'button', 'hover']
+                    killer: false, // 在显示这个noty之前，将所有的noty关掉
                     timeout     : 60000, // 60 seconds fade out
                     animation   : {
                         open  : 'animated bounceInRight',
@@ -177,13 +178,13 @@
                         easing: 'swing',
                         speed : 500
                     },
-                    callback: {     // ���ûص�����
+                    callback: {     // 设置回调函数
                         onShow: function() {},
                         afterShow: function() {},
                         onClose: function() {},
                         afterClose: function() {}
                     },
-                    buttons: false // ����һ����ť����
+                    buttons: false // 定义一个按钮数组
                 });
                 console.log('html: ' + n.options.id);
             }

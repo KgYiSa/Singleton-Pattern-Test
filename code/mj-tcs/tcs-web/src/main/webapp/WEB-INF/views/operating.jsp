@@ -25,44 +25,16 @@
 			<button type="button" class="btn btn-primary btn-sm" data-toggle="modal"  data-target="#sceneselect">
 				选择场景
 			</button>
-			<span id="scenename">暂无</span>
-			<!-- Modal -->
-			<div class="modal fade" id="sceneselect" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-				<div class="modal-dialog" role="document">
-					<div class="modal-content">
-						<div class="modal-header">
-							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-							<h4 class="modal-title" id="myModalLabel">场景列表：</h4>
-						</div>
-						<div class="modal-body">
-
-							<table class="table table-bordered scenelist">
-								<col width="10%" />
-								<col width="40%" />
-								<col width="18%" />
-								<col width="18%" />
-								<col width="14%" />
-								<thead>
-								<tr>
-									<th>ID</th>
-									<th>NAME</th>
-									<th>STATUS</th>
-									<th>OPERATE</th>
-									<th>SELECT</th>
-								</tr>
-								</thead>
-								<tbody>
-								</tbody>
-							</table>
-						</div>
-
-						<div class="modal-footer">
-							<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-							<button type="button" class="btn btn-primary submmit">确定</button>
-						</div>
-					</div>
-				</div>
+			<div class="dropdown">
+				<button class="btn btn-default dropdown-toggle" type="button" id="model-switch" data-toggle="dropdown">
+					Operating
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" aria-labelledby="model-switch">
+					<li><a href="./modelling">Modelling</a></li>
+				</ul>
 			</div>
+
 		</div>
 		<div class="userinfo">
 			<span class="label label-info">用户：admin</span>
@@ -100,7 +72,20 @@
 							<input id="zoom" size="3" value="100%" type="text" readonly="readonly" />
 
 							<select id="zoom_select">
+								<option value="40">40%</option>
+								<option value="50">50%</option>
+								<option value="60">60%</option>
+								<option value="70">70%</option>
+								<option value="80">80%</option>
+								<option value="90">90%</option>
 								<option value="100" selected="selected">100%</option>
+								<option value="110">110%</option>
+								<option value="120">120%</option>
+								<option value="150">150%</option>
+								<option value="170">170%</option>
+								<option value="200">200%</option>
+								<option value="220">220%</option>
+								<option value="250">250%</option>
 							</select>
 						</div>
 						<div class="show-reset selected"><img src="${ctxStatic}/images/zoom-fit.png" title=""></div>
@@ -214,134 +199,29 @@
 						<li>
 							<img src="${ctxStatic}/images/create-order.22.png" alt=""></li>
 						<li>
-							<img src="${ctxStatic}/images/find-vehicle.22.png" alt=""></li>
+							<img src="${ctxStatic}/images/find-vehicle.22.png" id="find-vehicle" alt="find-vehicle"></li>
 						<li>
 							<img src="${ctxStatic}/images/pause-vehicles.22.png" alt=""></li>
-						<li>
-							<img src="${ctxStatic}/images/zoom-fit.png" alt=""></li>
-						<li>
-							<img src="${ctxStatic}/images/view-split.png" alt=""></li>
-						<li>
-							<img src="${ctxStatic}/images/comment-add.16.png" alt=""></li>
-						<li>
-							<img src="${ctxStatic}/images/block.18x18.png" alt=""></li>
-						<li>
-							<img src="${ctxStatic}/images/staticRoute.18x18.png" alt=""></li>
-						<li>
-							<img src="${ctxStatic}/images/document-page-setup.16x16.png" alt=""></li>
 						<li>
 							<img src="${ctxStatic}/images/transport-order.png" class="to" alt=""></li>
 					</ul>
 				</div>
-			</div>
 
+			</div>
+			<div class="bottom-button"></div>
 			<div class="bottom-panel">
 				<div class="bottom-panel-title">小车列表</div>
 				<div class="bottom-panel-list">
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-						<div class="vehicle" data-toggle="modal" data-target="#myModal">
-							<div class="name">Vehicle</div>
-							<div class="battery"><img src="${ctxStatic}/images/battery/battery-100-2.png" /></div>
-							<div class="status">runing</div>
-						</div>
-					</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-						<div class="vehicle" data-toggle="modal" data-target="#myModal">
-							<div class="name" data-toggle="modal" data-target="#myModal">Vehicle</div>
-							<div class="battery"><img src="${ctxStatic}/images/battery/battery-100-2.png" /></div>
-							<div class="status">runing</div>
-						</div>
-					</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-						<div class="vehicle" data-toggle="modal" data-target="#myModal">
-							<div class="name">Vehicle</div>
-							<div class="battery"><img src="${ctxStatic}/images/battery/battery-100-2.png" /></div>
-							<div class="status">runing</div>
-						</div>
-					</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-						<div class="vehicle" data-toggle="modal" data-target="#myModal">
-							<div class="name" data-toggle="modal" data-target="#myModal">Vehicle</div>
-							<div class="battery"><img src="${ctxStatic}/images/battery/battery-100-2.png" /></div>
-							<div class="status">runing</div>
-						</div>
-					</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-						<div class="vehicle" data-toggle="modal" data-target="#myModal">
-							<div class="name">Vehicle</div>
-							<div class="battery"><img src="${ctxStatic}/images/battery/battery-100-2.png" /></div>
-							<div class="status">runing</div>
-						</div>
-					</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-						<div class="vehicle" data-toggle="modal" data-target="#myModal">
-							<div class="name">Vehicle</div>
-							<div class="battery"><img src="${ctxStatic}/images/battery/battery-100-2.png" /></div>
-							<div class="status">runing</div>
-						</div>
-					</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-						<div class="vehicle" data-toggle="modal" data-target="#myModal">
-							<div class="name">Vehicle</div>
-							<div class="battery"><img src="${ctxStatic}/images/battery/battery-100-2.png" /></div>
-							<div class="status">runing</div>
-						</div>
-					</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-						<div class="vehicle" data-toggle="modal" data-target="#myModal">
-							<div class="name">Vehicle</div>
-							<div class="battery"><img src="${ctxStatic}/images/battery/battery-100-2.png" /></div>
-							<div class="status">runing</div>
-						</div>
-					</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-						<div class="vehicle" data-toggle="modal" data-target="#myModal">
-							<div class="name">Vehicle</div>
-							<div class="battery"><img src="${ctxStatic}/images/battery/battery-100-2.png" /></div>
-							<div class="status">runing</div>
-						</div>
-					</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-						<div class="vehicle" data-toggle="modal" data-target="#myModal">
-							<div class="name">Vehicle</div>
-							<div class="battery"><img src="${ctxStatic}/images/battery/battery-100-2.png" /></div>
-							<div class="status">runing</div>
-						</div>
-					</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-						<div class="vehicle" data-toggle="modal" data-target="#myModal">
-							<div class="name">Vehicle</div>
-							<div class="battery"><img src="${ctxStatic}/images/battery/battery-100-2.png" /></div>
-							<div class="status">runing</div>
-						</div>
-					</div>
-					<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-						<div class="vehicle" data-toggle="modal" data-target="#myModal">
-							<div class="name">Vehicle</div>
-							<div class="battery"><img src="${ctxStatic}/images/battery/battery-100-2.png" /></div>
-							<div class="status">runing</div>
-						</div>
-					</div>
+					<%--<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">--%>
+						<%--<div class="vehicle" data-toggle="modal" data-target="#myModal">--%>
+							<%--<div class="name">Vehicle</div>--%>
+							<%--<div class="battery"><img src="${ctxStatic}/images/battery/battery-100-2.png" /></div>--%>
+							<%--<div class="status">runing</div>--%>
+						<%--</div>--%>
+					<%--</div>--%>
 
 				</div>
-				<!-- Modal -->
-				<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-				  <div class="modal-dialog" role="document">
-				    <div class="modal-content">
-				      <div class="modal-header">
-				        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				        <h4 class="modal-title" id="myModalLabel">小车实时状态</h4>
-				      </div>
-				      <div class="modal-body">
-				        ...
-				      </div>
-				      <div class="modal-footer">
-				        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-				        <!--<button type="button" class="btn btn-primary">Save changes</button>-->
-				      </div>
-				    </div>
-				  </div>
-				</div>
+
 			</div>
 		</div>
 		<div class="col-md-3 right-container">
@@ -364,27 +244,116 @@
 				<ul id="blocks-tree" class="ztree"></ul>
 			</div>
 			</div>
+			<div class="side-bottom-button"></div>
 			<div class="properties">
 				<div class="table-head">
 					<table>
-					<thead>
-						<tr>
-							<th>Attribute</th>
-							<th>Value</th>
-						</tr>
-					</thead>
-				</table>
+						<thead>
+							<tr>
+								<th>Attribute</th>
+								<th>Value</th>
+							</tr>
+						</thead>
+					</table>
 				</div>
 				<div class="table-body">
-				<table>
-				<tbody>
-				</tbody>
-				</table>
+					<table>
+						<tbody>
+						</tbody>
+					</table>
 				</div>
+
 			</div>
 			<div class="side-button">
 				<!--<span class="glyphicon glyphicon-chevron-right" style="display: block;">&nbsp;</span>-->
 				<!--<span class="glyphicon glyphicon-chevron-left" style="display: inline-block;">&nbsp;</span>-->
+			</div>
+		</div>
+	</div>
+
+
+	<!-- show sceneselect Modal -->
+	<div class="modal fade" id="sceneselect" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">场景列表：</h4>
+				</div>
+				<div class="modal-body">
+
+					<table class="table table-bordered scenelist">
+						<col width="10%" />
+						<col width="40%" />
+						<col width="18%" />
+						<col width="18%" />
+						<col width="14%" />
+						<thead>
+						<tr>
+							<th>ID</th>
+							<th>NAME</th>
+							<th>STATUS</th>
+							<th>OPERATE</th>
+							<th>SELECT</th>
+						</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary submmit">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- vehcile detail Modal -->
+	<div class="modal fade" id="vehicleDetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="">小车实时状态</h4>
+				</div>
+				<div class="modal-body" style="overflow-wrap: break-word">
+					...
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<!--<button type="button" class="btn btn-primary">Save changes</button>-->
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- find vehicle Modal -->
+	<div class="modal fade" id="operate-popup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="title">dd</h4>
+				</div>
+				<div class="modal-body" style="overflow-wrap: break-word">
+					<div class="dropdown">
+						<button class="btn btn-default dropdown-toggle" type="button" id="vehicle-dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+							请选择小车
+							<span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu" aria-labelledby="vehicle-dropdownMenu">
+							<li><a href="#">--</a></li>
+
+						</ul>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary submit">确定</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+
+				</div>
 			</div>
 		</div>
 	</div>
@@ -506,10 +475,9 @@
 	<!--<script type="text/javascript" src="../js/mjtcs-modelling.js"></script>-->
 	<script type="text/javascript">
 	  $(document).ready(function(){
-		  startLoading();
 	      $('#left-sidebar').BootSideMenu({side:"left", autoClose:true});
 
-
+		// --------------------------side menu script-------------------------------------------------------
 		$("#left-sidebar .content .adapter .table-body table .startflg").on('click', function() {
 			$("#left-sidebar .content .settinginfo .tips").html("");
 
@@ -541,34 +509,17 @@
 			$("#left-sidebar .content .settinginfo .tips").html("");
 			// console.log($(this)[0]);
 			// console.log($(this).parent().parent().find(".startflg")[0])
-			var setinginfo = $("#left-sidebar .content .settinginfo");
+			var settinginfo = $("#left-sidebar .content .settinginfo");
 			if($(this).parent().parent().find(".startflg")[0].checked){
-				setinginfo.find("input").removeAttr("disabled");
-				setinginfo.find("input[name=slaveId]").val($(this).parent().parent().find(".startflg").val());
-				setinginfo.find("input[name=mark]").val($(this).parent().parent().find(".startflg").attr("name"));
+				settinginfo.find("input").removeAttr("disabled");
+				settinginfo.find("input[name=slaveId]").val($(this).parent().parent().find(".startflg").val());
+				settinginfo.find("input[name=mark]").val($(this).parent().parent().find(".startflg").attr("name"));
 			}
 
 		});
 
-
 	  });
 
-		function startLoading(){
-			var _PageHeight = document.documentElement.clientHeight;
-			var _PageWidth = document.documentElement.clientWidth;
-			//计算loading框距离顶部和左部的距离（loading框的宽度为215px，高度为61px）
-			var _LoadingTop = _PageHeight > 61 ? (_PageHeight - 61) / 2 : 0;
-			var _LoadingLeft = _PageWidth > 215 ? (_PageWidth - 215) / 2 : 0;
-			$("#loadingDiv").attr("display", "block");
-			$("#loadingDiv").attr("height", _PageHeight);
-			$("#loadingDiv > div").attr("left", _LoadingLeft);
-			$("#loadingDiv > div").attr("top", _LoadingTop);
-
-		}
-
-		function endingLoading(){
-			$("#loadingDiv").attr("display", "none");
-		}
 	</script>
 </body>
 </html>

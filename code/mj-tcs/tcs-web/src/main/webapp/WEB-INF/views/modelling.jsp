@@ -16,7 +16,7 @@
 <header>
 	<!--<h1>AVG Modelling-Mode<a href="operating.html">[operating]</a></h1>-->
 	<div class="mj-logo"><img src="../images/mj-logo.png" alt="" class=""></div>
-	<div class="title">AVG Modelling<a href="operating.html">[operating]</a></div>
+	<div class="title">AVG Modelling</div>
 
 	<div class="sys-info">
 		<!--<p class="sence"><a href="javascript:;">选择场景</a>|</p>-->
@@ -25,7 +25,15 @@
 			<button type="button" class="btn btn-primary btn-sm" data-toggle="modal"  data-target="#sceneselect">
 				选择场景
 			</button>
-			<span>场景一</span>
+			<div class="dropdown">
+				<button class="btn btn-default dropdown-toggle" type="button" id="model-switch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+					Modelling
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu" aria-labelledby="model-switch">
+					<li><a href="./operating">Operating</a></li>
+				</ul>
+			</div>
 			<!-- Modal -->
 			<div class="modal fade" id="sceneselect" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 				<div class="modal-dialog" role="document">

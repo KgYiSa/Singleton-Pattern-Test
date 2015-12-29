@@ -197,7 +197,7 @@ public class PathDto extends BaseEntityDto {
         this.routingCost = routingCost;
     }
 
-    public double getMaxVelocity() {
+    public int getMaxVelocity() {
         return maxVelocity;
     }
 
@@ -205,7 +205,7 @@ public class PathDto extends BaseEntityDto {
         this.maxVelocity = maxVelocity;
     }
 
-    public double getMaxReverseVelocity() {
+    public int getMaxReverseVelocity() {
         return maxReverseVelocity;
     }
 

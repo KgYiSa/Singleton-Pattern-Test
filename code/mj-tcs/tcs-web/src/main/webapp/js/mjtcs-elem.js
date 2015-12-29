@@ -4,6 +4,7 @@
 //
 
 Elem = function(){
+    //todo: polish magic number from tcs-canvas.js'code :var axisOffset = tcsCanvas.editorCoordinatesToMouseCoordinates([0, 0]);
     var axisOffsetCopy = [52, 402];
 
     //this.ZOOM = 1;

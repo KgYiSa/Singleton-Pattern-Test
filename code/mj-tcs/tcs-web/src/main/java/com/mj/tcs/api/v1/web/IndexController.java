@@ -72,47 +72,69 @@ public class IndexController extends ServiceController {
         return "upload";
     }
 
-    @RequestMapping(value="/upload", method=RequestMethod.GET)
-    public @ResponseBody String provideUploadInfo() {
-
-        Document document = TcsXmlUtils.getDocument("D:\\Demo.xml");
-        Element root = document.getRootElement();
-        String newSceneName = "test_scene_" +
-                new SimpleDateFormat("yy_MM_dd_HH_mm_ss").format(new Date()).toString();
-        System.out.println(newSceneName);
-
-        SceneDto sceneDto = new SceneDto();
-        sceneDto.setAuditorDto(xml2EntityService.createAuditor());
-        sceneDto.setName(newSceneName);
-        xml2EntityService.setSceneDto(sceneDto);
-        List<Element> elements = root.elements();
-        for (Element e : elements) {
-            String type = TcsXmlUtils.getNodeAttrMap(e).get("type");
-            xml2EntityService.Map2Dto(TcsXmlUtils.getPoint(e),type);
-        }
-
-        SceneDto newSceneDto = resolveRelationships(sceneDto);
-        newSceneDto = getService().createScene(newSceneDto);
-        return "You can upload a file by posting to this same URL.";
-    }
+//    @RequestMapping(value="/upload", method=RequestMethod.GET)
+//    public @ResponseBody String provideUploadInfo() {
+//
+//        Document document = TcsXmlUtils.getDocument("D:\\Demo.xml");
+//        Element root = document.getRootElement();
+//        String newSceneName = "test_scene_" +
+//                new SimpleDateFormat("yy_MM_dd_HH_mm_ss").format(new Date()).toString();
+//        System.out.println(newSceneName);
+//
+//        SceneDto sceneDto = new SceneDto();
+//        sceneDto.setAuditorDto(xml2EntityService.createAuditor());
+//        sceneDto.setName(newSceneName);
+//        xml2EntityService.setSceneDto(sceneDto);
+//        List<Element> elements = root.elements();
+//        for (Element e : elements) {
+//            String type = TcsXmlUtils.getNodeAttrMap(e).get("type");
+//            xml2EntityService.Map2Dto(TcsXmlUtils.getPoint(e),type);
+//        }
+//
+//        SceneDto newSceneDto = resolveRelationships(sceneDto);
+//        newSceneDto = getService().createScene(newSceneDto);
+//        return "You can upload a file by posting to this same URL.";
+//    }
 
     @RequestMapping(value="/upload", method=RequestMethod.POST)
     public @ResponseBody
-    String handleFileUpload(@RequestParam("name") String name,
-                            @RequestParam("file") MultipartFile file){
+    String handleFileUpload(@RequestParam("file") MultipartFile file){
         if (!file.isEmpty()) {
+            String path = "D:\\"+new Date().getTime()+file.getOriginalFilename();
+            String name = file.getName();
             try {
                 byte[] bytes = file.getBytes();
                 BufferedOutputStream stream =
-                        new BufferedOutputStream(new FileOutputStream(new File(name + "-uploaded")));
+                        new BufferedOutputStream(new FileOutputStream(new File(path)));
                 stream.write(bytes);
                 stream.close();
+
+
+                Document document = TcsXmlUtils.getDocument(path);
+                Element root = document.getRootElement();
+                String newSceneName = "test_scene_" +
+                        new SimpleDateFormat("yy_MM_dd_HH_mm_ss").format(new Date()).toString();
+                System.out.println(newSceneName);
+
+                SceneDto sceneDto = new SceneDto();
+                sceneDto.setAuditorDto(xml2EntityService.createAuditor());
+                sceneDto.setName(newSceneName);
+                xml2EntityService.setSceneDto(sceneDto);
+                List<Element> elements = root.elements();
+                for (Element e : elements) {
+                    String type = TcsXmlUtils.getNodeAttrMap(e).get("type");
+                    xml2EntityService.Map2Dto(TcsXmlUtils.getPoint(e),type);
+                }
+
+                SceneDto newSceneDto = resolveRelationships(sceneDto);
+                newSceneDto = getService().createScene(newSceneDto);
+
                 return "You successfully uploaded " + name + " into " + name + "-uploaded !";
             } catch (Exception e) {
                 return "You failed to upload " + name + " => " + e.getMessage();
             }
         } else {
-            return "You failed to upload " + name + " because the file was empty.";
+            return "You failed to upload , because the file was empty.";
         }
     }
 

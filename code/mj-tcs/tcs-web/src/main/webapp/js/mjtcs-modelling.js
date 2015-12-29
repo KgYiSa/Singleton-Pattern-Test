@@ -1,3 +1,7 @@
+/**
+ * Created by Shuai.Wang on 2015/12/7.
+ */
+
 //var selectedObject;//存放被选中的对象
 //var mouseoverObject;//存放鼠标滑过的对象
 var gridlist = [];//存放网格对应的点

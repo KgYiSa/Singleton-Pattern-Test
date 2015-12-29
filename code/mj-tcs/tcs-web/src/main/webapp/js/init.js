@@ -1,3 +1,7 @@
+// Dependencies:
+// 1) jquery-1.11.3.js
+//
+
 $(function(){
 	// 监听浏览器窗口变化，重置高度，保持充满整个窗口
 	$(window).resize(function(){

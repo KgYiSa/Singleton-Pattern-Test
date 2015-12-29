@@ -1,4 +1,9 @@
-
+// Dependencies:
+// 1) jquery-1.11.3.js
+// 2) bootstrap.min.js
+// 3) jquery.ztree.core-3.5.js
+// 4) mousewheel.js
+// 5) tcs-editor.js
 
 //基本设定
 var setting = {
@@ -11,15 +16,6 @@ var setting = {
         }
     },
 
-    //async:{
-    //    enable:true,
-    //    url:"/tcs-web/web/scene/12",
-    //    type:"get",
-    //    contentType:"application/json",
-    //    autoParam:["id","name"],
-    //    otherParam:{},
-    //    dataFilter:filter
-    //},
     callback: {
         beforeClick: beforeClick,
         onClick: onClick
@@ -28,12 +24,10 @@ var setting = {
 
 
 // format json
-var fJosn = {};
-
+var fJson = {};
 
 $(function(){
-
-
+    startLoading();
 
     // 初始化树结构数据
     initTree();
@@ -59,6 +53,7 @@ $(function(){
      
     });
 
+    //工单按钮
     $(".operation-list .to").click(function() {
     	if ($(".top-panel .top-panel-to").css("display") == 'none') {
     		$(".top-panel .top-panel-to").css("display","block");
@@ -68,17 +63,26 @@ $(function(){
     	
     })
 
+
+    // reset zoom
+    $(".left-container .top-panel .top-panel-view .tcs-bottom .reset-zoom").click(function(){
+        $(".zoom-label #zoom").val(100).change();
+    });
+
+
+
     // operating，针对editor的共通操作eg：缩放，显示/隐藏网格线,title,blocks等
     $(".left-container .top-panel .top-panel-view .tcs-bottom div[class^=show-]").click(function(){
         //console.log(this.className);
+
         if($(this).hasClass("selected")) {
 
             $(this).removeClass("selected");
             switch(this.className){
-                case 'show-reset':
-
-                    // TODO
-                    break;
+                //case 'show-reset':
+                //
+                //    // TODO
+                //    break;
                 case 'show-splits':
                     showGrid(true);
                     break;
@@ -86,10 +90,10 @@ $(function(){
             }
         } else {
             switch(this.className){
-                case 'show-reset':
-                    $(".zoom-label #zoom").val(100).change();
-                    // TODO
-                    break;
+                //case 'show-reset':
+                //    $(".zoom-label #zoom").val(100).change();
+                //    // TODO
+                //    break;
                 case 'show-splits':
                     showGrid(false);
                     break;
@@ -112,7 +116,6 @@ $(function(){
 
     // select 与 input数据一致
     $(".zoom-label #zoom_select").change(function(){
-        //alert($(this).val())
         $(".zoom-label #zoom").val($(this).val())
         $(".zoom-label #zoom").change();
     })
@@ -161,7 +164,7 @@ $(function(){
 
     });
 
-    $("#sceneselect .modal-footer .submmit").click(function(){
+    $("#sceneselect .modal-footer .submit").click(function(){
         var selectRadio = $("#sceneselect .modal-body tbody input[name=selectId]:checked");
         if(selectRadio.val() == undefined) {
             if (confirm("您还未选择任何场景，确定继续？")) {
@@ -172,33 +175,143 @@ $(function(){
         } else {
             $('#sceneselect').modal("hide");
             var  sceneTitle = selectRadio.parent().parent().parent().find("td:nth-child(2) span").text();
-            $('#scenename').html(sceneTitle);
-            $('#scenename').attr("title", sceneTitle);
+            //$('#scenename').html(sceneTitle);
+            //$('#scenename').attr("title", sceneTitle);
             $('header .title').text(sceneTitle);
             $('header .title').attr("title", sceneTitle);
+            startLoading();
             getSceneContent(selectRadio.val());
         }
     });
 
+    // hidden vehicle list
+    $(".left-container .bottom-button").click(function(){
+        if($(".left-container .bottom-panel").css("display") == "none"){
+            $(".left-container .top-panel").css("height", "80%");
+            $(".left-container .bottom-panel").css("display", "");
 
+        } else {
+            $(".left-container .bottom-panel").css("display", "none");
+            $(".left-container .top-panel").css("height", $(".left-container").height() - 15);
+        }
+
+    });
 
     //hidden .right-container
     $(".right-container .side-button").click(function(){
+
         if($(".right-container .elements-blocks").css("display") == "none"){
             $(".left-container").width("75%");
-            $(".right-container .elements-blocks").css("display","block");
-            $(".right-container .properties").css("display","block");
+            $(".right-container .elements-blocks").css("display",'');
+            $(".right-container .side-bottom-button").css("display",'');
+            $(".right-container .properties").css("display",'');
             $(".right-container").css("width","25%");
+
         } else {
             $(".right-container .elements-blocks").css("display","none");
             $(".right-container .properties").css("display","none");
+            $(".right-container .side-bottom-button").css("display","none");
+            //$(".right-container .side-button").css("display", "none");
             $(".right-container").css("width",15);
-            $(".left-container").css("width", $(".container-fluid").width() - 15);
+            $(".left-container").css("width", $(".container-fluid").width() - 10 - 30);
         }
 
     });
 
 
+    // hidden .right-container > .properties
+    $(".right-container .side-bottom-button").click(function(){
+
+        if($(".right-container .properties").height() == 0 || $(".right-container .properties").css("display") == "none") {
+
+            $(".right-container .elements-blocks").css("height","70%");
+            $(".right-container .properties").css("display",'');
+            $(".right-container .properties").css("height", $(".right-container").height() - $(".right-container .elements-blocks").height());
+        
+        } else {
+            $(".right-container .properties").css("height",0);
+
+            $(".right-container .elements-blocks").css("height","100%");
+        }
+
+
+    });
+
+
+
+    // show vehicle base info
+    $(".bottom-panel .bottom-panel-list .vehicle").click(function(){
+
+        var uuid = $(this).attr("vehicle-uuid");
+        var vehicleDtail = fJson[uuid];
+        $("#vehicleDetail .modal-body").html("");
+        $("#vehicleDetail .modal-body").html(JSON.stringify(vehicleDtail));
+        $("#vehicleDetail").modal("show");
+
+    });
+
+
+    // tcs-editor  right operate menu
+    $(".left-container .top-panel .top-panel-operation .operation-list img").click(function(){
+        // find vehicle from a vihicle list
+        if($(this)[0].id == "find-vehicle") {
+            $("#operate-popup #title").html("");
+            $("#operate-popup #title").html("请选择小车");
+
+            if(supportLocalStorage()) {
+                var data = localStorage.getItem("sceneJson");
+                var vehicleList = JSON.parse(data)["vehicles"];
+                console.log(vehicleList)
+                if(vehicleList){
+                    var dropdownItem = "";
+                    $.each(vehicleList, function (index, attr) {
+                        dropdownItem += "<li><a href='#' vehicle-uuid='" + attr.UUID + "' title='" + attr.name + "'>" + attr.name + "</a></li>";
+                    })
+                    $("#operate-popup .modal-body .dropdown-menu").html("");
+                    $("#operate-popup .modal-body .dropdown-menu").html(dropdownItem);
+                }
+            }
+            $("#operate-popup").modal("show");
+
+        // TODO other operate
+        } else if(""){
+
+        } else {
+
+        }
+
+    });
+
+    // tcs-editor  right operate menu --- dropdownmenu
+    $("#operate-popup .modal-body .dropdown-menu").on("click", "a", function(){
+        $("#operate-popup .modal-body #vehicle-dropdownMenu").html($(this).text()+"<span class='caret'></span>");
+        $("#operate-popup .modal-footer .submit").attr("vehicle-uuid", $(this).attr("vehicle-uuid"));
+    });
+
+    // tcs-editor  right operate menu --- submit
+    $("#operate-popup .modal-footer .submit").on("click", function(){
+
+
+        $("#operate-popup").modal("hide");
+        var treeObj = $.fn.zTree.getZTreeObj("elements-tree");
+        console.log(treeObj)
+        var node = treeObj.getNodeByParam("id",1,null);
+        // open node
+        treeObj.expandNode(node,true,true,true );
+        var vehicleNode = treeObj.getNodeByParam("elemId",$(this).attr("vehicle-uuid"),null)
+        // select node
+        treeObj.selectNode(vehicleNode);
+
+        onClick(event, "elements-tree", vehicleNode, true);
+    });
+
+
+    // 选择响应对应的小车信息的显示（树结构节点突出，已经属性列表）
+    $('').on('click', '', function(){
+        var value = $(this).text();
+        $(this).append("<input type='text' value='"+value+"' />");
+        // alert($(this).text())
+    })
 
 })
 
@@ -210,7 +323,7 @@ var getSceneBaseList = function() {
         url: "/rest/scenes/profile",
         dataType: "json",
         cache: false,//false时，会自动添加时间戳
-        timeout: 1000,
+        //timeout: 1000,
         success: function (data) {
 
             var trContent;
@@ -226,8 +339,17 @@ var getSceneBaseList = function() {
                     trContent += "<td><span class='label label-default'>"+obj.status+"</span></td>"
                     trContent += "<td><button value='"+obj.id+"'>start</button></td>"
                 }
+                if(window.localStorage && localStorage.getItem("currentScene")){
+                    var currentScene = localStorage.getItem("currentScene");
+                    if(currentScene == obj.id) {
+                        trContent += "<td><span><input type='radio' name='selectId' id='selectId' checked='check' value='"+obj.id+"'></span></td>";
+                    } else {
+                        trContent += "<td><span><input type='radio' name='selectId' id='selectId' value='"+obj.id+"'></span></td>";
+                    }
+                } else {
+                    trContent += "<td><span><input type='radio' name='selectId' id='selectId' value='"+obj.id+"'></span></td>";
 
-                trContent += "<td><span><input type='radio' name='selectId' id='selectId' value='"+obj.id+"'></span></td>";
+                }
                 trContent += "</tr>"
             });
             $("#sceneselect .modal-body tbody").append(trContent);
@@ -245,7 +367,7 @@ var operateSceneById = function(id, operate, obj){
         url: "/rest/scenes/" + id + "/actions/" + operate,
         dataType: "text",
         cache: false,//false时，会自动添加时间戳
-        timeout: 1000,
+        //timeout: 1000,
         success: function (data, jqXHR, textStatus) {
             if(textStatus.status == 200){
                 var trCont =  $(obj).parent().parent();
@@ -282,10 +404,12 @@ var showGrid = function(flg){
     for (var p in lineh) {
         lineh[p].opacity = flg ? 0 : 0.3;
     }
+
+
     for (var p in linew) {
         linew[p].opacity = flg ? 0 : 0.3;
     }
-    two.update();
+    //two.update();
 }
 
 
@@ -296,63 +420,48 @@ var getSceneContent = function (id) {
         url: "/web/scenes/"+id,
         dataType: "json",
         cache: false,//false时，会自动添加时间戳
-        timeout: 1000,
+        //timeout: 1000,
         success: function (data) {
             if(data){
                 buildTree(data);
+                endingLoading();
                 window.tcsDraw.canvas.buildSceneEditor(data);
             }
 
         },
         error: function (xhr) {
-            alert("error!");
+            console.log("xhr")
+            console.log(xhr)
+            alert(xhr.responseText);
+            endingLoading();
         }
     });
 }
 
 
 var buildTree = function(data) {
-
     // 保存数据到localstorage
-    if(window.localStorage) {
-        console.log(data)
-        //console.log(data.id)
+    if(supportLocalStorage){
         if(data){
-            if(localStorage.getItem("currentScene")) {
-
-                localStorage.setItem("currentScene", data.id);
-                localStorage.setItem("sceneJson", JSON.stringify(data));
-            } else {
-                localStorage.setItem("currentScene", data.id);
-                localStorage.setItem("sceneJson", JSON.stringify(data));
-            }
-
+            localStorage.setItem("currentScene", data.id);
+            localStorage.setItem("sceneJson", JSON.stringify(data));
 
             $("header .title").text(data.name);
             $("header .title").attr("title", data.name);
         } else {
             return
         }
-
-
     }
-
-
-
 
     var eleNodes=[];
     //locations --> attached_links
     var initElementsObj = ["vehicles", "points", "paths", "locations", "location_types", "attached_links", "static_routes"];
     var initBlocksObj = ["blocks"];
 
-
     // init vehicle list
     if(data[initElementsObj[0]]) {
         initVehicleList(data[initElementsObj[0]])
     }
-
-
-
 
 
     //--------------------------elements-----------------------------------------
@@ -388,7 +497,7 @@ var buildTree = function(data) {
                 pointObj.icon = "./images/" + elem + ".18x18.png";
                 pointObj.elemId = attr.UUID;
                 eleNodes.push(pointObj);
-                fJosn[attr.UUID] = attr;
+                fJson[attr.UUID] = attr;
 
 
             })
@@ -419,7 +528,7 @@ var buildTree = function(data) {
                                 pointObj.elemId = attr.UUID
                                 pointObj.icon = "./images/"+elem+".18x18.png";
                                 eleNodes.push(pointObj);
-                                fJosn[attr.UUID] = attr;
+                                fJson[attr.UUID] = attr;
                         });
                     }
                 )
@@ -446,7 +555,7 @@ var buildTree = function(data) {
                     pointObj.icon = "./images/" + elem + ".18x18.png";
                     pointObj.elemId = attr.UUID;
                     eleNodes.push(pointObj);
-                    fJosn[attr.UUID] = attr;
+                    fJson[attr.UUID] = attr;
 
                 })
             }
@@ -454,64 +563,67 @@ var buildTree = function(data) {
         }
 
     }
-    console.log(fJosn)
-    console.log(eleNodes)
+    //console.log(fJson)
+    //console.log(eleNodes)
     $.fn.zTree.init($("#elements-tree"), setting, eleNodes);
 
-    var bloNodes =[
-        { id:1, pId:0, name:"Block-Block001", title:"vehicle",position:'1111111', open:false},
-        { id:22, pId:1, name:"Point-0001 --- Point-0002", t:"p12", icon:"../images/block.18x18.png"},
-        { id:12, pId:1, name:"Point-0002 --- Point-0003", t:"p34", icon:"../images/block.18x18.png"},
-        { id:13, pId:1, name:"Point-0004 --- Point-0005", t:"p45", icon:"../images/block.18x18.png"},
-        { id:14, pId:1, name:"Point-0004 --- Point-0005", t:"p45", icon:"../images/block.18x18.png"},
-        { id:15, pId:1, name:"Point-0004 --- Point-0005", t:"p45", icon:"../images/block.18x18.png"},
-        { id:16, pId:1, name:"Point-0004 --- Point-0005", t:"p45", icon:"../images/block.18x18.png"},
-        { id:17, pId:1, name:"Point-0004 --- Point-0005", t:"p45", icon:"../images/block.18x18.png"},
-        { id:18, pId:1, name:"Point-0004 --- Point-0005", t:"p45", icon:"../images/block.18x18.png"},
-        { id:19, pId:1, name:"Point-0004 --- Point-0005", t:"p45", icon:"../images/block.18x18.png"},
-        { id:20, pId:1, name:"Point-0004 --- Point-0005", t:"p45", icon:"../images/block.18x18.png"},
-        { id:21, pId:2, name:"Point-0006 --- Point-0007", t:"p67..", click:false, icon:"../images/block.18x18.png"},
-        { id:22, pId:2, name:"Point-0008 --- Point-0009", t:"989..", click:false, icon:"../images/block.18x18.png"},
-        { id:23, pId:2, name:"Point-0010 --- Point-0011", t:"p1011..", click:false, icon:"../images/block.18x18.png"},
-        { id:3, pId:0, name:"Block-Block003", t:"Path...", open:true, click:false },
-        { id:31, pId:3, name:"Point-0004 --- Point-0005", t:"path1", icon:"../images/block.18x18.png"},
-        { id:32, pId:3, name:"Point-0004 --- Point-0005", t:"path2", icon:"../images/block.18x18.png"},
-        { id:33, pId:3, name:"Point-0004 --- Point-0005", t:"path3", icon:"../images/block.18x18.png"},
-        { id:34, pId:3, name:"Point-0004 --- Point-0005", t:"path1", icon:"../images/block.18x18.png"},
-        { id:35, pId:3, name:"Point-0004 --- Point-0005", t:"path2", icon:"../images/block.18x18.png"},
-        { id:36, pId:3, name:"Point-0004 --- Point-0005", t:"path3", icon:"../images/block.18x18.png"},
-        { id:4, pId:0, name:"Block-Block003", t:"Path...", open:true, click:false },
-        { id:41, pId:4, name:"Point-0004 --- Point-0005", t:"path1", icon:"../images/block.18x18.png"},
-        { id:42, pId:4, name:"Point-0004 --- Point-0005", t:"path2", icon:"../images/block.18x18.png"},
-        { id:43, pId:4, name:"Point-0004 --- Point-0005", t:"path4", icon:"../images/block.18x18.png"},
-        { id:44, pId:4, name:"Point-0004 --- Point-0005", t:"path1", icon:"../images/block.18x18.png"},
-        { id:45, pId:4, name:"Point-0004 --- Point-0005", t:"path2", icon:"../images/block.18x18.png"},
-        { id:46, pId:4, name:"Point-0004 --- Point-0005", t:"path3", icon:"../images/block.18x18.png"}
-    ];
+    var bloNodes =[];
+    // blocks tree   diff with others
+    var elem = initBlocksObj[0];
+    var array = data[elem];
 
+    if(array) {
+        // iterator blocks elements
+        $.each(array, function (idx, attr) {
+
+            var rootBlocks = { id:1, pId:0, name:'Blocks', click:false, title:'Blocks',icon:"../images/block.18x18.png", open:false, elemId:''};
+            rootBlocks.id = idx + 1;
+            rootBlocks.elemId = attr.UUID;
+            bloNodes.push(rootBlocks);
+
+            if(attr.members && attr.members.length > 0) {
+                for(var index in attr.members) {
+                    var uuid = attr.members[index]["UUID"];
+                    var mem = fJson[uuid];
+                    var blockObj = {id: 0, pId: 0, name: "", title: "", click: true, icon: "", icon:"../images/block.18x18.png", open: false, elemId: 0};
+                    blockObj.id = rootBlocks.id + "" + mem.id;
+                    blockObj.pId = rootBlocks.id;
+                    blockObj.name = mem.name;
+                    blockObj.title = mem.name;
+                    blockObj.click = true;
+                    blockObj.icon = "./images/" + "block" + ".18x18.png";
+                    blockObj.elemId = mem.UUID;
+                    bloNodes.push(blockObj);
+                    fJson[attr.UUID] = mem;
+                }
+
+            }
+
+        })
+        }
     $.fn.zTree.init($("#blocks-tree"), setting, bloNodes);
 }
 
 
 var initTree = function(){
-    if(window.localStorage) {
+    if(supportLocalStorage()) {
         if(localStorage.getItem("currentScene")) {
             var data = localStorage.getItem("sceneJson");
             buildTree(JSON.parse(data));
-
+            localStorage.setItem("fSceneJson", fJson);
+            endingLoading();
         } else {
             return
         }
-    } else {
-        alert("this browser does not support localStorage!")
     }
 
 }
 
-
+//init vehicle list
 var initVehicleList = function(vehicleArray){
-    var vehicleListStr ="<div class='col-xs-6 col-sm-4 col-md-3 col-lg-2'>";
+    var vehicleListStr ="";
     for(var i = 0 ; i < vehicleArray.length ; i ++ ) {
+        vehicleListStr += "<div class='col-xs-6 col-sm-4 col-md-3 col-lg-2'>";
         vehicleListStr += "<div class='vehicle' vehicle-uuid='" + vehicleArray[i].UUID + "'>";
         vehicleListStr += "<div class='name'>" + vehicleArray[i].name + "</div>";
         var el = vehicleArray[i].energy_level;
@@ -537,8 +649,9 @@ var initVehicleList = function(vehicleArray){
         vehicleListStr += " <div class='battery'><img src='/images/battery/battery-"+el+".png' /></div>";
         vehicleListStr += "<div class='status'> running </div>";
         vehicleListStr += "</div>";
+        vehicleListStr += "</div>"
     }
-    vehicleListStr += "</div>"
+
     $(".left-container .bottom-panel .bottom-panel-list").html(vehicleListStr)
 
 }
@@ -546,10 +659,8 @@ var initVehicleList = function(vehicleArray){
 var pro, className = "dark";
 
 function beforeClick(treeId, treeNode, clickFlag) {
-
     className = (className === "dark" ? "" : "dark");
-    //howpro("[ " + getTime() + " beforeClick ]&nbsp;&nbsp;" + treeNode.name);
-    
+
     return (treeNode.click != false);
 }
 
@@ -564,7 +675,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 
 
     var uuid = treeNode.elemId;
-    var treeNodeInfo = fJosn[uuid];
+    var treeNodeInfo = fJson[uuid];
     var str = "";
 
      $.each(treeNodeInfo, function(key, value) {
@@ -581,8 +692,8 @@ function onClick(event, treeId, treeNode, clickFlag) {
             } else if(key == "properties") {
                 var proStr = "";
                 if(value && value.length > 0 ) {
-                    $.each(value, function(obj, id){
-                        proStr += obj.key+":"+obj.value;
+                    $.each(value, function(id, obj){
+                        proStr += obj.name+":"+obj.value + " ";
                     })
                     value = proStr;
                 } else {
@@ -603,12 +714,9 @@ function onClick(event, treeId, treeNode, clickFlag) {
                 } else if( isJson(value)) {
                     value = JSON.stringify(value)
                 }
-
             }
             str+="<tr><td>"+key+"</td><td>"+value+"</td></tr>";
-
         }
-
     });
 
      showAttr(str)
@@ -651,3 +759,33 @@ var showAttr = function(str){
      $(".properties .table-body tbody ").append(str);
 
 }
+
+var supportLocalStorage = function(){
+    if(window.localStorage) {
+        return true
+    } else {
+        alert("this browser does not support localStorage!")
+        return
+    }
+
+}
+
+
+function startLoading(){
+    var _PageHeight = document.documentElement.clientHeight;
+    var _PageWidth = document.documentElement.clientWidth;
+    //计算loading框距离顶部和左部的距离（loading框的宽度为215px，高度为61px）
+    var _LoadingTop = _PageHeight > 61 ? (_PageHeight - 61) / 2 : 0;
+    var _LoadingLeft = _PageWidth > 215 ? (_PageWidth - 215) / 2 : 0;
+    $("#loadingDiv").css("display", "block");
+    $("#loadingDiv").css("height", _PageHeight);
+    $("#loadingDiv > div").css("left", _LoadingLeft);
+    $("#loadingDiv > div").css("top", _LoadingTop);
+
+}
+
+function endingLoading(){
+    $("#loadingDiv").css("display", "none");
+}
+
+

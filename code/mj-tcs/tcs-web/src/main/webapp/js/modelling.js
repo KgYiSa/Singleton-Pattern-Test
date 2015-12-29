@@ -1,3 +1,10 @@
+// Dependencies:
+// 1) jquery-1.11.3.js
+// 2) bootstrap.min.js
+// 3) jquery.ztree.core-3.5.js
+// 4) mousewheel.js
+// 5) tcs-editor.js
+
 $(function(){
 
     initTree()
@@ -270,7 +277,7 @@ function onClick(event, treeId, treeNode, clickFlag) {
 
 var showAttr = function(str){
     // $("#table1 tr th:not(:nth-child(1))").remove();  
-    var cont = $(".properties .table-body tbody tr:not(:nth-child(1))");
+    var cont = $(".properties .table-body tbody tr:not(:nth-child(1)");
      //console.log(cont)
      
      cont.remove()

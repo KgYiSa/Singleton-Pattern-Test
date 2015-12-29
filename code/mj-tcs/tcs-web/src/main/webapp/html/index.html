@@ -25,7 +25,8 @@
                     setConnected(true);
                     console.log('Connected: ' + frame);
                 stompClient.subscribe('/topic/scene/1', function(greeting){
-                    showMessage(JSON.parse(greeting.body).content);
+//                    showMessage(JSON.parse(greeting.body).content);
+                    showMessage(greeting.body);
                 });
                 });
             }
@@ -85,6 +86,7 @@
                 <br>
                 <input type="button" value="Upload" onclick="uploadFile()" />
             </div>
+            <div style="width: 100%;height: 600px;" id="response"></div>
         </div>
 
     </body>

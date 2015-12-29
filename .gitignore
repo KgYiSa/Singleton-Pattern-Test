@@ -1,5 +1,6 @@
 # Created by https://www.gitignore.io/api/java,intellij,eclipse,webstorm
 
+
 !tcs-kernel-1.0.jar
 
 ### Java ###
@@ -37,6 +38,10 @@ hs_err_pid*
 # .idea/sqlDataSources.xml
 # .idea/dynamic.xml
 # .idea/uiDesigner.xml
+
+./code/mj-tcs/tcs-base/target/
+./code/mj-tcs/tcs-web/target/
+
 
 # Gradle:
 # .idea/gradle.xml
@@ -106,4 +111,3 @@ local.properties
 
 # TeXlipse plugin
 .texlipse
-/code/mj-tcs/tcs-web/target

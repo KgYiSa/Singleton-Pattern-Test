@@ -27,6 +27,8 @@
 $.TCSCanvas = function(container, config) {
 
     // Default configuration options
+
+
     var curConfig = {
         show_outside_canvas: true,
         selectNew: true,
@@ -67,19 +69,19 @@ $.TCSCanvas = function(container, config) {
             enabled: true,
             update: function(element) {
 
-                var w = two.width;
-                var h = two.height;
-
-                var range_hi = tcsCanvas.mouseCoordinatesToEditorCoordinates([w, h]);
-                var range_lo = tcsCanvas.mouseCoordinatesToEditorCoordinates([0, 0]);
-
-                //console.log("x: " + element.translation.x + ", y: " + element.translation.y);
-                element.translation.x += velocity_x * 1;
-                if (element.translation.x > range_hi[0] - 10) {
-                    velocity_x = -1;
-                } else if (element.translation.x < range_lo[0] + 10) {
-                    velocity_x = 1;
-                };
+                //var w = two.width;
+                //var h = two.height;
+                //
+                //var range_hi = tcsCanvas.mouseCoordinatesToEditorCoordinates([w, h]);
+                //var range_lo = tcsCanvas.mouseCoordinatesToEditorCoordinates([0, 0]);
+                //
+                ////console.log("x: " + element.translation.x + ", y: " + element.translation.y);
+                //element.translation.x += velocity_x * 1;
+                //if (element.translation.x > range_hi[0] - 10) {
+                //    velocity_x = -1;
+                //} else if (element.translation.x < range_lo[0] + 10) {
+                //    velocity_x = 1;
+                //};
 
                 //if ((element.translation.y < h && element.velocity.y < 0)
                 //    || (element.translation.y > two.height - h && element.velocity.y > 0)) {
@@ -88,8 +90,9 @@ $.TCSCanvas = function(container, config) {
             }
         },
         scale: {
-            enabled: false,
+            enabled: true,
             update: function(element) {
+                element.translation.set(axisOffset[0], axisOffset[1]);
                 element.scale = current_zoom;
             }
         }
@@ -319,6 +322,7 @@ $.TCSCanvas = function(container, config) {
         return mouse_coords;
     };
 
+    var axisOffset = tcsCanvas.editorCoordinatesToMouseCoordinates([0, 0]);
 /////////////////////////////////////////////////  TWO JS  /////////////////////////////////////////////////////////////
     twoAxisPos = tcsCanvas.editorCoordinatesToMouseCoordinates([0, 0]);
 
@@ -344,6 +348,31 @@ $.TCSCanvas = function(container, config) {
             autostart: true
         };
         two = new Two(params).appendTo(document.querySelector('#tcs-canvas'));
+
+        // add grid line
+        //var gridlist = [];
+        //var gridlength = 10;
+        //for(var i=0;i<200;i ++){
+        //    gridlist[i]=new Array;
+        //    for(var j=0;j<200;j++){
+        //        gridlist[i][j]='';
+        //    }
+        //}
+        //
+        //for(var i=0;i<200;i++){
+        //    var t=two.makeLine(gridlength*i, 0, gridlength*i, gridlength*200);
+        //    t.stroke = 'black';
+        //    t.opacity = 0.3;
+        //    lineh.push(t);
+        //    //twoElements.push(t);
+        //}
+        //for(var j=0;j<200;j++){
+        //    var t=two.makeLine( 0, gridlength*j, gridlength*200,gridlength*j);
+        //    t.stroke = 'black';
+        //    t.opacity = 0.3;
+        //    linew.push(t);
+        //    //twoElements.push(t);
+        //}
 
         // Setup the size
         _.extend(two.renderer.domElement.style, {
@@ -372,29 +401,29 @@ $.TCSCanvas = function(container, config) {
         two.bind('update', update);
 
         // TEST
-        var editor_in = [200, 100];
-        var canvas_coord = tcsCanvas.editorCoordinatesToMouseCoordinates(editor_in);
-        var text_styles={
-            size:10,
-            linewidth:1,
-            alignment:'center'
-        };
-        var _x = 0;//canvas_coord[0],
-            _y = 0;//canvas_coord[1];
-        var cross_x = two.makeLine(_x - 2000, _y, _x + 2000, _y);
-        cross_x.stroke = 'blue';
-        cross_x.linewidth = 1.0;
-        var cross_y = two.makeLine(_x, _y - 2000, _x, _y + 2000);
-        cross_y.stroke = 'blue';
-        cross_y.linewidth = 1.0;
-        var text = two.makeText("x: " + editor_in[0] + ", y: " + editor_in[1], _x+45, _y-10, text_styles);
-        var group = two.makeGroup(cross_x, cross_y, text);
-        //group.add(cross_x);
-        //group.add(cross_y);
-        //group.add(text);
-        group.translation.set(canvas_coord[0], canvas_coord[1]);
-
-        twoElements.push(group);
+        //var editor_in = [200, 100];
+        //var canvas_coord = tcsCanvas.editorCoordinatesToMouseCoordinates(editor_in);
+        //var text_styles={
+        //    size:10,
+        //    linewidth:1,
+        //    alignment:'center'
+        //};
+        //var _x = 0;//canvas_coord[0],
+        //    _y = 0;//canvas_coord[1];
+        //var cross_x = two.makeLine(_x - 2000, _y, _x + 2000, _y);
+        //cross_x.stroke = 'blue';
+        //cross_x.linewidth = 1.0;
+        //var cross_y = two.makeLine(_x, _y - 2000, _x, _y + 2000);
+        //cross_y.stroke = 'blue';
+        //cross_y.linewidth = 1.0;
+        //var text = two.makeText("x: " + editor_in[0] + ", y: " + editor_in[1], _x+45, _y-10, text_styles);
+        //var group = two.makeGroup(cross_x, cross_y, text);
+        ////group.add(cross_x);
+        ////group.add(cross_y);
+        ////group.add(text);
+        //group.translation.set(canvas_coord[0], canvas_coord[1]);
+        //
+        //twoElements.push(group);
     };
 
     function initializeAxes(x, y) {
@@ -408,7 +437,7 @@ $.TCSCanvas = function(container, config) {
         twoAxisY.linewidth = 0.7;
         twoAxisY.stroke = 'green';
 
-        two.update();
+        //two.update();
     };
 
     function update() {
@@ -448,31 +477,39 @@ $.TCSCanvas = function(container, config) {
     };
 
     tcsCanvas.buildSceneEditor = function(jsonObject) {
+        for(var elem in twoElements){
+            twoElements[elem].remove();
+        }
+        twoElements.splice(0,twoElements.length);
+
         if (!jsonObject) {
             return;
         }
 
         for(var i= 0; i<jsonObject.points.length; i++){
             var jsonPoint = jsonObject.points[i];
-            var point = new Point(jsonPoint.display_position_x,jsonPoint.display_position_y,jsonPoint.type,jsonPoint.name,jsonPoint.label_offset_x,jsonPoint.label_offset_y,two);
-            twoElements.push(point);
+            var pointPositionRelativeZero = tcsCanvas.editorCoordinatesToMouseCoordinates([jsonPoint.display_position_x, jsonPoint.display_position_y]);
+            var point = new Point(pointPositionRelativeZero[0],pointPositionRelativeZero[1],jsonPoint.type,jsonPoint.name,jsonPoint.label_offset_x,jsonPoint.label_offset_y,two);
+            twoElements.push(point.point);
         }
         for(var i= 0; i<jsonObject.locations.length; i++){
             var jsonLocation = jsonObject.locations[i];
-            var location = new Location(jsonLocation.display_position_x,jsonLocation.display_position_y,jsonLocation.type,jsonLocation.name,jsonLocation.label_offset_x,jsonLocation.label_offset_y,two);
+            var locationPositionRelativeZero = tcsCanvas.editorCoordinatesToMouseCoordinates([jsonLocation.display_position_x, jsonLocation.display_position_y]);
+            var location = new Location(locationPositionRelativeZero[0],locationPositionRelativeZero[1],jsonLocation.type,jsonLocation.name,jsonLocation.label_offset_x,jsonLocation.label_offset_y,two);
             for(var j=0; j<jsonLocation.attached_links.length; j++){
                 var startX,startY;
                 for(var k=0; k<jsonObject.points.length; k++){
                     if(jsonObject.points[k].UUID == jsonLocation.attached_links[j].point.UUID){
-                        startX = jsonObject.points[k].display_position_x;
-                        startY = jsonObject.points[k].display_position_y;
+                        var pointPositionRelativeZero = tcsCanvas.editorCoordinatesToMouseCoordinates([jsonObject.points[k].display_position_x, jsonObject.points[k].display_position_y]);
+                        startX = pointPositionRelativeZero[0];
+                        startY = pointPositionRelativeZero[1];
                         break;
                     }
                 }
-                var link = new Link(startX,startY,jsonLocation.display_position_x,jsonLocation.display_position_y,two);
-                twoElements.push(link);
+                var link = new Link(startX,startY,locationPositionRelativeZero[0],locationPositionRelativeZero[1],two);
+                twoElements.push(link.link);
             }
-            twoElements.push(location);
+            twoElements.push(location.location);
         }
         for(var i= 0; i<jsonObject.paths.length; i++){
             var jsonPath = jsonObject.paths[i];
@@ -480,13 +517,24 @@ $.TCSCanvas = function(container, config) {
             var sourceUUID = jsonPath.source_point.UUID,
                 destinationUUID = jsonPath.destination_point.UUID;
             for(var j=0; j<jsonObject.points.length; j++){
-                startX = jsonObject.points[j].UUID == sourceUUID?jsonObject.points[j].display_position_x : startX ;
-                startY = jsonObject.points[j].UUID == sourceUUID?jsonObject.points[j].display_position_y : startY ;
-                endX = jsonObject.points[j].UUID == destinationUUID?jsonObject.points[j].display_position_x : endX ;
-                endY = jsonObject.points[j].UUID == destinationUUID?jsonObject.points[j].display_position_y : endY ;
+                startX = jsonObject.points[j].UUID == sourceUUID?tcsCanvas.editorCoordinatesToMouseCoordinates([jsonObject.points[j].display_position_x, jsonObject.points[j].display_position_y])[0] : startX ;
+                startY = jsonObject.points[j].UUID == sourceUUID?tcsCanvas.editorCoordinatesToMouseCoordinates([jsonObject.points[j].display_position_x, jsonObject.points[j].display_position_y])[1] : startY ;
+                endX = jsonObject.points[j].UUID == destinationUUID?tcsCanvas.editorCoordinatesToMouseCoordinates([jsonObject.points[j].display_position_x, jsonObject.points[j].display_position_y])[0] : endX ;
+                endY = jsonObject.points[j].UUID == destinationUUID?tcsCanvas.editorCoordinatesToMouseCoordinates([jsonObject.points[j].display_position_x, jsonObject.points[j].display_position_y])[1] : endY ;
             }
-            var path = new Path(startX,startY,endX,endY,two);
-            twoElements.push(path);
+            var path = new Path(startX,startY,endX,endY,jsonPath.max_velocity,jsonPath.max_reverse_velocity,two);
+            twoElements.push(path.path);
+        }
+        for(var i= 0; i<jsonObject.vehicles.length; i++){
+            var jsonVehicle = jsonObject.vehicles[i];
+            var pointX,pointY;
+            var preciseUUID = jsonVehicle.initial_point;
+            for(var j=0; j<jsonObject.points.length; j++){
+                pointX = jsonObject.points[j].UUID == preciseUUID?tcsCanvas.editorCoordinatesToMouseCoordinates([jsonObject.points[j].display_position_x, jsonObject.points[j].display_position_y])[0] : pointX ;
+                pointY = jsonObject.points[j].UUID == preciseUUID?tcsCanvas.editorCoordinatesToMouseCoordinates([jsonObject.points[j].display_position_x, jsonObject.points[j].display_position_y])[1] : pointY ;
+            }
+            var vehicle = new Vehicle(pointX,pointY,jsonVehicle.name,two);
+            twoElements.push(vehicle.vehicle);
         }
     };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -513,7 +561,6 @@ $.TCSCanvas = function(container, config) {
     (function () {
         initializeScene();
 
-        var axisOffset = tcsCanvas.editorCoordinatesToMouseCoordinates([0, 0]);
         initializeAxes(axisOffset[0], axisOffset[1]);
 
     }());

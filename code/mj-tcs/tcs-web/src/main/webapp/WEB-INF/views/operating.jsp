@@ -495,6 +495,7 @@
 	<script type="text/javascript" src="../plugin/draw2d/two_dev.js"></script>
 	<script type="text/javascript" src="../js/init.js"></script>
 	<script type="text/javascript" src="../js/mousewheel.js"></script>
+	<script type="text/javascript" src="../js/mjtcs-elem.js"></script>
 	<script type="text/javascript" src="../js/mjtcs-elem-point.js"></script>
 	<script type="text/javascript" src="../js/mjtcs-elem-path.js"></script>
 	<script type="text/javascript" src="../js/mjtcs-elem-location.js"></script>

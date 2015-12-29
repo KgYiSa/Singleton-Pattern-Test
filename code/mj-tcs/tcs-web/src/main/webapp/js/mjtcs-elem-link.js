@@ -1,53 +1,48 @@
-/**
- * Created by Administrator on 2015/12/16.
- */
-var LOCATION_RADIUS = 15,
-    POINT_RADIUS = 5 ;
-function Link(x1,y1,x2,y2,two){
-    x1 = POINT_RADIUS * 2 * (parseInt((x1 - boardOffsetX) / (POINT_RADIUS*2)) + 0.5);
-    y1 = POINT_RADIUS * 2 * (parseInt((y1 - boardOffsetX) / (POINT_RADIUS*2)) + 0.5);
-    x2 = POINT_RADIUS * 2 * (parseInt((x2 - boardOffsetX) / (POINT_RADIUS*2)) + 0.5);
-    y2 = POINT_RADIUS * 2 * (parseInt((y2 - boardOffsetX) / (POINT_RADIUS*2)) + 0.5);
-    var atan2Angle = angle({x:x1,y:y1},{x:x2,y:y2});
-    x1 = x1 + POINT_RADIUS*Math.cos(atan2Angle);
-    y1 = y1 + POINT_RADIUS*Math.sin(atan2Angle);
-    x2 = x2 - LOCATION_RADIUS*Math.cos(atan2Angle);
-    y2 = y2 - LOCATION_RADIUS*Math.sin(atan2Angle);
+// Dependencies:
+// 1) jquery.js
+// 2) two.js
+// 3)mjtcs-elem.js
 
-    var hypotenuse = Math.sqrt(Math.pow(x2-x1,2) + Math.pow(y2-y1,2));
+Link = function (x1,y1,x2,y2,two) {
+    var elemLink = this;
+    Elem.call(elemLink);
 
-    for(var i=0; i<=(hypotenuse-1)/POINT_RADIUS; i++){
-        var xx1 = x1 + i*POINT_RADIUS*Math.cos(atan2Angle);
-        var yy1 = y1 + i*POINT_RADIUS*Math.sin(atan2Angle);
-        var xx2 = x1 + (i+1)*POINT_RADIUS*Math.cos(atan2Angle);
-        var yy2 = y1 + (i+1)*POINT_RADIUS*Math.sin(atan2Angle);
+    var XY = elemLink.initXY(x1,y1,x2,y2);
 
-        var link = two.makePath(xx1,yy1,xx2,yy2,true);
-        link.linewidth = 1;
-        link.opacity = (i%2 ==0?0:1);
+
+    var atan2Angle = angle({x: XY.x1, y: XY.y1}, {x: XY.x2, y: XY.y2});
+    //两端减去POINT和LOCATION半径后的坐标
+    x1 = XY.x1 + elemLink.POINT_RADIUS * Math.cos(atan2Angle);
+    y1 = XY.y1 + elemLink.POINT_RADIUS * Math.sin(atan2Angle);
+    x2 = XY.x2 - elemLink.LOCATION_RADIUS * Math.cos(atan2Angle);
+    y2 = XY.y2 - elemLink.LOCATION_RADIUS * Math.sin(atan2Angle);
+
+    //斜长
+    var hypotenuse = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+
+    var link = two.makeGroup();
+    //以POINT_RADIUS长度划线段
+    for (var i = 0; i <= (hypotenuse - 2) / elemLink.POINT_RADIUS; i+=2) {
+        var xx1 = x1 + i * elemLink.POINT_RADIUS * Math.cos(atan2Angle);
+        var yy1 = y1 + i * elemLink.POINT_RADIUS * Math.sin(atan2Angle);
+        var xx2 = x1 + (i + 1) * elemLink.POINT_RADIUS * Math.cos(atan2Angle);
+        var yy2 = y1 + (i + 1) * elemLink.POINT_RADIUS * Math.sin(atan2Angle);
+
+        var dotted = two.makePath(xx1, yy1, xx2, yy2, true);
+        dotted.linewidth = 1;
+        //dotted.opacity = (i % 2 == 0 ? 0 : 1);
+        link.add(dotted);
+    }
+    elemLink.link = link;
+
+    elemLink.two = two;
+
+    //two.update();
+
+    function angle(start, end) {
+        var diff_x = end.x - start.x,
+            diff_y = end.y - start.y;
+        return Math.atan2(diff_y, diff_x);
     }
 
-
-    this.two = two;
-
-    two.update();
-}
-
-Link.prototype = {
-    setPositiveTriangle: function(start,end) {
-        this.positiveTriangle.translation.set(end.x,end.y);
-        this.positiveTriangle.rotation = angle(start,end) + Math.PI/2;
-    },
-    setNegativeTriangle: function (start,end) {
-        this.negativeTriangle.translation.set(start.x,start.y);
-        this.negativeTriangle,rotation = angle(start,end) - Math.PI/2;
-    }
-}
-
-
-
-function angle(start,end){
-    var diff_x = end.x - start.x,
-        diff_y = end.y - start.y;
-    return Math.atan2(diff_y,diff_x);
-}
+};

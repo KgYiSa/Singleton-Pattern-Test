@@ -304,7 +304,7 @@
 
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-					<button type="button" class="btn btn-primary submmit">确定</button>
+					<button type="button" class="btn btn-primary submit">确定</button>
 				</div>
 			</div>
 		</div>

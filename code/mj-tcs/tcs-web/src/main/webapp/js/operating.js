@@ -159,7 +159,7 @@ $(function(){
 
     });
 
-    $("#sceneselect .modal-footer .submmit").click(function(){
+    $("#sceneselect .modal-footer .submit").click(function(){
         var selectRadio = $("#sceneselect .modal-body tbody input[name=selectId]:checked");
         if(selectRadio.val() == undefined) {
             if (confirm("您还未选择任何场景，确定继续？")) {

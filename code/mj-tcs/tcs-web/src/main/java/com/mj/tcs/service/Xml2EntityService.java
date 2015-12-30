@@ -3,11 +3,9 @@ package com.mj.tcs.service;
 import com.mj.tcs.api.v1.dto.*;
 import com.mj.tcs.api.v1.dto.base.EntityAuditorDto;
 import com.mj.tcs.api.v1.dto.base.TripleDto;
-import com.mj.tcs.data.model.StaticRoute;
-import com.mj.tcs.data.model.Vehicle;
-import com.mj.tcs.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.mj.tcs.exception.TCSServerRuntimeException;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.Map;
 
@@ -66,46 +64,35 @@ public class Xml2EntityService {
     public PointDto Map2PointDto(Map<String,String> map){
         PointDto pointDto = new PointDto();
         TripleDto triple = new TripleDto();
-        triple.setX((int)Double.parseDouble(map.get("modelXPosition")));
-        triple.setY((int)Double.parseDouble(map.get("modelYPosition")));
+        triple.setX(getIntegerFromMap("modelXPosition",map));//((int)Double.parseDouble(map.get("modelXPosition")));
+        triple.setY(getIntegerFromMap("modelYPosition",map));//((int)Double.parseDouble(map.get("modelYPosition")));
         triple.setZ((int)Double.parseDouble("0"));
-        pointDto.setName(map.get("Name"));
-        pointDto.setDisplayPositionX(Long.parseLong(map.get("POSITION_X")));
-        pointDto.setDisplayPositionY(Long.parseLong(map.get("POSITION_Y")));
-        pointDto.setLabelOffsetX(Long.parseLong(map.get("LABEL_OFFSET_X").length()<1?"0":map.get("LABEL_OFFSET_X")));
-        pointDto.setLabelOffsetY(Long.parseLong(map.get("LABEL_OFFSET_Y").length()<1?"0":map.get("LABEL_OFFSET_X")));
-        pointDto.setVehicleOrientationAngle(Double.parseDouble(map.get("vehicleOrientationAngle").equals("NaN")?"0":map.get("vehicleOrientationAngle")));
+        pointDto.setName(getStringFromMap("Name",map));//(map.get("Name"));
+        pointDto.setDisplayPositionX(getLongFromMap("POSITION_X",map));//(Long.parseLong(map.get("POSITION_X")));
+        pointDto.setDisplayPositionY(getLongFromMap("POSITION_Y",map));//(Long.parseLong(map.get("POSITION_Y")));
+        pointDto.setLabelOffsetX(getLongFromMap("LABEL_OFFSET_X",map));//(Long.parseLong(map.get("LABEL_OFFSET_X").length()<1?"0":map.get("LABEL_OFFSET_X")));
+        pointDto.setLabelOffsetY(getLongFromMap("LABEL_OFFSET_Y",map));//(Long.parseLong(map.get("LABEL_OFFSET_Y").length()<1?"0":map.get("LABEL_OFFSET_X")));
+        pointDto.setVehicleOrientationAngle(getDoubleFromMap("vehicleOrientationAngle",map));//(Double.parseDouble(map.get("vehicleOrientationAngle").equals("NaN")?"0":map.get("vehicleOrientationAngle")));
         pointDto.setPosition(triple);
-        pointDto.setType(PointDto.Type.valueOf(map.get("Type")+"_POSITION"));
+        pointDto.setType(getTypeFromMap("Type",map));//(PointDto.Type.valueOf(map.get("Type")+"_POSITION"));
         return pointDto;
     }
 
     /**
      *
-     CONN_TYPE	DIRECT
-     endComponent	Point-0052
-     startComponent	Point-0043
-     Name	Point-0043 --- Point-0052
-     Miscellaneous
-     maxVelocity	1000.0
-     cost	1
-     maxReverseVelocity 0.0
-     length	8443.0
-     locked	false
-     CONTROL_POINTS
      * @param map
      * @return
      */
     public PathDto Map2PathDto(Map<String,String> map){
         PathDto pathDto = new PathDto();
-        pathDto.setName(map.get("Name"));
-        pathDto.setMaxVelocity(Integer.parseInt(map.get("maxVelocity").split("\\.")[0]));
-        pathDto.setRoutingCost((long)Double.parseDouble(map.get("cost")));
-        pathDto.setSourcePointDto(sceneDto.getPointDtoByName(map.get("startComponent")));
-        pathDto.setDestinationPointDto(sceneDto.getPointDtoByName(map.get("endComponent")));
-        pathDto.setMaxReverseVelocity(Integer.parseInt(map.get("maxReverseVelocity").split("\\.")[0]));
-        pathDto.setLength((long)Double.parseDouble(map.get("length")));
-        pathDto.setLocked(map.get("locked").equals("false"));
+        pathDto.setName(getStringFromMap("Name",map));
+        pathDto.setMaxVelocity(getIntegerFromMap("maxVelocity",map));//(Integer.parseInt(map.get("maxVelocity").split("\\.")[0]));
+        pathDto.setRoutingCost(getLongFromMap("cost",map));//((long)Double.parseDouble(map.get("cost")));
+        pathDto.setSourcePointDto(getPointDtoFromMap("startComponent",map));//(sceneDto.getPointDtoByName(map.get("startComponent")));
+        pathDto.setDestinationPointDto(getPointDtoFromMap("endComponent",map));//(sceneDto.getPointDtoByName(map.get("endComponent")));
+        pathDto.setMaxReverseVelocity(getIntegerFromMap("maxReverseVelocity",map));//(Integer.parseInt(map.get("maxReverseVelocity").split("\\.")[0]));
+        pathDto.setLength(getLongFromMap("length",map));//((long)Double.parseDouble(map.get("length")));
+        pathDto.setLocked(getBooleanFromMap("locked",map));//(map.get("locked").equals("false"));
         return pathDto;
     }
 
@@ -120,11 +107,11 @@ public class Xml2EntityService {
      * @return
      */
     public LocationLinkDto Map2LocationLinkDto(Map<String,String> map){
-        LocationDto locationDto = sceneDto.getLocationDtoByName(map.get("endComponent"));
+        LocationDto locationDto = getLocationDtoFromMap("endComponent",map);//sceneDto.getLocationDtoByName(map.get("endComponent"));
         LocationLinkDto locationLinkDto = new LocationLinkDto();
-        locationLinkDto.setName(map.get("Name"));
-        locationLinkDto.setPointDto(sceneDto.getPointDtoByName(map.get("startComponent")));
-        locationLinkDto.setLocationDto(sceneDto.getLocationDtoByName(map.get("endComponent")));
+        locationLinkDto.setName(getStringFromMap("Name",map));//(map.get("Name"));
+        locationLinkDto.setPointDto(getPointDtoFromMap("startComponent",map));//(sceneDto.getPointDtoByName(map.get("startComponent")));
+        locationLinkDto.setLocationDto(getLocationDtoFromMap("endComponent",map));//(sceneDto.getLocationDtoByName(map.get("endComponent")));
         locationLinkDto.setAllowedOperations(null);
         locationDto.attachLink(locationLinkDto);
         return locationLinkDto;
@@ -137,37 +124,29 @@ public class Xml2EntityService {
      */
     public LocationTypeDto Map2LocationTypeDto(Map<String,String> map){
         LocationTypeDto locationTypeDto = new LocationTypeDto();
-        locationTypeDto.setName(map.get("Name"));
+        locationTypeDto.setName(getStringFromMap("Name",map));//(map.get("Name"));
         locationTypeDto.setAllowedOperations(null);
         return locationTypeDto;
     }
 
     /**
      *
-     modelXPosition	-28000.0
-     Name	Goods in north 02
-     POSITION_Y	6000
-     *LABEL_OFFSET_X	-10
-     *LABEL_OFFSET_Y	-20
-     modelYPosition	6000.0
-     *Type	Transfer station
-     POSITION_X	-28000
      * @param map
      * @return
      */
     public LocationDto Map2LocationDto(Map<String,String> map){
         LocationDto locationDto = new LocationDto();
         TripleDto triple = new TripleDto();
-        triple.setX((int)Double.parseDouble(map.get("modelXPosition")));
-        triple.setY((int)Double.parseDouble(map.get("modelYPosition")));
+        triple.setX(getIntegerFromMap("modelXPosition",map));//((int)Double.parseDouble(map.get("modelXPosition")));
+        triple.setY(getIntegerFromMap("modelXPosition",map));//((int)Double.parseDouble(map.get("modelYPosition")));
         triple.setZ((int)Double.parseDouble("0"));
-        locationDto.setName(map.get("Name"));
+        locationDto.setName(getStringFromMap("Name",map));//(map.get("Name"));
         locationDto.setPosition(triple);
-        locationDto.setLabelOffsetX(Long.parseLong(map.get("LABEL_OFFSET_X")));
-        locationDto.setLabelOffsetY(Long.parseLong(map.get("LABEL_OFFSET_Y")));
-        locationDto.setLocationTypeDto(sceneDto.getLocationTypeDtoByName(map.get("Type")));//Type
-        locationDto.setDisplayPositionX(Long.parseLong(map.get("POSITION_X")));
-        locationDto.setDisplayPositionY(Long.parseLong(map.get("POSITION_Y")));
+        locationDto.setLabelOffsetX(getLongFromMap("LABEL_OFFSET_X",map));//(Long.parseLong(map.get("LABEL_OFFSET_X")));
+        locationDto.setLabelOffsetY(getLongFromMap("LABEL_OFFSET_Y",map));//(Long.parseLong(map.get("LABEL_OFFSET_Y")));
+        locationDto.setLocationTypeDto(getLocationTypeDtoFromMap("Type",map));//(sceneDto.getLocationTypeDtoByName(map.get("Type")));//Type
+        locationDto.setDisplayPositionX(getLongFromMap("POSITION_X",map));//(Long.parseLong(map.get("POSITION_X")));
+        locationDto.setDisplayPositionY(getLongFromMap("POSITION_X",map));//(Long.parseLong(map.get("POSITION_Y")));
         locationDto.setProperties(null);
 
         return locationDto;
@@ -176,7 +155,7 @@ public class Xml2EntityService {
     public BlockDto Map2BlockDto(Map<String,String> map){
         BlockDto locationDto = new BlockDto();
 
-        locationDto.setName(map.get("Name"));
+        locationDto.setName(getStringFromMap("Name",map));//(map.get("Name"));
 
         locationDto.setProperties(null);
         return locationDto;
@@ -189,13 +168,119 @@ public class Xml2EntityService {
      */
     public VehicleDto Map2VehicleDto(Map<String,String> map){
         VehicleDto vehicleDto = new VehicleDto();
-        vehicleDto.setName(map.get("Name"));
+        vehicleDto.setName(getStringFromMap("Name",map));//(map.get("Name"));
         vehicleDto.setInitialPoint(null);
-        vehicleDto.setEnergyLevel(Double.parseDouble(map.get("EnergyLevel")));
-        vehicleDto.setEnergyLevelCritical(Integer.parseInt(map.get("EnergyLevelCritical").split("\\.")[0]));
-        vehicleDto.setOrientationAngle(map.get("OrientationAngle").equals("NaN")?0:Double.parseDouble(map.get("OrientationAngle")));
-        vehicleDto.setEnergyLevelGood(Integer.parseInt(map.get("EnergyLevelGood").split("\\.")[0]));
-        vehicleDto.setLength(Long.parseLong(map.get("Length").split("\\.")[0]));
+        vehicleDto.setEnergyLevel(getDoubleFromMap("EnergyLevel",map));//(Double.parseDouble(map.get("EnergyLevel")));
+        vehicleDto.setEnergyLevelCritical(getIntegerFromMap("EnergyLevelCritical",map));//(Integer.parseInt(map.get("EnergyLevelCritical").split("\\.")[0]));
+        vehicleDto.setOrientationAngle(getDoubleFromMap("OrientationAngle",map));//(map.get("OrientationAngle").equals("NaN")?0:Double.parseDouble(map.get("OrientationAngle")));
+        vehicleDto.setEnergyLevelGood(getIntegerFromMap("EnergyLevelGood",map));//(Integer.parseInt(map.get("EnergyLevelGood").split("\\.")[0]));
+        vehicleDto.setLength(getLongFromMap("Length",map));//(Long.parseLong(map.get("Length").split("\\.")[0]));
         return vehicleDto;
+    }
+
+    private String getStringFromMap(String key,Map map){
+        if(StringUtils.isEmpty(key)){
+            throw new TCSServerRuntimeException("String is Empty :" + key + ",can not get value from XML file.");
+        }
+        if(map == null ){
+            throw new TCSServerRuntimeException("Map is Empty :" + map + ",can not get value from Null Object.");
+        }
+        String value =  (String) map.get(key);
+
+        if(StringUtils.isEmpty(value)){
+            throw new TCSServerRuntimeException("String is Empty :" + key + ",can not parse from Empty String.");
+        }
+        return value;
+    }
+
+    private Integer getIntegerFromMap(String key,Map map){
+        String value = getStringFromMap(key,map);
+        Integer intValue = 0;
+
+        try {
+            intValue = Integer.parseInt(value.split("\\.")[0]);
+        }catch (Exception e){
+            throw new TCSServerRuntimeException("String is  :" + key + ",can not parseInt from this String." + e.getMessage());
+        }
+        return intValue;
+    }
+
+    private Double getDoubleFromMap(String key,Map map){
+        String value = getStringFromMap(key,map);
+        Double doubleValue = 0.0;
+        if(!"NaN".equals(value)){
+            try {
+                doubleValue = Double.parseDouble(value);
+            }catch (Exception e){
+                throw new TCSServerRuntimeException("String is  :" + key + ",can not parseDouble from this String." + e.getMessage());
+            }
+        }
+        return doubleValue;
+    }
+
+    private Long getLongFromMap(String key,Map map){
+        String value = getStringFromMap(key,map);
+        Long longValue = 0l;
+        try {
+            longValue = Long.parseLong(value.split("\\.")[0]);
+        }catch (Exception e){
+            throw new TCSServerRuntimeException("String is  :" + key + ",can not parseLong from this String." + e.getMessage());
+        }
+        return longValue;
+    }
+
+    private Boolean getBooleanFromMap(String key,Map map){
+        String value = getStringFromMap(key,map);
+        Boolean booleanValue = false;
+        try {
+            booleanValue = value.equals("false");
+        }catch (Exception e){
+            throw new TCSServerRuntimeException("String is  :" + key + ",can not parseBoolean from this String." + e.getMessage());
+        }
+        return booleanValue;
+    }
+
+    private PointDto.Type getTypeFromMap(String key,Map map){
+        String value = getStringFromMap(key,map);
+        PointDto.Type type = null;
+        try {
+            type = PointDto.Type.valueOf(value+"_POSITION");
+        }catch (Exception e){
+            throw new TCSServerRuntimeException("String is  :" + key + ",can not parsePointDto.Type from this String." + e.getMessage());
+        }
+        return type;
+    }
+
+    private PointDto getPointDtoFromMap(String key,Map map){
+        String value = getStringFromMap(key,map);
+        PointDto pointDto = null;
+        try {
+            pointDto = sceneDto.getPointDtoByName(value);
+        }catch (Exception e){
+            throw new TCSServerRuntimeException("String is  :" + key + ",can not parsePointDto from this String." + e.getMessage());
+        }
+        return pointDto;
+    }
+
+    private LocationDto getLocationDtoFromMap(String key,Map map){
+        String value = getStringFromMap(key,map);
+        LocationDto locationDto = null;
+        try {
+            locationDto = sceneDto.getLocationDtoByName(value);
+        }catch (Exception e){
+            throw new TCSServerRuntimeException("String is  :" + key + ",can not parseLocationDto from this String." + e.getMessage());
+        }
+        return locationDto;
+    }
+
+    private LocationTypeDto getLocationTypeDtoFromMap(String key,Map map){
+        String value = getStringFromMap(key,map);
+        LocationTypeDto locationTypeDto = null;
+        try {
+            locationTypeDto = sceneDto.getLocationTypeDtoByName(value);
+        }catch (Exception e){
+            throw new TCSServerRuntimeException("String is  :" + key + ",can not parseLocationTypeDto from this String." + e.getMessage());
+        }
+        return locationTypeDto;
     }
 }

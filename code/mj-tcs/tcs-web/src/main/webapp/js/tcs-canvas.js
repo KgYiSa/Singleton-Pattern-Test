@@ -475,7 +475,7 @@ $.TCSCanvas = function(container, config) {
         two.width = two.renderer.width;
         two.height = two.renderer.height;
     };
-    var uuidToElemMap = new Map();
+    var uuidToElemMap = new Map();//根据UUID存放对应point, location, vehicle
     tcsCanvas.buildSceneEditor = function(jsonObject) {
 
         tcsCanvas.pause();
@@ -535,13 +535,40 @@ $.TCSCanvas = function(container, config) {
             if(jsonVehicle.initial_point == "" || jsonVehicle.initial_point == null)continue;
             var pointX = uuidToElemMap.get(jsonVehicle.initial_point).display_position_x;
             var pointY = uuidToElemMap.get(jsonVehicle.initial_point).display_position_y;
-            var vehicle = new Vehicle(pointX,pointY,jsonVehicle.name,two);
+            var vehicle = new Vehicle(pointX,pointY,jsonVehicle.name,jsonVehicle.initial_point,two);
             twoElements.push(vehicle.vehicle);
             //uuidToElemMap[jsonVehicle.UUID] = vehicle;
             uuidToElemMap.set(jsonVehicle.UUID,vehicle);
         }
 
         tcsCanvas.play();
+
+    };
+
+    tcsCanvas.parseVehiclePosition = function(jsonStatusObject){
+
+        var currentVehicle = uuidToElemMap.get(jsonStatusObject.UUID);
+
+        var initialPointUUID;
+        var currentPointUUID;
+        var precisePointUUID = jsonStatusObject.precise_position;
+
+        initialPointUUID = currentVehicle.initialPointUUID;
+        currentPointUUID = currentVehicle.currentPointUUID;
+
+        var initialPoint,currentPoint,precisePoint;
+
+        initialPoint = uuidToElemMap.get(initialPointUUID);
+        currentPoint = uuidToElemMap.get(currentPointUUID);
+        precisePoint = uuidToElemMap.get(precisePointUUID);
+
+        currentVehicle.setVehicleDirection(currentPoint.pointOrigin.translation,precisePoint.pointOrigin.translation);
+
+        //相对于初始点的translation
+        var x,y;
+        x = precisePoint.pointOrigin.translation.x-initialPoint.pointOrigin.translation.x;
+        y = precisePoint.pointOrigin.translation.y-initialPoint.pointOrigin.translation.y;
+        currentVehicle.setVehiclePosition(x,y,precisePointUUID);
 
     };
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

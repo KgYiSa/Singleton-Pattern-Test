@@ -3,7 +3,7 @@
 // 2) two.js
 // 3)mjtcs-elem.js
 
-Vehicle = function(x,y,name,two){
+Vehicle = function(x,y,name,initialPointUUID,two){
     var elemVehicle = this;
     Elem.call(elemVehicle);
 
@@ -33,6 +33,22 @@ Vehicle = function(x,y,name,two){
 
     elemVehicle.vehicle = two.makeGroup(elemVehicle.vehicleOrigin,elemVehicle.text);
 
-    elemVehicle.two = two;
+    elemVehicle.initialPointUUID = initialPointUUID;
+    elemVehicle.currentPointUUID = initialPointUUID;
+
+    elemVehicle.setVehiclePosition = function(x,y,currentPointUUID){
+        elemVehicle.vehicle.translation.set(x,y);
+        elemVehicle.currentPointUUID = currentPointUUID;
+    };
+
+    elemVehicle.setVehicleDirection = function(start,end){
+        elemVehicle.vehicleOrigin.rotation = angle(start,end);
+    };
+
+    var angle = function(start,end){
+        var diff_x = end.x - start.x,
+            diff_y = end.y - start.y;
+        return Math.atan2(diff_y,diff_x);
+    };
 
 };

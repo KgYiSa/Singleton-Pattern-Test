@@ -4,6 +4,10 @@ import com.mj.tcs.LocalKernel;
 import com.mj.tcs.api.v1.dto.*;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.api.v1.dto.converter.SceneDtoConverter;
+import com.mj.tcs.api.v1.sock.SceneStatusSockController;
+import com.mj.tcs.api.v1.sock.TransportOrderStatusSockController;
+import com.mj.tcs.api.v1.sock.VehicleStatusSockController;
+import com.mj.tcs.config.AppContext;
 import com.mj.tcs.data.base.TCSObjectReference;
 import com.mj.tcs.data.model.Location;
 import com.mj.tcs.data.model.Point;
@@ -12,6 +16,7 @@ import com.mj.tcs.data.order.DriveOrder;
 import com.mj.tcs.data.order.TransportOrder;
 import com.mj.tcs.drivers.BasicCommunicationAdapter;
 import com.mj.tcs.drivers.CommunicationAdapterFactory;
+import com.mj.tcs.drivers.SimCommunicationAdapter;
 import com.mj.tcs.eventsystem.EventHub;
 import com.mj.tcs.eventsystem.SynchronousEventHub;
 import com.mj.tcs.exception.ObjectUnknownException;
@@ -231,6 +236,10 @@ public class ServiceGateway {
     }
 
     ////////////////////////////// OPERATTING /////////////////////////////////
+    public LocalKernel getKernel(long sceneId) {
+        return kernelRuntimeMapping.get(sceneId);
+    }
+
     public boolean loadSceneDto(long sceneId) {
         SceneDto sceneDto;
         synchronized (sceneDtoService) {
@@ -251,28 +260,43 @@ public class ServiceGateway {
         // TODO:
         Scene scene = sceneDtoConverter.convertToEntity(sceneDto);
         EventHub<TCSEvent> eventHub = new SynchronousEventHub<>();
-        KernelEventHandler eventHandler = new KernelEventHandler();
+        final KernelEventHandler eventHandler = new KernelEventHandler(idKey);
+
+        // TODO: Register Controller as listeners
+        Map<String, SceneStatusSockController> controllerMap1 = AppContext.getContext().getBeansOfType(SceneStatusSockController.class);
+        controllerMap1.values().forEach(eventHandler::register);
+        Map<String, TransportOrderStatusSockController> controllerMap2 = AppContext.getContext().getBeansOfType(TransportOrderStatusSockController.class);
+        controllerMap2.values().forEach(eventHandler::register);
+        Map<String, VehicleStatusSockController> controllerMap3 = AppContext.getContext().getBeansOfType(VehicleStatusSockController.class);
+        controllerMap3.values().forEach(eventHandler::register);
+
         eventHub.addEventListener(eventHandler, eventHandler);
         LocalKernel kernel = new StandardKernel(eventHub, scene);
         try {
             kernel.initialize();
-            final Vehicle v = (Vehicle) kernel.getTCSObjects(Vehicle.class).toArray()[0];
-            final Point p = ((Point) kernel.getTCSObjects(Point.class).toArray()[0]);
-            kernel.setVehiclePosition(v.getReference(),
-                    p.getReference());
+            // vehicle & setVehiclePosition
+            final Vehicle vehicle = (Vehicle) kernel.getTCSObjects(Vehicle.class).toArray()[0];
+            final Point point = ((Point) kernel.getTCSObjects(Point.class).toArray()[0]);
+
             // adapter
-            CommunicationAdapterFactory adapterFactory = kernel.getCommAdapterRegistry().findFactoriesFor(v).get(0);
-            BasicCommunicationAdapter adapter = adapterFactory.getAdapterFor(v);
-            adapter.enable();
-            kernel.getVehicleManagerPool().getVehicleManager(v.getUUID(), adapter);
+            CommunicationAdapterFactory adapterFactory = kernel.getCommAdapterRegistry().findFactoriesFor(vehicle).get(0);
+            kernel.attachAdapterToVehicle(vehicle.getReference(), adapterFactory);
+
+            BasicCommunicationAdapter adapter = kernel.findAdapterFor(vehicle.getReference());
+            adapter.enable();// enable
+            if (adapter instanceof SimCommunicationAdapter) {
+                ((SimCommunicationAdapter) adapter).initVehiclePosition(point.getUUID());
+            }
+
             // transport order
             List<DriveOrder.Destination> destinations = new ArrayList<>();
-            TCSObjectReference<Location> locRef = TCSObjectReference.getDummyReference(Point.class, p.getUUID());
+            TCSObjectReference<Location> locRef = TCSObjectReference.getDummyReference(Point.class, point.getUUID());
             destinations.add(new DriveOrder.Destination(locRef, "MOVE"));
             TransportOrder torder = kernel.createTransportOrder(destinations);
             kernel.activateTransportOrder(torder.getReference());
+
             // dispatch vehicle
-            kernel.dispatchVehicle(v.getReference(), true);
+            kernel.dispatchVehicle(vehicle.getReference(), true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -295,9 +319,9 @@ public class ServiceGateway {
 
         if (isSceneDtoRunning(sceneDto)) {
             // Stop kernel for the sceneDto
-            // TODO:
 
-            // remove it
+
+            // remove it & terminate kernel
             LocalKernel kernel = kernelRuntimeMapping.remove(idKey);
             kernel.terminate();
         }

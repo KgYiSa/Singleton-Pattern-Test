@@ -123,11 +123,6 @@ public class PointDto extends BaseEntityDto {
         this.sceneDto = sceneDto;
     }
 
-    @Override
-    public void clearId() {
-        setId(null);
-    }
-
     public String getName() {
         return name;
     }

@@ -3,6 +3,8 @@ package com.mj.tcs.api.v1.dto;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
+import java.util.Objects;
+
 /**
  * @author Wang Zhen
  */
@@ -11,7 +13,7 @@ public class VehicleStatusDto {
     private String type = "vehicleStatusMessage";
     private String uuid;
     
-    private String position;
+    private String positionUUID;
     private String processingState;
     private String state;
 
@@ -20,15 +22,17 @@ public class VehicleStatusDto {
     }
 
     public void setUUID(String uuid) {
+        Objects.requireNonNull(uuid);
+
         this.uuid = uuid;
     }
 
-    public String getPosition() {
-        return position;
+    public String getPositionUUID() {
+        return positionUUID;
     }
 
-    public void setPosition(String position) {
-        this.position = position;
+    public void setPosition(String positionUUID) {
+        this.positionUUID = positionUUID;
     }
 
     public String getProcessingState() {

@@ -86,7 +86,8 @@ public class TCSRequestEntity<T> extends TCSCommEntity<T> {
         SCENE_FIND("SCENE_FIND"),
         SCENE_DELETE("SCENE_DELETE"),
         SCENE_START("SCENE_START"),
-        SCENE_STOP("SCENE_STOP");
+        SCENE_STOP("SCENE_STOP"),
+        TO_NEW("NEW_TORDER");
         private String text;
         Action(String text) {
             this.text = text;

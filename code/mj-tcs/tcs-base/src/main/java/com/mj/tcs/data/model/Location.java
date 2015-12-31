@@ -30,6 +30,7 @@ public final class Location
         extends TCSResource<Location>
         implements Serializable, Cloneable {
 
+    // TODO: Remove??
     /**
      * This location's position in mm.
      */

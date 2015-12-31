@@ -1,18 +1,17 @@
-package com.mj.tcs.api.v1.dto.communication;
+package com.mj.tcs.access.status;
 
 import com.mj.tcs.data.model.Vehicle;
 
 /**
  * A status message containing information about a vehicle.
  *
- * @author Tobias Marquardt (Fraunhofer IML)
  */
-public class VehicleStatusMessage {
+public class VehicleStatusMessage extends StatusMessage {
 
     /**
      * The vehicle's name.
      */
-    private String vehicleName = "";
+    private String vehicleUUID = "";
     /**
      * Precise position of the vehicle.
      */
@@ -20,7 +19,7 @@ public class VehicleStatusMessage {
     /**
      * Position of the vehicle.
      */
-    private String position;
+    private String positionUUID;
     /**
      * State of the vehicle.
      */
@@ -35,8 +34,8 @@ public class VehicleStatusMessage {
     /**
      * Creates a new instance.
      */
-    public VehicleStatusMessage() {
-        // Do nada.
+    public VehicleStatusMessage(long sceneId) {
+        super(sceneId);
     }
 
     /**
@@ -44,35 +43,35 @@ public class VehicleStatusMessage {
      *
      * @return The vehicle's name.
      */
-    public String getVehicleName() {
-        return vehicleName;
+    public String getVehicleUUID() {
+        return vehicleUUID;
     }
 
     /**
      * Sets the vehicle's name.
      *
-     * @param vehicleName The vehicle's name.
+     * @param vehicleUUID The vehicle's name.
      */
-    public void setVehicleName(String vehicleName) {
-        this.vehicleName = vehicleName;
+    public void setVehicleUUID(String vehicleUUID) {
+        this.vehicleUUID = vehicleUUID;
     }
 
     /**
-     * Returns the position of the vehicle.
+     * Returns the position UUID of the vehicle.
      *
-     * @return The vehicle's position.
+     * @return The vehicle's position UUID.
      */
-    public String getPosition() {
-        return position;
+    public String getPositionUUID() {
+        return positionUUID;
     }
 
     /**
-     * Sets the position of the vehicle.
+     * Sets the position UUID of the vehicle.
      *
-     * @param position The vehicle's position.
+     * @param positionUUID The vehicle's position UUID.
      */
-    public void setPosition(String position) {
-        this.position = position;
+    public void setPositionUUID(String positionUUID) {
+        this.positionUUID = positionUUID;
     }
 
     /**

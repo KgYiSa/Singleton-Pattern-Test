@@ -23,6 +23,13 @@
         <spring.messaging.version>4.1.8.RELEASE</spring.messaging.version>
     </properties>
 
+    <!--<pluginRepositories>-->
+        <!--<pluginRepository>-->
+            <!--<id>external-jars-repo</id>-->
+            <!--<url>file://${project.basedir}/lib</url>-->
+        <!--</pluginRepository>-->
+    <!--</pluginRepositories>-->
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -227,6 +234,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
+		        <version>2.6</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <!-- 释放将项目的类文件打成jar放到lib目录中。
@@ -250,6 +258,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>1.2.7.RELEASE</version>
                 <executions>
                     <execution>
                         <goals>
@@ -264,6 +273,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
                 <configuration>
                     <skipTests>true</skipTests>
                 </configuration>

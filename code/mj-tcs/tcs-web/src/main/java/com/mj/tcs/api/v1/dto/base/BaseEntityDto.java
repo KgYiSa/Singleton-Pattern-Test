@@ -23,8 +23,7 @@ import java.util.UUID;
 public class BaseEntityDto implements Serializable, Cloneable {
 
     @JsonProperty("UUID")
-//    @Transient
-    private /*final */String uuid;
+    private String uuid;
 
     /**
      * Each type in the same scene should be unique!!!
@@ -62,10 +61,6 @@ public class BaseEntityDto implements Serializable, Cloneable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public void clearId() {
-        this.id = null;
     }
 
     public Long getVersion() {

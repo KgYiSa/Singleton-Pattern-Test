@@ -1,4 +1,4 @@
-package com.mj.tcs.api.v1.dto.communication;
+package com.mj.tcs.access.status;
 
 import com.mj.tcs.data.base.TCSObjectReference;
 import com.mj.tcs.data.model.Vehicle;
@@ -7,19 +7,19 @@ import com.mj.tcs.data.order.TransportOrder;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A status message containing details about a transport order.
  *
- * @author Stefan Walter (Fraunhofer IML)
  */
-public class OrderStatusMessage {
+public class OrderStatusMessage extends StatusMessage {
 
     /**
      * The transport order's name.
      */
-    private String orderName = "";
-    private String executingVehicleName;
+    private String orderUUID = "";
+    private String executingVehicleUUID;
     /**
      * The transport order's state.
      */
@@ -32,35 +32,35 @@ public class OrderStatusMessage {
     /**
      * Creates a new instance.
      */
-    public OrderStatusMessage() {
-        // Do nada.
+    public OrderStatusMessage(long sceneId) {
+        super(sceneId);
     }
 
     /**
-     * Returns the transport order's name.
+     * Returns the transport order's UUID.
      *
-     * @return The transport order's name.
+     * @return The transport order's UUID.
      */
-    public String getOrderName() {
-        return orderName;
+    public String getOrderUUID() {
+        return orderUUID;
     }
 
     /**
-     * Sets the transport order's name.
+     * Sets the transport order's UUID.
      *
-     * @param orderName The transport order's name.
+     * @param orderUUID The transport order's UUID.
      */
-    public void setOrderName(String orderName) {
-        this.orderName = orderName;
+    public void setOrderUUID(String orderUUID) {
+        this.orderUUID = orderUUID;
     }
 
-    public String getExecutingVehicleName() {
-        return executingVehicleName;
+    public String getExecutingVehicleUUID() {
+        return executingVehicleUUID;
     }
 
-    public void setExecutingVehicleName(TCSObjectReference<Vehicle> executingVehicle) {
+    public void setExecutingVehicle(TCSObjectReference<Vehicle> executingVehicle) {
         if (executingVehicle != null) {
-            this.executingVehicleName = executingVehicle.getName();
+            this.executingVehicleUUID = executingVehicle.getUUID();
         }
     }
 
@@ -106,9 +106,9 @@ public class OrderStatusMessage {
     public static class Destination {
 
         /**
-         * The name of the destination location.
+         * The UUID of the destination location.
          */
-        private String locationName = "";
+        private String locationUUID = "";
         /**
          * The operation to be executed at the destination location.
          */
@@ -126,24 +126,23 @@ public class OrderStatusMessage {
         }
 
         /**
-         * Returns the name of the destination location.
+         * Returns the UUID of the destination location.
          *
-         * @return The name of the destination location.
+         * @return The UUID of the destination location.
          */
-        public String getLocationName() {
-            return locationName;
+        public String getLocationUUID() {
+            return locationUUID;
         }
 
         /**
-         * Sets the name of the destination location.
+         * Sets the UUID of the destination location.
          *
-         * @param name The name of the destination location.
+         * @param uuid The UUID of the destination location.
          */
-        public void setLocationName(String name) {
-            if (name == null) {
-                throw new NullPointerException("name is null");
-            }
-            this.locationName = name;
+        public void setLocationUUID(String uuid) {
+            Objects.requireNonNull(uuid);
+
+            this.locationUUID = uuid;
         }
 
         /**

@@ -59,6 +59,23 @@ public interface LocalKernel extends Kernel {
     CommunicationAdapterRegistry getCommAdapterRegistry();
 
     /**
+     * Attaches an adapter to a vehicle.
+     *
+     * @param ref The vehicle reference
+     * @param factory The factory that shall be assigned
+     */
+    void attachAdapterToVehicle(TCSObjectReference<Vehicle> ref,
+                                CommunicationAdapterFactory factory);
+
+    /**
+     * Find the adapter associated with a vehicle.
+     *
+     * @param ref The vehicle reference
+     * @return the adapter found for the vehicle or null if nothing found.
+     */
+    BasicCommunicationAdapter findAdapterFor(TCSObjectReference<Vehicle> ref);
+
+    /**
      * Returns the kernel's scheduler.
      *
      * @return The kernel's scheduler.

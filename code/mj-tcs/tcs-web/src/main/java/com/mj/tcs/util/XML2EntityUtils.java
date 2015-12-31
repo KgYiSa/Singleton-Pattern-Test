@@ -1,16 +1,15 @@
-package com.mj.tcs.service;
+package com.mj.tcs.util;
 
 import com.mj.tcs.api.v1.dto.*;
 import com.mj.tcs.api.v1.dto.base.EntityAuditorDto;
 import com.mj.tcs.api.v1.dto.base.TripleDto;
 import com.mj.tcs.exception.TCSServerRuntimeException;
-import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
+import java.util.Objects;
 
-@Component
-public class Xml2EntityService {
+public class XML2EntityUtils {
 
     private SceneDto sceneDto;
 
@@ -36,7 +35,7 @@ public class Xml2EntityService {
      * @param map
      * @return
      */
-    public Object Map2Dto(Map<String,String> map,String type){
+    public Object Map2Dto(Map<String,String> map, String type){
         switch (type){
             case "point":
                 return sceneDto.addPointDto(Map2PointDto(map));
@@ -64,8 +63,8 @@ public class Xml2EntityService {
     public PointDto Map2PointDto(Map<String,String> map){
         PointDto pointDto = new PointDto();
         TripleDto triple = new TripleDto();
-        triple.setX(getIntegerFromMap("modelXPosition",map));//((int)Double.parseDouble(map.get("modelXPosition")));
-        triple.setY(getIntegerFromMap("modelYPosition",map));//((int)Double.parseDouble(map.get("modelYPosition")));
+        triple.setX(getLongFromMap("modelXPosition",map));//((int)Double.parseDouble(map.get("modelXPosition")));
+        triple.setY(getLongFromMap("modelYPosition",map));//((int)Double.parseDouble(map.get("modelYPosition")));
         triple.setZ((int)Double.parseDouble("0"));
         pointDto.setName(getStringFromMap("Name",map));//(map.get("Name"));
         pointDto.setDisplayPositionX(getLongFromMap("POSITION_X",map));//(Long.parseLong(map.get("POSITION_X")));
@@ -137,9 +136,9 @@ public class Xml2EntityService {
     public LocationDto Map2LocationDto(Map<String,String> map){
         LocationDto locationDto = new LocationDto();
         TripleDto triple = new TripleDto();
-        triple.setX(getIntegerFromMap("modelXPosition",map));//((int)Double.parseDouble(map.get("modelXPosition")));
-        triple.setY(getIntegerFromMap("modelXPosition",map));//((int)Double.parseDouble(map.get("modelYPosition")));
-        triple.setZ((int)Double.parseDouble("0"));
+        triple.setX(getLongFromMap("modelXPosition",map));//((int)Double.parseDouble(map.get("modelXPosition")));
+        triple.setY(getLongFromMap("modelXPosition",map));//((int)Double.parseDouble(map.get("modelYPosition")));
+        triple.setZ((long)Double.parseDouble("0"));
         locationDto.setName(getStringFromMap("Name",map));//(map.get("Name"));
         locationDto.setPosition(triple);
         locationDto.setLabelOffsetX(getLongFromMap("LABEL_OFFSET_X",map));//(Long.parseLong(map.get("LABEL_OFFSET_X")));
@@ -170,7 +169,7 @@ public class Xml2EntityService {
         VehicleDto vehicleDto = new VehicleDto();
         vehicleDto.setName(getStringFromMap("Name",map));//(map.get("Name"));
         vehicleDto.setInitialPoint(null);
-        vehicleDto.setEnergyLevel(getDoubleFromMap("EnergyLevel",map));//(Double.parseDouble(map.get("EnergyLevel")));
+        vehicleDto.setEnergyLevel(getDoubleFromMap("EnergyLevel",map));
         vehicleDto.setEnergyLevelCritical(getIntegerFromMap("EnergyLevelCritical",map));//(Integer.parseInt(map.get("EnergyLevelCritical").split("\\.")[0]));
         vehicleDto.setOrientationAngle(getDoubleFromMap("OrientationAngle",map));//(map.get("OrientationAngle").equals("NaN")?0:Double.parseDouble(map.get("OrientationAngle")));
         vehicleDto.setEnergyLevelGood(getIntegerFromMap("EnergyLevelGood",map));//(Integer.parseInt(map.get("EnergyLevelGood").split("\\.")[0]));
@@ -180,15 +179,15 @@ public class Xml2EntityService {
 
     private String getStringFromMap(String key,Map map){
         if(StringUtils.isEmpty(key)){
-            throw new TCSServerRuntimeException("String is Empty :" + key + ",can not get value from XML file.");
+            throw new IllegalArgumentException("String is Empty :" + key + ",can not get value from XML file.");
         }
-        if(map == null ){
-            throw new TCSServerRuntimeException("Map is Empty :" + map + ",can not get value from Null Object.");
+        if(Objects.isNull(map)){
+            throw new NullPointerException("Map is Empty :" + map + ",can not get value from Null Object.");
         }
         String value =  (String) map.get(key);
 
         if(StringUtils.isEmpty(value)){
-            throw new TCSServerRuntimeException("String is Empty :" + key + ",can not parse from Empty String.");
+            throw new IllegalArgumentException("String is Empty :" + key + ",can not parse from Empty String.");
         }
         return value;
     }
@@ -200,7 +199,7 @@ public class Xml2EntityService {
         try {
             intValue = Integer.parseInt(value.split("\\.")[0]);
         }catch (Exception e){
-            throw new TCSServerRuntimeException("String is  :" + key + ",can not parseInt from this String." + e.getMessage());
+            throw new IllegalArgumentException("String is  :" + key + ",can not parseInt from this String." + e.getMessage());
         }
         return intValue;
     }
@@ -212,7 +211,7 @@ public class Xml2EntityService {
             try {
                 doubleValue = Double.parseDouble(value);
             }catch (Exception e){
-                throw new TCSServerRuntimeException("String is  :" + key + ",can not parseDouble from this String." + e.getMessage());
+                throw new IllegalArgumentException("String is  :" + key + ",can not parseDouble from this String." + e.getMessage());
             }
         }
         return doubleValue;
@@ -224,7 +223,7 @@ public class Xml2EntityService {
         try {
             longValue = Long.parseLong(value.split("\\.")[0]);
         }catch (Exception e){
-            throw new TCSServerRuntimeException("String is  :" + key + ",can not parseLong from this String." + e.getMessage());
+            throw new IllegalArgumentException("String is  :" + key + ",can not parseLong from this String." + e.getMessage());
         }
         return longValue;
     }
@@ -235,7 +234,7 @@ public class Xml2EntityService {
         try {
             booleanValue = value.equals("false");
         }catch (Exception e){
-            throw new TCSServerRuntimeException("String is  :" + key + ",can not parseBoolean from this String." + e.getMessage());
+            throw new IllegalArgumentException("String is  :" + key + ",can not parseBoolean from this String." + e.getMessage());
         }
         return booleanValue;
     }
@@ -246,7 +245,7 @@ public class Xml2EntityService {
         try {
             type = PointDto.Type.valueOf(value+"_POSITION");
         }catch (Exception e){
-            throw new TCSServerRuntimeException("String is  :" + key + ",can not parsePointDto.Type from this String." + e.getMessage());
+            throw new IllegalArgumentException("String is  :" + key + ",can not parsePointDto.Type from this String." + e.getMessage());
         }
         return type;
     }
@@ -257,7 +256,7 @@ public class Xml2EntityService {
         try {
             pointDto = sceneDto.getPointDtoByName(value);
         }catch (Exception e){
-            throw new TCSServerRuntimeException("String is  :" + key + ",can not parsePointDto from this String." + e.getMessage());
+            throw new IllegalArgumentException("String is  :" + key + ",can not parsePointDto from this String." + e.getMessage());
         }
         return pointDto;
     }
@@ -268,7 +267,7 @@ public class Xml2EntityService {
         try {
             locationDto = sceneDto.getLocationDtoByName(value);
         }catch (Exception e){
-            throw new TCSServerRuntimeException("String is  :" + key + ",can not parseLocationDto from this String." + e.getMessage());
+            throw new IllegalArgumentException("String is  :" + key + ",can not parseLocationDto from this String." + e.getMessage());
         }
         return locationDto;
     }
@@ -279,7 +278,7 @@ public class Xml2EntityService {
         try {
             locationTypeDto = sceneDto.getLocationTypeDtoByName(value);
         }catch (Exception e){
-            throw new TCSServerRuntimeException("String is  :" + key + ",can not parseLocationTypeDto from this String." + e.getMessage());
+            throw new IllegalArgumentException("String is  :" + key + ",can not parseLocationTypeDto from this String." + e.getMessage());
         }
         return locationTypeDto;
     }

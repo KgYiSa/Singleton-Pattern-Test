@@ -7,15 +7,17 @@ import com.mj.tcs.api.v1.dto.SceneDto;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.exception.ObjectUnknownException;
 import com.mj.tcs.exception.ResourceUnknownException;
-import com.mj.tcs.service.Xml2EntityService;
 import com.mj.tcs.util.TcsXmlUtils;
+import com.mj.tcs.util.XML2EntityUtils;
 import org.dom4j.Document;
 import org.dom4j.Element;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,7 +25,9 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.security.Principal;
-import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Wang Zhen
@@ -32,9 +36,6 @@ import java.util.Date;
 @Controller
 @RequestMapping(value = "/")
 public class IndexController extends ServiceController {
-
-    @Autowired
-    Xml2EntityService xml2EntityService;
 
     @RequestMapping(value = {"", "/"}, method = RequestMethod.GET)
     public String index(HttpServletRequest req, Principal principal, Model model){
@@ -115,15 +116,15 @@ public class IndexController extends ServiceController {
                 String newSceneName = "test_scene_" +
                         new SimpleDateFormat("yy_MM_dd_HH_mm_ss").format(new Date()).toString();
                 System.out.println(newSceneName);
-
+                XML2EntityUtils xml2EntityUtils = new XML2EntityUtils();
                 SceneDto sceneDto = new SceneDto();
-                sceneDto.setAuditorDto(xml2EntityService.createAuditor());
+                sceneDto.setAuditorDto(xml2EntityUtils.createAuditor());
                 sceneDto.setName(newSceneName);
-                xml2EntityService.setSceneDto(sceneDto);
+                xml2EntityUtils.setSceneDto(sceneDto);
                 List<Element> elements = root.elements();
                 for (Element e : elements) {
                     String type = TcsXmlUtils.getNodeAttrMap(e).get("type");
-                    xml2EntityService.Map2Dto(TcsXmlUtils.getPoint(e),type);
+                    xml2EntityUtils.Map2Dto(TcsXmlUtils.getPoint(e),type);
                 }
 
                 SceneDto newSceneDto = resolveRelationships(sceneDto);

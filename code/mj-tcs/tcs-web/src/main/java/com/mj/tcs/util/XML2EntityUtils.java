@@ -3,7 +3,6 @@ package com.mj.tcs.util;
 import com.mj.tcs.api.v1.dto.*;
 import com.mj.tcs.api.v1.dto.base.EntityAuditorDto;
 import com.mj.tcs.api.v1.dto.base.TripleDto;
-import com.mj.tcs.exception.TCSServerRuntimeException;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
@@ -256,7 +255,7 @@ public class XML2EntityUtils {
         try {
             pointDto = sceneDto.getPointDtoByName(value);
         }catch (Exception e){
-            throw new IllegalArgumentException("String is  :" + key + ",can not parsePointDto from this String." + e.getMessage());
+            throw new IllegalArgumentException("String is  key:" + key +" value:"+value+ ",can not parsePointDto from this String." + e.getMessage());
         }
         return pointDto;
     }
@@ -267,7 +266,7 @@ public class XML2EntityUtils {
         try {
             locationDto = sceneDto.getLocationDtoByName(value);
         }catch (Exception e){
-            throw new IllegalArgumentException("String is  :" + key + ",can not parseLocationDto from this String." + e.getMessage());
+            throw new IllegalArgumentException("String is key:" + key + "  value:"+value+",can not parseLocationDto from this String." + e.getMessage());
         }
         return locationDto;
     }
@@ -278,7 +277,7 @@ public class XML2EntityUtils {
         try {
             locationTypeDto = sceneDto.getLocationTypeDtoByName(value);
         }catch (Exception e){
-            throw new IllegalArgumentException("String is  :" + key + ",can not parseLocationTypeDto from this String." + e.getMessage());
+            throw new IllegalArgumentException("String is  key:" + key + "  value:"+value+",can not parseLocationTypeDto from this String." + e.getMessage());
         }
         return locationTypeDto;
     }

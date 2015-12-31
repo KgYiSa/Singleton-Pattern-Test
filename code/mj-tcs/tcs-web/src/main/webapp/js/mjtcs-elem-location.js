@@ -68,10 +68,8 @@ Location = function (x,y,type,name,textOffsetXX,textOffsetYY,two){
     elemLocation.location = two.makeGroup(elemLocation.locationOrigin
         ,elemLocation.circle,elemLocation.rect1,elemLocation.rect2,elemLocation.rect3,elemLocation.rect4,elemLocation.text);
 
-    elemLocation.two = two;
-    //two.update();
     //textTitleNumber++;
-}
+};
 //
 //Location.prototype = {
 //    setPointDefault: function(){

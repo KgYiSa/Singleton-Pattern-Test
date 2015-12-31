@@ -22,6 +22,7 @@ Path = function(x1,y1,x2,y2,positiveVal,negativeVal,two){
     y2 = XY.y2 - (positivePathArrowAdjust+elemPath.POINT_RADIUS)*Math.sin(atan2Angle);
 
     var line = two.makePath(x1,y1,x2,y2,true);
+
     line.linewidth = 1;
     elemPath.line = line;
 
@@ -41,9 +42,6 @@ Path = function(x1,y1,x2,y2,positiveVal,negativeVal,two){
     setPositiveTriangle({x:x1,y:y1},{x:x2,y:y2});
     setNegativeTriangle({x:x1,y:y1},{x:x2,y:y2});
 
-    elemPath.two = two;
-
-    //two.update();
 
     function angle(start,end){
         var diff_x = end.x - start.x,

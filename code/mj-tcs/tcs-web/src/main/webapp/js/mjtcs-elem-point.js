@@ -82,8 +82,6 @@ Point = function(x,y,type,name,textOffsetX,textOffsetY,two){
     elemPoint.point = two.makeGroup(elemPoint.pointOrigin
         ,elemPoint.circle,elemPoint.rect1,elemPoint.rect2,elemPoint.rect3,elemPoint.rect4,elemPoint.text);
 
-    elemPoint.two = two;
-    //two.update();
     //textTitleNumber++;
 };
 //

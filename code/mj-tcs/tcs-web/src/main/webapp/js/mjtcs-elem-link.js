@@ -35,9 +35,6 @@ Link = function (x1,y1,x2,y2,two) {
     }
     elemLink.link = link;
 
-    elemLink.two = two;
-
-    //two.update();
 
     function angle(start, end) {
         var diff_x = end.x - start.x,

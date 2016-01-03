@@ -2,6 +2,7 @@ package com.mj.tcs.api.v1.dto.base;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
@@ -45,10 +46,11 @@ public class BaseEntityDto implements Serializable, Cloneable {
 //    @JsonProperty("auditor")
     @JsonIgnore // TODO: [TBD] Ignore or display in debug mode???
     @Embedded
-    private EntityAuditorDto auditorDto = null;
+    private EntityAuditorDto auditorDto;
 
     public BaseEntityDto() {
         uuid = this.getClass().getSimpleName().toLowerCase() + "-" + UUID.randomUUID().toString();
+        auditorDto = new EntityAuditorDto();
     }
 
     public String getUUID() {

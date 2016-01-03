@@ -9,7 +9,6 @@
 
     <name>${project.artifactId} ${project.version}</name>
 
-    <groupId>com.mj.tcs</groupId>
     <artifactId>tcs-web</artifactId>
     <version>1.0</version>
     <packaging>war</packaging>
@@ -23,12 +22,12 @@
         <spring.messaging.version>4.1.8.RELEASE</spring.messaging.version>
     </properties>
 
-    <!--<pluginRepositories>-->
-        <!--<pluginRepository>-->
-            <!--<id>external-jars-repo</id>-->
-            <!--<url>file://${project.basedir}/lib</url>-->
-        <!--</pluginRepository>-->
-    <!--</pluginRepositories>-->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>external-jars-repo</id>
+            <url>file://${project.basedir}/src/main/resources/lib</url>
+        </pluginRepository>
+    </pluginRepositories>
 
     <dependencyManagement>
         <dependencies>
@@ -54,8 +53,8 @@
             <groupId>com.mj.tcs</groupId>
             <artifactId>tcs-kernel</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/lib/tcs-kernel-1.0.jar</systemPath>
+            <!--<scope>system</scope>-->
+            <!--<systemPath>${project.basedir}/src/main/resources/lib/tcs-kernel-1.0.jar</systemPath>-->
         </dependency>
 
         <dependency>
@@ -127,23 +126,6 @@
         <!--<groupId>org.springframework.boot</groupId>-->
         <!--<artifactId>spring-boot-starter-data-rest</artifactId>-->
         <!--</dependency>-->
-
-        <!-- !!!Attention 2.7.0-rc1 error !!! -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>2.6.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>2.6.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.6.3</version>
-        </dependency>
 
         <!-- Websocket -->
         <dependency>

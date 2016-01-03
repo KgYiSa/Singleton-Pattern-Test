@@ -38,7 +38,7 @@ public class VehicleDto extends BaseEntityDto {
     @Column
     private String name;
 
-    @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "tcs_model_vehicle_properties", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
     private Set<EntityProperty> properties = new LinkedHashSet<>();

@@ -81,13 +81,23 @@ public class TCSRequestEntity<T> extends TCSCommEntity<T> {
 
     public enum Action {
         UNKNOWN("UNKNOWN"),
+        // Scene Operations
         SCENE_PROFILE("SCENE_PROFILE"),
         SCENE_CREATE("SCENE_CREATE"),// WARNING: LAZY LOAD!!
         SCENE_FIND("SCENE_FIND"),
         SCENE_DELETE("SCENE_DELETE"),
         SCENE_START("SCENE_START"),
         SCENE_STOP("SCENE_STOP"),
-        TO_NEW("NEW_TORDER");
+        // Transport Order Operations
+        TO_NEW("TO_NEW"),
+        TO_WITHDRAW("TO_WITHDRAW"),
+        // Vehicle Operations
+        VEHICLE_PROFILE("VEHICLE_PROFILE"),
+        VEHICLE_ADAPTER_ATTACH("VEHICLE_ADAPTER_ATTACH"),
+        VEHICLE_DISPATCH("VEHICLE_DISPATCH"),
+        VEHICLE_STOP_TO("VEHICLE_STOP_TO"),
+        VEHICLE_PARK("VEHICLE_PARK")
+        ;
         private String text;
         Action(String text) {
             this.text = text;

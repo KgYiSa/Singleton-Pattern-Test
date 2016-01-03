@@ -35,7 +35,7 @@ public class LocationTypeDto extends BaseEntityDto {
 
     @JsonSerialize(as = LinkedHashSet.class)
     @JsonDeserialize(as = LinkedHashSet.class)
-    @ElementCollection/*(targetClass = EntityProperty.class, fetch = FetchType.LAZY)*/
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "tcs_model_location_type_properties", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
     private Set<EntityProperty> properties = new LinkedHashSet<>();
@@ -52,7 +52,7 @@ public class LocationTypeDto extends BaseEntityDto {
 //            entityBeanKeys = {"Path"},
 //            dtoToEntityMatcher = PathDto2PathMatcher.class)
     @DtoField
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "tcs_model_location_type_operations", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
     private Set<String> allowedOperations = new LinkedHashSet<>();

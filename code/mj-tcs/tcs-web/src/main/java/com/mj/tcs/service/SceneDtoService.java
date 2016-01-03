@@ -31,14 +31,29 @@ public class SceneDtoService {
         SceneDto sceneDto = sceneDtoRepository.findOne(id);
 
         if (sceneDto != null) {
-            // TODO: FOR Lazy loading issues (properties!!!)
-            Hibernate.initialize(sceneDto.getProperties());
+            // TODO: FOR Lazy loading issues
             Hibernate.initialize(sceneDto.getBlockDtos());
+            if (sceneDto.getBlockDtos() != null) {
+                sceneDto.getBlockDtos().forEach(v -> Hibernate.initialize(v.getMembers()));
+            }
             Hibernate.initialize(sceneDto.getLocationDtos());
+            if (sceneDto.getLocationDtos() != null) {
+                sceneDto.getLocationDtos().forEach(v -> Hibernate.initialize(v.getAttachedLinks()));
+            }
             Hibernate.initialize(sceneDto.getLocationTypeDtos());
             Hibernate.initialize(sceneDto.getPathDtos());
             Hibernate.initialize(sceneDto.getPointDtos());
+            if (sceneDto.getPointDtos() != null) {
+                sceneDto.getPointDtos().forEach(v -> {
+                    Hibernate.initialize(v.getAttachedLinks());
+                    Hibernate.initialize(v.getIncomingPaths());
+                    Hibernate.initialize(v.getOutgoingPaths());
+                });
+            }
             Hibernate.initialize(sceneDto.getStaticRouteDtos());
+            if (sceneDto.getStaticRouteDtos() != null) {
+                sceneDto.getStaticRouteDtos().forEach(v -> Hibernate.initialize(v.getHops()));
+            }
             Hibernate.initialize(sceneDto.getVehicleDtos());
         }
 

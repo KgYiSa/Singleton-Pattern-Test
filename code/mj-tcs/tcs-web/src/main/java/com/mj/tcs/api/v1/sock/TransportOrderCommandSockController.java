@@ -1,16 +1,20 @@
 package com.mj.tcs.api.v1.sock;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mj.tcs.LocalKernel;
-import com.mj.tcs.api.v1.dto.LocationDto;
-import com.mj.tcs.api.v1.dto.LocationTypeDto;
-import com.mj.tcs.api.v1.dto.SceneDto;
+import com.mj.tcs.access.orders.Destination;
+import com.mj.tcs.access.orders.Transport;
+import com.mj.tcs.api.v1.dto.TransportWithdrawDto;
 import com.mj.tcs.api.v1.dto.communication.TCSRequestEntity;
 import com.mj.tcs.api.v1.dto.communication.TCSResponseEntity;
 import com.mj.tcs.api.v1.web.ServiceController;
+import com.mj.tcs.data.ObjectUnknownException;
 import com.mj.tcs.data.base.TCSObjectReference;
 import com.mj.tcs.data.model.Location;
-import com.mj.tcs.data.model.LocationType;
 import com.mj.tcs.data.model.Point;
+import com.mj.tcs.data.model.Vehicle;
 import com.mj.tcs.data.order.DriveOrder;
 import com.mj.tcs.data.order.TransportOrder;
 import com.mj.tcs.service.ServiceGateway;
@@ -20,18 +24,17 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * @author Wang Zhen
  */
 @Controller
 public class TransportOrderCommandSockController extends ServiceController {
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
-    @MessageMapping("/topic/actions/scenes/{sceneId}/torders")
+    @MessageMapping("/topic/actions/scenes/{sceneId}/torders/request")
     @SendToUser("/topic/actions/response")
     public TCSResponseEntity<?> executeAction(@DestinationVariable Long sceneId,
                                               TCSRequestEntity request,
@@ -41,97 +44,166 @@ public class TransportOrderCommandSockController extends ServiceController {
         TCSResponseEntity<?> responseEntity = null;
 
         TCSRequestEntity.Action actionCode = request.getActionCode();
-        switch (actionCode) {
-            case TO_NEW:
-                responseEntity = createTransportOrder(sceneId, request.getBody());
-                break;
-            default:
-                responseEntity = new TCSResponseEntity<>(TCSResponseEntity.Status.ERROR,
-                        "The action code [" + actionCode + "] is not recognized.");
-                break;
+        if (actionCode == null) {// Check actionCode
+            return new TCSResponseEntity<>(TCSResponseEntity.Status.ERROR,
+                    "The action code is null.");
+        }
+
+        // check the scene is running.
+        final ServiceGateway serviceGateway = getService();
+        final LocalKernel kernel = serviceGateway.getKernel(sceneId);
+        if (kernel == null || !serviceGateway.isSceneDtoRunning(sceneId)) {
+            return new TCSResponseEntity<>(TCSResponseEntity.Status.WARNING, null,
+                    "The scene of id [" + sceneId +"] is NOT running!");
+        }
+
+        try {
+            switch (actionCode) {
+                case TO_NEW:
+                    responseEntity = createTransportOrder(kernel, sceneId, request.getBody());
+                    break;
+                case TO_WITHDRAW:
+                    responseEntity = withdrawTransportOrder(kernel, sceneId, request.getBody());
+                    break;
+                default:
+                    throw new IllegalArgumentException("The action code [" + actionCode + "] is not recognized.");
+            }
+        } catch (Exception e) {
+            responseEntity = new TCSResponseEntity<>(TCSResponseEntity.Status.ERROR,null,e.getMessage());
         }
 
         responseEntity.setResponseUUID(request.getRequestUUID());
         return responseEntity;
     }
 
-    private TCSResponseEntity<?> createTransportOrder(long sceneId, Object jsonBody) {
-        if (jsonBody == null) {
-            return new TCSResponseEntity<>(TCSResponseEntity.Status.ERROR, null,
-                                           "The transport order can not created with EMPTY content");
+    private TCSResponseEntity<?> createTransportOrder(final LocalKernel kernel, long sceneId, Object jsonBody) throws Exception {
+        if (jsonBody == null || jsonBody.toString().isEmpty()) {
+            throw new IllegalArgumentException("The transport order can not created with EMPTY content");
         }
 
-        final ServiceGateway serviceGateway = getService();
-        synchronized (serviceGateway) {
-            final LocalKernel kernel = serviceGateway.getKernel(sceneId);
-            if (kernel == null || !serviceGateway.isSceneDtoRunning(sceneId)) {
-                return new TCSResponseEntity<>(TCSResponseEntity.Status.WARNING, null,
-                        "The scene of id [" + sceneId +"] is NOT running!");
-            }
+        Transport transport = null;
+        String json = objectMapper.writeValueAsString(jsonBody);
+        transport = objectMapper.readValue(json, Transport.class);
+        assert transport != null;
 
-            final SceneDto sceneDto = serviceGateway.getSceneDto(sceneId);
+        TransportOrder order = createTransportOrder(kernel, transport.getDestinations());
 
-            String locUUID = "xxx";// TODO
-            String destOperation = "NOP"; // TODO
-//            Map<String, String> destProperties // TODO:
-            // transport order
-            List<DriveOrder.Destination> destinations = new ArrayList<>();
-            Class<?> locClass = ((sceneDto.getLocationDtoByUUID(locUUID) == null) ?
-                    ((sceneDto.getPointDtoByUUID(locUUID) == null) ? null : Point.class) : Location.class);
+        // Set the transport order's deadline, if any.
+        if (transport.getDeadline() != null) {
+            final long deadline = transport.getDeadline().getTime();
+            kernel.setTransportOrderDeadline(order.getReference(), deadline);
+        }
+
+        // Set the order's intended vehicle, if any.
+        setIntendedVehicle(kernel, order, transport.getIntendedVehicle());
+
+        // Set the transport order's dependencies, if any.
+        setDependencies(kernel, order, transport.getDependencies());
+
+        // Activate the new transport order.
+        kernel.activateTransportOrder(order.getReference());
+
+        // TODO: Save to Database.
+        // Everything went fine - let the client know.
+        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS, order, transport.getUuid());
+    }
+
+
+    private TCSResponseEntity<?> withdrawTransportOrder(final LocalKernel kernel, long sceneId, Object jsonBody) throws IOException {
+        if (jsonBody == null || jsonBody.toString().isEmpty()) {
+            throw new IllegalArgumentException("The transport order can not withdraw with EMPTY content");
+        }
+
+        TransportWithdrawDto transportWithdrawDto = null;
+        String json = objectMapper.writeValueAsString(jsonBody);
+        transportWithdrawDto = objectMapper.readValue(json, TransportWithdrawDto.class);
+        assert transportWithdrawDto != null;
+
+        TransportOrder transportOrder = Objects.requireNonNull(kernel.getTCSObject(TransportOrder.class, transportWithdrawDto.getUUID()));
+        boolean force = transportWithdrawDto.isForce();
+        boolean disableVehicle = transportWithdrawDto.isDisableVehicle();
+        kernel.withdrawTransportOrder(transportOrder.getReference(), disableVehicle);
+        if (force) {
+            kernel.withdrawTransportOrder(transportOrder.getReference(), disableVehicle);
+        }
+
+        // TODO: Save to Database.
+        // Everything went fine - let the client know.
+        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS);
+    }
+
+    /**
+     * Creates a transport order.
+     *
+     * @param kernel The kernel instance
+     * @param destinations The destinations of this order.
+     * @return The newly created transport order.
+     */
+    private TransportOrder createTransportOrder(final LocalKernel kernel, List<Destination> destinations) {
+        List<DriveOrder.Destination> realDests = new LinkedList<>();
+
+        for (Destination curDest : destinations) {
+            final String locUUID = Objects.requireNonNull(curDest.getLocationUUID());
+            Class<?> locClass = ((kernel.getTCSObject(Location.class, locUUID) == null) ?
+                    ((kernel.getTCSObject(Point.class, locUUID) == null) ? null : Point.class) : Location.class);
+
             if (locClass == null) {
-                return new TCSResponseEntity<>(TCSResponseEntity.Status.ERROR, null,
-                        "The element by UUID [" + locUUID + "] is neither Point class nor Location class in scene of id [" + sceneId +"]!");
+                throw new ObjectUnknownException("The element by UUID [" + locUUID + "] is neither Point class nor Location class!");
             } else if (Point.class.equals(locClass)) {
-                destinations.add(new DriveOrder.Destination(TCSObjectReference.getDummyReference(Point.class, locUUID), "MOVE"));
+                // TODO: Refine const "MOVE"
+                realDests.add(new DriveOrder.Destination(TCSObjectReference.getDummyReference(Point.class, locUUID), "MOVE"));
             } else { // location
-                final LocationDto locationDto = sceneDto.getLocationDtoByUUID(locUUID);
-                final LocationTypeDto locationTypeDto = Objects.requireNonNull(sceneDto.getLocationTypeDtoByUUID(locationDto.getLocationTypeDto().getUUID()));
-                // Get LocationType from kernel
-                LocationType locationType = Objects.requireNonNull(kernel.getTCSObject(LocationType.class, locationTypeDto.getUUID()));
-
-                // Convert to location
-                Location location = new Location(locUUID, locationDto.getName(), locationType.getReference());
+                String curDestOp = curDest.getOperation();
+                // Get Location from kernel
+                final Location location = Objects.requireNonNull(kernel.getTCSObject(Location.class, locUUID));
 
                 // Add to the destinations
-                destinations.add(new DriveOrder.Destination(location.getReference(),destOperation));
+                realDests.add(new DriveOrder.Destination(location.getReference(),curDestOp));
             }
+        }
+        return kernel.createTransportOrder(realDests);
+    }
 
-            TransportOrder torder = kernel.createTransportOrder(destinations);
-            kernel.activateTransportOrder(torder.getReference());
-            // TODO:
-            return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS, torder, null);
+    /**
+     * Sets the intended vehicle.
+     *
+     * @param kernel The kernel instance
+     * @param order The transport order the vehicle shall be set.
+     * @param vehicleUUID The name of the vehicle.
+     */
+    void setIntendedVehicle(final LocalKernel kernel, TransportOrder order, String vehicleUUID) {
+        if (vehicleUUID != null && !vehicleUUID.isEmpty()) {
+            Vehicle vehicle = kernel.getTCSObject(Vehicle.class, vehicleUUID);
+            if (vehicle == null) {
+                // TODO: Set state of created order to FAILED?
+                throw new ObjectUnknownException("Unknown vehicle: " + vehicleUUID);
+            }
+            kernel.setTransportOrderIntendedVehicle(order.getReference(),
+                    vehicle.getReference());
         }
     }
 
-    private DriveOrder.Destination createDestination(final SceneDto sceneDto,
-                                                     final String locUUID,
-                                                     final String destOperation,
-                                                     final Map<String, String> destProperties) throws Exception {
-        Objects.requireNonNull(locUUID);
-        Objects.requireNonNull(destOperation);
-        Objects.requireNonNull(destProperties);
+    /**
+     * Sets a list of dependencies to a transport order.
+     *
+     * @param kernel The kernel instance
+     * @param order The order.
+     * @param deps The list of dependencies.
+     */
+    private void setDependencies(final LocalKernel kernel, TransportOrder order, List<String> deps) {
+        if (deps == null) {
+            return;
+        }
 
-        // TODO:
-        throw new Exception("TODO");
-        // transport order
-//        Class<?> locClass = ((sceneDto.getLocationDtoByUUID(locUUID) == null) ?
-//                ((sceneDto.getPointDtoByUUID(locUUID) == null) ? null : Point.class) : Location.class);
-//        if (locClass == null) {
-//            return new TCSResponseEntity<>(TCSResponseEntity.Status.ERROR, null,
-//                    "The element by UUID [" + locUUID + "] is neither Point class nor Location class in scene of id [" + sceneId +"]!");
-//        } else if (Point.class.equals(locClass)) {
-//            destinations.add(new DriveOrder.Destination(TCSObjectReference.getDummyReference(Point.class, locUUID), "MOVE"));
-//        } else { // location
-//            final LocationDto locationDto = sceneDto.getLocationDtoByUUID(locUUID);
-//            final LocationTypeDto locationTypeDto = Objects.requireNonNull(sceneDto.getLocationTypeDtoByUUID(locationDto.getLocationTypeDto().getUUID()));
-//            // Get LocationType from kernel
-//            LocationType locationType = Objects.requireNonNull(kernel.getTCSObject(LocationType.class, locationTypeDto.getUUID()));
-//
-//            // Convert to location
-//            Location location = new Location(locUUID, locationDto.getName(), locationType.getReference());
-//
-//            // Add to the destinations
-//            destinations.add(new DriveOrder.Destination(location.getReference(),destOperation));
-//        }
+        for (String curDepUUID : deps) {
+            TransportOrder curDep = kernel.getTCSObject(TransportOrder.class,
+                    curDepUUID);
+            // If curDep is null, ignore it - it might have been processed and
+            // removed already.
+            if (curDep != null) {
+                kernel.addTransportOrderDependency(order.getReference(),
+                        curDep.getReference());
+            }
+        }
     }
 }

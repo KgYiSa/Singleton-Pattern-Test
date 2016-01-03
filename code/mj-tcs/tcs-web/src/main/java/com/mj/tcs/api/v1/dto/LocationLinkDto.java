@@ -65,7 +65,7 @@ public class LocationLinkDto extends BaseEntityDto {
      * The operations allowed at this link.
      */
     @DtoField
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "tcs_model_location_link_operations", joinColumns = @JoinColumn(
             nullable = false, name = "model_id", referencedColumnName = "id"))
     private Set<String> allowedOperations = new LinkedHashSet<>();

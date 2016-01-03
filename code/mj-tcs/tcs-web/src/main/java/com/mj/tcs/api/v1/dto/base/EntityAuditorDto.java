@@ -1,5 +1,6 @@
 package com.mj.tcs.api.v1.dto.base;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
@@ -33,6 +34,12 @@ public class EntityAuditorDto implements Serializable {
     @DtoField
     @Column(name = "updated_by", length = 20)
     private String updatedBy;
+
+    public EntityAuditorDto() {
+        // TODO: Use unified date generator?
+        createdAt = new Date();
+        updatedAt = new Date();
+    }
 
     public Date getCreatedAt() {
         return createdAt;

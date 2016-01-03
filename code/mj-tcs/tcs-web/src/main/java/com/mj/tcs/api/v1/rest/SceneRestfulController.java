@@ -155,7 +155,7 @@ public class SceneRestfulController extends ServiceController {
         SceneDto sceneDto = getService().getSceneDto(sceneId);
         getService().loadSceneDto(sceneDto);
 
-        return new TCSResponseEntity<Object>(TCSResponseEntity.Status.SUCCESS);
+        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS);
     }
 
     @RequestMapping(value = "/scenes/{sceneId}/actions/stop"/*, method = RequestMethod.POST*/)
@@ -164,6 +164,6 @@ public class SceneRestfulController extends ServiceController {
         SceneDto sceneDto = getService().getSceneDto(sceneId);
         getService().unloadSceneDto(sceneDto);
 
-        return new TCSResponseEntity<Object>(TCSResponseEntity.Status.SUCCESS);
+        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS);
     }
 }

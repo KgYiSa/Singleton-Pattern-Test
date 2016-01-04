@@ -175,6 +175,17 @@ public class SceneDto extends BaseEntityDto {
         return null;
     }
 
+    public PointDto getPointDtoByName(String name) {
+        if (pointDtos == null) {
+            return null;
+        }
+        Optional<PointDto> pointDtoOp = pointDtos.stream().filter(l -> name.equals(l.getName())).findFirst();
+        if (pointDtoOp.isPresent()) {
+            return pointDtoOp.get();
+        }
+        return null;
+    }
+
     public boolean addPointDto(PointDto dto) {
         if (getPointDtos() == null) {
             this.pointDtos = new LinkedHashSet<>();
@@ -298,7 +309,16 @@ public class SceneDto extends BaseEntityDto {
         }
         return null;
     }
-
+    public LocationTypeDto getLocationTypeDtoByName(String name) {
+        if (locationTypeDtos == null || name == null) {
+            return null;
+        }
+        Optional<LocationTypeDto> locationTypeDtoOp = locationTypeDtos.stream().filter(l -> name.equals(l.getName())).findFirst();
+        if (locationTypeDtoOp.isPresent()) {
+            return locationTypeDtoOp.get();
+        }
+        return null;
+    }
     public LocationDto getLocationDtoByUUID(String uuid) {
         if (locationDtos == null || uuid == null) {
             return null;
@@ -321,7 +341,16 @@ public class SceneDto extends BaseEntityDto {
         }
         return null;
     }
-
+        public LocationDto getLocationDtoByName(String name) {
+            if (locationDtos == null || name == null) {
+                return null;
+            }
+            Optional<LocationDto> locationDtoOp = locationDtos.stream().filter(l -> name.equals(l.getName())).findFirst();
+            if (locationDtoOp.isPresent()) {
+                return locationDtoOp.get();
+            }
+            return null;
+        }
     public Set<LocationDto> getLocationDtos() {
         return locationDtos;
     }

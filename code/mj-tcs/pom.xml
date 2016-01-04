@@ -9,7 +9,7 @@
     <version>1.0</version>
     <modules>
         <module>tcs-base</module>
-        <!--<module>tcs-kernel</module>-->
+        <module>tcs-kernel</module>
         <module>tcs-web</module>
     </modules>
 

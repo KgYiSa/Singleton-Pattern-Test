@@ -40,6 +40,7 @@
     </orderEntry>
     <orderEntry type="module" module-name="tcs-base" />
     <orderEntry type="library" name="Maven: com.mj.tcs:tcs-kernel:1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.jdom:jdom2:2.0.6" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:1.2.7.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:1.2.7.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-autoconfigure:1.2.7.RELEASE" level="project" />

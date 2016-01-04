@@ -166,7 +166,7 @@ public class SceneDtoModelGenerator {
         for (int i=0; i< 10; i++) {
             createPointDto();
 
-            if (i != 0 && i % 2 == 1) {
+            if (i != 0 /*&& i % 2 == 1*/) {
                 PointDto sourcePoint = (PointDto) pointDtos.toArray()[i-1];
                 PointDto destinationPoint = (PointDto) pointDtos.toArray()[i];
                 createPathDto(sourcePoint, destinationPoint);

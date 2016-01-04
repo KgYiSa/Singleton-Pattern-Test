@@ -28,7 +28,7 @@ import java.util.*;
 @Dto
 @Entity(name = "tcs_model_path")
 @Table(name = "tcs_model_path", uniqueConstraints =
-    @UniqueConstraint(columnNames = {"name", "scene"})
+@UniqueConstraint(columnNames = {"name", "scene"})
 )
 public class PathDto extends BaseEntityDto {
     @JsonIgnore

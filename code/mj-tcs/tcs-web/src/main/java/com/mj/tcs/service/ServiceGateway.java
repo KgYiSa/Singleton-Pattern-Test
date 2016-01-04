@@ -29,6 +29,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PreDestroy;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -236,6 +237,12 @@ public class ServiceGateway {
     }
 
     ////////////////////////////// OPERATTING /////////////////////////////////
+    @PreDestroy
+    public void shutdown() {
+        System.out.printf("++++++++++++++++++++++++++++++ DESTROY ++++++++++++++++++++++++");
+        kernelRuntimeMapping.keySet().forEach(this::unloadSceneDto);
+    }
+
     public LocalKernel getKernel(long sceneId) {
         return kernelRuntimeMapping.get(sceneId);
     }
@@ -274,29 +281,30 @@ public class ServiceGateway {
         LocalKernel kernel = new StandardKernel(eventHub, scene);
         try {
             kernel.initialize();
-            // vehicle & setVehiclePosition
-            final Vehicle vehicle = (Vehicle) kernel.getTCSObjects(Vehicle.class).toArray()[0];
-            final Point point = ((Point) kernel.getTCSObjects(Point.class).toArray()[0]);
-
-            // adapter
-            CommunicationAdapterFactory adapterFactory = kernel.getCommAdapterRegistry().findFactoriesFor(vehicle).get(0);
-            kernel.attachAdapterToVehicle(vehicle.getReference(), adapterFactory);
-
-            BasicCommunicationAdapter adapter = kernel.findAdapterFor(vehicle.getReference());
-            adapter.enable();// enable
-            if (adapter instanceof SimCommunicationAdapter) {
-                ((SimCommunicationAdapter) adapter).initVehiclePosition(point.getUUID());
-            }
-
-            // transport order
-            List<DriveOrder.Destination> destinations = new ArrayList<>();
-            TCSObjectReference<Location> locRef = TCSObjectReference.getDummyReference(Point.class, point.getUUID());
-            destinations.add(new DriveOrder.Destination(locRef, "MOVE"));
-            TransportOrder torder = kernel.createTransportOrder(destinations);
-            kernel.activateTransportOrder(torder.getReference());
-
-            // dispatch vehicle
-            kernel.dispatchVehicle(vehicle.getReference(), true);
+            // TODO: For testing only!!!
+//            // vehicle & setVehiclePosition
+//            final Vehicle vehicle = (Vehicle) kernel.getTCSObjects(Vehicle.class).toArray()[0];
+//            final Point point = ((Point) kernel.getTCSObjects(Point.class).toArray()[0]);
+//
+//            // adapter
+//            CommunicationAdapterFactory adapterFactory = kernel.getCommAdapterRegistry().findFactoriesFor(vehicle).get(0);
+//            kernel.attachAdapterToVehicle(vehicle.getReference(), adapterFactory);
+//
+//            BasicCommunicationAdapter adapter = kernel.findAdapterFor(vehicle.getReference());
+//            adapter.enable();// enable
+//            if (adapter instanceof SimCommunicationAdapter) {
+//                ((SimCommunicationAdapter) adapter).initVehiclePosition(point.getUUID());
+//            }
+//
+//            // transport order
+//            List<DriveOrder.Destination> destinations = new ArrayList<>();
+//            TCSObjectReference<Location> locRef = TCSObjectReference.getDummyReference(Point.class, point.getUUID());
+//            destinations.add(new DriveOrder.Destination(locRef, "MOVE"));
+//            TransportOrder torder = kernel.createTransportOrder(destinations);
+//            kernel.activateTransportOrder(torder.getReference());
+//
+//            // dispatch vehicle
+//            kernel.dispatchVehicle(vehicle.getReference(), true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -305,24 +313,33 @@ public class ServiceGateway {
         return true;
     }
 
-    public void unloadSceneDto(long sceneId) {
-        SceneDto sceneDto;
-        synchronized (sceneDtoService) {
-            sceneDto = sceneDtoService.findOne(sceneId);
-        }
-        updateScene(sceneDto);
-    }
-
     public void unloadSceneDto(SceneDto sceneDto) {
         Objects.requireNonNull(sceneDto);
         Long idKey = Objects.requireNonNull(sceneDto.getId());
 
-        if (isSceneDtoRunning(sceneDto)) {
+        unloadSceneDto(idKey);
+//        if (isSceneDtoRunning(sceneDto)) {
+//            // Stop kernel for the sceneDto
+//
+//
+//            // remove it & terminate kernel
+//            LocalKernel kernel = kernelRuntimeMapping.remove(idKey);
+//            kernel.terminate();
+//        }
+    }
+
+    public void unloadSceneDto(long sceneId) {
+//        SceneDto sceneDto;
+//        synchronized (sceneDtoService) {
+//            sceneDto = sceneDtoService.findOne(sceneId);
+//        }
+//        updateScene(sceneDto);
+        if (isSceneDtoRunning(sceneId)) {
             // Stop kernel for the sceneDto
 
 
             // remove it & terminate kernel
-            LocalKernel kernel = kernelRuntimeMapping.remove(idKey);
+            LocalKernel kernel = kernelRuntimeMapping.remove(sceneId);
             kernel.terminate();
         }
     }
@@ -336,23 +353,29 @@ public class ServiceGateway {
         Objects.requireNonNull(sceneDto);
         Long idKey = Objects.requireNonNull(sceneDto.getId());
 
-        return kernelRuntimeMapping.containsKey(idKey);
+        return isSceneDtoRunning(idKey);
     }
 
     public boolean isSceneDtoRunning(long sceneId) {
-        return isSceneDtoRunning(getSceneDto(sceneId));
+//        return isSceneDtoRunning(getSceneDto(sceneId));
+        return kernelRuntimeMapping.containsKey(sceneId);
     }
 
-    private void checkSceneDtoRunning(long sceneId) {
-        checkSceneDtoRunning(getSceneDto(sceneId));
-    }
-
-    private void checkSceneDtoRunning(SceneDto sceneDto) {
+    private void checkSceneDtoRunning(SceneDto sceneDto) throws TCSServerRuntimeException {
         Objects.requireNonNull(sceneDto);
+        Long idKey = Objects.requireNonNull(sceneDto.getId());
 
-        if (isSceneDtoRunning(sceneDto)) {
-            Objects.requireNonNull(sceneDto.getId());
-            throw new TCSServerRuntimeException("The scene by id [" + sceneDto.getId() + "] is running!");
+        checkSceneDtoRunning(idKey);
+//        if (isSceneDtoRunning(sceneDto)) {
+//            Objects.requireNonNull(sceneDto.getId());
+//            throw new TCSServerRuntimeException("The scene by id [" + sceneDto.getId() + "] is running!");
+//        }
+    }
+
+    private void checkSceneDtoRunning(long sceneId) throws TCSServerRuntimeException {
+//        checkSceneDtoRunning(getSceneDto(sceneId));
+        if (isSceneDtoRunning(sceneId)) {
+            throw new TCSServerRuntimeException("The scene by id [" + sceneId + "] is running!");
         }
     }
 }

@@ -232,7 +232,7 @@
 
                 // todo
                 //var units = tcsEdit.units.getTypeMap();
-                var unit = 1;//units[curConfig.baseUnit]; // 1 = 1px
+                var unit = 0.1;//units[curConfig.baseUnit]; // 1 = 1px
                 var u_multi = unit * zoom;
 
                 var multi = tcsCanvas.calculateZoomMultiplier(u_multi);

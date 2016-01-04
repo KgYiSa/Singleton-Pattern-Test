@@ -177,7 +177,7 @@ public class SceneDto extends BaseEntityDto {
     }
 
     public PointDto getPointDtoByName(String name) {
-        if (pointDtos == null) {
+        if (pointDtos == null || name == null) {
             return null;
         }
         Optional<PointDto> pointDtoOp = pointDtos.stream().filter(l -> name.equals(l.getName())).findFirst();

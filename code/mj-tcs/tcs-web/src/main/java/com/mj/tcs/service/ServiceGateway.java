@@ -239,7 +239,6 @@ public class ServiceGateway {
     ////////////////////////////// OPERATTING /////////////////////////////////
     @PreDestroy
     public void shutdown() {
-        System.out.printf("++++++++++++++++++++++++++++++ DESTROY ++++++++++++++++++++++++");
         kernelRuntimeMapping.keySet().forEach(this::unloadSceneDto);
     }
 

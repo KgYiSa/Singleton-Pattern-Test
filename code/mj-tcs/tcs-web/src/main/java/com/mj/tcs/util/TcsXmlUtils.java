@@ -2,7 +2,6 @@ package com.mj.tcs.util;
 
 import com.mj.tcs.api.v1.dto.PointDto;
 import com.mj.tcs.api.v1.dto.base.TripleDto;
-import com.mj.tcs.data.base.Triple;
 import org.dom4j.*;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
@@ -16,9 +15,7 @@ import java.util.*;
 /**
  * Created by GuoXiaowu on 2015/11/18.
  */
-public class TcsXmlUtils {
-
-
+public class TCSXmlUtils {
     /**
      * @方法功能描述：生成空的xml文件头
      * @方法名:createEmptyXmlFile
@@ -505,8 +502,8 @@ public class TcsXmlUtils {
         List<Element> elements = element.elements();
         Map<String,String> map = new HashMap<>();
         for(Element e : elements){
-            if(TcsXmlUtils.getNodeAttrMap(e).get("type") != null) {
-                map.put(TcsXmlUtils.getSingleNodeText(e).get("key"),TcsXmlUtils.getSingleNodeText(e).get("value"));
+            if(TCSXmlUtils.getNodeAttrMap(e).get("type") != null) {
+                map.put(TCSXmlUtils.getSingleNodeText(e).get("key"), TCSXmlUtils.getSingleNodeText(e).get("value"));
             }
         }
         return map;

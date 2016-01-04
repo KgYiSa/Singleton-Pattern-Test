@@ -341,6 +341,7 @@ public class ServiceGateway {
             // remove it & terminate kernel
             LocalKernel kernel = kernelRuntimeMapping.remove(sceneId);
             kernel.terminate();
+            kernel.waitForTermination();
         }
     }
 

@@ -1,5 +1,8 @@
 # Created by https://www.gitignore.io/api/java,intellij,eclipse,webstorm
 
+
+!tcs-kernel-1.0.jar
+
 ### Java ###
 *.class
 
@@ -18,30 +21,34 @@ hs_err_pid*
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio
 
-*.iml
+# *.iml
 
 ## Directory-based project format:
-# .idea/
+.idea/
 # if you remove the above rule, at least ignore the following:
 
 # User-specific stuff:
-.idea/workspace.xml
-.idea/tasks.xml
-.idea/dictionaries
+# .idea/workspace.xml
+# .idea/tasks.xml
+# .idea/dictionaries
 
 # Sensitive or high-churn files:
-.idea/dataSources.ids
-.idea/dataSources.xml
-.idea/sqlDataSources.xml
-.idea/dynamic.xml
-.idea/uiDesigner.xml
+# .idea/dataSources.ids
+# .idea/dataSources.xml
+# .idea/sqlDataSources.xml
+# .idea/dynamic.xml
+# .idea/uiDesigner.xml
+
+./code/mj-tcs/tcs-base/target/
+./code/mj-tcs/tcs-web/target/
+
 
 # Gradle:
-.idea/gradle.xml
-.idea/libraries
+# .idea/gradle.xml
+# .idea/libraries/
 
 # Mongo Explorer plugin:
-.idea/mongoSettings.xml
+# .idea/mongoSettings.xml
 
 ## File-based project format:
 *.ipr

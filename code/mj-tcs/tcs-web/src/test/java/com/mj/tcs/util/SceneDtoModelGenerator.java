@@ -163,7 +163,7 @@ public class SceneDtoModelGenerator {
         sceneDto.setName(newSceneName);
 
         // Points & Paths
-        for (int i=0; i< 1000; i++) {
+        for (int i=0; i< 10; i++) {
             createPointDto();
 
             if (i != 0 && i % 2 == 1) {

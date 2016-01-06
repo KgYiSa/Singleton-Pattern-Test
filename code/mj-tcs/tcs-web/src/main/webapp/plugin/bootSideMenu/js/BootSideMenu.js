@@ -155,7 +155,7 @@ function getSide(listaClassi){
 			side = null;
 		}
 	}
-	console.log(side);
+	//console.log(side);
 	return side;
 }
 //esegue l'animazione

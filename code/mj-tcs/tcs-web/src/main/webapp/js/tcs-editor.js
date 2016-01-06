@@ -96,7 +96,8 @@
             });
 
             $('#zoom').change(function(){
-                changeZoom(this)
+                //changeZoom(this)
+                zoomChanged(window, "content", true);
             });
 
             var changeZoom = function(ctl) {
@@ -405,6 +406,26 @@
 
             // INVOKE
             updateCanvas(true);
+        };
+
+        Editor.loadScene = function(jsonObject, autoCenter) {
+            tcsCanvas.buildSceneEditor(jsonObject);
+
+            if (!autoCenter) {
+                return;
+            }
+
+            tcsCanvas.getBBox(true);
+        };
+
+        /**
+         *
+         * @param dx from left to right
+         * @param dy from top to bottom
+         */
+        Editor.translate = function(dx, dy) {
+            tcsCanvas.translateScene(dx, dy);
+            Editor.updateCanvas();
         };
 
         var callbacks = [];

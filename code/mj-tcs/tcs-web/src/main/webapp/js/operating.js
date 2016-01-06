@@ -53,6 +53,12 @@ $(function(){
      
     });
 
+    //平移按钮
+    $(".operation-list .hand").click(function() {
+        // TODO:
+        window.tcsDraw.translate(10,10);
+    });
+
     //工单按钮
     $(".operation-list .to").click(function() {
     	if ($(".top-panel .top-panel-to").css("display") == 'none') {

@@ -12,10 +12,8 @@ import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.api.v1.dto.base.EntityProperty;
 
 import javax.persistence.*;
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * @author Wang Zhen
@@ -144,6 +142,13 @@ public class SceneDto extends BaseEntityDto {
 
     public Set<EntityProperty> getProperties() {
         return properties;
+    }
+
+    // Used for client comparison
+    @JsonProperty("updated_at")
+    public String getUpdatedAt() {
+        return (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
+                .format((getAuditorDto() == null) ? (new Date()) : (getAuditorDto().getUpdatedAt()));
     }
 
     public Set<PointDto> getPointDtos() {

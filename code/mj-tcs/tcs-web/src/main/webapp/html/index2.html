@@ -33,6 +33,7 @@
                            SCENE_DELETE :"SCENE_DELETE",
                            SCENE_START :"SCENE_START",
                            SCENE_STOP :"SCENE_STOP",
+                           SCENE_SPECIFIC_PROFILE :"SCENE_SPECIFIC_PROFILE",
                            // Transport Order
                            TO_NEW: "TO_NEW",
                            TO_WITHDRAW: "TO_WITHDRAW",
@@ -297,6 +298,18 @@
                 fireAction(ACTIONS.SCENE_FIND, Number($("#findSceneId").val()));
             }
 
+            function getSceneProfile() {
+
+                var sceneProfile = {
+                    "uuid":REQ_UUID,
+                    "action_code":ACTIONS.SCENE_SPECIFIC_PROFILE,
+                    "body":{}
+                };
+
+                stompClient.send("/app/topic/actions/scenes/" + Number($("#findSceneId").val()) + "/request", {},
+                        JSON.stringify(sceneProfile));
+            }
+
             function deleteScene() {
                 fireAction(ACTIONS.SCENE_DELETE, Number($("#findSceneId").val()));
             }
@@ -437,6 +450,7 @@
                 <b>Scene ID:</b>
                 <input id="findSceneId" onkeyup="sceneIdChange()" type="text" name="sceneId" value="" style="width: 30px"/>
                 <button id="getScene" style="width: 100px; height: 100%;" onclick="getScene()">Get Scene</button>
+                <button id="getSceneProfile" style="width: 150px; height: 100%;" onclick="getSceneProfile()">Get Scene Profile</button>
                 <button id="deleteScene" style="width: 100px; height: 100%;" onclick="deleteScene()">Delete Scene</button>
                 <button id="startScene" style="width: 100px;height: 100%;" onclick="startScene()">Start Scene</button>
                 <button id="stopScene" style="width: 100px;height: 100%;" onclick="stopScene()">Stop Scene</button>

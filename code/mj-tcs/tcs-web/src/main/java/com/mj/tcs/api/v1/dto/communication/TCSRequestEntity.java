@@ -81,13 +81,15 @@ public class TCSRequestEntity<T> extends TCSCommEntity<T> {
 
     public enum Action {
         UNKNOWN("UNKNOWN"),
-        // Scene Operations
+        // Scene Operations (General)
         SCENE_PROFILE("SCENE_PROFILE"),
         SCENE_CREATE("SCENE_CREATE"),// WARNING: LAZY LOAD!!
         SCENE_FIND("SCENE_FIND"),
         SCENE_DELETE("SCENE_DELETE"),
         SCENE_START("SCENE_START"),
         SCENE_STOP("SCENE_STOP"),
+        // Scene Operations (Specific)
+        SCENE_SPECIFIC_PROFILE("SCENE_SPECIFIC_PROFILE"),
         // Transport Order Operations
         TO_NEW("TO_NEW"),
         TO_WITHDRAW("TO_WITHDRAW"),

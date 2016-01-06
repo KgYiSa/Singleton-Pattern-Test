@@ -2,21 +2,7 @@
 // Dependencies:
 // 1) underscore.js
 // 2) has.js
-//
-(function () {
-
-    if (!window.console) {
-        window.console = {};
-        window.console.log = function(str) {};
-        window.console.dir = function(str) {};
-    }
-
-    if (window.opera) {
-        window.console.log = function(str) { opera.postError(str); };
-        window.console.dir = function(str) {};
-    }
-
-}());
+// 3) two.js
 
 // Class: TCSCanvas
 // The main TCSCanvas class that manages all TCS-canvas related functions
@@ -571,24 +557,6 @@ $.TCSCanvas = function(container, config) {
         currentVehicle.setVehiclePosition(x,y,precisePointUUID);
 
     };
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//    var editor_in = [200, 150];
-//    var canvas_coord = tcsCanvas.editorCoordinatesToMouseCoordinates(editor_in);
-//
-//    var text_styles={
-//        size:10,
-//        linewidth:1,
-//        alignment:'center'
-//    };
-//    var _x = canvas_coord[0],
-//        _y = canvas_coord[1];
-//    var cross_x = twoCanvas.makeLine(_x - 20, _y, _x + 20, _y);
-//    cross_x.stroke = 'blue';
-//    cross_x.linewidth = 1.0;
-//    var cross_y = twoCanvas.makeLine(_x, _y - 20, _x, _y + 20);
-//    cross_y.stroke = 'blue';
-//    cross_y.linewidth = 1.0;
-//    text = twoCanvas.makeText("x: " + editor_in[0] + ", y: " + editor_in[1], _x+45, _y-10, text_styles);
 /////////////////////////////////////////////////  TWO JS  /////////////////////////////////////////////////////////////
 
     // Mouse events

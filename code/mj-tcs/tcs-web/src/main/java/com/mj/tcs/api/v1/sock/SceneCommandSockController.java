@@ -8,6 +8,7 @@ import com.mj.tcs.api.v1.dto.communication.TCSRequestEntity;
 import com.mj.tcs.api.v1.dto.communication.TCSResponseEntity;
 import com.mj.tcs.api.v1.web.ServiceController;
 import com.mj.tcs.util.TCSDtoUtils;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.annotation.SendToUser;
@@ -24,7 +25,7 @@ public class SceneCommandSockController extends ServiceController {
 
     @MessageMapping("/topic/actions/request")
     @SendToUser("/topic/actions/response")
-    public TCSResponseEntity<?> executeAction(/*Principal principal, */SimpMessageHeaderAccessor ha, TCSRequestEntity request) {
+    public TCSResponseEntity<?> executeGeneralAction(/*Principal principal, */SimpMessageHeaderAccessor ha, TCSRequestEntity request) {
         Objects.requireNonNull(request);
         TCSResponseEntity<?> responseEntity = null;
 
@@ -66,6 +67,36 @@ public class SceneCommandSockController extends ServiceController {
         return responseEntity;
     }
 
+    @MessageMapping("/topic/actions/scenes/{sceneId}/request")
+    @SendToUser("/topic/actions/response")
+    public TCSResponseEntity<?> executeSpecificAction(@DestinationVariable Long sceneId,
+                                                      SimpMessageHeaderAccessor ha,
+                                                      TCSRequestEntity request) {
+        Objects.requireNonNull(request);
+        TCSResponseEntity<?> responseEntity = null;
+
+        TCSRequestEntity.Action actionCode = request.getActionCode();
+        if (actionCode == null) {// Check actionCode
+            return new TCSResponseEntity<>(TCSResponseEntity.Status.ERROR,
+                    "The action code is null.");
+        }
+
+        try {
+            switch (actionCode) {
+                case SCENE_SPECIFIC_PROFILE:
+                    responseEntity = getSceneProfile(sceneId);
+                    break;
+                default:
+                    throw new IllegalArgumentException("The action code [" + actionCode + "] is not recognized.");
+            }
+        } catch (Exception e) {
+            responseEntity = new TCSResponseEntity<>(TCSResponseEntity.Status.ERROR,null, e.getMessage());
+        }
+
+        responseEntity.setResponseUUID(request.getRequestUUID());
+        return responseEntity;
+    }
+
     private TCSResponseEntity<?> getAllScenesProfile() {
         Collection<SceneDto> sceneDtos = getService().findAllScene();
         List<Map<String, String>> sceneDtosProfile = new ArrayList<>();
@@ -76,12 +107,26 @@ public class SceneCommandSockController extends ServiceController {
                 item.put("id", sceneDto.getId().toString());
                 item.put("name", sceneDto.getName());
                 item.put("status", getService().isSceneDtoRunning(sceneDto) ? "running" : "stopped");
-                item.put("updated_at", String.valueOf(sceneDto.getAuditorDto().getUpdatedAt().getTime()));
+                item.put("updated_at", sceneDto.getUpdatedAt());
                 sceneDtosProfile.add(item);
             }
         }
 
         return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS, sceneDtosProfile);
+    }
+
+    private TCSResponseEntity<?> getSceneProfile(long sceneId) {
+        SceneDto sceneDto = Objects.requireNonNull(getService().getSceneDto(sceneId));
+        Map<String, String> sceneDtoProfile = new TreeMap<>();
+
+        if (sceneDto != null) {
+            sceneDtoProfile.put("id", sceneDto.getId().toString());
+            sceneDtoProfile.put("name", sceneDto.getName());
+            sceneDtoProfile.put("status", getService().isSceneDtoRunning(sceneDto) ? "running" : "stopped");
+            sceneDtoProfile.put("updated_at", sceneDto.getUpdatedAt());
+        }
+
+        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS, sceneDtoProfile);
     }
 
     private TCSResponseEntity<?> createSceneDto(Object jsonBody) throws IOException {

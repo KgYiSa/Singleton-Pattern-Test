@@ -19,7 +19,7 @@ $.TCSCanvas = function(container, config) {
         show_outside_canvas: true,
         selectNew: true,
         dimensions: [640, 480], // Array with width/height of canvas
-        offset:[50, 400]
+        offset:[50, 50] // x: from left to right; y: from bottom to top
     };
 
     // Update config with new one if given
@@ -28,12 +28,12 @@ $.TCSCanvas = function(container, config) {
     }
 
     var dimensions = curConfig.dimensions;
-    var contentOffset = curConfig.offset;
+    var contentOffset = [curConfig.offset[0], $(container).height() - curConfig.offset[1]];
 
     var tcsCanvas = this;
 
     var two;
-    var twoAxisX, twoAxisY, twoAxisPos;
+    var twoAxisGroup, twoAxisPos;
     var twoElements = [];
     var twoFlags = [
         '_flagMatrix',
@@ -48,7 +48,7 @@ $.TCSCanvas = function(container, config) {
         '_flagJoin',
         '_flagMiter'
     ];
-    var velocity_x = 1;
+
     var twoOperations = {
         //TODO
         translation: {
@@ -147,10 +147,16 @@ $.TCSCanvas = function(container, config) {
         //twoContent.height = res.h/zoomlevel;
 
         current_zoom = zoomlevel;
-        $.each(selectedElements, function(i, elem) {
-            if (!elem) {return;}
-            selectorManager.requestSelector(elem).resize();
-        });
+        //$.each(selectedElements, function(i, elem) {
+        //    if (!elem) {return;}
+        //    selectorManager.requestSelector(elem).resize();
+        //});
+
+        // update content Offset
+        contentOffset[1] = $(container).height() - curConfig.offset[1];
+        // update axis position
+        axisOffset = tcsCanvas.editorCoordinatesToMouseCoordinates([0, 0]);
+        twoAxisGroup.translation.set(axisOffset[0], axisOffset[1]);
         //pathActions.zoomChange();
         //runExtensions('zoomChanged', zoomlevel);
 
@@ -202,12 +208,16 @@ $.TCSCanvas = function(container, config) {
         switch (val) {
             case 'content':
                 // TODO
-                bb = getStrokedBBox();
+                bb = getBBox(true);
                 break;
             default:
                 return;
         }
         return calcZoom(bb);
+    };
+
+    tcsCanvas.getBBox = function(shallow) {
+      return two.scene.getBoundingClientRect(shallow);
     };
 
     // u_multi = unit * zoom
@@ -415,14 +425,23 @@ $.TCSCanvas = function(container, config) {
     function initializeAxes(x, y) {
         // two axes
         var axisLen = 100;
-        twoAxisX = two.makeLine(x, y, x + axisLen, y);
+        var twoAxisX = two.makeLine(x, y, x + axisLen, y);
         twoAxisX.linewidth = 0.75;
         twoAxisX.stroke = 'red';
 
-        twoAxisY = two.makeLine(x, y, x, y - axisLen);
+        var twoAxisY = two.makeLine(x, y, x, y - axisLen);
         twoAxisY.linewidth = 0.7;
         twoAxisY.stroke = 'green';
 
+        twoAxisGroup = two.makeGroup(twoAxisX, twoAxisY);
+        var corner = {
+            x: x,
+            y: y
+        };
+        twoAxisGroup.children.forEach(function(child) {
+            child.translation.subSelf(corner);
+        });
+        twoAxisGroup.translation.set(x, y);
         //two.update();
     };
 
@@ -527,6 +546,7 @@ $.TCSCanvas = function(container, config) {
             uuidToElemMap.set(jsonVehicle.UUID,vehicle);
         }
 
+        console.log(two.scene.getBoundingClientRect(true));
         tcsCanvas.play();
 
     };

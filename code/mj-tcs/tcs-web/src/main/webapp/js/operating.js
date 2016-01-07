@@ -431,7 +431,8 @@ var getSceneContent = function (id) {
             if(data){
                 buildTree(data);
                 endingLoading();
-                window.tcsDraw.canvas.buildSceneEditor(data);
+                //window.tcsDraw.canvas.buildSceneEditor(data);
+                window.tcsDraw.loadScene(data, true);
             }
 
         },

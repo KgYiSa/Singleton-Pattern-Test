@@ -96,8 +96,8 @@
             });
 
             $('#zoom').change(function(){
-                //changeZoom(this)
-                zoomChanged(window, "content", true);
+                changeZoom(this)
+                //zoomChanged(window, "content", true);
             });
 
             var changeZoom = function(ctl) {
@@ -213,6 +213,21 @@
                 var scroll_x = w/2 - w_orig/2;
                 var scroll_y = h/2 - h_orig/2;
 
+                //if(center) {
+                //    // Go to top-left for larger documents
+                //    if(tcsCanvas.contentW > w_area.width()) {
+                //        // Top-left
+                //        w_area[0].scrollLeft = offset.x - 10;
+                //        w_area[0].scrollTop = offset.y - 10;
+                //    } else {
+                //        // Center
+                //        w_area[0].scrollLeft = scroll_x;
+                //        w_area[0].scrollTop = scroll_y;
+                //    }
+                //} else {
+                //    w_area[0].scrollLeft = new_ctr.x - w_orig/2;
+                //    w_area[0].scrollTop = new_ctr.y - h_orig/2;
+                //}
                 if(curConfig.showRulers) {
                     updateRulers(canvas, zoom);
                     workarea.scroll();
@@ -233,7 +248,7 @@
 
                 // todo
                 //var units = tcsEdit.units.getTypeMap();
-                var unit = 0.1;//units[curConfig.baseUnit]; // 1 = 1px
+                var unit = 1;//units[curConfig.baseUnit]; // 1 = 1px
                 var u_multi = unit * zoom;
 
                 var multi = tcsCanvas.calculateZoomMultiplier(u_multi);
@@ -297,7 +312,7 @@
                         label_pos += big_int;
                         var real_d = ruler_d - canvasOffset;
 
-                        var cur_d = Math.round(ruler_d) + .5;
+                        var cur_d = Math.round(ruler_d);
                         if(is_x) {
                             ctx.moveTo(cur_d, 15);
                             ctx.lineTo(cur_d, 0);
@@ -335,7 +350,7 @@
 
                         var part = big_int / 10;
                         for(var i = 1; i < 10; i++) {
-                            var sub_d = Math.round(ruler_d + part * i) + .5;
+                            var sub_d = Math.round(ruler_d + part * i);
                             if(ctx_arr && sub_d > ruler_len) {
                                 ctx_num++;
                                 ctx.stroke();
@@ -346,7 +361,7 @@
                                 }
                                 ctx = ctx_arr[ctx_num];
                                 ruler_d -= limit;
-                                sub_d = Math.round(ruler_d + part * i) + .5;
+                                sub_d = Math.round(ruler_d + part * i);
                             }
 
                             var line_num = (i % 5)? 12:7/*(i % 2)?12:10*/;
@@ -408,14 +423,12 @@
             updateCanvas(true);
         };
 
-        Editor.loadScene = function(jsonObject, autoCenter) {
-            tcsCanvas.buildSceneEditor(jsonObject);
-
-            if (!autoCenter) {
-                return;
-            }
-
-            tcsCanvas.getBBox(true);
+        Editor.loadScene = function(jsonObject, fill) {
+            var zoom = tcsCanvas.buildSceneEditor(jsonObject, fill);
+//TODO
+//            var bbox = tcsCanvas.getBBox(true);
+//            Editor.updateCanvas();
+            $("#zoom").val(zoom).change()
         };
 
         /**

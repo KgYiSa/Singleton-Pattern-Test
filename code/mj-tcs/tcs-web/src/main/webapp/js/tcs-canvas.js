@@ -13,7 +13,6 @@
 $.TCSCanvas = function(container, config) {
 
     // Default configuration options
-
     var curConfig = {
         show_outside_canvas: true,
         selectNew: true,
@@ -219,12 +218,18 @@ $.TCSCanvas = function(container, config) {
 
     tcsCanvas.getBBox = function(shallow) {
         var rect = two.scene.getBoundingClientRect(shallow);
+        var left_top = tcsCanvas.editorCoordinatesToMouseCoordinates([rect.left, rect.top]);
+        var right_bottom = tcsCanvas.editorCoordinatesToMouseCoordinates([rect.right, rect.bottom]);
         var value = {
-            width: rect.width,
-            height: rect.height,
+            width: Math.abs(right_bottom[0] - left_top[0]),
+            height: Math.abs(right_bottom[1] - left_top[1]),
+            x: left_top[0],
+            y: left_top[1],
+            x2: right_bottom[0],
+            y2: right_bottom[1]
             // center pt of scroll position
-            x: (rect.left + rect.right)/zoom, //($('#workarea').offset().left + w_area.width()/2)/zoom,
-            y: (rect.bottom + rect.top)/zoom, //($('#workarea').offset().top + w_area.height()/2)/zoom,
+            //x: (rect.left + rect.right)/zoom, //($('#workarea').offset().left + w_area.width()/2)/zoom,
+            //y: (rect.bottom + rect.top)/zoom, //($('#workarea').offset().top + w_area.height()/2)/zoom,
             //zoom: zoomlevel
         };
       return value;
@@ -267,7 +272,7 @@ $.TCSCanvas = function(container, config) {
 
         // todo
         //var units = tcsEdit.units.getTypeMap();
-        var unit = 0.1;//units[curConfig.baseUnit]; // 1 = 1px
+        var unit = 1;//units[curConfig.baseUnit]; // 1 = 1px
         var u_multi = unit * zoom;
 
         var multi = tcsCanvas.calculateZoomMultiplier(u_multi);
@@ -302,7 +307,7 @@ $.TCSCanvas = function(container, config) {
 
         // todo
         //var units = tcsEdit.units.getTypeMap();
-        var unit = 0.1;//units[curConfig.baseUnit]; // 1 = 1px
+        var unit = 1;//units[curConfig.baseUnit]; // 1 = 1px
         var u_multi = unit * zoom;
 
         var multi = tcsCanvas.calculateZoomMultiplier(u_multi);
@@ -353,7 +358,7 @@ $.TCSCanvas = function(container, config) {
     };
 
     var uuidToElemMap = new Map();//根据UUID存放对应point, location, vehicle
-    tcsCanvas.buildSceneEditor = function(jsonObject) {
+    tcsCanvas.buildSceneEditor = function(jsonObject, fill) {
 
         tcsCanvas.pause();
 
@@ -418,7 +423,38 @@ $.TCSCanvas = function(container, config) {
             uuidToElemMap.set(jsonVehicle.UUID,vehicle);
         }
 
+
         tcsCanvas.play();
+
+        // Auto fill
+        if (!_.isUndefined(fill) && (fill === true)) {
+            var bbox = tcsCanvas.getBBox(true);
+
+            // Find the minimum left top value comparison with (0, 0)
+            var left_min = Math.min(bbox.x, 0);
+            var top_min = Math.min(bbox.y, 0);
+
+            // calculate the new width & height
+            var width_new = bbox.x2 - left_min;
+            var height_new = bbox.y2 - top_min;
+
+            // calculate the new zoom level
+            var canvas = $("#tcs-canvas");
+            var spacer = 0.85;
+            var w_zoom = Math.round((width_new / canvas.width())*100 * spacer)/100;
+            var h_zoom = Math.round((height_new / canvas.height())*100 * spacer)/100;
+            var zoomLevel = 1.0 / Math.min(w_zoom, h_zoom);
+
+            // calculate the panning value; 0 for positive value, the absolute value otherwise.
+            var dx = (left_min < 0) ? -left_min : 0;
+            var dy = (top_min < 0) ? -top_min : 0;
+
+            // zoom & panning now
+            sceneOffset = [dx, dy];
+            // TODO: ZOOM ??? In tcs-editor.js??
+            current_zoom = zoomLevel;
+            return zoomLevel;
+        }
     };
 
     tcsCanvas.parseVehiclePosition = function(jsonStatusObject){

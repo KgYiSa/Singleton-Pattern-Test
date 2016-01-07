@@ -135,7 +135,7 @@
 
                             // add adapter options for the specified vehicle
                             if (adapterMap.has(currentVehicleUUID)) {
-                                var adapters = JSON.parse(adapterMap.get(currentVehicleUUID));
+                                var adapters = adapterMap.get(currentVehicleUUID);
                                 for (var i=0; i<adapters.length; i++) {
                                     domVehicleAdapters.append("<option value='" + adapters[i] + "'>"  + adapters[i] +"</option>");
                                 }

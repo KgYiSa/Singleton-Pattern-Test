@@ -82,12 +82,12 @@ public class VehicleCommandSockController extends ServiceController{
     }
 
     private  TCSResponseEntity<?> getAllVehicleProfile(final LocalKernel kernel, long sceneId, Object jsonBody) throws Exception {
-        List<Map<String, String>> vehiclesProfile = new ArrayList<>();
+        List<Map<String, Object>> vehiclesProfile = new ArrayList<>();
         Set<Vehicle> vehicles = Objects.requireNonNull(kernel.getTCSObjects(Vehicle.class));
         final CommunicationAdapterRegistry communicationAdapterRegistry = Objects.requireNonNull(kernel.getCommAdapterRegistry());
 
         for (final Vehicle vehicle : vehicles) {
-            Map<String, String> item = new LinkedHashMap<>();
+            Map<String, Object> item = new LinkedHashMap<>();
             item.put("uuid", vehicle.getUUID());
             item.put("name", vehicle.getName());
             item.put("position_uuid", (vehicle.getCurrentPosition() == null ? "":vehicle.getCurrentPosition().getUUID()));
@@ -104,12 +104,12 @@ public class VehicleCommandSockController extends ServiceController{
             item.put("processing_state", vehicle.getProcState().name());
             List<CommunicationAdapterFactory> factories = communicationAdapterRegistry.findFactoriesFor(vehicle);
             if (factories == null) {
-                item.put("adapters", "");
+                item.put("adapters", new ArrayList<String>());
             } else {
-                item.put("adapters", objectMapper.writeValueAsString(factories.stream()
+                item.put("adapters", factories.stream()
                         .filter(v -> v.providesAdapterFor(vehicle))
                         .map(v -> v.getAdapterFor(vehicle).getClass().getSimpleName())
-                        .collect(Collectors.toList())));
+                        .collect(Collectors.toList()));
             }
             vehiclesProfile.add(item);
         }

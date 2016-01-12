@@ -45,7 +45,7 @@
 				用户：
 			</sec:authorize>
 			<sec:authentication property="principal.username" /></span>
-			<a href="/logout">logout</a>
+			<a href="/logout">注销</a>
 		</div>
 	</div>
 </header>
@@ -678,7 +678,9 @@
 		  console.log(response)
 //		  alert(response.body.updated_at +"=="+ localStorage.getItem("updateTime"))
 		  if(response.status != "stopped" && response.body.updated_at == localStorage.getItem("updateTime")){
-			  buildTree(JSON.parse(localStorage.getItem("sceneJson")));
+			  var sceneJson = JSON.parse(localStorage.getItem("sceneJson"))
+			  $("header .title").text(sceneJson.name);
+			  buildTree(sceneJson);
 		  }
 	  }
 	  

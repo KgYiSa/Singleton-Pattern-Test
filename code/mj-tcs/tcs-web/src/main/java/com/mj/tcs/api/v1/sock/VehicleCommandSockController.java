@@ -163,8 +163,9 @@ public class VehicleCommandSockController extends ServiceController{
                     .findAny();
 
             if (!factoryOptional.isPresent()) {
-                throw new IllegalArgumentException("Can not found the adapter by name [" + adapterAttacherDto.getAdapterName()
-                    + "] for vehicle " + vehicle.getName());
+                continue; // TODO: Dis-attach
+//                throw new IllegalArgumentException("Can not found the adapter by name [" + adapterAttacherDto.getAdapterName()
+//                    + "] for vehicle " + vehicle.getName());
             }
             BasicCommunicationAdapter prevAdapter = kernel.findAdapterFor(vehicle.getReference());
             if (prevAdapter != null) {

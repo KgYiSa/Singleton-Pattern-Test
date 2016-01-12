@@ -480,20 +480,20 @@
 #left-sidebar {
 	/*background-color: #32FA0F;*/
 	height: 80%;
-	min-width: 500px;
+	min-width: 550px;
 	margin-top: 70px;
 	border-top-right-radius: 10px;
 	border-bottom-right-radius: 10px;
-	padding: 30px 20px 30px 10px;
-	min-height: 460px;
+	padding: 15px 10px 20px 10px;
+	min-height: 530px;
 }
 
 
 #left-sidebar .content {
 	height: 100%;
-	min-height: 400px;
+	min-height: 500px;
 	background-color: #C0C8C4;
-	padding: 30px 20px 30px 20px;
+	padding: 20px 15px 30px 20px;
 }
 #left-sidebar .content .simulation {
 	width: 100%;
@@ -537,12 +537,12 @@
 	padding-right:17px;
 	background-color:#999;
 	color:#000;
-	height: 10%;
+	height: 20px;
 	line-height: 23px;
 }
 
 #left-sidebar .content .adapter .table-head table th {
-	width: 10%;
+	width: 100%;
 	padding-left: 5px;
 }
 
@@ -550,7 +550,9 @@
 	width: 100%;
 	height: 100%;
 	overflow-y: scroll;
-	height: 80%;
+	height:-moz-calc(80% - 15px);
+	height:-webkit-calc(80% - 15px);
+	height:calc(80% - 15px);
 	border-left-style: solid;
 	border-left-width: 1px;
 	border-bottom-style: solid;

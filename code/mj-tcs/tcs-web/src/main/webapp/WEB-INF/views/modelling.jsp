@@ -72,7 +72,15 @@
 			</div>
 		</div>
 		<div class="userinfo">
-			<span class="label label-info">用户：admin</span>
+			<span class="label label-info">
+			<sec:authorize ifAllGranted="ROLE_ADMIN">
+				管理员：
+			</sec:authorize>
+			<sec:authorize ifNotGranted="ROLE_ADMIN">
+				用户：
+			</sec:authorize>
+			<sec:authentication property="principal.username" /></span>
+			<a href="/logout">注销</a>
 		</div>
 	</div>
 </header>
@@ -116,7 +124,7 @@
 				<li><img src="../images/transport-order.png" alt=""></li>
 				<li><img src="../images/transport-order.png" alt=""></li>
 				<li class="import-file"><img src="../images/folderopen.png" alt="">
-					<form method="POST" enctype="multipart/form-data" action="/upload">
+					<form method="POST" enctype="multipart/form-data" action="/web/utils/upload">
 						<input type="file" name="file" style="display: none">
 					</form>
 				</li>

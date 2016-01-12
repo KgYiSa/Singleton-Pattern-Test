@@ -192,13 +192,13 @@ var eleNodes =[
     { id:12, pId:1, name:"vehicle - 2", t:"vehicle3", icon:"../images/vehicle.18x18.png"},
     { id:13, pId:1, name:"vehicle - 3", t:"vehicle4", icon:"../images/vehicle.18x18.png"},
     { id:2, pId:0, name:"Points", t:"point", open:true},
-    { id:21, pId:2, name:"point - 1", t:"point1..", click:false, icon:"../images/point.18x18.png"},
-    { id:22, pId:2, name:"point - 2", t:"point2..", click:false, icon:"../images/point.18x18.png"},
-    { id:23, pId:2, name:"point - 3", t:"point3..", click:false, icon:"../images/point.18x18.png"},
+    { id:21, pId:2, name:"point - 1", t:"point1..", click:false, icon:"../images/points.18x18.png"},
+    { id:22, pId:2, name:"point - 2", t:"point2..", click:false, icon:"../images/points.18x18.png"},
+    { id:23, pId:2, name:"point - 3", t:"point3..", click:false, icon:"../images/points.18x18.png"},
     { id:3, pId:0, name:"Path", t:"Path...", open:true, click:false },
-    { id:31, pId:3, name:"Path3 - 1", t:"path1", icon:"../images/path.18x18.png"},
-    { id:32, pId:3, name:"Path3 - 2", t:"path2", icon:"../images/path.18x18.png"},
-    { id:33, pId:3, name:"Path3 - 3", t:"path3", icon:"../images/path.18x18.png"}
+    { id:31, pId:3, name:"Path3 - 1", t:"path1", icon:"../images/paths.18x18.png"},
+    { id:32, pId:3, name:"Path3 - 2", t:"path2", icon:"../images/paths.18x18.png"},
+    { id:33, pId:3, name:"Path3 - 3", t:"path3", icon:"../images/paths.18x18.png"}
 ];
 
 var bloNodes =[

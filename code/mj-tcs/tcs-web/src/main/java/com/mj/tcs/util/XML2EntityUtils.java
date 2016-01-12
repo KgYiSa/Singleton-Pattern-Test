@@ -1,12 +1,12 @@
 package com.mj.tcs.util;
 
 import com.mj.tcs.api.v1.dto.*;
+import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 import com.mj.tcs.api.v1.dto.base.EntityAuditorDto;
 import com.mj.tcs.api.v1.dto.base.TripleDto;
 import org.springframework.util.StringUtils;
 
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class XML2EntityUtils {
 
@@ -86,12 +86,39 @@ public class XML2EntityUtils {
         pathDto.setName(getStringFromMap("Name",map));
         pathDto.setMaxVelocity(getIntegerFromMap("maxVelocity",map));//(Integer.parseInt(map.get("maxVelocity").split("\\.")[0]));
         pathDto.setRoutingCost(getLongFromMap("cost",map));//((long)Double.parseDouble(map.get("cost")));
-        pathDto.setSourcePointDto(getPointDtoFromMap("startComponent",map));//(sceneDto.getPointDtoByName(map.get("startComponent")));
-        pathDto.setDestinationPointDto(getPointDtoFromMap("endComponent",map));//(sceneDto.getPointDtoByName(map.get("endComponent")));
+        PointDto outPoint = getPointDtoFromMap("startComponent",map);
+        outPoint.addOutgoingPath(pathDto);
+        pathDto.setSourcePointDto(outPoint);//(sceneDto.getPointDtoByName(map.get("startComponent")));
+        PointDto inPoint = getPointDtoFromMap("endComponent",map);
+        inPoint.addIncomingPath(pathDto);
+        pathDto.setDestinationPointDto(inPoint);//(sceneDto.getPointDtoByName(map.get("endComponent")));
         pathDto.setMaxReverseVelocity(getIntegerFromMap("maxReverseVelocity",map));//(Integer.parseInt(map.get("maxReverseVelocity").split("\\.")[0]));
         pathDto.setLength(getLongFromMap("length",map));//((long)Double.parseDouble(map.get("length")));
         pathDto.setLocked(getBooleanFromMap("locked",map));//(map.get("locked").equals("false"));
+        pathDto.setControlPoints(getControlPointsFromMap("CONTROL_POINTS",map));
         return pathDto;
+    }
+
+    private List<TripleDto> getControlPointsFromMap(String control_points, Map<String, String> map) {
+        List<TripleDto> tripleDtos = new ArrayList<>();
+        try {
+            if(map.get(control_points).length() < 1 ){
+                return tripleDtos;
+            }
+            String[] points = map.get(control_points).split(";");
+            for (int i = 0; i < points.length; i++) {
+                String[] label = points[i].split(",");
+                TripleDto tripleDto = new TripleDto();
+                tripleDto.setX(Integer.parseInt(label[0]));
+                tripleDto.setY(Integer.parseInt(label[1]));
+                tripleDto.setZ(0);
+                tripleDtos.add(tripleDto);
+            }
+        }catch (Exception e){
+//            System.out.print(e.getMessage());
+            e.printStackTrace();
+        }
+        return tripleDtos;
     }
 
     /**
@@ -151,12 +178,32 @@ public class XML2EntityUtils {
     }
 
     public BlockDto Map2BlockDto(Map<String,String> map){
-        BlockDto locationDto = new BlockDto();
+        BlockDto blockDto = new BlockDto();
+        blockDto.setName(getStringFromMap("Name",map));//(map.get("Name"));
+        blockDto.setResources(getResourcesFromMap("blockElements",map));
+        blockDto.addProperty("COLOR",getStringFromMap("COLOR",map));
+        blockDto.setProperties(null);
+        return blockDto;
+    }
 
-        locationDto.setName(getStringFromMap("Name",map));//(map.get("Name"));
-
-        locationDto.setProperties(null);
-        return locationDto;
+    private Set<BaseEntityDto> getResourcesFromMap(String name, Map<String, String> map) {
+        Set<BaseEntityDto> baseEntityDtos = new HashSet<>();
+        try {
+            String value = map.get(name);
+            String[] pointList = value.split(";");
+            for (String points : pointList) {
+                if(points.length() > 0) {
+                    String[] point = points.split(" --- ");
+                    for (String temp : point) {
+                        PointDto pointDto = sceneDto.getPointDtoByName(temp);
+                        baseEntityDtos.add(pointDto);
+                    }
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return baseEntityDtos;
     }
 
     /**
@@ -184,7 +231,13 @@ public class XML2EntityUtils {
             throw new NullPointerException("Map is Empty :" + map + ",can not get value from Null Object.");
         }
         String value =  (String) map.get(key);
-
+        if(value.length() < 1 ){
+            if(key.equals("LABEL_OFFSET_X")){
+                value = "-10";
+            }else if(key.equals("LABEL_OFFSET_Y")){
+                value = "-20";
+            }
+        }
         if(StringUtils.isEmpty(value)){
             throw new IllegalArgumentException("String is Empty :" + key + ",can not parse from Empty String.");
         }

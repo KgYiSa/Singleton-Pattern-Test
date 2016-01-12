@@ -31,6 +31,8 @@ $.TCSCanvas = function(container, config) {
 
     var tcsCanvas = this;
 
+    tcsCanvas.unit = 1;
+
     var two;
     var twoAxisGroup, twoAxisPos;
     var twoElements = [];
@@ -77,7 +79,7 @@ $.TCSCanvas = function(container, config) {
         scale: {
             enabled: true,
             update: function(element) {
-                element.translation.set(axisOffset[0], axisOffset[1]);
+                //element.translation.set(axisOffset[0], axisOffset[1]);
                 element.scale = current_zoom;
             }
         }
@@ -155,7 +157,7 @@ $.TCSCanvas = function(container, config) {
         //contentOffset[1] = $(container).height() - curConfig.offset[1];
 
         // update axis position
-        axisOffset = tcsCanvas.editorCoordinatesToMouseCoordinates([0, 0]);
+        axisOffset = tcsCanvas.editorCoordinatesToCanvasCoordinates([0, 0]);
         twoAxisGroup.translation.set(axisOffset[0], axisOffset[1]);
         //pathActions.zoomChange();
         //runExtensions('zoomChanged', zoomlevel);
@@ -218,8 +220,10 @@ $.TCSCanvas = function(container, config) {
 
     tcsCanvas.getBBox = function(shallow) {
         var rect = two.scene.getBoundingClientRect(shallow);
-        var left_top = tcsCanvas.editorCoordinatesToMouseCoordinates([rect.left, rect.top]);
-        var right_bottom = tcsCanvas.editorCoordinatesToMouseCoordinates([rect.right, rect.bottom]);
+        //var left_top = tcsCanvas.editorCoordinatesToMouseCoordinates([rect.left, rect.top]);
+        //var right_bottom = tcsCanvas.editorCoordinatesToMouseCoordinates([rect.right, rect.bottom]);
+        var left_top = [rect.left, rect.top];
+        var right_bottom = [rect.right, rect.bottom];
         var value = {
             width: Math.abs(right_bottom[0] - left_top[0]),
             height: Math.abs(right_bottom[1] - left_top[1]),
@@ -264,6 +268,23 @@ $.TCSCanvas = function(container, config) {
         return _calculateMultiplier(u_multi);
     };
 
+    // from DOM (workarea) Space to EDITOR (RULER) Space
+    tcsCanvas.mouseCoordinatesToCanvasCoordinates = function(mouse_coords) {
+        return [
+            mouse_coords[0] - sceneOffset[0],
+            mouse_coords[1] - sceneOffset[1]
+        ];
+    };
+
+    // from EDITOR (RULER) Space to DOM (workarea) Space
+    tcsCanvas.canvasCoordinatesToMouseCoordinates = function(canvas_coords) {
+        return [
+            canvas_coords[0] + sceneOffset[0],
+            canvas_coords[1] + sceneOffset[1]
+        ];
+    };
+
+    // from DOM (workarea) Space to EDITOR (RULER) Space
     // mouse_coords = [x, y]
     tcsCanvas.mouseCoordinatesToEditorCoordinates = function(mouse_coords) {
         var editor_coords = [0, 0];
@@ -272,8 +293,8 @@ $.TCSCanvas = function(container, config) {
 
         // todo
         //var units = tcsEdit.units.getTypeMap();
-        var unit = 1;//units[curConfig.baseUnit]; // 1 = 1px
-        var u_multi = unit * zoom;
+        //var unit = 0.1;//units[curConfig.baseUnit]; // 1 = 1px
+        var u_multi = tcsCanvas.unit * zoom;
 
         var multi = tcsCanvas.calculateZoomMultiplier(u_multi);
 
@@ -299,6 +320,7 @@ $.TCSCanvas = function(container, config) {
         return editor_coords;
     };
 
+    // from EDITOR (RULER) Space to DOM (workarea) Space
     // editor_coords = [x, y]
     tcsCanvas.editorCoordinatesToMouseCoordinates = function(editor_coords) {
         var mouse_coords = [0, 0];
@@ -307,8 +329,8 @@ $.TCSCanvas = function(container, config) {
 
         // todo
         //var units = tcsEdit.units.getTypeMap();
-        var unit = 1;//units[curConfig.baseUnit]; // 1 = 1px
-        var u_multi = unit * zoom;
+        //var unit = 0.1;//units[curConfig.baseUnit]; // 1 = 1px
+        var u_multi = tcsCanvas.unit * zoom;
 
         var multi = tcsCanvas.calculateZoomMultiplier(u_multi);
 
@@ -333,7 +355,27 @@ $.TCSCanvas = function(container, config) {
         return mouse_coords;
     };
 
-    var axisOffset = tcsCanvas.editorCoordinatesToMouseCoordinates([0, 0]);
+    /**
+     * from EDITOR (RULER) Space to CANVAS Space
+     *
+     * @param editor_coords
+     */
+    tcsCanvas.editorCoordinatesToCanvasCoordinates = function(editor_coords) {
+        var temp = tcsCanvas.editorCoordinatesToMouseCoordinates(editor_coords);
+        return tcsCanvas.mouseCoordinatesToCanvasCoordinates(temp);
+    };
+
+    /**
+     * from Canvas Space to Editor (RULER) Space
+     *
+     * @param canvas_coords
+     */
+    tcsCanvas.canvasCoordinatesToEditorCoordinates = function(canvas_coords) {
+        var temp = tcsCanvas.canvasCoordinatesToMouseCoordinates(canvas_coords);
+        return tcsCanvas.mouseCoordinatesToEditorCoordinates(temp);
+    };
+
+    var axisOffset = tcsCanvas.editorCoordinatesToCanvasCoordinates([0, 0]);
 /////////////////////////////////////////////////  TWO JS  /////////////////////////////////////////////////////////////
     twoAxisPos = tcsCanvas.editorCoordinatesToMouseCoordinates([0, 0]);
 
@@ -358,7 +400,26 @@ $.TCSCanvas = function(container, config) {
     };
 
     var uuidToElemMap = new Map();//根据UUID存放对应point, location, vehicle
-    tcsCanvas.buildSceneEditor = function(jsonObject, fill) {
+    var boundingBox = { x: 10000000,
+        y: 10000000,
+        x2: -10000000,
+        y2: -10000000};// left ,top, right, bottom
+    tcsCanvas.buildSceneEditor = function(jsonObject) {
+
+        function calcInnerBBox(twoObj, bbox) { // DOM Space
+            var bb = twoObj.getBoundingClientRect();
+            bbox.x = Math.min(bb.left + sceneOffset[0], bbox.x); // left
+            bbox.y = Math.min(bb.top + sceneOffset[1], bbox.y); // top
+            bbox.x2 = Math.max(bb.right + sceneOffset[0], bbox.x2); // right
+            bbox.y2 = Math.max(bb.bottom + sceneOffset[1], bbox.y2);// bottom
+            //var tt = tcsCanvas.mouseCoordinatesToEditorCoordinates([bb.left,bb.top]);
+            //var rr = tcsCanvas.mouseCoordinatesToEditorCoordinates([bb.right,bb.bottom]);
+            //bbox.x = Math.min(tt[0], bbox.x); // left
+            //bbox.y = Math.min(tt[1], bbox.y); // top
+            //bbox.x2 = Math.max(rr[0], bbox.x2); // right
+            //bbox.y2 = Math.max(rr[1], bbox.y2);// bottom
+            return bbox;
+        };
 
         tcsCanvas.pause();
 
@@ -374,15 +435,17 @@ $.TCSCanvas = function(container, config) {
 
         for(var i= 0; i<jsonObject.points.length; i++){
             var jsonPoint = jsonObject.points[i];
-            var pointPositionRelativeZero = [jsonPoint.display_position_x, jsonPoint.display_position_y];
+            var pointPositionRelativeZero = tcsCanvas.editorCoordinatesToMouseCoordinates([jsonPoint.display_position_x, jsonPoint.display_position_y]);
+            console.log("raw: ["+jsonPoint.display_position_x+", " + jsonPoint.display_position_y + "] -> new: [" + pointPositionRelativeZero[0] + ", " + pointPositionRelativeZero[1] + "]");
             var point = new Point(pointPositionRelativeZero[0],pointPositionRelativeZero[1],jsonPoint.type,jsonPoint.name,jsonPoint.label_offset_x,jsonPoint.label_offset_y,two);
-            twoElements.push(point.point);
+            twoElements.push(point.group);
+            boundingBox = calcInnerBBox(point.group, boundingBox);
             //uuidToElemMap[jsonPoint.UUID] = point;
             uuidToElemMap.set(jsonPoint.UUID,point);
         }
         for(var i= 0; i<jsonObject.locations.length; i++){
             var jsonLocation = jsonObject.locations[i];
-            var locationPositionRelativeZero = [jsonLocation.display_position_x, jsonLocation.display_position_y];
+            var locationPositionRelativeZero = tcsCanvas.editorCoordinatesToMouseCoordinates([jsonLocation.display_position_x, jsonLocation.display_position_y]);
             var location = new Location(locationPositionRelativeZero[0],locationPositionRelativeZero[1],jsonLocation.type,jsonLocation.name,jsonLocation.label_offset_x,jsonLocation.label_offset_y,two);
             for(var j=0; j<jsonLocation.attached_links.length; j++){
                 //var startX = uuidToElemMap[jsonLocation.attached_links[j].point.UUID].display_position_x;
@@ -390,9 +453,10 @@ $.TCSCanvas = function(container, config) {
                 var startX = uuidToElemMap.get(jsonLocation.attached_links[j].point.UUID).display_position_x;
                 var startY = uuidToElemMap.get(jsonLocation.attached_links[j].point.UUID).display_position_y;
                 var link = new Link(startX,startY,locationPositionRelativeZero[0],locationPositionRelativeZero[1],two);
-                twoElements.push(link.link);
+                twoElements.push(link.group);
             }
-            twoElements.push(location.location);
+            twoElements.push(location.group);
+            boundingBox = calcInnerBBox(location.group, boundingBox);
             //uuidToElemMap[jsonLocation.UUID] = location;
             uuidToElemMap.set(jsonLocation.UUID,location);
 
@@ -408,81 +472,167 @@ $.TCSCanvas = function(container, config) {
             var endX = uuidToElemMap.get(jsonPath.destination_point.UUID).display_position_x;
             var endY = uuidToElemMap.get(jsonPath.destination_point.UUID).display_position_y;
             var path = new Path(startX,startY,endX,endY,jsonPath.max_velocity,jsonPath.max_reverse_velocity,two);
-            twoElements.push(path.path);
+            twoElements.push(path.group);
         }
         for(var i= 0; i<jsonObject.vehicles.length; i++){
             var jsonVehicle = jsonObject.vehicles[i];
             //var pointX = uuidToElemMap[jsonVehicle.initial_point].display_position_x;
             //var pointY = uuidToElemMap[jsonVehicle.initial_point].display_position_y;
-            if(jsonVehicle.initial_point == "" || jsonVehicle.initial_point == null)continue;
-            var pointX = uuidToElemMap.get(jsonVehicle.initial_point).display_position_x;
-            var pointY = uuidToElemMap.get(jsonVehicle.initial_point).display_position_y;
-            var vehicle = new Vehicle(pointX,pointY,jsonVehicle.name,jsonVehicle.initial_point,two);
-            twoElements.push(vehicle.vehicle);
+            //if(jsonVehicle.initial_point == "" || jsonVehicle.initial_point == null)continue;
+            //var pointX = uuidToElemMap.get(jsonVehicle.initial_point).display_position_x;
+            //var pointY = uuidToElemMap.get(jsonVehicle.initial_point).display_position_y;
+            //var vehicle = new Vehicle(pointX,pointY,jsonVehicle.name,jsonVehicle.initial_point,two);
+            var vehicle = new Vehicle(0,0,jsonVehicle.name,jsonVehicle.initial_point,two);
+            twoElements.push(vehicle.group);
+            //boundingBox = calcInnerBBox(vehicle.group, boundingBox);
             //uuidToElemMap[jsonVehicle.UUID] = vehicle;
             uuidToElemMap.set(jsonVehicle.UUID,vehicle);
         }
 
+        for(var elem in twoElements){
+            tcsCanvas.setElemTranslation(twoElements[elem]);
+        }
 
         tcsCanvas.play();
+        two.update();
 
-        // Auto fill
-        if (!_.isUndefined(fill) && (fill === true)) {
-            var bbox = tcsCanvas.getBBox(true);
-
-            // Find the minimum left top value comparison with (0, 0)
-            var left_min = Math.min(bbox.x, 0);
-            var top_min = Math.min(bbox.y, 0);
-
-            // calculate the new width & height
-            var width_new = bbox.x2 - left_min;
-            var height_new = bbox.y2 - top_min;
-
-            // calculate the new zoom level
-            var canvas = $("#tcs-canvas");
-            var spacer = 0.85;
-            var w_zoom = Math.round((width_new / canvas.width())*100 * spacer)/100;
-            var h_zoom = Math.round((height_new / canvas.height())*100 * spacer)/100;
-            var zoomLevel = 1.0 / Math.min(w_zoom, h_zoom);
-
-            // calculate the panning value; 0 for positive value, the absolute value otherwise.
-            var dx = (left_min < 0) ? -left_min : 0;
-            var dy = (top_min < 0) ? -top_min : 0;
-
-            // zoom & panning now
-            sceneOffset = [dx, dy];
-            // TODO: ZOOM ??? In tcs-editor.js??
-            current_zoom = zoomLevel;
-            return zoomLevel;
-        }
     };
 
     tcsCanvas.parseVehiclePosition = function(jsonStatusObject){
 
-        var currentVehicle = uuidToElemMap.get(jsonStatusObject.UUID);
+        var currentVehicle = uuidToElemMap.get(jsonStatusObject.uuid);
 
-        var initialPointUUID;
-        var currentPointUUID;
-        var precisePointUUID = jsonStatusObject.precise_position;
+        //var initialPointUUID;
+        //var currentPointUUID;
+        var precisePointUUID = jsonStatusObject.position_uuid;
+        if(precisePointUUID == "" || precisePointUUID == null)return;
 
-        initialPointUUID = currentVehicle.initialPointUUID;
-        currentPointUUID = currentVehicle.currentPointUUID;
+        //initialPointUUID = currentVehicle.initialPointUUID;
+        //currentPointUUID = currentVehicle.currentPointUUID;
 
         var initialPoint,currentPoint,precisePoint;
 
-        initialPoint = uuidToElemMap.get(initialPointUUID);
-        currentPoint = uuidToElemMap.get(currentPointUUID);
+        //initialPoint = uuidToElemMap.get(initialPointUUID);
+        //currentPoint = uuidToElemMap.get(currentPointUUID);
         precisePoint = uuidToElemMap.get(precisePointUUID);
 
-        currentVehicle.setVehicleDirection(currentPoint.pointOrigin.translation,precisePoint.pointOrigin.translation);
+        //currentVehicle.setVehicleDirection(currentPoint.pointOrigin.translation,precisePoint.pointOrigin.translation);
 
         //相对于初始点的translation
         var x,y;
-        x = precisePoint.pointOrigin.translation.x-initialPoint.pointOrigin.translation.x;
-        y = precisePoint.pointOrigin.translation.y-initialPoint.pointOrigin.translation.y;
+        //x = precisePoint.pointOrigin.translation.x-initialPoint.pointOrigin.translation.x;
+        //y = precisePoint.pointOrigin.translation.y-initialPoint.pointOrigin.translation.y;
+        x = precisePoint.pointOrigin.translation.x;
+        y = precisePoint.pointOrigin.translation.y;
         currentVehicle.setVehiclePosition(x,y,precisePointUUID);
 
     };
+    tcsCanvas.setElemTranslation = function(elem){
+        elem.children.forEach(function(child) {
+            child.translation.subSelf({x:axisOffset[0],y:axisOffset[1]});
+        });
+        elem.translation.set(axisOffset[0], axisOffset[1]);
+    };
+    tcsCanvas.resetZoomAndOffset = function() {
+        // Reset
+        current_zoom = 1.0;
+        sceneOffset = [0, 0];
+        contentOffset = calculateContentOffset();
+        two.update();
+    };
+    tcsCanvas.autoZoomAndOffset = function(){
+        var bbox = boundingBox;//tcsCanvas.getBBox(true);
+
+        // Find the minimum left top value comparison with origin of the coordinate system (0, 0)
+        var left_min = Math.min(bbox.x, axisOffset[0]);
+        var top_min = Math.min(bbox.y, axisOffset[1]);
+
+        // calculate the new width & height
+        var spacer = 1.2;
+        var width_new = Math.abs(bbox.x2 - left_min) * spacer;
+        var height_new = Math.abs(bbox.y2 - top_min) * spacer;
+
+        // calculate the new zoom level
+        var canvas = $("#tcs-canvas");
+        var w_zoom = Math.round((canvas.width() / width_new)*100)/100;
+        var h_zoom = Math.round((canvas.height() / height_new)*100)/100;
+        var zoomLevel = Math.min(w_zoom, h_zoom);
+
+        //calculate the new bbox that already zoomed
+        left_min = (left_min-axisOffset[0])*spacer*zoomLevel+axisOffset[0];
+        top_min = (top_min-axisOffset[1])*spacer*zoomLevel+axisOffset[1];
+
+
+        // calculate the panning value; 0 for positive value, the absolute value otherwise.
+        var dx = -left_min;
+        var dy = -top_min;
+
+        // zoom & panning now
+        sceneOffset = [dx, dy];
+        //contentOffset = calculateContentOffset();
+        // TODO: ZOOM ??? In tcs-editor.js??
+        zoomLevel *= 100;
+        current_zoom = zoomLevel;
+        return zoomLevel;
+        //Auto fill [IN DOM SPACE!!]
+        //if (!_.isUndefined(fill) && (fill === true)) {
+        //    var bbox = boundingBox;//tcsCanvas.getBBox(true);
+        //
+        //    // Find the minimum left top value comparison with origin of the coordinate system (0, 0)
+        //    var left_min = Math.min(bbox.x, axisOffset[0]);
+        //    var top_min = Math.max(bbox.y2, axisOffset[1]/*0*/);
+        //
+        //    // calculate the new width & height
+        //    var spacer = 1.2;
+        //    var width_new = Math.abs(bbox.x2 - left_min) * spacer;
+        //    var height_new = Math.abs(bbox.y - top_min) * spacer;
+        //
+        //    // calculate the new zoom level
+        //    var canvas = $("#tcs-canvas");
+        //    var w_zoom = Math.round((canvas.width() / width_new)*100)/100;
+        //    var h_zoom = Math.round((canvas.height() / height_new)*100)/100;
+        //    var zoomLevel = Math.min(w_zoom, h_zoom);
+        //
+        //    // calculate the panning value; 0 for positive value, the absolute value otherwise.
+        //    var dx = ((left_min < 0) ? -left_min : 0)*zoomLevel;
+        //    var dy = ((top_min > axisOffset[1]) ? -(top_min-axisOffset[1]) : 0)*zoomLevel;
+        //
+        //    // zoom & panning now
+        //    sceneOffset = [dx, dy];
+        //    // TODO: ZOOM ??? In tcs-editor.js??
+        //    zoomLevel *= 100;
+        //    current_zoom = zoomLevel;
+        //    return zoomLevel;
+        //}
+        //if (!_.isUndefined(fill) && (fill === true)) {
+        //    var bbox = tcsCanvas.getBBox(true);
+        //
+        //    // Find the minimum left top value comparison with (0, 0)
+        //    var left_min = Math.min(bbox.x, 0);
+        //    var top_min = Math.min(bbox.y, 0);
+        //
+        //    // calculate the new width & height
+        //    var width_new = Math.abs(bbox.x2 - left_min);
+        //    var height_new = Math.abs(bbox.y2 - top_min);
+        //
+        //    // calculate the new zoom level
+        //    var canvas = $("#tcs-canvas");
+        //    var spacer = 0.85;
+        //    var w_zoom = Math.round((width_new / canvas.width())*100 * spacer)/100;
+        //    var h_zoom = Math.round((height_new / canvas.height())*100 * spacer)/100;
+        //    var zoomLevel = 1.0 / Math.max(w_zoom, h_zoom);
+        //
+        //    // calculate the panning value; 0 for positive value, the absolute value otherwise.
+        //    var dx = (left_min < 0) ? -left_min : 0;
+        //    var dy = (top_min < 0) ? -top_min : 0;
+        //
+        //    // zoom & panning now
+        //    //sceneOffset = [dx, dy];
+        //    // TODO: ZOOM ??? In tcs-editor.js??
+        //    current_zoom = zoomLevel;
+        //    return zoomLevel;
+        //}
+    }
 /////////////////////////////////////////////////  TWO JS  /////////////////////////////////////////////////////////////
 
     function calculateContentOffset() {
@@ -510,7 +660,7 @@ $.TCSCanvas = function(container, config) {
             width: dimensions[0],
             height: dimensions[1],
             type: Two.Types.webgl,
-            //antialias: true,
+            antialias: true,
             autostart: true
         };
         two = new Two(params).appendTo(document.querySelector('#tcs-canvas'));
@@ -604,6 +754,10 @@ $.TCSCanvas = function(container, config) {
         var twoAxisY = two.makeLine(x, y, x, y - axisLen);
         twoAxisY.linewidth = 0.7;
         twoAxisY.stroke = 'green';
+
+        //var test = two.makeRectangle(x,y, 100, 50);
+        //test.fill = 'red';
+        //twoElements.push(test);
 
         twoAxisGroup = two.makeGroup(twoAxisX, twoAxisY);
         var corner = {

@@ -19,11 +19,11 @@ Location = function (x,y,type,name,textOffsetXX,textOffsetYY,two){
 //    selectedPoint;
 
 
-    var LOCATION_DIAMETER = 30;
+    var LOCATION_DIAMETER = 60*elemLocation.ZOOM;
 
     var locationOrigin =  two.makeRectangle(x,y,LOCATION_DIAMETER,LOCATION_DIAMETER);
     locationOrigin.stroke = 'black';
-    locationOrigin.linewidth = 1;
+    locationOrigin.linewidth = 1*elemLocation.ZOOM;
     elemLocation.locationOrigin = locationOrigin;
 
     //编辑样式
@@ -52,7 +52,7 @@ Location = function (x,y,type,name,textOffsetXX,textOffsetYY,two){
     //标题
     var textTitle;
     var styles={
-        size:10,
+        size:10*elemLocation.ZOOM,
         linewidth:1,
         alignment:'center'
     };
@@ -65,7 +65,7 @@ Location = function (x,y,type,name,textOffsetXX,textOffsetYY,two){
 
     elemLocation.text = text;
 
-    elemLocation.location = two.makeGroup(elemLocation.locationOrigin
+    elemLocation.group = two.makeGroup(elemLocation.locationOrigin
         ,elemLocation.circle,elemLocation.rect1,elemLocation.rect2,elemLocation.rect3,elemLocation.rect4,elemLocation.text);
 
     //textTitleNumber++;

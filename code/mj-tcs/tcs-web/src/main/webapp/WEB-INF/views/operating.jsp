@@ -441,6 +441,8 @@
 </div>
 
 	<script type="text/javascript" src="../js/jquery-1.11.3.js"></script>
+	<script src="../plugin/sockjs/sockjs.js"></script>
+	<script src="../plugin/stomp/stomp.min.js"></script>
 	<script type="text/javascript" src="../plugin/bootstrap/js/bootstrap.js"></script>
 	<script type="text/javascript" src="../plugin/zTree/js/jquery.ztree.core-3.5.js"></script>
 	<script type="text/javascript" src="../plugin/bootSideMenu/js/BootSideMenu.js"></script>
@@ -460,8 +462,6 @@
 	<script type="text/javascript" src="../js/tcs-canvas.js"></script>
 	<script type="text/javascript" src="../js/tcs-editor.js"></script>
 	<script type="text/javascript" src="../js/operating.js"></script>
-	<script src="../plugin/sockjs/sockjs.js"></script>
-	<script src="../plugin/stomp/stomp.min.js"></script>
 	<!--<script type="text/javascript" src="../js/mjtcs-modelling.js"></script>-->
 	<script type="text/javascript">
 	  $(document).ready(function(){
@@ -572,7 +572,7 @@
 		  var transportSubscriber = stompClient.subscribe("/topic/status/scenes/" + sceneId+"/torders",
 				  function(message) {
 //                            var response = JSON.parse(message.body);
-					  console.log("++++++++++++++++");
+//					  console.log("++++++++++++++++");
 //					  console.log(message.body);
 					  showTOrderMessage(JSON.parse(message.body))
 //					  document.getElementById('transportStatus').innerHTML = "<b>TransportOrder:</b><br>" + message.body;
@@ -580,11 +580,13 @@
 
 		  var vehicleSubscriber = stompClient.subscribe("/topic/status/scenes/" + sceneId+"/vehicles",
 				  function(message) {
-//                            var response = JSON.parse(message.body);
+					  var response = JSON.parse(message.body);
 //					  console.log("---------------");
 //					  console.log(message.body);
 					  showVehicleMessage(JSON.parse(message.body));
+					  window.tcsDraw.canvas.parseVehiclePosition(response);
 //					  document.getElementById("vehicleStatus").innerHTML = "<b>VehicleStatus:</b><br>" + message.body;
+
 				  });
 
 		  subscriberMap.set(sceneId, [transportSubscriber, vehicleSubscriber]);

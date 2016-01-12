@@ -14,7 +14,7 @@ Point = function(x,y,type,name,textOffsetX,textOffsetY,two){
     //var textTitleNumber = 1;
     var textTitle;
     var styles={
-        size:10,
+        size:10*elemPoint.ZOOM,
         linewidth:1,
         alignment:'center'
     };
@@ -24,8 +24,9 @@ Point = function(x,y,type,name,textOffsetX,textOffsetY,two){
     //    selectedText,
     //    mouseoverObject,
     //    selectedPoint;
-
+//console.log("x = " + x + ", y = " + y);
     var pointOrigin =  two.makeCircle(x,y,elemPoint.POINT_RADIUS);
+    //console.log(pointOrigin.getBoundingClientRect());
     var typeColor;
     if(type == "REPORT_POSITION"){//Report Point
         typeColor = 'white';
@@ -36,7 +37,7 @@ Point = function(x,y,type,name,textOffsetX,textOffsetY,two){
     }
     pointOrigin.fill = typeColor;
     pointOrigin.stroke = 'black';
-    pointOrigin.linewidth = 1;
+    pointOrigin.linewidth = 1*elemPoint.ZOOM    ;
     elemPoint.typeColor = typeColor;
     elemPoint.pointOrigin = pointOrigin;
 
@@ -74,12 +75,13 @@ Point = function(x,y,type,name,textOffsetX,textOffsetY,two){
     //标题
     textTitle =  name;
     var text = two.makeText(textTitle,x-textOffsetX,y-textOffsetY,styles);
+    //console.log(text.getBoundingClientRect());
     //this.selectedText = false;
     elemPoint.textOffsetX = x-textOffsetX - elemPoint.pointOrigin.translation.x;
     elemPoint.textOffsetY = y-textOffsetY - elemPoint.pointOrigin.translation.x;
     elemPoint.text = text;
 
-    elemPoint.point = two.makeGroup(elemPoint.pointOrigin
+    elemPoint.group = two.makeGroup(elemPoint.pointOrigin
         ,elemPoint.circle,elemPoint.rect1,elemPoint.rect2,elemPoint.rect3,elemPoint.rect4,elemPoint.text);
 
     //textTitleNumber++;

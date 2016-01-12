@@ -29,11 +29,11 @@ Link = function (x1,y1,x2,y2,two) {
         var yy2 = y1 + (i + 1) * elemLink.POINT_RADIUS * Math.sin(atan2Angle);
 
         var dotted = two.makePath(xx1, yy1, xx2, yy2, true);
-        dotted.linewidth = 1;
+        dotted.linewidth = 1*elemLink.ZOOM;
         //dotted.opacity = (i % 2 == 0 ? 0 : 1);
         link.add(dotted);
     }
-    elemLink.link = link;
+    elemLink.group = link;
 
 
     function angle(start, end) {

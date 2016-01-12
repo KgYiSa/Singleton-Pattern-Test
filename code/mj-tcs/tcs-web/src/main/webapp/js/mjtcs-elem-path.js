@@ -9,7 +9,7 @@ Path = function(x1,y1,x2,y2,positiveVal,negativeVal,two){
 
     var XY = elemPath.initXY(x1,y1,x2,y2);
 
-    var TRIANGLE_RADIUS = 7;//PATH箭头半径
+    var TRIANGLE_RADIUS = 10*elemPath.ZOOM;//PATH箭头半径
 
     var atan2Angle = angle({x: XY.x1,y: XY.y1},{x: XY.x2,y: XY.y2});
     //正/负向速度不为0时，存在正/负向箭头
@@ -23,7 +23,7 @@ Path = function(x1,y1,x2,y2,positiveVal,negativeVal,two){
 
     var line = two.makePath(x1,y1,x2,y2,true);
 
-    line.linewidth = 1;
+    line.linewidth = 1*elemPath.ZOOM;
     elemPath.line = line;
 
     var positiveTriangle = two.makePolygon(x2,y2,TRIANGLE_RADIUS,3);
@@ -36,7 +36,7 @@ Path = function(x1,y1,x2,y2,positiveVal,negativeVal,two){
     negativeTriangle.opacity = negativeVal==0 ? 0:1;
     elemPath.negativeTriangle = negativeTriangle;
 
-    elemPath.path = two.makeGroup(elemPath.line,elemPath.positiveTriangle,elemPath.negativeTriangle);
+    elemPath.group = two.makeGroup(elemPath.line,elemPath.positiveTriangle,elemPath.negativeTriangle);
 
     //设置正/负向箭头角度
     setPositiveTriangle({x:x1,y:y1},{x:x2,y:y2});

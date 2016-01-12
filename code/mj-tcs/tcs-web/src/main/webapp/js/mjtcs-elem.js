@@ -5,15 +5,15 @@
 
 Elem = function(){
     //todo: polish magic number from tcs-canvas.js'code :var axisOffset = tcsCanvas.editorCoordinatesToMouseCoordinates([0, 0]);
-    var axisOffsetCopy = [52, 402];
+    var axisOffsetCopy = [0, 0];
 
     var elem = this;
 
-    //this.ZOOM = 1;
+    elem.ZOOM = 1;
     elem.boardOffsetX = 0;
     elem.boardOffsetY = 0;
-    elem.POINT_RADIUS = 5;
-    elem.LOCATION_RADIUS = 15;
+    elem.POINT_RADIUS = 10*elem.ZOOM;
+    elem.LOCATION_RADIUS = 30*elem.ZOOM;
 
     //将坐标转化成对应的网格坐标 网格边长为POINT_RADIUS*2
     elem.initXY = function(x1,y1,x2,y2){

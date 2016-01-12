@@ -248,8 +248,8 @@
 
                 // todo
                 //var units = tcsEdit.units.getTypeMap();
-                var unit = 1;//units[curConfig.baseUnit]; // 1 = 1px
-                var u_multi = unit * zoom;
+                //var unit = tcsCanvas.unit;//units[curConfig.baseUnit]; // 1 = 1px
+                var u_multi = tcsCanvas.unit * zoom;
 
                 var multi = tcsCanvas.calculateZoomMultiplier(u_multi);
 
@@ -424,10 +424,16 @@
         };
 
         Editor.loadScene = function(jsonObject, fill) {
-            var zoom = tcsCanvas.buildSceneEditor(jsonObject, fill);
+
+            //Reset
+            tcsCanvas.resetZoomAndOffset();
+            $("#zoom").val(100).change()
+
+            tcsCanvas.buildSceneEditor(jsonObject);
 //TODO
 //            var bbox = tcsCanvas.getBBox(true);
 //            Editor.updateCanvas();
+            var zoom = tcsCanvas.autoZoomAndOffset();
             $("#zoom").val(zoom).change()
         };
 

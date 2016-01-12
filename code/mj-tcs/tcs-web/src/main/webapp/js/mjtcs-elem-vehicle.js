@@ -14,30 +14,34 @@ Vehicle = function(x,y,name,initialPointUUID,two){
     var vehicleOrigin = two.makePath(x-elemVehicle.POINT_RADIUS*4,y-elemVehicle.POINT_RADIUS*2,x+elemVehicle.POINT_RADIUS*2,y-elemVehicle.POINT_RADIUS*2,x+elemVehicle.POINT_RADIUS*4,y,x+elemVehicle.POINT_RADIUS*2,y+elemVehicle.POINT_RADIUS*2,x-elemVehicle.POINT_RADIUS*4,y+elemVehicle.POINT_RADIUS*2,true);
     vehicleOrigin.fill = "orangered";
     vehicleOrigin.closed = true;
-    vehicleOrigin.opacity = 0.75;
+    vehicleOrigin.opacity = 0;
     elemVehicle.vehicleOrigin = vehicleOrigin;
 
     //标题
     var textTitle =  name.slice(-4);
     var styles={
-        size:10,
+        size:20*elemVehicle.ZOOM,
         alignment:'center'
     };
 
     var text = two.makeText(textTitle,x,y,styles);
+    text.opacity = 0;
     //elemVehicle.selectedText = false;
     elemVehicle.textOffsetX = x - elemVehicle.vehicleOrigin.translation.x;
     elemVehicle.textOffsetY = y - elemVehicle.vehicleOrigin.translation.x;
 
     elemVehicle.text = text;
 
-    elemVehicle.vehicle = two.makeGroup(elemVehicle.vehicleOrigin,elemVehicle.text);
+    elemVehicle.group = two.makeGroup(elemVehicle.vehicleOrigin,elemVehicle.text);
 
     elemVehicle.initialPointUUID = initialPointUUID;
     elemVehicle.currentPointUUID = initialPointUUID;
 
     elemVehicle.setVehiclePosition = function(x,y,currentPointUUID){
-        elemVehicle.vehicle.translation.set(x,y);
+        elemVehicle.vehicleOrigin.opacity = 0.75;
+        elemVehicle.text.opacity = 0.75;
+        elemVehicle.vehicleOrigin.translation.set(x,y);
+        elemVehicle.text.translation.set(x,y);
         elemVehicle.currentPointUUID = currentPointUUID;
     };
 

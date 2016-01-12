@@ -37,6 +37,9 @@ public interface Kernel extends EventSource<TCSEvent> {
     String getSceneName()
             throws IOException;
 
+
+    public long getSceneID();
+
     /**
      * Returns a single TCSObjectReference<?> of the given class.
      *
@@ -412,6 +415,36 @@ public interface Kernel extends EventSource<TCSEvent> {
      * execute this method.
      */
     TransportOrder createTransportOrder(List<DriveOrder.Destination> destinations)
+            throws CredentialsException;
+
+    /**
+     * Creates a new transport order.
+     * A new transport order is created with a generated unique UUID and name,
+     * containing the given <code>DriveOrder</code>s and with all other attributes
+     * set to their default values. A copy of the newly created transport order
+     * is then returned.
+     *
+     * @param orderUUID
+     * @param orderName
+     * @param destinations The list of destinations that have to be travelled to
+     * when processing this transport order.
+     * @return A copy of the newly created transport order.
+     * @throws CredentialsException If the calling client is not allowed to
+     * execute this method.
+     */
+    TransportOrder createTransportOrder(String orderUUID,
+                                       String orderName,
+                                       List<DriveOrder.Destination> destinations)
+            throws CredentialsException;
+
+    /**
+     * Removes a transport order from the kernel, if it does NOT exists, then do nothing.
+     *
+     * @param orderRef The transport order reference to be removed.
+     * @throws CredentialsException If the calling client is not allowed to
+     * execute this method.
+     */
+    void removeTransportOrder(TCSObjectReference<TransportOrder> orderRef)
             throws CredentialsException;
 
     /**

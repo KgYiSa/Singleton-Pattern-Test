@@ -218,7 +218,7 @@ public class SceneDtoModelGenerator {
         return staticRouteDto;
     }
 
-    public synchronized TransportOrderDto createTransportOrderDto(long destPointId) {
+    public synchronized TransportOrderDto createTransportOrderDto(String destPointUUID) {
         long id = new Random().nextInt(1000);
 
         TransportOrderDto transportOrderDto = new TransportOrderDto();
@@ -226,12 +226,12 @@ public class SceneDtoModelGenerator {
 
         transportOrderDto.setName(String.format("test_to_%d", id));
         transportOrderDto.setDeadline(new Date().getTime());
-        transportOrderDto.setIntendedVehicle(0);
+        transportOrderDto.setIntendedVehicleUUID(null);
 
         // Destination
         DestinationDto destinationDto = new DestinationDto();
         destinationDto.setAuditorDto(createAuditor());
-        destinationDto.setLocationId(destPointId); // TODO: Point-Name
+        destinationDto.setLocationUUID(destPointUUID);
         destinationDto.setDummy(true);
         destinationDto.setOperation("NOP");
 

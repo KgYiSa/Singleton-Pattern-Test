@@ -29,7 +29,7 @@ public class TransportOrderDto extends BaseEntityDto {
 
     @JsonIgnore
     @Column(name = "scene", nullable = false)
-    private SceneDto sceneDto;
+    private Long sceneId;
 
     @DtoField
     @Column
@@ -39,42 +39,38 @@ public class TransportOrderDto extends BaseEntityDto {
     @DtoField(value = "destination",
             dtoBeanKey = "DestinationDto",
             entityBeanKeys = "Destination")
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<DestinationDto> destinations;
 
     /**
      * The point of time at which this TransportOrder must have been finished.
      */
     @Column
-    private long deadline = Long.MAX_VALUE;
+    private Long deadline = Long.MAX_VALUE;
 
     /**
      * The point of time at which this transport order was finished.
      */
     @Column
-    private long finishedTime = Long.MIN_VALUE;
+    private Long finishedTime = Long.MIN_VALUE;
 
     /**
      * A reference to the vehicle that is intended to process this transport
      * order. If this order is free to be processed by any vehicle, this is
      * <code>null</code>.
      */
-    @JsonProperty(value = "intended_vehicle")
+    @JsonProperty(value = "intended_vehicle_uuid")
     @Column
-    private long intendedVehicle;
+    private String intendedVehicleUUID;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "tcs_order_transport_order_deps")
+    private List<String> deps;
 
     /**
      * Creates a new TransportOrder.
      */
     public TransportOrderDto() {
-    }
-
-    public SceneDto getSceneDto() {
-        return sceneDto;
-    }
-
-    public void setSceneDto(SceneDto sceneDto) {
-        this.sceneDto = sceneDto;
     }
 
     public String getName() {
@@ -109,7 +105,7 @@ public class TransportOrderDto extends BaseEntityDto {
      * @return This transport order's deadline or the initial deadline value.
      * <code>Long.MAX_VALUE</code>, if the deadline was not changed.
      */
-    public long getDeadline() {
+    public Long getDeadline() {
         return deadline;
     }
 
@@ -118,7 +114,7 @@ public class TransportOrderDto extends BaseEntityDto {
      *
      * @param newDeadline This transport order's new deadline.
      */
-    public void setDeadline(long newDeadline) {
+    public void setDeadline(Long newDeadline) {
         deadline = newDeadline;
     }
 
@@ -131,31 +127,50 @@ public class TransportOrderDto extends BaseEntityDto {
      * <code>Long.MIN_VALUE</code>, if the transport order has not been finished,
      * yet.
      */
-    public long getFinishedTime() {
+    public Long getFinishedTime() {
         return finishedTime;
     }
 
+    public void setFinishedTime(Long finishedTime) {
+        this.finishedTime = finishedTime;
+    }
+
     /**
-     * Returns a reference to the vehicle that is intended to process this
+     * Returns The UUID to the vehicle that is intended to process this
      * transport order.
      *
-     * @return A reference to the vehicle that is intended to process this
+     * @return The UUID to the vehicle that is intended to process this
      * transport order. If this order is free to be processed by any vehicle,
      * <code>null</code> is returned.
      */
-    public long getIntendedVehicle() {
-        return intendedVehicle;
+    public String getIntendedVehicleUUID() {
+        return intendedVehicleUUID;
     }
 
     /**
-     * Sets a reference to the vehicle that is intended to process this transport
+     * Sets a UUID to the vehicle that is intended to process this transport
      * order.
      *
-     * @param vehicle The ID to the vehicle intended to process this order,
-     *                  If the value <= 0, then use auto-selection.
+     * @param vehicle The UUID to the vehicle intended to process this order,
+     *                  If the value == null, then use auto-selection.
      */
-    public void setIntendedVehicle(long vehicle) {
-        intendedVehicle = vehicle;
+    public void setIntendedVehicleUUID(String vehicle) {
+        intendedVehicleUUID = vehicle;
     }
 
+    public Long getSceneId() {
+        return sceneId;
+    }
+
+    public void setSceneId(Long sceneId) {
+        this.sceneId = sceneId;
+    }
+
+    public List<String> getDeps() {
+        return deps;
+    }
+
+    public void setDeps(List<String> deps) {
+        this.deps = deps;
+    }
 }

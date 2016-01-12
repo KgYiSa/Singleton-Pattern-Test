@@ -1,6 +1,8 @@
 package com.mj.tcs.util;
 
+import java.text.DateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * Instances of this class provide a way to acquire unique timestamps, working
@@ -44,5 +46,10 @@ public class UniqueTimestampGenerator {
 
     public synchronized Date getNextDateTime() {
         return new Date(getNextTimestamp());
+    }
+
+    public synchronized String getNextTimestampInStringFormat(DateFormat dateFormat) {
+        Objects.requireNonNull(dateFormat);
+        return dateFormat.format(getNextDateTime());
     }
 }

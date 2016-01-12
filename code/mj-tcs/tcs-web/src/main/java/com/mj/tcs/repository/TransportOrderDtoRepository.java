@@ -6,7 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 /**
  * @author Wang Zhen
  */
-public interface TransportOrderRepository extends CrudRepository<TransportOrderDto, Long> {
+public interface TransportOrderDtoRepository extends CrudRepository<TransportOrderDto, Long> {
     /**
      * Returns all instances of the type in the scene.
      *

@@ -14,9 +14,6 @@ import com.mj.tcs.data.model.Point;
 import com.mj.tcs.data.model.Vehicle;
 import com.mj.tcs.data.order.DriveOrder;
 import com.mj.tcs.data.order.TransportOrder;
-import com.mj.tcs.drivers.BasicCommunicationAdapter;
-import com.mj.tcs.drivers.CommunicationAdapterFactory;
-import com.mj.tcs.drivers.SimCommunicationAdapter;
 import com.mj.tcs.eventsystem.EventHub;
 import com.mj.tcs.eventsystem.SynchronousEventHub;
 import com.mj.tcs.exception.ObjectUnknownException;
@@ -47,6 +44,9 @@ public class ServiceGateway {
 
     @Autowired
     SceneDtoService sceneDtoService;
+
+    @Autowired
+    TransportOrderDtoService orderDtoService;
 
     //////////////////////// MODELLING ///////////////////////////////
 
@@ -221,7 +221,7 @@ public class ServiceGateway {
     }
 
     public SceneDto updateScene(SceneDto dto) {
-        checkSceneDtoRunning(dto);
+        assertSceneDtoStatus(dto, true);
 
         synchronized (sceneDtoService) {
             return sceneDtoService.update(dto);
@@ -229,7 +229,7 @@ public class ServiceGateway {
     }
 
     public void deleteScene(long sceneId) {
-        checkSceneDtoRunning(sceneId);
+        assertSceneDtoStatus(sceneId, true);
 
         synchronized (sceneDtoService) {
             sceneDtoService.delete(sceneId);
@@ -361,21 +361,115 @@ public class ServiceGateway {
         return kernelRuntimeMapping.containsKey(sceneId);
     }
 
-    private void checkSceneDtoRunning(SceneDto sceneDto) throws TCSServerRuntimeException {
+    /////////////// Transport Order //////////////
+    public TransportOrderDto createTransportOrder(long sceneId, TransportOrderDto newOrderDto) throws Exception {
+        assertSceneDtoStatus(sceneId, false);
+        Objects.requireNonNull(newOrderDto);
+
+        final LocalKernel kernel = getKernel(sceneId);
+        final TransportOrder order;
+        // Convert from DTO to Entity
+        {
+            // Destinations
+            List<DriveOrder.Destination> realDests = new LinkedList<>();
+            for (DestinationDto destDto : newOrderDto.getDestinations()) {
+                final String locUUID = destDto.getLocationUUID();
+                final String operation = destDto.getOperation();
+                if (destDto.isDummy()) {
+                    // TODO: Refine const "MOVE"
+                    realDests.add(new DriveOrder.Destination(TCSObjectReference.getDummyReference(Point.class, locUUID), "MOVE"));
+                } else {
+                    // Get Location from kernel
+                    final Location location = Objects.requireNonNull(kernel.getTCSObject(Location.class, locUUID));
+                    realDests.add(new DriveOrder.Destination(location.getReference(), operation));
+                }
+            }
+
+            // New Transport order
+            // TODO: Use kernel's internal events
+            order = kernel.createTransportOrder(newOrderDto.getUUID(), newOrderDto.getName(), realDests);
+            // TODO: Polish Prefix
+//            order = new TransportOrder("TO-"+UUID.randomUUID(), "TO-"+new UniqueTimestampGenerator().getNextTimestampInStringFormat(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss:SS")), realDests);
+
+            // Set the transport order's deadline, if any.
+            if (newOrderDto.getDeadline() != null) {
+                kernel.setTransportOrderDeadline(order.getReference(), newOrderDto.getDeadline());
+            }
+
+            // Sets the intended vehicle, if any.
+            String vehicleUUID = newOrderDto.getIntendedVehicleUUID();
+            if (vehicleUUID != null && !vehicleUUID.isEmpty()) {
+                Vehicle vehicle = kernel.getTCSObject(Vehicle.class, vehicleUUID);
+                if (vehicle == null) {
+                    // TODO: Set state of created order to FAILED?
+                    throw new com.mj.tcs.data.ObjectUnknownException("Unknown vehicle: " + vehicleUUID);
+                }
+//                order.setIntendedVehicle(vehicle.getReference());
+                kernel.setTransportOrderIntendedVehicle(order.getReference(), vehicle.getReference());
+            }
+
+            // Set the transport order's dependencies, if any.
+            if (newOrderDto.getDeps() != null) {
+                List<String> toRemove = new ArrayList<>();
+                newOrderDto.getDeps().forEach(v -> {
+                    final TransportOrder curDep = kernel.getTCSObject(TransportOrder.class,
+                            v);
+                    // If curDep is null, remove it - it might have been processed and
+                    // removed already.
+                    if (curDep != null) {
+                        kernel.addTransportOrderDependency(order.getReference(),
+                                curDep.getReference());
+                    } else {
+                        toRemove.add(v);
+                    }
+                });
+                newOrderDto.getDeps().removeAll(toRemove);
+            }
+        }
+
+        // Save to Database.
+        try {
+            newOrderDto = orderDtoService.create(newOrderDto);
+        } catch (Exception e) {
+            kernel.removeTransportOrder(order.getReference());
+            throw new Exception(e);
+        }
+
+        // Activate the new transport order.
+        kernel.activateTransportOrder(order.getReference());
+
+        return newOrderDto;
+    }
+
+    public void withdrawTransportOrder(long sceneId, TransportWithdrawDto withdrawDto) throws Exception {
+        assertSceneDtoStatus(sceneId, false);
+        Objects.requireNonNull(withdrawDto);
+
+        final LocalKernel kernel = getKernel(sceneId);
+
+        TransportOrder transportOrder = Objects.requireNonNull(kernel.getTCSObject(TransportOrder.class, withdrawDto.getUUID()));
+        boolean force = withdrawDto.isForce();
+        boolean disableVehicle = withdrawDto.isDisableVehicle();
+        kernel.withdrawTransportOrder(transportOrder.getReference(), disableVehicle);
+        if (force) {
+            kernel.withdrawTransportOrder(transportOrder.getReference(), disableVehicle);
+        }
+
+        // TODO: Save to Database.
+    }
+
+    /////////////// PRIVATE METHODS //////////////
+    private void assertSceneDtoStatus(SceneDto sceneDto, boolean assertRunning) throws TCSServerRuntimeException {
         Objects.requireNonNull(sceneDto);
         Long idKey = Objects.requireNonNull(sceneDto.getId());
 
-        checkSceneDtoRunning(idKey);
-//        if (isSceneDtoRunning(sceneDto)) {
-//            Objects.requireNonNull(sceneDto.getId());
-//            throw new TCSServerRuntimeException("The scene by id [" + sceneDto.getId() + "] is running!");
-//        }
+        assertSceneDtoStatus(idKey, assertRunning);
     }
 
-    private void checkSceneDtoRunning(long sceneId) throws TCSServerRuntimeException {
-//        checkSceneDtoRunning(getSceneDto(sceneId));
-        if (isSceneDtoRunning(sceneId)) {
-            throw new TCSServerRuntimeException("The scene by id [" + sceneId + "] is running!");
+    private void assertSceneDtoStatus(long sceneId, boolean assertRunning) throws TCSServerRuntimeException {
+        boolean isRunning = isSceneDtoRunning(sceneId);
+        if (!(assertRunning ^ isRunning)) {
+            throw new TCSServerRuntimeException("The scene by id [" + sceneId + "] is " + (assertRunning ? "running":"stopped"));
         }
     }
 }

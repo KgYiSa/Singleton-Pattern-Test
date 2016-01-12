@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping({"/api/v1", ""})
+//@RequestMapping({"/api/v1", ""})
 public class LoginController {
 
     /**
@@ -14,8 +14,8 @@ public class LoginController {
      *
      * @return String
      */
-    @RequestMapping(value= "/login")
-    public ModelAndView getLoginPage() {
-        return new ModelAndView("login");
+    @RequestMapping(value= "/login",method = RequestMethod.GET)
+    public String getLoginPage() {
+        return "login";
     }
 }

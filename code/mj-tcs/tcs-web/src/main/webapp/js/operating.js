@@ -27,10 +27,10 @@ var setting = {
 var fJson = {};
 
 $(function(){
-    startLoading();
+    //startLoading();
 
     // 初始化树结构数据
-    initTree();
+    //initTree();
 
 	$(".elements-blocks-title li").each(function(){
 
@@ -246,15 +246,13 @@ $(function(){
 
 
     // show vehicle base info
-    $(".bottom-panel .bottom-panel-list .vehicle").click(function(){
-
+    $(".bottom-panel .bottom-panel-list").on("click", ".vehicle", (function(){
         var uuid = $(this).attr("vehicle-uuid");
         var vehicleDtail = fJson[uuid];
         $("#vehicleDetail .modal-body").html("");
         $("#vehicleDetail .modal-body").html(JSON.stringify(vehicleDtail));
         $("#vehicleDetail").modal("show");
-
-    });
+    }));
 
 
     // tcs-editor  right operate menu
@@ -279,14 +277,87 @@ $(function(){
             }
             $("#operate-popup").modal("show");
 
-        // TODO other operate
-        } else if(""){
+        } else if($(this)[0].id == "create-torder"){
 
+
+            $("#create-to table tbody").html("");
+            $("#create-to").modal("show");
+            // TODO other operate
         } else {
 
         }
 
     });
+
+    // 显示所有工位和 所有状态
+    $("#show-location-list").click(function(){
+
+        if(supportLocalStorage()) {
+            var data = localStorage.getItem("sceneJson");
+            var locationList = JSON.parse(data)["locations"];
+            //console.log(locationList)
+            if(locationList){
+                var dropdownItem = "";
+                $.each(locationList, function (index, attr) {
+                    dropdownItem += "<li><a href='#' location-uuid='" + attr.UUID + "' title='" + attr.name + "'>" + attr.name + "</a></li>";
+                })
+                $("#select-location .modal-body .location .dropdown-menu").html("");
+                $("#select-location .modal-body .location .dropdown-menu").html(dropdownItem);
+            }
+        }
+
+        $("#select-location .modal-body .state .dropdown-menu").html("<li><a href='#'>NOP</a></li>");
+        $("#select-location").modal("show");
+    });
+
+    // id: select-location dropdownmenu click
+    $("#select-location .modal-body .location .dropdown-menu").on("click", "a", function(){
+        $("#select-location .modal-body #location-dropdownMenu").html($(this).text()+"<span class='caret'></span>");
+        $("#select-location .modal-footer .submit").attr("location-uuid", $(this).attr("location-uuid"));
+        $("#select-location .modal-footer .submit").attr("location-name", $(this).attr("title"));
+    });
+
+    $("#select-location .modal-body .state .dropdown-menu").on("click", "a", function(){
+        $("#select-location .modal-body #location-state-dropdownMenu").html($(this).text()+"<span class='caret'></span>");
+        $("#select-location .modal-footer .submit").attr("state", $(this).text());
+    });
+
+    // id: select-location submit
+    $("#select-location .modal-footer .submit").on("click", function(){
+        var location_uuid = $(this).attr("location-uuid");
+        var location_name = $(this).attr("location-name");
+        var state = $(this).attr("state");
+        if(location_uuid == undefined || state == undefined || location_name == undefined) {
+            alert("please select the right location and state");
+            return
+        }
+        $("#create-to table tbody").append("<tr><td location-uuid='"+ location_uuid +"'>"+location_name+"</td><td state='"+state+"'>"+ state +"</td></tr>");
+
+        $("#select-location .modal-footer .submit").removeAttr("location-uuid");
+        $("#select-location .modal-footer .submit").removeAttr("location-name");
+        $("#select-location .modal-body #location-dropdownMenu").html("请选择工位<span class='caret'></span>");
+        $("#select-location .modal-body #location-state-dropdownMenu").html("请选择状态<span class='caret'></span>");
+        $("#select-location .modal-footer .submit").removeAttr("state");
+        $("#select-location").modal("hide");
+    })
+
+    // id: create-to modal submit
+    $("#create-to .modal-footer .submit").on("click", function(){
+        var tbodyContent = $("#create-to table tbody");
+        if(tbodyContent.html() != ''){
+            var location_uuid = tbodyContent.find("td:eq(0)").attr("location-uuid");
+            var state = tbodyContent.find("td:eq(1)").attr("state");
+
+            createTransport(location_uuid, state);
+            $("#create-to").modal("hide");
+
+        } else {
+            $("#create-to").modal("hide");
+            return
+        }
+
+    })
+
 
     // tcs-editor  right operate menu --- dropdownmenu
     $("#operate-popup .modal-body .dropdown-menu").on("click", "a", function(){
@@ -310,14 +381,6 @@ $(function(){
 
         onClick(event, "elements-tree", vehicleNode, true);
     });
-
-
-    // 选择响应对应的小车信息的显示（树结构节点突出，已经属性列表）
-    $('').on('click', '', function(){
-        var value = $(this).text();
-        $(this).append("<input type='text' value='"+value+"' />");
-        // alert($(this).text())
-    })
 
 })
 
@@ -430,6 +493,13 @@ var getSceneContent = function (id) {
         success: function (data) {
             if(data){
                 buildTree(data);
+                // 存到本地
+                if(supportLocalStorage()){
+                    localStorage.setItem("currentScene", data.id);
+                    localStorage.setItem("updateTime", data.updated_at);
+                    localStorage.setItem("sceneJson", JSON.stringify(data));
+                    localStorage.setItem("fSceneJson", JSON.stringify(fJson));
+                }
                 endingLoading();
                 //window.tcsDraw.canvas.buildSceneEditor(data);
                 window.tcsDraw.loadScene(data, true);
@@ -447,18 +517,6 @@ var getSceneContent = function (id) {
 
 
 var buildTree = function(data) {
-    // 保存数据到localstorage
-    if(supportLocalStorage){
-        if(data){
-            localStorage.setItem("currentScene", data.id);
-            localStorage.setItem("sceneJson", JSON.stringify(data));
-
-            $("header .title").text(data.name);
-            $("header .title").attr("title", data.name);
-        } else {
-            return
-        }
-    }
 
     var eleNodes=[];
     //locations --> attached_links
@@ -612,19 +670,25 @@ var buildTree = function(data) {
 }
 
 
-var initTree = function(){
-    if(supportLocalStorage()) {
-        if(localStorage.getItem("currentScene")) {
-            var data = localStorage.getItem("sceneJson");
-            buildTree(JSON.parse(data));
-            localStorage.setItem("fSceneJson", fJson);
-            endingLoading();
-        } else {
-            return
-        }
-    }
-
-}
+/**
+ * 如果本地有缓存，则验证加载数据，若没有数据，继续
+ */
+//var initTree = function(){
+//    if(supportLocalStorage()) {
+//        var currentSceneId = localStorage.getItem("currentScene");
+//        if(currentSceneId) {
+//            checkSceneStatusAndUpdateTimeById(currentSceneId)
+//
+//        } else {
+//            endingLoading();
+//            return
+//        }
+//    } else {
+//        endingLoading();
+//        return
+//    }
+//
+//}
 
 //init vehicle list
 var initVehicleList = function(vehicleArray){

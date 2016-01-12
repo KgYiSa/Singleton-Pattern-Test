@@ -104,6 +104,16 @@ $(function(){
     })
 
 
+    $(".import-file").click(function(){
+       $(this).find("[type=file]")[0].click();
+    });
+
+    $(".import-file [type=file]").change(function(){
+        //alert($(this).val());
+        $(".import-file form").submit();
+    })
+
+
 
 })
 
@@ -259,21 +269,6 @@ function onClick(event, treeId, treeNode, clickFlag) {
      showAttr(str)
 }
 
-// function showPro(str) {
-//     if (!pro) pro = $("#pro");
-//     pro.append("<li class='" + className + "'>" + str + "</li>");
-//     if (pro.children("li").length > 8) {
-//         pro.get(0).removeChild(pro.children("li")[0]);
-//     }
-// }
-
-// function getTime() {
-//     var now = new Date(),
-//         h = now.getHours(),
-//         m = now.getMinutes(),
-//         s = now.getSeconds();
-//     return (h + ":" + m + ":" + s);
-// }
 
 var showAttr = function(str){
     // $("#table1 tr th:not(:nth-child(1))").remove();  

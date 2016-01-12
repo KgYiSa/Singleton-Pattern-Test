@@ -43,23 +43,13 @@ public class UtilController extends ServiceController {
 
     @RequestMapping(value="/upload", method= RequestMethod.POST)
     public @ResponseBody
-    String handleFileUpload(@RequestParam("file") MultipartFile file){
+    String handleFileUpload(@RequestParam("file") MultipartFile file) {
         if (!file.isEmpty()) {
-            // TODO:
-            String path = "D:\\"+new Date().getTime()+file.getOriginalFilename();
-            String name = file.getName();
+
             try {
-                byte[] bytes = file.getBytes();
-                BufferedOutputStream stream =
-                        new BufferedOutputStream(new FileOutputStream(new File(path)));
-                stream.write(bytes);
-                stream.close();
-
-
-                Document document = TCSXmlUtils.getDocument(path);
+                Document document = TCSXmlUtils.getDocument(file.getInputStream());
                 Element root = document.getRootElement();
-                String newSceneName = "test_scene_" +
-                        new SimpleDateFormat("yy_MM_dd_HH_mm_ss").format(new Date()).toString();
+                String newSceneName = file.getOriginalFilename();
                 System.out.println(newSceneName);
                 XML2EntityUtils xml2EntityUtils = new XML2EntityUtils();
                 SceneDto sceneDto = new SceneDto();
@@ -75,9 +65,9 @@ public class UtilController extends ServiceController {
                 SceneDto newSceneDto = resolveRelationships(sceneDto);
                 newSceneDto = getService().createScene(newSceneDto);
 
-                return "You successfully uploaded " + name + " into " + name + "-uploaded !";
+                return "You successfully uploaded -uploaded !";
             } catch (Exception e) {
-                return "You failed to upload " + name + " => " + e.getMessage();
+                return "You failed to upload  " + e.getMessage();
             }
         } else {
             return "You failed to upload , because the file was empty.";

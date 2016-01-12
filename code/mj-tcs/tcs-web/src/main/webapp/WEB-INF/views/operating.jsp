@@ -37,7 +37,15 @@
 
 		</div>
 		<div class="userinfo">
-			<span class="label label-info">用户：admin</span>
+			<span class="label label-info">
+			<sec:authorize ifAllGranted="ROLE_ADMIN">
+				管理员：
+			</sec:authorize>
+			<sec:authorize ifNotGranted="ROLE_ADMIN">
+				用户：
+			</sec:authorize>
+			<sec:authentication property="principal.username" /></span>
+			<a href="/logout">logout</a>
 		</div>
 	</div>
 </header>
@@ -63,7 +71,6 @@
 						</div>
 						<div class="workarea" id="workarea">
 							<div id="tcs-canvas" style="position:relative;min-width: 800px;width: 100%;height: 100%;">
-
 							</div>
 						</div>
 					</div>
@@ -94,7 +101,10 @@
 						<div class="show-comment"><img src="${ctxStatic}/images/comment-add.16.png" title=""></div>
 						<div class="show-blocks"><img src="${ctxStatic}/images/block.18x18.png" title=""></div>
 						<div class="show-static-routes"><img src="${ctxStatic}/images/staticRoute.18x18.png" title=""></div>
-
+						<span>
+							<button id="connect" onclick="connect();">Connect</button>
+							<button id="disconnect" onclick="disconnect();" disabled="">Disconnect</button>
+						</span>
 						<span class="show-position">x:0 y:0</span>
 					</div>
 				<div class="top-panel-to">
@@ -102,16 +112,14 @@
 						<table>
 						<thead>
 							<tr>
-								<th>Column1</th>
-								<th>Column2</th>
-								<th>Column3</th>
-								<th>Column4</th>
+								<th>UUID</th>
+								<th>Type</th>
+								<th>Execute Vehicle</th>
+								<th>Order State</th>
 								<th>Column5</th>
 								<th>Column6</th>
 								<th>Column7</th>
-								<th>Column8</th>
-								<th>Column9</th>
-								<th>Column10</th>
+
 								
 							</tr>
 						</thead>
@@ -124,65 +132,6 @@
 						<col style="width:10%;" />					
 						</colgroup> -->
 					<tbody>
-						<tr>
-							<td>1</td>
-							<td>column</td><td>column</td><td>column</td><td>column</td><td>column</td>
-							<td>column</td><td>column</td><td>column</td><td>column</td>
-						</tr>
-						<tr>
-							<td>2</td>
-							<td>column</td><td>column</td><td>column</td><td>column</td><td>column</td>
-							<td>column</td><td>column</td><td>column</td><td>column</td>
-						</tr>
-						<tr>
-							<td>3</td>
-							<td>我只是用来测试的</td>
-						</tr>
-						<tr>
-							<td>4</td>
-							<td>我只是用来测试的</td>
-						</tr>
-						<tr>
-							<td>5</td>
-							<td>我只是用来测试的</td>
-						</tr>
-						<tr>
-							<td>6</td>
-							<td>我只是用来测试的</td>
-						</tr>
-						<tr>
-							<td>7</td>
-							<td>我只是用来测试的</td>
-						</tr>
-						<tr>
-							<td>8</td>
-							<td>我只是用来测试的</td>
-						</tr>
-						<tr>
-							<td>9</td>
-							<td>我只是用来测试的</td>
-						</tr>
-						<tr>
-							<td>10</td>
-							<td>我只是用来测试的</td>
-						</tr>
-						<tr>
-							<td>11</td>
-							<td>我只是用来测试的</td>
-						</tr>
-						<tr>
-							<td>12</td>
-							<td>我只是用来测试的</td>
-						</tr>
-						<tr>
-							<td>13</td>
-							<td>我只是用来测试的</td>
-						</tr>
-						<tr>
-							<td>14</td>
-							<td>我只是用来测试的</td>
-						</tr>
-						
 					</tbody>
 				</table>
 				</div> 
@@ -197,13 +146,13 @@
 						<li>
 							<img src="${ctxStatic}/images/groups.png" alt=""></li>
 						<li>
-							<img src="${ctxStatic}/images/create-order.22.png" alt=""></li>
+							<img src="${ctxStatic}/images/create-order.22.png" id="create-torder" alt=""></li>
 						<li>
 							<img src="${ctxStatic}/images/find-vehicle.22.png" id="find-vehicle" alt="find-vehicle"></li>
 						<li>
 							<img src="${ctxStatic}/images/pause-vehicles.22.png" alt=""></li>
 						<li>
-							<img src="${ctxStatic}/images/transport-order.png" class="to" alt=""></li>
+							<img src="/images/transport-order.png" class="to" id="torder-list" alt="create transport order"></li>
 					</ul>
 				</div>
 
@@ -212,13 +161,6 @@
 			<div class="bottom-panel">
 				<div class="bottom-panel-title">小车列表</div>
 				<div class="bottom-panel-list">
-					<%--<div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">--%>
-						<%--<div class="vehicle" data-toggle="modal" data-target="#myModal">--%>
-							<%--<div class="name">Vehicle</div>--%>
-							<%--<div class="battery"><img src="${ctxStatic}/images/battery/battery-100-2.png" /></div>--%>
-							<%--<div class="status">runing</div>--%>
-						<%--</div>--%>
-					<%--</div>--%>
 
 				</div>
 
@@ -316,10 +258,10 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="">小车实时状态</h4>
+					<h4 class="modal-title" id="vehicle-title">小车实时状态</h4>
 				</div>
 				<div class="modal-body" style="overflow-wrap: break-word">
-					...
+					loading...
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -335,7 +277,7 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-					<h4 class="modal-title" id="title">dd</h4>
+					<h4 class="modal-title" id="title"></h4>
 				</div>
 				<div class="modal-body" style="overflow-wrap: break-word">
 					<div class="dropdown">
@@ -345,7 +287,6 @@
 						</button>
 						<ul class="dropdown-menu" aria-labelledby="vehicle-dropdownMenu">
 							<li><a href="#">--</a></li>
-
 						</ul>
 					</div>
 				</div>
@@ -357,6 +298,80 @@
 			</div>
 		</div>
 	</div>
+
+
+	<!-- create transportorder Modal -->
+	<div class="modal fade" id="create-to" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="crate-to-title">创建调拨单</h4>
+				</div>
+				<div class="modal-body" style="overflow-wrap: break-word">
+					<div class="panel panel-default">
+						<!-- Default panel contents -->
+						<div class="panel-heading">Drive Orders</div>
+
+						<!-- Table -->
+						<table class="table table-bordered">
+							<thead>
+							<tr>
+								<th>location</th>
+								<th>action</th>
+							</tr>
+							</thead>
+							<tbody></tbody>
+						</table>
+					</div>
+					<button type="button" class="btn btn-default location-list" id="show-location-list">添加</button>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary submit">创建</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<!--<button type="button" class="btn btn-primary">Save changes</button>-->
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!-- create transportorder Modal -->
+<div class="modal fade" id="select-location" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="select-location-title">选择工位与状态</h4>
+			</div>
+			<div class="modal-body">
+				<div class="dropdown location">
+					<button class="btn btn-default dropdown-toggle" type="button" id="location-dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+						请选择工位
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="location-dropdownMenu">
+						<li><a href="#">--</a></li>
+
+					</ul>
+				</div>
+				<div class="dropdown state">
+					<button class="btn btn-default dropdown-toggle" type="button" id="location-state-dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+						请选择状态
+						<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" aria-labelledby="state-dropdownMenu">
+						<li><a href="#">--</a></li>
+
+					</ul>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary submit">确定</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 	<!-- sidebar 侧边栏 -->
 	<div id="left-sidebar">
@@ -371,6 +386,11 @@
 				<div class="table-head">
 					<table>
 					<thead>
+						<col width="100px" />
+						<col width="65px" />
+						<col width="140px" />
+						<col width="30px" />
+						<col width="75px" />
 						<tr>
 							<th>名称</th>
 							<th>状态</th>
@@ -383,46 +403,12 @@
 				</div>
 				<div class="table-body">
 				<table>
+				<col width="100px" />
+				<col width="65px" />
+				<col width="140px" />
+				<col width="30px" />
+				<col width="75px" />
 				<tbody>
-					<tr>
-						<td><a href="javascript:;">小车</a></td>
-						<td title="stop">stop</td>
-						<td>
-							<select>
-								<option value="">请选择</option>
-								<option value="mo">adapter1</option>
-								<option value="lo">adapter2</option>
-							</select>
-						</td>
-						<td><input type="checkbox" name="1" class="startflg" value="1"/></td>
-						<td>name</td>
-					</tr>
-					<tr>
-						<td><a href="javascript:;">叉车</a></td>
-						<td>stop</td>
-						<td>
-							<select>
-								<option value="">请选择</option>
-								<option value="mo">adapter1</option>
-								<option value="lo">adapter2</option>
-							</select>
-						</td>
-						<td><input type="checkbox" name="2" class="startflg" value="2"/></td>
-						<td>location1</td>
-					</tr>
-					<tr>
-						<td><a href="javascript:;">小车</a></td>
-						<td>running</td>
-						<td>
-							<select>
-								<option value="">请选择</option>
-								<option value="mo">adapter1</option>
-								<option value="lo">adapter2</option>
-							</select>
-						</td>
-						<td><input type="checkbox" name="3" checked="" class="startflg" value="3"/></td>
-						<td>location2</td>
-					</tr>
 				</tbody>
 				</table>
 				</div>
@@ -474,53 +460,301 @@
 	<script type="text/javascript" src="../js/tcs-canvas.js"></script>
 	<script type="text/javascript" src="../js/tcs-editor.js"></script>
 	<script type="text/javascript" src="../js/operating.js"></script>
+	<script src="../plugin/sockjs/sockjs.js"></script>
+	<script src="../plugin/stomp/stomp.min.js"></script>
 	<!--<script type="text/javascript" src="../js/mjtcs-modelling.js"></script>-->
 	<script type="text/javascript">
 	  $(document).ready(function(){
 	      $('#left-sidebar').BootSideMenu({side:"left", autoClose:true});
-
-		// --------------------------side menu script-------------------------------------------------------
-		$("#left-sidebar .content .adapter .table-body table .startflg").on('click', function() {
-			$("#left-sidebar .content .settinginfo .tips").html("");
-
-			if($(this)[0].checked) {
-				$("#left-sidebar .content .settinginfo").find("input").removeAttr("disabled");
-				// setting value
-				$("#left-sidebar .content .settinginfo").find("input[name=slaveId]").val($(this).val());
-				$("#left-sidebar .content .settinginfo").find("input[name=mark]").val($(this).attr("name"));
-			} else {
-				$("#left-sidebar .content .settinginfo").find("input").attr('disabled', 'true');
+	   // 保存数据
+	  	$("#left-sidebar .content .settinginfo div > input[name=save]").click(function() {
+			var destinations = [];
+			var trContent = $("#left-sidebar .content .adapter .table-body table tbody tr");
+			for(var i = 0 ; i < trContent.length; i++){
+				var destination = {"vehicle_uuid":"","adapter_name":"",initial_position_uuid:"",enable:""}
+				destination.vehicle_uuid = trContent.find("td:eq(0)").attr("vehicle-uuid");
+				destination.adapter_name = trContent.find("td:eq(0)").text();
+				destination.initial_position_uuid = trContent.find(".pointSelect").val();
+				destination.enable = trContent.find("input[type=checkbox]").prop("checked");
+				destinations.push(destination);
 			}
-
-		});
-
-		// 保存数据
-		$("#left-sidebar .content .settinginfo div > input[name=save]").click(function() {
-			$("#left-sidebar .content .settinginfo .tips").html("");
-
-			var id = $(this).parent().find("input[name=mark]").val();
-			var slaveId = $(this).parent().parent().find("input[name=slaveId]").val();
-			console.log(slaveId)
-			$("#left-sidebar .content .adapter").find("input[name="+id+"]").val(slaveId);
-
-			$("#left-sidebar .content .settinginfo .tips").html("保存成功.....");
-
-		});
-
-		$("#left-sidebar .content .adapter .table-body table a").click(function() {
-			$("#left-sidebar .content .settinginfo .tips").html("");
-			// console.log($(this)[0]);
-			// console.log($(this).parent().parent().find(".startflg")[0])
-			var settinginfo = $("#left-sidebar .content .settinginfo");
-			if($(this).parent().parent().find(".startflg")[0].checked){
-				settinginfo.find("input").removeAttr("disabled");
-				settinginfo.find("input[name=slaveId]").val($(this).parent().parent().find(".startflg").val());
-				settinginfo.find("input[name=mark]").val($(this).parent().parent().find(".startflg").attr("name"));
-			}
-
-		});
-
+			console.log(trContent)
+			console.log(destinations)
+			attachAdapter(destinations);
+	  	});
 	  });
+
+
+	  var wsUrl = "http://localhost:8080/stomp";
+	  var stompClient = null;
+
+	  function setConnected(connected) {
+		  document.getElementById('connect').disabled = connected;
+		  document.getElementById('disconnect').disabled = !connected;
+	  }
+
+
+
+	  var ACTIONS = {
+		  // Scene
+		  SCENE_PROFILE :"SCENE_PROFILE",
+		  SCENE_CREATE :"SCENE_CREATE",
+		  SCENE_FIND :"SCENE_FIND",
+		  SCENE_DELETE :"SCENE_DELETE",
+		  SCENE_START :"SCENE_START",
+		  SCENE_STOP :"SCENE_STOP",
+		  SCENE_SPECIFIC_PROFILE :"SCENE_SPECIFIC_PROFILE",
+		  // Transport Order
+		  TO_NEW: "TO_NEW",
+		  TO_WITHDRAW: "TO_WITHDRAW",
+		  // Vehicle
+		  VEHICLE_PROFILE: "VEHICLE_PROFILE",
+		  VEHICLE_ADAPTER_ATTACH: "VEHICLE_ADAPTER_ATTACH",
+		  VEHICLE_DISPATCH: "VEHICLE_DISPATCH",
+		  VEHICLE_STOP_TO: "VEHICLE_STOP_TO",
+		  VEHICLE_PARK: "VEHICLE_PARK"
+	  };
+	  var subscriberMap = new Map();// sceneId -> subscriberLists
+	  var sceneId = localStorage.getItem("currentScene");
+	  //	  alert(sceneId)
+	  var REQ_UUID = uuid();
+
+
+	  function connect() {
+		  var socket = new SockJS(wsUrl);
+		  stompClient = Stomp.over(socket);
+		  stompClient.connect({}, function(frame) {
+			  setConnected(true);
+			  console.log('Connected: ' + frame);
+			  sceneIdChange();
+			  getSceneProfile();
+			  getVehicleProfile();
+			  stompClient.subscribe("/user/topic/actions/response", function(message) {
+				  var response = JSON.parse(message.body);
+				  console.log(response.body)
+				// 返回id对应场景信息 
+				if (response.uuid == REQ_UUID + "_" + ACTIONS.SCENE_SPECIFIC_PROFILE) {
+					  if (supportLocalStorage()) {
+						  var currentSceneId = localStorage.getItem("currentScene");
+						  if (currentSceneId) {
+							  initSceneByStatusAndUpdateTime(response)
+
+						  }
+						  
+					  }
+				// 获取小车列表适配信息 
+				} else if(response.uuid == REQ_UUID + "_" +ACTIONS.VEHICLE_PROFILE){
+					 if(response.body){
+						 initVehicleAdapterList(response.body);
+					 }
+					 
+				} else if(response.uuid == REQ_UUID+"_"+ACTIONS.VEHICLE_ADAPTER_ATTACH){
+					$("#left-sidebar .content .settinginfo .tips").text("has submit!");
+				}
+
+
+				endingLoading();
+			  });
+		  });
+	  }
+
+	  function sceneIdChange() {
+		  // update subscribers for the new scene
+		  if (subscriberMap.has(sceneId)) {
+			  var prevSubscribers = subscriberMap.get(sceneId);
+			  for (var i = 0; i < prevSubscribers.length; i++) {
+				  prevSubscribers[i].unsubscribe();
+			  }
+			  subscriberMap.clear();
+		  }
+
+		  // add new subscribers
+		  var transportSubscriber = stompClient.subscribe("/topic/status/scenes/" + sceneId+"/torders",
+				  function(message) {
+//                            var response = JSON.parse(message.body);
+					  console.log("++++++++++++++++");
+//					  console.log(message.body);
+					  showTOrderMessage(JSON.parse(message.body))
+//					  document.getElementById('transportStatus').innerHTML = "<b>TransportOrder:</b><br>" + message.body;
+				  });
+
+		  var vehicleSubscriber = stompClient.subscribe("/topic/status/scenes/" + sceneId+"/vehicles",
+				  function(message) {
+//                            var response = JSON.parse(message.body);
+//					  console.log("---------------");
+//					  console.log(message.body);
+					  showVehicleMessage(JSON.parse(message.body));
+//					  document.getElementById("vehicleStatus").innerHTML = "<b>VehicleStatus:</b><br>" + message.body;
+				  });
+
+		  subscriberMap.set(sceneId, [transportSubscriber, vehicleSubscriber]);
+	  };
+
+	  function disconnect() {
+		  if (stompClient != null) {
+			  stompClient.disconnect();
+		  }
+		  setConnected(false);
+		  console.log("Disconnected");
+	  }
+
+	  function showTOrderMessage(message) {
+
+		  // 移除上次完成的工单
+		  $(".top-panel-to .table-body tbody .FINISHED").remove();
+
+		  // 添加更新的工单
+		  console.log(message);
+		  var toContent = "<tr class='"+message.order_state+"'>";
+		  toContent += "<td>" + message.uuid + "</td>";
+		  toContent += "<td>" + message.type + "</td>";
+		  toContent += "<td>" + message.executing_vehicle + "</td>";
+		  toContent += "<td>" + message.order_state + "</td>";
+		  toContent += "<td>Column5</td>";
+		  toContent += "<td>Column6</td>";
+		  toContent += "<td>"+new Date().getTime()+"</td>";
+		  toContent += "</tr>";
+		  $(".top-panel-to .table-body tbody").append(toContent);
+		  $(".left-container .top-panel .top-panel-to .table-body").scrollTop(2000000);
+
+	  }
+
+	  function showVehicleMessage(message) {
+		  $(".bottom-panel-list [vehicle-uuid='" + message.uuid + "'] .status").text(message.state);
+	  }
+	  
+	  
+	  
+	  // 获取小车列表适配信息
+	  function getVehicleProfile() {
+          var request = {
+              "uuid":REQ_UUID + "_" +ACTIONS.VEHICLE_PROFILE, // SPECIAL !!!
+              "action_code":ACTIONS.VEHICLE_PROFILE,
+              "body": {}
+          };
+
+          stompClient.send("/app/topic/actions/scenes/" + Number(sceneId) + "/vehicles/request", {},
+                  JSON.stringify(request));
+      }
+
+	  // 创建工单
+	  function createTransport(location, operation) {
+		  var transport = {
+			  "uuid":REQ_UUID,
+			  "action_code":ACTIONS.TO_NEW,
+			  "body":{
+				  "uuid":REQ_UUID,
+				  "deadline":null,
+				  "intended_vehicle":null,
+				  "destinations":[
+					  {
+						  "location_uuid":location,
+						  "operation":operation
+					  }
+				  ],
+				  "dependencies":[]
+			  }
+		  };
+
+		  stompClient.send("/app/topic/actions/scenes/" + Number(sceneId) + "/torders/request", {},JSON.stringify(transport));
+	  }
+
+	  // 获取当前场景状态和更新时间等信息
+	  function getSceneProfile() {
+
+		  var sceneProfile = {
+			  "uuid":REQ_UUID + "_" +ACTIONS.SCENE_SPECIFIC_PROFILE,
+			  "action_code":ACTIONS.SCENE_SPECIFIC_PROFILE,
+			  "body":{}
+		  };
+
+		  stompClient.send("/app/topic/actions/scenes/" + Number(sceneId) + "/request", {},
+				  JSON.stringify(sceneProfile));
+	  }
+
+	  // 根据id获取场景的状态以及更新时间
+	  function initSceneByStatusAndUpdateTime(response) {
+		  console.log(response)
+//		  alert(response.body.updated_at +"=="+ localStorage.getItem("updateTime"))
+		  if(response.status != "stopped" && response.body.updated_at == localStorage.getItem("updateTime")){
+			  buildTree(JSON.parse(localStorage.getItem("sceneJson")));
+		  }
+	  }
+	  
+	// 初始化小车以及适配列表
+	function initVehicleAdapterList(response) {
+		  
+		  //console.log(response)
+		  var trContent = "";
+		  for(var i = 0 ; i < response.length; i++) {
+			  trContent += "<tr>";
+			  trContent += "<td><a href='javascript:;' vehicle-uuid='" + response[i].uuid + "'>" + response[i].name + "</a></td>";
+			  trContent += "<td title='" + response[i].state + "'>" + response[i].state + "</td>";
+			 
+			  var adapterContent = "<select class='adapterSelect'>";
+			  adapterContent += "<option value=''>请选择</option>";
+			  $.each(response[i]["adapters"], function(n, value){
+				  console.log(value)
+				  if(value == response[i].adapter) {
+					  adapterContent += "<option value='" + value + "' selected='selected'>" + value + "</option>";
+				  } else {
+					  adapterContent += "<option value='" + value + "'>" + value + "</option>";
+				  }
+				  
+			  });
+			  
+			  adapterContent += "</select>";
+			  trContent += "<td>" + adapterContent + "</td>";
+			  if(response[i].enable == "true"){
+				  trContent += "<td><input type='checkbox' class='startflg' checked='checked' value='true'/></td>";
+			  } else {
+				  trContent += "<td><input type='checkbox' class='startflg' value='false'/></td>";
+			  }
+			  
+			  var pointArray = JSON.parse(localStorage.getItem("sceneJson"))["points"];
+			  var pointSelectContent = "<select class='pointSelect'>";
+			  pointSelectContent += "<option value=''>请选择</option>";
+			  $.each(pointArray, function(n, value) {
+				  if(value == response[i].position_uuid) {
+					  pointSelectContent += "<option value='" + value.UUID + "' selected='selected>" + value.name + "</option>";
+				  } else {
+					  pointSelectContent += "<option value='" + value.UUID + "'>" + value.name + "</option>";
+				  }
+					
+				});
+			  pointSelectContent += "</select>";
+			 
+			  trContent += "<td>" + pointSelectContent + "</td>";
+			  trContent += "</tr>";
+		  }
+		 $("#left-sidebar .content .adapter .table-body tbody").html("");
+		 $("#left-sidebar .content .adapter .table-body tbody").append(trContent);
+	  }
+	  
+	 function attachAdapter(content) {
+         var request = {
+             "uuid":REQ_UUID+"_"+ACTIONS.VEHICLE_ADAPTER_ATTACH,
+             "action_code":ACTIONS.VEHICLE_ADAPTER_ATTACH,
+             "body": content
+         };
+
+         stompClient.send("/app/topic/actions/scenes/" + Number(sceneId) + "/vehicles/request", {},
+                 JSON.stringify(request));
+     }
+
+	  function uuid() {
+		  var s = [];
+		  var hexDigits = "0123456789abcdef";
+		  for (var i = 0; i < 36; i++) {
+			  s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+		  }
+		  s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+		  s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+		  s[8] = s[13] = s[18] = s[23] = "-";
+
+		  var uuid = s.join("");
+		  return uuid;
+	  }
 
 	</script>
 </body>

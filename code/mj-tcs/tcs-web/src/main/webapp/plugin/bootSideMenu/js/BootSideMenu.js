@@ -43,7 +43,7 @@
 		}
 
 		// 设定settinginfo disable状态
-		$("#left-sidebar .content .settinginfo").find("input").attr('disabled', 'true');
+//		$("#left-sidebar .content .settinginfo").find("input").attr('disabled', 'true');
 
 	};
 

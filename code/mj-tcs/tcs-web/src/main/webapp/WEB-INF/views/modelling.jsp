@@ -115,7 +115,11 @@
 				<li><img src="../images/object-order-back.png" alt=""></li>
 				<li><img src="../images/transport-order.png" alt=""></li>
 				<li><img src="../images/transport-order.png" alt=""></li>
-				<li><img src="../images/transport-order.png" alt=""></li>
+				<li class="import-file"><img src="../images/folderopen.png" alt="">
+					<form method="POST" enctype="multipart/form-data" action="/upload">
+						<input type="file" name="file" style="display: none">
+					</form>
+				</li>
 			</ul>
 		</div>
 		<div class="operate-content">

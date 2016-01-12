@@ -10,6 +10,7 @@ import org.dom4j.io.XMLWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -39,6 +40,23 @@ public class TCSXmlUtils {
         }
         return document;
     }
+    /**
+     * @方法功能描述：根据输入流取得 document对象
+     * @方法名:getDocument
+     * @param in
+     * @返回类型：Document
+     */
+    public static Document getDocument(InputStream in) {
+        SAXReader reader = new SAXReader();
+        Document document = null;
+        try {
+            document = reader.read(in);
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
+        return document;
+    }
+
     /**
      * 根据xml文件路径取得document对象
      * @param xmlPath
@@ -503,7 +521,7 @@ public class TCSXmlUtils {
         Map<String,String> map = new HashMap<>();
         for(Element e : elements){
             if(TCSXmlUtils.getNodeAttrMap(e).get("type") != null) {
-                map.put(TCSXmlUtils.getSingleNodeText(e).get("key"), TCSXmlUtils.getSingleNodeText(e).get("value"));
+                map.put(TCSXmlUtils.getSingleNodeText(e).get("key"),TCSXmlUtils.getSingleNodeText(e).get("value"));
             }
         }
         return map;

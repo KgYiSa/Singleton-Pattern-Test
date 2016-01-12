@@ -15,7 +15,6 @@ import org.springframework.security.config.annotation.web.servlet.configuration.
  */
 @Configuration
 @EnableWebMvcSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private Logger logger = Logger.getLogger(WebSecurityConfig.class);
 
@@ -27,56 +26,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
-        // 设置不拦截规则
-        web.ignoring()
-            // TODO: Add "/**" to avoid ClientAbortException
-            .antMatchers("/css/**", "/plugin/**", "/static/**", "/**.jsp", "/**/*.jsp", "/**");
-    }
-
-    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeRequests()
-            .antMatchers("/**", "/public/**").permitAll(); // TODO: COMMENT or REMOVE
-//            .antMatchers("/login", "/public/**").permitAll()
-//            .antMatchers("/**").hasRole("SUPERADMIN")
-//            .antMatchers("/api/v1/**").hasRole("ADMIN")
-//            .antMatchers("/users/**").hasAuthority("ADMIN")
-//            .anyRequest().fullyAuthenticated()
-//            .and()
-//                .formLogin()
-//                .loginPage("/tcs-web/login")
-//                .failureUrl("/tcs-web/login?error")
-//                .permitAll()
-//                .and()
-//                .logout()
-//                .deleteCookies("remember-me")
-//                .and()
-//                .rememberMe();
-//
-//        // 设置拦截规则
-//        // 自定义accessDecisionManager访问控制器,并开启表达式语言
-//        http.authorizeRequests().accessDecisionManager(accessDecisionManager())
-//            .expressionHandler(webSecurityExpressionHandler())
-//            .antMatchers("/**/*.do*").hasRole("USER")
-//            .antMatchers("/**/*.htm").hasRole("ADMIN").and()
-//            .exceptionHandling().accessDeniedPage("/templates/login");
-//
-//        // 自定义登录页面
-//        http.csrf().disable().formLogin().loginPage("/templates/login")
-//            .failureUrl("/login?error=1")
-//            .loginProcessingUrl("/j_spring_security_check")
-//            .usernameParameter("j_username")
-//            .passwordParameter("j_password").permitAll();
-//
-//        // 自定义注销
-//        http.logout().logoutUrl("/templates/logout").logoutSuccessUrl("/templates/login")
-//            .invalidateHttpSession(true);
-//
-//        // session管理
-//        http.sessionManagement().sessionFixation().changeSessionId()
-//                .maximumSessions(1).expiredUrl("/");
+                .antMatchers("/css/**").permitAll()
+                .antMatchers("/plugin/**").permitAll()
+                .antMatchers("/static/**").permitAll()
+                .antMatchers("/images/**").permitAll()
+                .antMatchers("/js/**").permitAll()
+                .antMatchers("/html/**").permitAll()
+                .antMatchers("/login", "/public/**").permitAll()
+                .antMatchers("/test").hasRole("ADMIN")
+                .anyRequest().authenticated()
+            .and()
+                .formLogin()
+                .loginPage("/login")
+                /**
+                 * ref org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer
+                 */
+//                .usernameParameter("user")
+//                .passwordParameter("pass")
+                .defaultSuccessUrl("/operating")
+                .permitAll()
+            .and()
+                .logout()
+                .logoutSuccessUrl("/")
+                .permitAll()
+                .invalidateHttpSession(true);
     }
 
 //    /*

@@ -250,7 +250,8 @@ $(function(){
         var uuid = $(this).attr("vehicle-uuid");
         var vehicleDtail = fJson[uuid];
         $("#vehicleDetail .modal-body").html("");
-        $("#vehicleDetail .modal-body").html(JSON.stringify(vehicleDtail));
+        var vData = JSON.stringify(vehicleDtail)+ "<br><button type='button' class='btn btn-primary btn-sm' onclick=dispatchVehicle('"+uuid+"')>Dispatch Vehicle </button>";
+        $("#vehicleDetail .modal-body").html(vData);
         $("#vehicleDetail").modal("show");
     }));
 

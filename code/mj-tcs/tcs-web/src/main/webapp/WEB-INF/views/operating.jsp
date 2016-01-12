@@ -471,15 +471,14 @@
 			var destinations = [];
 			var trContent = $("#left-sidebar .content .adapter .table-body table tbody tr");
 			for(var i = 0 ; i < trContent.length; i++){
-				var destination = {"vehicle_uuid":"","adapter_name":"",initial_position_uuid:"",enable:""}
-				destination.vehicle_uuid = trContent.find("td:eq(0)").attr("vehicle-uuid");
-				destination.adapter_name = trContent.find("td:eq(0)").text();
-				destination.initial_position_uuid = trContent.find(".pointSelect").val();
-				destination.enable = trContent.find("input[type=checkbox]").prop("checked");
+				var destination = {"vehicle_uuid":null,"adapter_name":null,initial_position_uuid:"",enable:"false"}
+				destination.vehicle_uuid = $(trContent[i]).find("td:eq(0) a").attr("vehicle-uuid");
+				destination.adapter_name = $(trContent[i]).find(".adapterSelect").val();
+				destination.initial_position_uuid = $(trContent[i]).find(".pointSelect").val();
+				destination.enable = $(trContent[i]).find("input[type=checkbox]").prop("checked");
 				destinations.push(destination);
 			}
-			console.log(trContent)
-			console.log(destinations)
+			
 			attachAdapter(destinations);
 	  	});
 	  });
@@ -717,7 +716,7 @@
 			  var pointSelectContent = "<select class='pointSelect'>";
 			  pointSelectContent += "<option value=''>请选择</option>";
 			  $.each(pointArray, function(n, value) {
-				  if(value == response[i].position_uuid) {
+				  if(value.UUID == response[i].position_uuid) {
 					  pointSelectContent += "<option value='" + value.UUID + "' selected='selected>" + value.name + "</option>";
 				  } else {
 					  pointSelectContent += "<option value='" + value.UUID + "'>" + value.name + "</option>";
@@ -738,6 +737,18 @@
              "uuid":REQ_UUID+"_"+ACTIONS.VEHICLE_ADAPTER_ATTACH,
              "action_code":ACTIONS.VEHICLE_ADAPTER_ATTACH,
              "body": content
+         };
+         stompClient.send("/app/topic/actions/scenes/" + Number(sceneId) + "/vehicles/request", {},
+                 JSON.stringify(request));
+         
+     }
+	 
+	 
+	 function dispatchVehicle(uuid) {
+         var request = {
+             "uuid":REQ_UUID,
+             "action_code":ACTIONS.VEHICLE_DISPATCH,
+             "body": uuid
          };
 
          stompClient.send("/app/topic/actions/scenes/" + Number(sceneId) + "/vehicles/request", {},

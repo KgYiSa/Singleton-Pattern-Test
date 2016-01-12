@@ -41,16 +41,22 @@ public class VehicleCommandSockController extends ServiceController{
 
         TCSRequestEntity.Action actionCode = request.getActionCode();
         if (actionCode == null) {// Check actionCode
-            return new TCSResponseEntity<>(TCSResponseEntity.Status.ERROR,
-                    "The action code is null.");
+            return TCSResponseEntity.getBuilder()
+                    .setResponseUUID(request.getRequestUUID())
+                    .setStatus(TCSResponseEntity.Status.ERROR)
+                    .setStatusMessage("The action code is null.")
+                    .get();
         }
 
         // check the scene is running.
         final ServiceGateway serviceGateway = getService();
         final LocalKernel kernel = serviceGateway.getKernel(sceneId);
         if (kernel == null || !serviceGateway.isSceneDtoRunning(sceneId)) {
-            return new TCSResponseEntity<>(TCSResponseEntity.Status.WARNING, null,
-                    "The scene of id [" + sceneId +"] is NOT running!");
+            return TCSResponseEntity.getBuilder()
+                    .setResponseUUID(request.getRequestUUID())
+                    .setStatus(TCSResponseEntity.Status.WARNING)
+                    .setStatusMessage("The scene of id [" + sceneId +"] is NOT running!")
+                    .get();
         }
 
         try {
@@ -74,7 +80,11 @@ public class VehicleCommandSockController extends ServiceController{
                     throw new IllegalArgumentException("The action code [" + actionCode + "] is not recognized.");
             }
         } catch (Exception e) {
-            responseEntity = new TCSResponseEntity<>(TCSResponseEntity.Status.ERROR,null, e.getMessage());
+            responseEntity = TCSResponseEntity.getBuilder()
+                    .setResponseUUID(request.getRequestUUID())
+                    .setStatus(TCSResponseEntity.Status.ERROR)
+                    .setStatusMessage(e.getMessage())
+                    .get();
         }
 
         responseEntity.setResponseUUID(request.getRequestUUID());
@@ -114,7 +124,10 @@ public class VehicleCommandSockController extends ServiceController{
             vehiclesProfile.add(item);
         }
 
-        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS, vehiclesProfile);
+        return TCSResponseEntity.getBuilder()
+                .setStatus(TCSResponseEntity.Status.SUCCESS)
+                .setBody(vehiclesProfile)
+                .get();
     }
 
     private  TCSResponseEntity<?> attachAdapterToVehicle(final LocalKernel kernel, long sceneId, Object jsonBody) throws Exception {
@@ -184,7 +197,10 @@ public class VehicleCommandSockController extends ServiceController{
             updatedVehiclesProfile.add(item);
         }
 
-        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS, updatedVehiclesProfile);
+        return TCSResponseEntity.getBuilder()
+                .setStatus(TCSResponseEntity.Status.SUCCESS)
+                .setBody(updatedVehiclesProfile)
+                .get();
     }
 
     private  TCSResponseEntity<?> dispatchVehicle(final LocalKernel kernel, long sceneId, Object jsonBody) {
@@ -195,7 +211,9 @@ public class VehicleCommandSockController extends ServiceController{
         Vehicle vehicle = Objects.requireNonNull(kernel.getTCSObject(Vehicle.class, jsonBody.toString()));
         kernel.dispatchVehicle(vehicle.getReference(), true);
 
-        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS);
+        return TCSResponseEntity.getBuilder()
+                .setStatus(TCSResponseEntity.Status.SUCCESS)
+                .get();
     }
 
     private  TCSResponseEntity<?> withdrawTObyVehicle(final LocalKernel kernel, long sceneId, Object jsonBody) throws IOException {
@@ -209,7 +227,9 @@ public class VehicleCommandSockController extends ServiceController{
         Vehicle vehicle = Objects.requireNonNull(kernel.getTCSObject(Vehicle.class, jsonBody.toString()));
         kernel.withdrawTransportOrderByVehicle(vehicle.getReference(), transportWithdrawDto.isDisableVehicle());
 
-        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS);
+        return TCSResponseEntity.getBuilder()
+                .setStatus(TCSResponseEntity.Status.SUCCESS)
+                .get();
     }
 
     private  TCSResponseEntity<?> parkVehicle(final LocalKernel kernel, long sceneId, Object jsonBody) throws Exception {

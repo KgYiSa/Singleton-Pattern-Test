@@ -45,16 +45,22 @@ public class TransportOrderCommandSockController extends ServiceController {
 
         TCSRequestEntity.Action actionCode = request.getActionCode();
         if (actionCode == null) {// Check actionCode
-            return new TCSResponseEntity<>(TCSResponseEntity.Status.ERROR,
-                    "The action code is null.");
+            return TCSResponseEntity.getBuilder()
+                    .setResponseUUID(request.getRequestUUID())
+                    .setStatus(TCSResponseEntity.Status.ERROR)
+                    .setStatusMessage("The action code is null.")
+                    .get();
         }
 
         // check the scene is running.
         final ServiceGateway serviceGateway = getService();
         final LocalKernel kernel = serviceGateway.getKernel(sceneId);
         if (kernel == null || !serviceGateway.isSceneDtoRunning(sceneId)) {
-            return new TCSResponseEntity<>(TCSResponseEntity.Status.WARNING, null,
-                    "The scene of id [" + sceneId +"] is NOT running!");
+            return TCSResponseEntity.getBuilder()
+                    .setResponseUUID(request.getRequestUUID())
+                    .setStatus(TCSResponseEntity.Status.WARNING)
+                    .setStatusMessage("The scene of id [" + sceneId +"] is NOT running!")
+                    .get();
         }
 
         try {
@@ -69,7 +75,11 @@ public class TransportOrderCommandSockController extends ServiceController {
                     throw new IllegalArgumentException("The action code [" + actionCode + "] is not recognized.");
             }
         } catch (Exception e) {
-            responseEntity = new TCSResponseEntity<>(TCSResponseEntity.Status.ERROR,null,e.getMessage());
+            responseEntity = TCSResponseEntity.getBuilder()
+                    .setResponseUUID(request.getRequestUUID())
+                    .setStatus(TCSResponseEntity.Status.ERROR)
+                    .setStatusMessage(e.getMessage())
+                    .get();
         }
 
         responseEntity.setResponseUUID(request.getRequestUUID());
@@ -123,7 +133,11 @@ public class TransportOrderCommandSockController extends ServiceController {
         orderDto = getService().createTransportOrder(sceneId, orderDto);
 
         // Everything went fine - let the client know.
-        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS, orderDto, transport.getUuid());
+        return TCSResponseEntity.getBuilder()
+                .setStatus(TCSResponseEntity.Status.SUCCESS)
+                .setBody(orderDto)
+                .get();
+//        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS, orderDto, transport.getUuid());
     }
 
 
@@ -139,6 +153,9 @@ public class TransportOrderCommandSockController extends ServiceController {
         getService().withdrawTransportOrder(sceneId, transportWithdrawDto);
 
         // Everything went fine - let the client know.
-        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS);
+        return TCSResponseEntity.getBuilder()
+                .setStatus(TCSResponseEntity.Status.SUCCESS)
+                .get();
+//        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS);
     }
 }

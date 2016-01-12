@@ -13,7 +13,7 @@ import java.util.Date;
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 public class TCSCommEntity<T> {
 
-    private final T body;
+    private T body;
 
     private String timestamp;
 
@@ -29,6 +29,10 @@ public class TCSCommEntity<T> {
 
     public T getBody() {
         return body;
+    }
+
+    public void setBody(T body) {
+        this.body = body;
     }
 
     public String getTimestamp() {

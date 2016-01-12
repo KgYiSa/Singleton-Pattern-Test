@@ -1,5 +1,7 @@
 package com.mj.tcs.api.v1.dto.communication;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -16,7 +18,7 @@ public class TCSResponseEntity<T> extends TCSCommEntity<T> {
 
     @JsonProperty("uuid")
     private String responseUUID;
-    private final Status statusCode;
+    private Status statusCode;
     private String statusMessage;
 
     public TCSResponseEntity() {
@@ -48,6 +50,10 @@ public class TCSResponseEntity<T> extends TCSCommEntity<T> {
 
     public Status getStatusCode() {
         return statusCode;
+    }
+
+    public void setStatusCode(Status statusCode) {
+        this.statusCode = statusCode;
     }
 
     public String getStatusMessage() {
@@ -105,34 +111,6 @@ public class TCSResponseEntity<T> extends TCSCommEntity<T> {
         return builder.toString();
     }
 
-//    public enum Type {
-//
-//        POINT("POINT"),
-//        SCENE("SCENE");
-//
-//        private String text;
-//
-//        Type(String text) {
-//            this.text = text;
-//        }
-//
-//        @Override
-//        public String toString() {
-//            return this.text;
-//        }
-//
-//        public static Type fromString(String text) {
-//            Optional<Type> type = Arrays.stream(Type.values())
-//                    .filter(s -> s.toString().compareToIgnoreCase(text) == 0).findFirst();
-//
-//            if (type.isPresent()) {
-//                return type.get();
-//            }
-//
-//            throw new IllegalArgumentException("The TCSResponseEntity.Type enum is no recognizable [text=" + text + "]");
-//        }
-//    }
-
     /**
      * alert, warning, success, error, information
      */
@@ -163,6 +141,44 @@ public class TCSResponseEntity<T> extends TCSCommEntity<T> {
             }
 
             throw new IllegalArgumentException("The TCSResponseEntity.Action enum is no recognizable [text=" + text + "]");
+        }
+    }
+
+    @JsonIgnore
+    public static <T> Builder getBuilder() {
+        return new Builder<T>();
+    }
+
+    @JsonIgnoreType
+    public static class Builder<T> {
+        private TCSResponseEntity<T> responseEntity;
+
+        public Builder() {
+            responseEntity = new TCSResponseEntity<T>();
+        }
+
+        public TCSResponseEntity<T> get() {
+            return this.responseEntity;
+        }
+
+        public Builder<T> setStatus(Status status) {
+            this.responseEntity.setStatusCode(status);
+            return this;
+        }
+
+        public Builder<T> setResponseUUID(String responseUUID) {
+            this.responseEntity.setResponseUUID(responseUUID);
+            return this;
+        }
+
+        public Builder<T> setStatusMessage(String statusMessage) {
+            this.responseEntity.setStatusMessage(statusMessage);
+            return this;
+        }
+
+        public Builder<T> setBody(T body) {
+            this.responseEntity.setBody(body);
+            return this;
         }
     }
 }

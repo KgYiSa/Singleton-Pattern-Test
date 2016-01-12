@@ -31,8 +31,11 @@ public class SceneCommandSockController extends ServiceController {
 
         TCSRequestEntity.Action actionCode = request.getActionCode();
         if (actionCode == null) {// Check actionCode
-            return new TCSResponseEntity<>(TCSResponseEntity.Status.ERROR,
-                    "The action code is null.");
+            return TCSResponseEntity.getBuilder()
+                    .setResponseUUID(request.getRequestUUID())
+                    .setStatus(TCSResponseEntity.Status.ERROR)
+                    .setStatusMessage("The action code is null.")
+                    .get();
         }
 
         try {
@@ -60,7 +63,11 @@ public class SceneCommandSockController extends ServiceController {
                     throw new IllegalArgumentException("The action code [" + actionCode + "] is not recognized.");
             }
         } catch (Exception e) {
-            responseEntity = new TCSResponseEntity<>(TCSResponseEntity.Status.ERROR,null, e.getMessage());
+            responseEntity = TCSResponseEntity.getBuilder()
+                    .setResponseUUID(request.getRequestUUID())
+                    .setStatus(TCSResponseEntity.Status.ERROR)
+                    .setStatusMessage(e.getMessage())
+                    .get();
         }
 
         responseEntity.setResponseUUID(request.getRequestUUID());
@@ -77,8 +84,10 @@ public class SceneCommandSockController extends ServiceController {
 
         TCSRequestEntity.Action actionCode = request.getActionCode();
         if (actionCode == null) {// Check actionCode
-            return new TCSResponseEntity<>(TCSResponseEntity.Status.ERROR,
-                    "The action code is null.");
+            return TCSResponseEntity.getBuilder()
+                    .setStatus(TCSResponseEntity.Status.ERROR)
+                    .setStatusMessage("The action code is null.")
+                    .get();
         }
 
         try {
@@ -90,7 +99,10 @@ public class SceneCommandSockController extends ServiceController {
                     throw new IllegalArgumentException("The action code [" + actionCode + "] is not recognized.");
             }
         } catch (Exception e) {
-            responseEntity = new TCSResponseEntity<>(TCSResponseEntity.Status.ERROR,null, e.getMessage());
+            responseEntity = TCSResponseEntity.getBuilder()
+                    .setStatus(TCSResponseEntity.Status.ERROR)
+                    .setStatusMessage(e.getMessage())
+                    .get();
         }
 
         responseEntity.setResponseUUID(request.getRequestUUID());
@@ -112,7 +124,11 @@ public class SceneCommandSockController extends ServiceController {
             }
         }
 
-        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS, sceneDtosProfile);
+        return TCSResponseEntity.getBuilder()
+                .setStatus(TCSResponseEntity.Status.SUCCESS)
+                .setBody(sceneDtosProfile)
+                .get();
+//        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS, sceneDtosProfile);
     }
 
     private TCSResponseEntity<?> getSceneProfile(long sceneId) {
@@ -126,7 +142,11 @@ public class SceneCommandSockController extends ServiceController {
             sceneDtoProfile.put("updated_at", sceneDto.getUpdatedAt());
         }
 
-        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS, sceneDtoProfile);
+        return TCSResponseEntity.getBuilder()
+                .setStatus(TCSResponseEntity.Status.SUCCESS)
+                .setBody(sceneDtoProfile)
+                .get();
+//        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS, sceneDtoProfile);
     }
 
     private TCSResponseEntity<?> createSceneDto(Object jsonBody) throws IOException {
@@ -141,7 +161,11 @@ public class SceneCommandSockController extends ServiceController {
         // Creating new scene
         newSceneDto = getService().createScene(newSceneDto);
 
-        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS, newSceneDto);
+        return TCSResponseEntity.getBuilder()
+                .setStatus(TCSResponseEntity.Status.SUCCESS)
+                .setBody(newSceneDto)
+                .get();
+//        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS, newSceneDto);
     }
 
     /**
@@ -153,14 +177,22 @@ public class SceneCommandSockController extends ServiceController {
         Long sceneId = Long.parseLong(jsonBody.toString());
 
         SceneDto sceneDto = getService().getSceneDto(sceneId);
-        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS, sceneDto);
+
+        return TCSResponseEntity.getBuilder()
+                .setStatus(TCSResponseEntity.Status.SUCCESS)
+                .setBody(sceneDto)
+                .get();
+//        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS, sceneDto);
     }
 
     private TCSResponseEntity<?> deleteSceneDto(Object jsonBody) {
         Long sceneId = Long.parseLong(jsonBody.toString());
         getService().deleteScene(sceneId);
 
-        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS);
+        return TCSResponseEntity.getBuilder()
+                .setStatus(TCSResponseEntity.Status.SUCCESS)
+                .get();
+//        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS);
     }
 
     //////////////// ACTIONS ///////////////////////////
@@ -169,7 +201,10 @@ public class SceneCommandSockController extends ServiceController {
         SceneDto sceneDto = Objects.requireNonNull(getService().getSceneDto(sceneId));
         getService().loadSceneDto(sceneDto);
 
-        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS);
+        return TCSResponseEntity.getBuilder()
+                .setStatus(TCSResponseEntity.Status.SUCCESS)
+                .get();
+//        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS);
     }
 
     private TCSResponseEntity<?> stopScene(Object jsonBody) {
@@ -177,6 +212,9 @@ public class SceneCommandSockController extends ServiceController {
         SceneDto sceneDto = Objects.requireNonNull(getService().getSceneDto(sceneId));
         getService().unloadSceneDto(sceneDto);
 
-        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS);
+        return TCSResponseEntity.getBuilder()
+                .setStatus(TCSResponseEntity.Status.SUCCESS)
+                .get();
+//        return new TCSResponseEntity<>(TCSResponseEntity.Status.SUCCESS);
     }
 }

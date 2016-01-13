@@ -162,22 +162,24 @@ public class VehicleCommandSockController extends ServiceController{
                     .filter(v -> Objects.equals(v.getAdapterFor(vehicle).getClass().getSimpleName(),adapterAttacherDto.getAdapterName()))
                     .findAny();
 
-            if (!factoryOptional.isPresent()) {
-                continue; // TODO: Dis-attach
-//                throw new IllegalArgumentException("Can not found the adapter by name [" + adapterAttacherDto.getAdapterName()
-//                    + "] for vehicle " + vehicle.getName());
-            }
             BasicCommunicationAdapter prevAdapter = kernel.findAdapterFor(vehicle.getReference());
             if (prevAdapter != null) {
                 prevAdapter.disable();
             }
-            kernel.attachAdapterToVehicle(vehicle.getReference(), factoryOptional.get());
 
-            BasicCommunicationAdapter newAdapter = Objects.requireNonNull(kernel.findAdapterFor(vehicle.getReference()));
-            if (adapterAttacherDto.isEnable()) {
+            BasicCommunicationAdapter newAdapter;
+            if (factoryOptional.isPresent()) {
+                kernel.attachAdapterToVehicle(vehicle.getReference(), factoryOptional.get());
+                newAdapter = Objects.requireNonNull(kernel.findAdapterFor(vehicle.getReference()));
+            } else {
+                kernel.attachAdapterToVehicle(vehicle.getReference(), null);
+                newAdapter = null;
+            }
+
+            if ((newAdapter != null) && adapterAttacherDto.isEnable()) {
                 newAdapter.enable();
             }
-            if (adapterAttacherDto.getInitialPositionUUID() != null && newAdapter instanceof SimCommunicationAdapter) {
+            if (adapterAttacherDto.getInitialPositionUUID() != null && (newAdapter != null) && newAdapter instanceof SimCommunicationAdapter) {
                 ((SimCommunicationAdapter) newAdapter).initVehiclePosition(adapterAttacherDto.getInitialPositionUUID());
             }
 

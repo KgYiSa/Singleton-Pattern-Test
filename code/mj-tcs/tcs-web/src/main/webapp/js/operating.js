@@ -720,6 +720,8 @@ var initVehicleList = function(vehicleArray){
         }
         vehicleListStr += " <div class='battery'><img src='/images/battery/battery-"+el+".png' /></div>";
         vehicleListStr += "<div class='status'> running </div>";
+        //把Dispatch Vehicle放在外面
+        vehicleListStr += "<div class='dispatch'><button type='button' class='btn btn-primary btn-sm' onclick=dispatchVehicle('"+vehicleArray[i].UUID+"')>Dispatch Vehicle </button></div>";
         vehicleListStr += "</div>";
         vehicleListStr += "</div>"
     }

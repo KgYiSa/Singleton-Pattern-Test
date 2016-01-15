@@ -120,7 +120,6 @@ public class TCSXmlUtils {
      * @param parent
      * @返回类型：Iterator<Element>
      */
-
     public static Iterator<Element> getIterator(Element parent){
         if(parent == null)
             return null;
@@ -130,19 +129,18 @@ public class TCSXmlUtils {
 
     /**
      *
-     * @方法功能描述: 根据子节点名称得到指定的子节点
+     * @方法功能描述: 根据XPath名称得到指定的子节点
      * @方法名:getChildElement
      * @param parent
-     * @param childName
+     * @param xPath
      * @返回类型：Element
      */
+    public static List<Element> getChildElements(Element parent, String xPath){
+        if (parent == null || xPath == null) {
+            return new ArrayList<>();
+        }
 
-    public static List<Element> getChildElements(Element parent, String childName){
-        childName  = childName.trim();
-        if (parent==null)
-            return null;
-        childName += "//";
-        List<Element> childElements = parent.selectNodes(childName);
+        List<Element> childElements = parent.selectNodes(xPath);
         return childElements;
     }
 
@@ -332,8 +330,24 @@ public class TCSXmlUtils {
             return null;
         List<Element> kids = getChildList(e);
         for(Element e2 :kids){
-            if(e2.getTextTrim()!=null){
-                map.put(e2.getName(), e2.getTextTrim());
+            final String e2Name = e2.getName();
+
+            if((e2.getTextTrim()!=null) && (!e2.getTextTrim().isEmpty())){
+                map.put(e2Name, e2.getTextTrim());
+            } else if (e2.hasContent()) {
+                StringBuffer stringBuffer = new StringBuffer();
+                for (Element e3 : getChildList(e2)) {
+                    final String e3Text = e3.getTextTrim();
+                    if (e3Text != null && !e3Text.isEmpty()) {
+                        if (stringBuffer.length() > 0) {
+                            stringBuffer.append(OpenTCSParser.LEVEL_1_DEVIDER);
+                        }
+                        stringBuffer.append(e3Text);
+                    }
+                }
+                map.put(e2Name, stringBuffer.toString());
+            } else {
+                map.put(e2Name, "");
             }
         }
         return map;
@@ -507,21 +521,29 @@ public class TCSXmlUtils {
         return j;
     }
 
-    public static Map<String,String> getType(Element element,String type){
-        Map<String,String> map = null;
-        switch (type){
-            case "point":
-                map =  getPoint(element);
-        }
-        return map;
-    }
-
-    public static Map<String,String> getPoint(Element element){
+    public static Map<String,String> getMapFromElement(Element element){
         List<Element> elements = element.elements();
         Map<String,String> map = new HashMap<>();
         for(Element e : elements){
-            if(TCSXmlUtils.getNodeAttrMap(e).get("type") != null) {
-                map.put(TCSXmlUtils.getSingleNodeText(e).get("key"),TCSXmlUtils.getSingleNodeText(e).get("value"));
+            final Map<String, String> attributeMap = TCSXmlUtils.getNodeAttrMap(e);
+            if(attributeMap.get("type") != null) {
+                if ("keyValueSetCourseProperty".equals(attributeMap.get("type"))) {
+                    // Miscellaneous property
+                    StringBuffer miscStringBuffer = new StringBuffer();
+                    for (Element subElem : getChildElements(e, "./value/keyValueProperty")) {
+                        String keyAndValue = getSingleNodeText(subElem).get("value"); // format "key=value"
+                        if (keyAndValue != null && !keyAndValue.isEmpty()) {
+                            if (miscStringBuffer.length() > 0) {
+                                miscStringBuffer.append(OpenTCSParser.LEVEL_1_DEVIDER);
+                            }
+                            miscStringBuffer.append(keyAndValue);
+                        }
+                    }
+                    map.put("Miscellaneous", miscStringBuffer.toString());
+                } else {
+                    final Map<String, String> temp = TCSXmlUtils.getSingleNodeText(e);
+                    map.put(temp.get("key"), temp.get("value"));
+                }
             }
         }
         return map;

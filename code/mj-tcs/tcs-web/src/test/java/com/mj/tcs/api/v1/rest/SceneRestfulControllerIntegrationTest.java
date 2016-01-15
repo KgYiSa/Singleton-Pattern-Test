@@ -3,13 +3,19 @@ package com.mj.tcs.api.v1.rest;
 import com.mj.tcs.TCSWebServerApplication;
 import com.mj.tcs.api.v1.dto.SceneDto;
 import com.mj.tcs.api.v1.dto.communication.TCSResponseEntity;
+import com.mj.tcs.config.AppContext;
+import com.mj.tcs.config.WebAppConfig;
+import com.mj.tcs.config.WebSecurityConfig;
 import com.mj.tcs.util.SceneDtoModelGenerator;
 import org.junit.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.SpringApplicationContextLoader;
+import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.http.*;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.web.client.RestTemplate;
@@ -23,9 +29,11 @@ import static org.junit.Assert.*;
  * Created by xiaobai on 2015/11/30.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = TCSWebServerApplication.class)
+@SpringApplicationConfiguration(classes = {AppContext.class, WebAppConfig.class, WebSecurityConfig.class})
 @WebAppConfiguration
-@IntegrationTest({"server.port=0", "management.port=0"})
+// Spock
+//@ContextConfiguration(loader = SpringApplicationContextLoader.class, classes = TCSWebServerApplication.class)
+@WebIntegrationTest(randomPort = false)
 public class SceneRestfulControllerIntegrationTest {
     private static final String BASE_URI = "http://localhost:8080/api/v1/rest";
 

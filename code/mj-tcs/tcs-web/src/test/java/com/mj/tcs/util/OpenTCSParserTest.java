@@ -1,17 +1,15 @@
 package com.mj.tcs.util;
 
 import com.mj.tcs.api.v1.dto.*;
-import com.mj.tcs.data.model.Point;
 import org.junit.Test;
 
 import java.lang.reflect.Field;
 import java.util.Map;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class XML2EntityUtilsTest {
+public class OpenTCSParserTest {
 
     private static String tempNull = null;
 
@@ -22,7 +20,7 @@ public class XML2EntityUtilsTest {
 
 
     public PointDto Map2pointDto(String testString){
-        XML2EntityUtils xml2EntityUtils = new XML2EntityUtils();
+        OpenTCSParser openTCSParser = new OpenTCSParser(mock(SceneDto.class));
         Map<String,String> mockMap = mock(Map.class);
 
         when(mockMap.get("modelXPosition")).thenReturn(testString);
@@ -35,7 +33,7 @@ public class XML2EntityUtilsTest {
         when(mockMap.get("vehicleOrientationAngle")).thenReturn(testString);
         when(mockMap.get("Type")).thenReturn("HALT");
 
-        return xml2EntityUtils.Map2PointDto(mockMap);
+        return openTCSParser.map2PointDto(mockMap);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -63,7 +61,7 @@ public class XML2EntityUtilsTest {
     }
 
     public PathDto Map2PathDto(String testString) throws NoSuchFieldException, IllegalAccessException {
-        XML2EntityUtils xml2EntityUtils = new XML2EntityUtils();
+        OpenTCSParser openTCSParser = new OpenTCSParser(mock(SceneDto.class));
         Map<String,String> mockMap = mock(Map.class);
 
         PointDto pointDto = new PointDto();
@@ -71,9 +69,9 @@ public class XML2EntityUtilsTest {
 
         SceneDto mockedSsceneDto = mock(SceneDto.class);
         when(mockedSsceneDto.getPointDtoByName("100.0")).thenReturn(pointDto);
-        Field fieldSceneDto = XML2EntityUtils.class.getDeclaredField("sceneDto");
+        Field fieldSceneDto = OpenTCSParser.class.getDeclaredField("sceneDto");
         fieldSceneDto.setAccessible(true);
-        fieldSceneDto.set(xml2EntityUtils, mockedSsceneDto);
+        fieldSceneDto.set(openTCSParser, mockedSsceneDto);
 
         when(mockMap.get("Name")).thenReturn(testString);
         when(mockMap.get("maxVelocity")).thenReturn(testString);
@@ -84,7 +82,7 @@ public class XML2EntityUtilsTest {
         when(mockMap.get("length")).thenReturn(testString);
         when(mockMap.get("locked")).thenReturn(testString);
 
-        return xml2EntityUtils.Map2PathDto(mockMap);
+        return openTCSParser.map2PathDto(mockMap);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -110,7 +108,7 @@ public class XML2EntityUtilsTest {
 
     public LocationLinkDto Map2LocationLinkDto(String testString) throws Exception {
 
-        XML2EntityUtils xml2EntityUtils = new XML2EntityUtils();
+        OpenTCSParser openTCSParser = new OpenTCSParser(mock(SceneDto.class));
         Map<String,String> mockMap = mock(Map.class);
 
         LocationDto locationDto = new LocationDto();
@@ -123,15 +121,15 @@ public class XML2EntityUtilsTest {
 
         when(mockedSsceneDto.getLocationDtoByName("100.0")).thenReturn(locationDto);
         when(mockedSsceneDto.getPointDtoByName("100.0")).thenReturn(pointDto);
-        Field fieldSceneDto = XML2EntityUtils.class.getDeclaredField("sceneDto");
+        Field fieldSceneDto = OpenTCSParser.class.getDeclaredField("sceneDto");
         fieldSceneDto.setAccessible(true);
-        fieldSceneDto.set(xml2EntityUtils,mockedSsceneDto);
+        fieldSceneDto.set(openTCSParser,mockedSsceneDto);
 
         when(mockMap.get("Name")).thenReturn(testString);
         when(mockMap.get("endComponent")).thenReturn(testString);
         when(mockMap.get("startComponent")).thenReturn(testString);
 
-         return xml2EntityUtils.Map2LocationLinkDto(mockMap);
+         return openTCSParser.map2LocationLinkDto(mockMap);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -156,10 +154,10 @@ public class XML2EntityUtilsTest {
     }
 
     public LocationTypeDto Map2LocationTypeDto(String testString) throws Exception {
-        XML2EntityUtils xml2EntityUtils = new XML2EntityUtils();
+        OpenTCSParser openTCSParser = new OpenTCSParser(mock(SceneDto.class));
         Map<String,String> mockMap = mock(Map.class);
         when(mockMap.get("Name")).thenReturn(testString);
-        return xml2EntityUtils.Map2LocationTypeDto(mockMap);
+        return openTCSParser.map2LocationTypeDto(mockMap);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -189,7 +187,7 @@ public class XML2EntityUtilsTest {
 
     public LocationDto Map2LocationDto( String testString ) throws Exception {
 
-        XML2EntityUtils xml2EntityUtils = new XML2EntityUtils();
+        OpenTCSParser openTCSParser = new OpenTCSParser(mock(SceneDto.class));
         Map<String,String> mockMap = mock(Map.class);
 
         LocationTypeDto locationTypeDto = new LocationTypeDto();
@@ -198,9 +196,9 @@ public class XML2EntityUtilsTest {
         SceneDto mockedSsceneDto = mock(SceneDto.class);
 
         when(mockedSsceneDto.getLocationTypeDtoByName("HALT")).thenReturn(locationTypeDto);
-        Field fieldSceneDto = XML2EntityUtils.class.getDeclaredField("sceneDto");
+        Field fieldSceneDto = OpenTCSParser.class.getDeclaredField("sceneDto");
         fieldSceneDto.setAccessible(true);
-        fieldSceneDto.set(xml2EntityUtils,mockedSsceneDto);
+        fieldSceneDto.set(openTCSParser,mockedSsceneDto);
 
         when(mockMap.get("modelXPosition")).thenReturn(testString);
         when(mockMap.get("modelYPosition")).thenReturn(testString);
@@ -212,7 +210,7 @@ public class XML2EntityUtilsTest {
         when(mockMap.get("vehicleOrientationAngle")).thenReturn(testString);
         when(mockMap.get("Type")).thenReturn("HALT");
 
-         return xml2EntityUtils.Map2LocationDto(mockMap);
+         return openTCSParser.map2LocationDto(mockMap);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -239,12 +237,12 @@ public class XML2EntityUtilsTest {
 
     public BlockDto Map2BlockDto(String testString) throws Exception {
 
-        XML2EntityUtils xml2EntityUtils = new XML2EntityUtils();
+        OpenTCSParser openTCSParser = new OpenTCSParser(mock(SceneDto.class));
         Map<String,String> mockMap = mock(Map.class);
 
         when(mockMap.get("Name")).thenReturn(testString);
 
-         return xml2EntityUtils.Map2BlockDto(mockMap);
+         return openTCSParser.map2BlockDto(mockMap);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -273,7 +271,7 @@ public class XML2EntityUtilsTest {
 
     public VehicleDto Map2VehicleDto(String testString) throws Exception {
 
-        XML2EntityUtils xml2EntityUtils = new XML2EntityUtils();
+        OpenTCSParser openTCSParser = new OpenTCSParser(mock(SceneDto.class));
         Map<String,String> mockMap = mock(Map.class);
 
         when(mockMap.get("Name")).thenReturn(testString);
@@ -283,7 +281,7 @@ public class XML2EntityUtilsTest {
         when(mockMap.get("EnergyLevelGood")).thenReturn(testString);
         when(mockMap.get("Length")).thenReturn(testString);
 
-         return xml2EntityUtils.Map2VehicleDto(mockMap);
+         return openTCSParser.map2VehicleDto(mockMap);
     }
 
     @Test(expected = IllegalArgumentException.class)

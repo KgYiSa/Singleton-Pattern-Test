@@ -5,6 +5,7 @@ import com.mj.tcs.api.v1.dto.PathDto;
 import com.mj.tcs.api.v1.dto.PointDto;
 import com.mj.tcs.api.v1.dto.SceneDto;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
+import com.mj.tcs.api.v1.dto.base.EntityAuditorDto;
 import com.mj.tcs.exception.ObjectUnknownException;
 import com.mj.tcs.exception.ResourceUnknownException;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -134,6 +135,14 @@ public class TCSDtoUtils {
         return sceneDto;
     }
 
+    public static EntityAuditorDto createAudiorDto(String user) {
+        EntityAuditorDto auditorDto = new EntityAuditorDto();
+        auditorDto.setCreationDate();
+        auditorDto.setCreatedBy(user);
+        auditorDto.setChangeDate();
+        auditorDto.setUpdatedBy(user);
+        return auditorDto;
+    }
 
     /**
      * Copy from one class object (or a Map object) to another class object.

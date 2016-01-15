@@ -21,17 +21,17 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
         configurer.enable();
     }
 
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer properties()
-    {
-        PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
-        Resource[] resources = new ClassPathResource[] {
-                new ClassPathResource("application.properties")
-        };
-        configurer.setLocations(resources);
-        configurer.setIgnoreUnresolvablePlaceholders(true);
-        return configurer;
-    }
+//    @Bean
+//    public static PropertySourcesPlaceholderConfigurer properties()
+//    {
+//        PropertySourcesPlaceholderConfigurer configurer = new PropertySourcesPlaceholderConfigurer();
+//        Resource[] resources = new ClassPathResource[] {
+//                new ClassPathResource("application.properties")
+//        };
+//        configurer.setLocations(resources);
+//        configurer.setIgnoreUnresolvablePlaceholders(true);
+//        return configurer;
+//    }
 
     @Bean
     public InternalResourceViewResolver getInternalResourceViewResolver() {
@@ -46,9 +46,6 @@ public class WebAppConfig extends WebMvcConfigurerAdapter {
     public WebContentInterceptor webContentInterceptor() {
         WebContentInterceptor interceptor = new WebContentInterceptor();
         interceptor.setCacheSeconds(0);
-        interceptor.setUseExpiresHeader(true);;
-        interceptor.setUseCacheControlHeader(true);
-        interceptor.setUseCacheControlNoStore(true);
 
         return interceptor;
     }

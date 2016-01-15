@@ -17,7 +17,10 @@
 <header>
 	<!--<h1>AVG Modelling-Mode<a href="operating.html">[operating]</a></h1>-->
 	<div class="mj-logo"><img src="../images/mj-logo.png" alt="" class=""></div>
-	<div class="title">AVG Modelling<a href="operating.html">[operating]</a></div>
+	<div class="title">AGV Modelling
+		<%--TODO:如果有modeling的功能，需要改，取消下面注释--%>
+		<%--<a href="operating.html">[operating]</a>--%>
+	</div>
 	<div class="sys-info">
 		<!--<p class="sence"><a href="javascript:;">选择场景</a>|</p>-->
 		<div class="scene">
@@ -34,7 +37,6 @@
 					<li><a href="./modelling">Modelling</a></li>
 				</ul>
 			</div>
-
 		</div>
 		<div class="userinfo">
 			<span class="label label-info">
@@ -356,7 +358,8 @@
 				</div>
 				<div class="dropdown state">
 					<button class="btn btn-default dropdown-toggle" type="button" id="location-state-dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-						请选择状态
+						<%--把“请选择状态”改为“请选择操作”--%>
+						请选择操作
 						<span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu" aria-labelledby="state-dropdownMenu">
@@ -606,18 +609,49 @@
 
 		  // 添加更新的工单
 		  console.log(message);
-		  var toContent = "<tr class='"+message.order_state+"'>";
-		  toContent += "<td>" + message.uuid + "</td>";
-		  toContent += "<td>" + message.type + "</td>";
-		  toContent += "<td>" + message.executing_vehicle + "</td>";
-		  toContent += "<td>" + message.order_state + "</td>";
-		  toContent += "<td>Column5</td>";
-		  toContent += "<td>Column6</td>";
-		  toContent += "<td>"+new Date().getTime()+"</td>";
-		  toContent += "</tr>";
-		  $(".top-panel-to .table-body tbody").append(toContent);
+//		  var toContent = "<tr class='"+message.order_state+"'>";
+//		  toContent += "<td>" + message.uuid + "</td>";
+//		  toContent += "<td>" + message.type + "</td>";
+//		  toContent += "<td>" + message.executing_vehicle + "</td>";
+//		  toContent += "<td>" + message.order_state + "</td>";
+//		  toContent += "<td>Column5</td>";
+//		  toContent += "<td>Column6</td>";
+//		  toContent += "<td>"+new Date().getTime()+"</td>";
+//		  toContent += "</tr>";
+//		  $(".top-panel-to .table-body tbody").append(toContent);
+		  hasUUid(message);
 		  $(".left-container .top-panel .top-panel-to .table-body").scrollTop(2000000);
 
+	  }
+	  //判断调拨单是否存在，如果存在则修改他的值，如果不存在则新建调拨单
+	  function hasUUid(message){
+		  var trList=$(".top-panel-to .table-body tbody").children("tr");
+		  var has=false;
+		  for(var i= 0,j=trList.length;i<j;i++){
+			  var tdText=trList.eq(i).find("td").eq(0).text();
+			  if(tdText== message.uuid ){
+				  has=true;
+				  trList.eq(i).find("td").eq(1).text(message.type);
+				  trList.eq(i).find("td").eq(2).text(message.executing_vehicle);
+				  trList.eq(i).find("td").eq(3).text(message.order_state);
+				  trList.eq(i).find("td").eq(4).text("Column5");
+				  trList.eq(i).find("td").eq(5).text("Column6");
+				  trList.eq(i).find("td").eq(6).text(new Date().getTime());
+				  return;
+			  }
+		  }
+		if(has==false){
+			var toContent = "<tr class='"+message.order_state+"'>";
+			toContent += "<td>" + message.uuid + "</td>";
+			toContent += "<td>" + message.type + "</td>";
+			toContent += "<td>" + message.executing_vehicle + "</td>";
+			toContent += "<td>" + message.order_state + "</td>";
+			toContent += "<td>Column5</td>";
+			toContent += "<td>Column6</td>";
+			toContent += "<td>"+new Date().getTime()+"</td>";
+			toContent += "</tr>";
+			$(".top-panel-to .table-body tbody").append(toContent);
+		}
 	  }
 
 	  function showVehicleMessage(message) {

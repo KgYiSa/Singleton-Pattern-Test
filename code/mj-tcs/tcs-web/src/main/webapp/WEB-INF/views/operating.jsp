@@ -358,7 +358,8 @@
 				</div>
 				<div class="dropdown state">
 					<button class="btn btn-default dropdown-toggle" type="button" id="location-state-dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-						请选择状态
+						<%--TODO:把“请选择状态”改为“请选择操作”--%>
+						请选择操作
 						<span class="caret"></span>
 					</button>
 					<ul class="dropdown-menu" aria-labelledby="state-dropdownMenu">

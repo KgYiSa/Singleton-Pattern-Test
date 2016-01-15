@@ -17,7 +17,10 @@
 <header>
 	<!--<h1>AVG Modelling-Mode<a href="operating.html">[operating]</a></h1>-->
 	<div class="mj-logo"><img src="../images/mj-logo.png" alt="" class=""></div>
-	<div class="title">AVG Modelling<a href="operating.html">[operating]</a></div>
+	<div class="title">AVG Modelling
+		<%--TODO:如果有modeling的功能，需要改，取消下面注释--%>
+		<%--<a href="operating.html">[operating]</a>--%>
+	</div>
 	<div class="sys-info">
 		<!--<p class="sence"><a href="javascript:;">选择场景</a>|</p>-->
 		<div class="scene">
@@ -34,7 +37,6 @@
 					<li><a href="./modelling">Modelling</a></li>
 				</ul>
 			</div>
-
 		</div>
 		<div class="userinfo">
 			<span class="label label-info">

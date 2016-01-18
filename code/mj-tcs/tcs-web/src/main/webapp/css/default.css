@@ -1,0 +1,177 @@
+html {
+	
+}
+/*设定图片的最大宽高为外层div的宽高*/
+img {
+	max-width: 100%;
+  	max-height: 100%;
+}
+
+header {
+	position: relative;
+	height: 70px;
+	margin-top: -2px;
+	text-align: center;
+	background-image: url("../images/header-bg.jpg");
+}
+
+header .mj-logo {
+	height:100%;
+	width: 30%;
+	float: left;
+	padding-top: 10px;
+}
+
+header .title {
+	height: 100%;
+	width: 30%;
+	font-size: 32px;
+	line-height: 46px;
+	/*text-align: center;*/
+	/*vertical-align:middle;*/
+	margin-bottom: -10px;
+	padding-top: 12px;
+	padding-bottom: 12px;
+	float: left;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	white-space: nowrap;
+}
+
+header .sys-info {
+	height: 100%;
+	width: 40%;
+	float: left;
+	padding-top: 30px;
+	padding-right: 15px;
+	/*position: absolute;*/
+	/*right:15px;*/
+}
+
+
+header .sys-info .scene{
+	float: left;
+	width: 70%;
+	height: 30px;
+	padding-left: 25%;
+	text-align: left;
+	display: flex;
+
+}
+
+
+header .sys-info .scene #model-switch{
+	height: 30px;
+	margin-left: 20px;
+	min-width: 110px;
+	padding-top:4px;
+}
+
+
+header .sys-info .scene .dropdown-menu{
+	margin-left: 20px;
+	min-width: 110px;
+}
+
+/*header .sys-info .scene #scenename {*/
+	/*text-overflow: ellipsis;*/
+	/*overflow: hidden;*/
+	/*white-space: nowrap;*/
+	/*line-height: 30px;*/
+	/*font-size: 14px;*/
+	/*width: 200px;*/
+	/*background-color: #ffffff;*/
+	/*padding-left: 5px;*/
+/*}*/
+
+
+header .sys-info .userinfo{
+	/*margin-bottom: -10px;*/
+	/*height:100%;*/
+	float: left;
+	width: 30%;
+	height: 30px;
+	text-align: left;
+	/*width: 100px;*/
+	/*margin-top: 40px;*/
+
+}
+
+
+header a, a:link, a:hover, a:active, a:visited {
+	text-decoration:none;
+}
+
+#sceneselect .modal-body .scenelist {
+	table-layout: fixed;
+}
+
+#sceneselect .modal-body .scenelist td {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+
+body {
+	background-color: rgb(247,243,247);
+
+}
+
+
+.container-fluid {
+	background-color: #3A92FF;
+	/*height: 500px;*/
+}
+
+
+.login-form {
+	background-color: #cccccc;
+	width: 30%;
+	height: 300px;
+	margin-top: 80px;
+	margin-left: auto;
+	margin-right: auto;
+	min-height: 330px;
+	min-width: 480px;
+	/*padding: 30px;*/
+}
+
+
+.login-form-title {
+	background-color: #dddddd;
+	text-align: center;
+	
+}
+
+.login-form-title h3{
+	margin-top: 20px;
+	margin-bottom:20px; 
+}
+
+.login-form .form-group {
+	margin-bottom: 40px;
+	margin-left: 0px;
+	margin-right: 0px;
+
+}
+
+
+/*.loading{*/
+	/*width:160px;*/
+	/*height:56px;*/
+	/*position: absolute;*/
+	/*top:50%;*/
+	/*left:50%;*/
+	/*line-height:56px;*/
+	/*color:#fff;*/
+	/*padding-left:60px;*/
+	/*font-size:15px;*/
+	/*background: #000 url(images/loader.gif) no-repeat 10px 50%;*/
+	/*opacity: 0.7;*/
+	/*z-index:9999;*/
+	/*-moz-border-radius:20px;*/
+	/*-webkit-border-radius:20px;*/
+	/*border-radius:20px;*/
+	/*filter:progid:DXImageTransform.Microsoft.Alpha(opacity=70);*/
+/*}*/

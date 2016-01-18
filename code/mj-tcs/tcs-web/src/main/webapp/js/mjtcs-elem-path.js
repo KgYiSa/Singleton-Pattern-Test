@@ -7,6 +7,14 @@ Path = function(x1,y1,x2,y2,positiveVal,negativeVal,control_points,two){
     var elemPath = this;
     Elem.call(elemPath);
 
+    for(var p = 0; p < control_points.length-3;p+=2){
+        if(control_points[p]==control_points[p+2] && control_points[p+1]==control_points[p+3]){
+            control_points.splice(p,1);
+            control_points.splice(p,1);
+            p-=2;
+        }
+    }
+
     control_points.unshift(y1);
     control_points.unshift(x1);
     control_points.push(x2);
@@ -34,6 +42,7 @@ Path = function(x1,y1,x2,y2,positiveVal,negativeVal,control_points,two){
 
     line.linewidth = 1*elemPath.ZOOM;
     line.opacity = elemPath.lineOpacity;
+    line.curved = true;
     line.noFill();
     elemPath.line = line;
 

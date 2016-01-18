@@ -246,14 +246,15 @@ $(function(){
 
 
     // show vehicle base info
-    $(".bottom-panel .bottom-panel-list").on("click", ".vehicle", (function(){
-        var uuid = $(this).attr("vehicle-uuid");
-        var vehicleDtail = fJson[uuid];
-        $("#vehicleDetail .modal-body").html("");
-        var vData = JSON.stringify(vehicleDtail)+ "<br><button type='button' class='btn btn-primary btn-sm' onclick=dispatchVehicle('"+uuid+"')>Dispatch Vehicle </button>";
-        $("#vehicleDetail .modal-body").html(vData);
-        $("#vehicleDetail").modal("show");
-    }));
+    //不让点击后出现弹框
+    //$(".bottom-panel .bottom-panel-list").on("click", ".vehicle", (function(){
+    //    var uuid = $(this).attr("vehicle-uuid");
+    //    var vehicleDtail = fJson[uuid];
+    //    $("#vehicleDetail .modal-body").html("");
+    //    var vData = JSON.stringify(vehicleDtail)+ "<br><button type='button' class='btn btn-primary btn-sm' onclick=dispatchVehicle('"+uuid+"')>Dispatch Vehicle </button>";
+    //    $("#vehicleDetail .modal-body").html(vData);
+    //    $("#vehicleDetail").modal("show");
+    //}));
 
 
     // tcs-editor  right operate menu
@@ -543,6 +544,7 @@ var buildTree = function(data) {
 
         var elem = initElementsObj[idx];
         var array = data[elem];
+        //更新右侧的列表
         if (elem == "vehicles") {
             //// *100 主要为了将id于pId区分
             //treeNode.id = rootVehicles.id * 100;
@@ -568,7 +570,8 @@ var buildTree = function(data) {
 
             })
 
-        } else if (elem == 'attached_links') {
+        }
+        else if (elem == 'attached_links') {
             // *100 主要为了将id于pId区分
             treeNode.id = (idx + 1) * 100;
             treeNode.pId = rootLayout.id;
@@ -600,7 +603,8 @@ var buildTree = function(data) {
                 )
 
             }
-        } else {
+        }
+        else {
             // *100 主要为了将id于pId区分
             treeNode.id = (idx + 1) * 100;
             treeNode.pId = rootLayout.id;

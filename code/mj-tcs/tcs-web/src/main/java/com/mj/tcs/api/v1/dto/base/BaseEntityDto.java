@@ -53,6 +53,10 @@ public class BaseEntityDto implements Serializable, Cloneable {
         auditorDto = new EntityAuditorDto();
     }
 
+    public void setUUID(String uuid) {
+        this.uuid = uuid;
+    }
+
     public String getUUID() {
         return uuid;
     }

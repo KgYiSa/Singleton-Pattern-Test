@@ -83,8 +83,8 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer
     @Bean
     public ServletServerContainerFactoryBean createWebSocketContainer() {
         ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
-        container.setMaxTextMessageBufferSize(81920);
-        container.setMaxBinaryMessageBufferSize(81920);
+        container.setMaxTextMessageBufferSize(8192);
+        container.setMaxBinaryMessageBufferSize(8192);
         return container;
     }
 

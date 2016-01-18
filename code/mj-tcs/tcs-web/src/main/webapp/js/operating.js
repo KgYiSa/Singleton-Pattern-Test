@@ -53,21 +53,21 @@ $(function(){
      
     });
 
-    //平移按钮
-    $(".operation-list .hand").click(function() {
-        // TODO:
-        window.tcsDraw.translate(10,10);
-    });
-
-    //工单按钮
-    $(".operation-list .to").click(function() {
-    	if ($(".top-panel .top-panel-to").css("display") == 'none') {
-    		$(".top-panel .top-panel-to").css("display","block");
-    	} else {
-    		$(".top-panel .top-panel-to").css("display","none");
-    	}
-    	
-    })
+    ////平移按钮
+    //$(".operation-list .hand").click(function() {
+    //    // TODO:
+    //    window.tcsDraw.translate(100,100);
+    //});
+    //
+    ////工单按钮
+    //$(".operation-list .to").click(function() {
+    //	if ($(".top-panel .top-panel-to").css("display") == 'none') {
+    //		$(".top-panel .top-panel-to").css("display","block");
+    //	} else {
+    //		$(".top-panel .top-panel-to").css("display","none");
+    //	}
+    //
+    //})
 
 
     // reset zoom
@@ -284,6 +284,8 @@ $(function(){
             $("#create-to table tbody").html("");
             $("#create-to").modal("show");
             // TODO other operate
+        } else if ($(this)[0].id == "pan") {
+            window.tcsDraw.translate(100,100);
         } else {
 
         }

@@ -144,7 +144,7 @@
 						<li>
 							<img src="${ctxStatic}/images/select-2.png" alt="1111"></li>
 						<li>
-							<img src="${ctxStatic}/images/cursor-opened-hand.png" alt=""></li>
+							<img src="${ctxStatic}/images/cursor-opened-hand.png" id="pan" alt=""></li>
 						<li>
 							<img src="${ctxStatic}/images/groups.png" alt=""></li>
 						<li>

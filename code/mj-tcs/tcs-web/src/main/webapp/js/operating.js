@@ -129,9 +129,10 @@ $(function(){
 
     // 绑定双击事件 依据固定不变的父层
     $('.properties .table-body tbody').on('dblclick', 'tr td:nth-child(2)', function(){
-        var value = $(this).text();
-        $(this).text("");
-        $(this).append("<input type='text' value='"+value+"' />");
+        //把双击事件注释，让右侧小车栏位下方的Attribute和Value只读
+        //var value = $(this).text();
+        //$(this).text("");
+        //$(this).append("<input type='text' value='"+value+"' />");
         // alert($(this).text())
     })
 

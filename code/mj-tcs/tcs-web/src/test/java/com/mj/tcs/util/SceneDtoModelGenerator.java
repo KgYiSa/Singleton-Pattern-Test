@@ -229,7 +229,7 @@ public class SceneDtoModelGenerator {
         transportOrderDto.setIntendedVehicleUUID(null);
 
         // Destination
-        DestinationDto destinationDto = new DestinationDto();
+        TransportOrderDto.DestinationDto destinationDto = new TransportOrderDto.DestinationDto();
         destinationDto.setAuditorDto(createAuditor());
         destinationDto.setLocationUUID(destPointUUID);
         destinationDto.setDummy(true);

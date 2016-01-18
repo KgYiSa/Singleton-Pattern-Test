@@ -227,10 +227,12 @@ public class OpenTCSParser {
     private Map<String, String> getMapValueFromMap(String name, Map<String, String> map) {
         Map<String, String> mapValue = new HashMap<>();
         String value = map.get(name);
-        for (String subValue : value.split(LEVEL_1_DEVIDER)) {
-            String[] temp = subValue.split(MAP_KEY_VALUE_DEVIDER);
-            if ((temp != null) && (temp.length == 2)) {
-                mapValue.put(temp[0], temp[1]);
+        if (!Objects.isNull(value)) {
+            for (String subValue : value.split(LEVEL_1_DEVIDER)) {
+                String[] temp = subValue.split(MAP_KEY_VALUE_DEVIDER);
+                if ((temp != null) && (temp.length == 2)) {
+                    mapValue.put(temp[0], temp[1]);
+                }
             }
         }
 
@@ -238,8 +240,11 @@ public class OpenTCSParser {
     }
 
     private String[] getStringArrayFromMap(String name, Map<String, String> map) {
-            String value = map.get(name);
-            return value.split(LEVEL_1_DEVIDER);
+        String value = map.get(name);
+        if (Objects.isNull(value)) {
+            return new String[]{};
+        }
+        return value.split(LEVEL_1_DEVIDER);
     }
 
     private Set<BaseEntityDto> getBlockElementsFromMap(String name, Map<String, String> map) {
@@ -315,15 +320,15 @@ public class OpenTCSParser {
             throw new NullPointerException("Map is Empty :" + map + ",can not get value from Null Object.");
         }
         String value =  (String) map.get(key);
+        if (Objects.isNull(value)) {
+            throw new IllegalArgumentException("Value is null for key: " + key);
+        }
         if(value.isEmpty() ){
             if(key.equals("LABEL_OFFSET_X")){
                 value = "-10";
             }else if(key.equals("LABEL_OFFSET_Y")){
                 value = "-20";
             }
-        }
-        if(StringUtils.isEmpty(value)){
-            throw new IllegalArgumentException("String is Empty :" + key + ",can not parse from Empty String.");
         }
         return value;
     }

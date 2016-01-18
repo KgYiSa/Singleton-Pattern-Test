@@ -6,6 +6,8 @@ import com.mj.tcs.repository.SceneDtoRepository;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -14,6 +16,7 @@ import java.util.Objects;
  * @author Wang Zhen
  */
 @Component
+@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
 public class SceneDtoService {
     private static final String SCENE_NAME_NEW_SUFFIX = "_1";
 

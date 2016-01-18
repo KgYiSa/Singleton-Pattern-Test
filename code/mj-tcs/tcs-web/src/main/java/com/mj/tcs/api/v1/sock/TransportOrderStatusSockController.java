@@ -2,13 +2,13 @@ package com.mj.tcs.api.v1.sock;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.eventbus.Subscribe;
-import com.mj.tcs.api.v1.dto.TransportOrderStatusDto;
 import com.mj.tcs.access.status.OrderStatusMessage;
+import com.mj.tcs.api.v1.dto.TransportOrderDto;
 import com.mj.tcs.api.v1.web.ServiceController;
+import com.mj.tcs.data.order.TransportOrder;
 import org.springframework.stereotype.Controller;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Objects;
 
 /**
  * @author Wang Zhen
@@ -26,23 +26,50 @@ public class TransportOrderStatusSockController extends ServiceController {
         synchronized (message) {
             final long sceneId = message.getSceneId();
             // TODO: convert to TransportOrder DTO
-            final TransportOrderStatusDto orderStatusDto = new TransportOrderStatusDto();
-            orderStatusDto.setUUID(message.getOrderUUID());
-            orderStatusDto.setExecutingVehicle(message.getExecutingVehicleUUID());
-            orderStatusDto.setOrderState(message.getOrderState().name());
-            final List<TransportOrderStatusDto.DestinationStatusDto> destinationStatusDtos = new ArrayList<>();
+            final TransportOrder.State orderState = message.getOrderState();
+//            final TransportOrderStatusDto orderStatusDto = new TransportOrderStatusDto();
+//            orderStatusDto.setUUID(message.getOrderUUID());
+//            orderStatusDto.setExecutingVehicle(message.getExecutingVehicleUUID());
+//            orderStatusDto.setOrderState(orderState.name());
+//            final List<TransportOrderStatusDto.DestinationStatusDto> destinationStatusDtos = new ArrayList<>();
+//            if (message.getDestinations() != null) {
+//                message.getDestinations().forEach(v -> {
+//                    final TransportOrderStatusDto.DestinationStatusDto destinationStatusDto = new TransportOrderStatusDto.DestinationStatusDto();
+//                    destinationStatusDto.setLocationUUID(v.getLocationUUID());
+//                    destinationStatusDto.setOperation(v.getOperation());
+//                    destinationStatusDto.setState(v.getState().name());
+//                    destinationStatusDtos.add(destinationStatusDto);
+//                });
+//            }
+//            orderStatusDto.setDestinationDtos(destinationStatusDtos);
+
+            final TransportOrderDto orderDto = new TransportOrderDto();
+            orderDto.setUUID(message.getOrderUUID());
+            orderDto.setExecutingVehicle(message.getExecutingVehicleUUID());
+            orderDto.setOrderState(orderState.name());
+
             if (message.getDestinations() != null) {
                 message.getDestinations().forEach(v -> {
-                    final TransportOrderStatusDto.DestinationStatusDto destinationStatusDto = new TransportOrderStatusDto.DestinationStatusDto();
-                    destinationStatusDto.setLocationUUID(v.getLocationUUID());
-                    destinationStatusDto.setOperation(v.getOperation());
-                    destinationStatusDto.setState(v.getState().name());
-                    destinationStatusDtos.add(destinationStatusDto);
+                    final TransportOrderDto.DestinationDto dest = new TransportOrderDto.DestinationDto();
+                    dest.setLocationUUID(v.getLocationUUID());
+                    // No need to update the other parameter, it will let service to handle it!
+                    dest.setState(v.getState().name());
+                    orderDto.addDestionation(dest);
                 });
             }
-            orderStatusDto.setDestinationDtos(destinationStatusDtos);
 
-            getMessageSender().convertAndSend("/topic/status/scenes/" + sceneId+"/torders", orderStatusDto);
+            // Save or update for the TransportOrderStatusDto when it is not in raw_state & processing_state
+            if (!Objects.equals(TransportOrder.State.RAW, orderState) && !Objects.equals(TransportOrder.State.BEING_PROCESSED, orderState)) {
+                try {
+                    getService().updateTrnasportOrderDto(sceneId, orderDto);
+                } catch (Exception e) {
+                    //TODO: add exception handling
+                    e.printStackTrace();
+                    return;
+                }
+            }
+
+            getMessageSender().convertAndSend("/topic/status/scenes/" + sceneId+"/torders", orderDto);
         }
     }
 }

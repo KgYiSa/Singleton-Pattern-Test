@@ -5,15 +5,16 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 import java.util.Map;
+import java.util.Random;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class OpenTCSParserTest {
 
-    private static String tempNull = null;
+    private static final String tempNull = null;
 
-    private static String tempNormal = "100.0";
+    private static final String tempNormal = "123.4";
 
     private static String tempEmpty ;
 
@@ -32,6 +33,7 @@ public class OpenTCSParserTest {
         when(mockMap.get("LABEL_OFFSET_Y")).thenReturn(testString);
         when(mockMap.get("vehicleOrientationAngle")).thenReturn(testString);
         when(mockMap.get("Type")).thenReturn("HALT");
+        when(mockMap.get("RFID")).thenReturn(String.valueOf(new Random().nextInt(1000)));
 
         return openTCSParser.map2PointDto(mockMap);
     }
@@ -65,13 +67,13 @@ public class OpenTCSParserTest {
         Map<String,String> mockMap = mock(Map.class);
 
         PointDto pointDto = new PointDto();
-        pointDto.setName("100.0");
+        pointDto.setName(testString);
 
-        SceneDto mockedSsceneDto = mock(SceneDto.class);
-        when(mockedSsceneDto.getPointDtoByName("100.0")).thenReturn(pointDto);
+        SceneDto mockedSceneDto = mock(SceneDto.class);
+        when(mockedSceneDto.getPointDtoByName(testString)).thenReturn(pointDto);
         Field fieldSceneDto = OpenTCSParser.class.getDeclaredField("sceneDto");
         fieldSceneDto.setAccessible(true);
-        fieldSceneDto.set(openTCSParser, mockedSsceneDto);
+        fieldSceneDto.set(openTCSParser, mockedSceneDto);
 
         when(mockMap.get("Name")).thenReturn(testString);
         when(mockMap.get("maxVelocity")).thenReturn(testString);
@@ -81,6 +83,7 @@ public class OpenTCSParserTest {
         when(mockMap.get("maxReverseVelocity")).thenReturn(testString);
         when(mockMap.get("length")).thenReturn(testString);
         when(mockMap.get("locked")).thenReturn(testString);
+        when(mockMap.get("CONTROL_POINTS")).thenReturn("100,200;300,400");
 
         return openTCSParser.map2PathDto(mockMap);
     }
@@ -112,15 +115,15 @@ public class OpenTCSParserTest {
         Map<String,String> mockMap = mock(Map.class);
 
         LocationDto locationDto = new LocationDto();
-        locationDto.setName("100.0");
+        locationDto.setName(testString);
 
         PointDto pointDto = new PointDto();
-        pointDto.setName("100.0");
+        pointDto.setName(testString);
 
         SceneDto mockedSsceneDto = mock(SceneDto.class);
 
-        when(mockedSsceneDto.getLocationDtoByName("100.0")).thenReturn(locationDto);
-        when(mockedSsceneDto.getPointDtoByName("100.0")).thenReturn(pointDto);
+        when(mockedSsceneDto.getLocationDtoByName(testString)).thenReturn(locationDto);
+        when(mockedSsceneDto.getPointDtoByName(testString)).thenReturn(pointDto);
         Field fieldSceneDto = OpenTCSParser.class.getDeclaredField("sceneDto");
         fieldSceneDto.setAccessible(true);
         fieldSceneDto.set(openTCSParser,mockedSsceneDto);
@@ -241,6 +244,7 @@ public class OpenTCSParserTest {
         Map<String,String> mockMap = mock(Map.class);
 
         when(mockMap.get("Name")).thenReturn(testString);
+        when(mockMap.get("COLOR")).thenReturn(testString);
 
          return openTCSParser.map2BlockDto(mockMap);
     }

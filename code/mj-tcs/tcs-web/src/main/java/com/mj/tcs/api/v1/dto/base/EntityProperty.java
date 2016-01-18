@@ -20,6 +20,13 @@ public class EntityProperty implements Serializable, Cloneable {
     @Column
     private String value;
 
+    public EntityProperty() {}
+
+    public EntityProperty(String name, String value) {
+        this.name = name;
+        this.value = value;
+    }
+
     public String getName() {
         return name;
     }

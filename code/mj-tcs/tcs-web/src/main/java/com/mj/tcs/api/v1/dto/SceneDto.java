@@ -224,6 +224,17 @@ public class SceneDto extends BaseEntityDto {
         this.pathDtos = pathDtos;
     }
 
+    public PathDto getPathDtoByName(String name) {
+        if (pathDtos == null || name == null) {
+            return null;
+        }
+        Optional<PathDto> pathDtoOp = pathDtos.stream().filter(l -> name.equals(l.getName())).findFirst();
+        if (pathDtoOp.isPresent()) {
+            return pathDtoOp.get();
+        }
+        return null;
+    }
+
     public boolean addPathDto(PathDto dto) {
         if (getPathDtos() == null) {
             this.pathDtos = new LinkedHashSet<>();
@@ -315,6 +326,7 @@ public class SceneDto extends BaseEntityDto {
         }
         return null;
     }
+
     public LocationTypeDto getLocationTypeDtoByName(String name) {
         if (locationTypeDtos == null || name == null) {
             return null;

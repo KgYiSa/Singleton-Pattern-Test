@@ -22,15 +22,15 @@ public class TCSResponseEntity<T> extends TCSCommEntity<T> {
     private String statusMessage;
 
     public TCSResponseEntity() {
-        this(Status.ERROR, null, Status.ERROR.toString());
+        this(Status.ERROR, null, null);
     }
 
     public TCSResponseEntity(Status statusCode) {
-        this(statusCode, null, statusCode.toString());
+        this(statusCode, null, null);
     }
 
     public TCSResponseEntity(Status statusCode, T body) {
-        this(statusCode, body, statusCode.toString());
+        this(statusCode, body, null);
     }
 
     public TCSResponseEntity(Status statusCode, T body, String statusMessage) {

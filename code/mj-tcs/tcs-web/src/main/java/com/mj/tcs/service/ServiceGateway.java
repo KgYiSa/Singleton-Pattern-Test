@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
 /**
  * @author Wang Zhen
  */
-@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
 @Component
 public class ServiceGateway {
     private final static SceneDtoConverter sceneDtoConverter = new SceneDtoConverter();
@@ -372,7 +371,7 @@ public class ServiceGateway {
         {
             // Destinations
             List<DriveOrder.Destination> realDests = new LinkedList<>();
-            for (DestinationDto destDto : newOrderDto.getDestinations()) {
+            for (TransportOrderDto.DestinationDto destDto : newOrderDto.getDestinations()) {
                 final String locUUID = destDto.getLocationUUID();
                 final String operation = destDto.getOperation();
                 if (destDto.isDummy()) {
@@ -455,7 +454,18 @@ public class ServiceGateway {
             kernel.withdrawTransportOrder(transportOrder.getReference(), disableVehicle);
         }
 
-        // TODO: Save to Database.
+        // TODO: Save to Database. Saved in status dto ???
+    }
+
+    public void updateTrnasportOrderDto(long sceneId, TransportOrderDto orderDto) throws Exception {
+        Objects.requireNonNull(orderDto);
+        if (orderDto.getSceneId() == null) {
+            orderDto.setSceneId(sceneId);
+        } else if (sceneId != orderDto.getSceneId()) {
+            throw new IllegalArgumentException("The sceneId is [" + sceneId +
+                    "], but the oderDto's sceneId is [" + orderDto.getSceneId() + "]");
+        }
+        orderDtoService.update(orderDto);
     }
 
     /////////////// PRIVATE METHODS //////////////

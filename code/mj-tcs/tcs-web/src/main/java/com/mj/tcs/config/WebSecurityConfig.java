@@ -2,21 +2,30 @@ package com.mj.tcs.config;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 
 /**
  * @author Wang Zhen
  */
 @Configuration
-@EnableWebMvcSecurity
+@EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private Logger logger = Logger.getLogger(WebSecurityConfig.class);
+
+    @Value("${spring.profiles.active}")
+    private String env;
+
+    public WebSecurityConfig() {
+        super(false);
+    }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -27,22 +36,43 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        // Enables Https instead of Http except the local request.
+        if (!env.equals("dev")) {
+            http.requiresChannel().anyRequest().requiresSecure();
+        }
+
         http.csrf().disable();
-        http.authorizeRequests()
+
+        http.exceptionHandling().and()
+                .anonymous().and()
+                .servletApi().and()
+//                .headers().cacheControl().and() // ERROR!!!
+                .authorizeRequests()
+
+                //allow anonymous resource requests
+                .antMatchers("/").permitAll()
+                .antMatchers("/favicon.ico").permitAll()
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/plugin/**").permitAll()
                 .antMatchers("/static/**").permitAll()
                 .antMatchers("/images/**").permitAll()
                 .antMatchers("/js/**").permitAll()
                 .antMatchers("/html/**").permitAll()
-                .antMatchers("/login", "/public/**").permitAll()
-                .antMatchers("/test").hasRole("ADMIN")
+                .antMatchers("/login", "/public/**").permitAll() // TODO: REMOVE ???
+                .antMatchers("/test").hasRole("ADMIN") // TODO: REMOVE ???
                 .anyRequest().authenticated()
-            .and()
+
+                //allow anonymous POSTs to login
+                .antMatchers(HttpMethod.POST, "/api/login").permitAll()
+
+                //allow anonymous GETs to API
+                .antMatchers(HttpMethod.GET, "/api/**").permitAll()
+
+                .and()
                 .formLogin()
-                .loginPage("/login")
+                .loginPage("/api/login")
                 /**
-                 * ref org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer
+                 * REF: org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer
                  */
 //                .usernameParameter("user")
 //                .passwordParameter("pass")
@@ -55,61 +85,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .invalidateHttpSession(true);
     }
 
-//    /*
-//     *
-//     * 这里可以增加自定义的投票器
-//     */
-//    @SuppressWarnings("rawtypes")
-//    @Bean(name = "accessDecisionManager")
-//    public AccessDecisionManager accessDecisionManager() {
-//        logger.info("AccessDecisionManager");
-//        List<AccessDecisionVoter> decisionVoters = new ArrayList<AccessDecisionVoter>();
-//        decisionVoters.add(new RoleVoter());
-//        decisionVoters.add(new AuthenticatedVoter());
-//        decisionVoters.add(webExpressionVoter());// 启用表达式投票器
-//
-//        AffirmativeBased accessDecisionManager = new AffirmativeBased(
-//                decisionVoters);
-//
-//        return accessDecisionManager;
-//    }
-//
-//    /*
-//     * 表达式控制器
-//     */
-//    @Bean(name = "expressionHandler")
-//    public DefaultWebSecurityExpressionHandler webSecurityExpressionHandler() {
-//        logger.info("DefaultWebSecurityExpressionHandler");
-//        DefaultWebSecurityExpressionHandler webSecurityExpressionHandler = new DefaultWebSecurityExpressionHandler();
-//        return webSecurityExpressionHandler;
-//    }
-//
-//    /*
-//     * 表达式投票器
-//     */
-//    @Bean(name = "expressionVoter")
-//    public WebExpressionVoter webExpressionVoter() {
-//        logger.info("WebExpressionVoter");
-//        WebExpressionVoter webExpressionVoter = new WebExpressionVoter();
-//        webExpressionVoter.setExpressionHandler(webSecurityExpressionHandler());
-//        return webExpressionVoter;
-//    }
-
-//    @Configuration
-//    protected static class AuthenticationConfiguration extends GlobalAuthenticationConfigurerAdapter {
-//
-//        @Autowired
-//        private PersonRepository personRepository;
-//
-//        @Override
-//        public void init(AuthenticationManagerBuilder auth) throws Exception {
-//            auth.userDetailsService(userDetailsService());
-//        }
-//
-//        @Bean
-//        public UserDetailsService userDetailsService() {
-//            return (email) -> personRepository.findByEmail(email)
-//                    .orElseThrow(() -> new UsernameNotFoundException("Could not find the user with email '" + email + "'."));
-//        }
-//    }
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 }

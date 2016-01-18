@@ -156,7 +156,7 @@ public class SceneDtoModelGenerator {
     public synchronized SceneDto createSceneDto() {
         String newSceneName = SCENE_NAME_PREFIX +
                 new SimpleDateFormat(SCENE_NAME_SUFFIX_FORMAT).format(new Date()).toString();
-        System.out.println(newSceneName);
+//        System.out.println(newSceneName);
 
         SceneDto sceneDto = new SceneDto();
         sceneDto.setAuditorDto(createAuditor());
@@ -229,7 +229,7 @@ public class SceneDtoModelGenerator {
         transportOrderDto.setIntendedVehicleUUID(null);
 
         // Destination
-        DestinationDto destinationDto = new DestinationDto();
+        TransportOrderDto.DestinationDto destinationDto = new TransportOrderDto.DestinationDto();
         destinationDto.setAuditorDto(createAuditor());
         destinationDto.setLocationUUID(destPointUUID);
         destinationDto.setDummy(true);

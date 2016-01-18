@@ -7,14 +7,16 @@ import com.mj.tcs.repository.TransportOrderDtoRepository;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author Wang Zhen
  */
 @Component
+@Transactional(isolation = Isolation.READ_COMMITTED, rollbackFor = Exception.class)
 public class TransportOrderDtoService {
     @Autowired
     private TransportOrderDtoRepository orderDtoRepository;
@@ -26,6 +28,12 @@ public class TransportOrderDtoService {
         return orderDtoRepository.findAll();
     }
 
+    public TransportOrderDto findByUUID(String uuid) {
+        if (uuid == null) {
+            return null;
+        }
+        return orderDtoRepository.findByUuid(uuid);
+    }
 //    TODO:
 //    public Iterable<TransportOrderDto> findAllFromAScene(long sceneId) {
 //    }
@@ -37,14 +45,25 @@ public class TransportOrderDtoService {
         return orderDtoRepository.save(dto);
     }
 
-    public TransportOrderDto update(TransportOrderDto dto) {
+    public TransportOrderDto update(final TransportOrderDto dto) {
         Objects.requireNonNull(dto, "updated transport order dto object is null");
 
-        // TODO: merge && update creation & update time
+        // merge && update creation & update time
+        final TransportOrderDto orderDto = Objects.requireNonNull(orderDtoRepository.findByUuid(dto.getUUID()));
+
+        orderDto.setExecutingVehicle(dto.getExecutingVehicle());
+
+        orderDto.setOrderState(Objects.requireNonNull(dto.getOrderState()));
+        final List<TransportOrderDto.DestinationDto> newDestList = dto.getDestinations();
+        if (orderDto.getDestinations() != null && newDestList != null) {
+            orderDto.getDestinations().forEach(v -> {
+                final Optional<TransportOrderDto.DestinationDto> destinationDtoOp = newDestList.stream().filter(v2 -> Objects.equals(v2.getLocationUUID(), v.getLocationUUID())).findFirst();
+            });
+        }
 //        dto.setCreatedAt(oldEntity.getCreatedAt());
 //        dto.setCreatedBy(oldEntity.getCreatedBy());
 
-        return orderDtoRepository.save(dto);
+        return orderDtoRepository.save(orderDto);
     }
 
     public void delete(long id) {

@@ -14,7 +14,7 @@ public class LoginController {
      *
      * @return String
      */
-    @RequestMapping(value= "/login",method = RequestMethod.GET)
+    @RequestMapping(value= "/api/login",method = RequestMethod.GET)
     public String getLoginPage() {
         return "login";
     }

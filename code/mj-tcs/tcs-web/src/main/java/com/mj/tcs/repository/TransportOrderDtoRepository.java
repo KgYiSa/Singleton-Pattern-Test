@@ -1,6 +1,7 @@
 package com.mj.tcs.repository;
 
 import com.mj.tcs.api.v1.dto.TransportOrderDto;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
 /**
@@ -14,5 +15,7 @@ public interface TransportOrderDtoRepository extends CrudRepository<TransportOrd
      * @return all entities of the scene
      */
     // TODO
-//    Iterable<TransportOrderDto> findAllByScene(/*@Param("sceneId")*/ Long scene);
+    Iterable<TransportOrderDto> findAllBySceneId(/*@Param("sceneId")*/ Long scene);
+
+    TransportOrderDto findByUuid(String uuid);
 }

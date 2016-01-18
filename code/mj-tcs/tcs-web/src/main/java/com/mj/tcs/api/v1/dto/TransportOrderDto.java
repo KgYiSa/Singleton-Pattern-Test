@@ -8,6 +8,7 @@ package com.mj.tcs.api.v1.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.inspiresoftware.lib.dto.geda.annotations.Dto;
@@ -15,6 +16,7 @@ import com.inspiresoftware.lib.dto.geda.annotations.DtoField;
 import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,31 +28,34 @@ import java.util.Objects;
 @Entity(name = "tcs_order_transport_order")
 //@Table(name = "tcs_order_transport_order")
 public class TransportOrderDto extends BaseEntityDto {
-
     @JsonIgnore
     @Column(name = "scene", nullable = false)
     private Long sceneId;
 
+    @JsonView(View.Order.class)
     @DtoField
     @Column
     private String name;
 
+    @JsonView(View.Default.class)
     @JsonProperty(value = "destinations")
     @DtoField(value = "destination",
             dtoBeanKey = "DestinationDto",
             entityBeanKeys = "Destination")
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private List<DestinationDto> destinations;
+    private List<DestinationDto> destinations = new ArrayList<>();
 
     /**
      * The point of time at which this TransportOrder must have been finished.
      */
+    @JsonView(View.Order.class)
     @Column
     private Long deadline = Long.MAX_VALUE;
 
     /**
      * The point of time at which this transport order was finished.
      */
+    @JsonView(View.Order.class)
     @Column
     private Long finishedTime = Long.MIN_VALUE;
 
@@ -59,13 +64,23 @@ public class TransportOrderDto extends BaseEntityDto {
      * order. If this order is free to be processed by any vehicle, this is
      * <code>null</code>.
      */
+    @JsonView(View.Order.class)
     @JsonProperty(value = "intended_vehicle_uuid")
     @Column
     private String intendedVehicleUUID;
 
+    @JsonView(View.Order.class)
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "tcs_order_transport_order_deps")
     private List<String> deps;
+
+    @JsonView(View.Status.class)
+    @Column(name = "executing_vehicle_uuid")
+    private String executingVehicle;
+
+    @JsonView(View.Status.class)
+    @Column
+    private String orderState;
 
     /**
      * Creates a new TransportOrder.
@@ -90,10 +105,16 @@ public class TransportOrderDto extends BaseEntityDto {
     }
 
     public void addDestionation(DestinationDto destinationDto) {
+        if (this.destinations == null) {
+            this.destinations = new ArrayList<>();
+        }
         this.destinations.add(Objects.requireNonNull(destinationDto, "destinationDto"));
     }
 
     public void removeDestionation(DestinationDto destinationDto) {
+        if (this.destinations == null) {
+            return;
+        }
         this.destinations.remove(Objects.requireNonNull(destinationDto, "destinationDto"));
     }
 
@@ -172,5 +193,90 @@ public class TransportOrderDto extends BaseEntityDto {
 
     public void setDeps(List<String> deps) {
         this.deps = deps;
+    }
+
+    public String getExecutingVehicle() {
+        return executingVehicle;
+    }
+
+    public void setExecutingVehicle(String executingVehicle) {
+        this.executingVehicle = executingVehicle;
+    }
+
+    public String getOrderState() {
+        return orderState;
+    }
+
+    public void setOrderState(String orderState) {
+        this.orderState = orderState;
+    }
+
+    @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
+    @Dto
+    @Entity(name = "tcs_order_transport_drive_order_destination")
+//@Table(name = "tcs_order_transport_drive_order_destination")
+    public static class DestinationDto extends BaseEntityDto {
+
+        @JsonView(View.Default.class)
+        @Column
+        private boolean dummy;
+
+        @JsonView(View.Default.class)
+        @Column
+        private String locationUUID; // Location if dummy == false, Point otherwise
+
+        @JsonView(View.Default.class)
+        @Column
+        private String operation;
+
+        @JsonView(View.Status.class)
+        @Column
+        private String state;
+
+        public DestinationDto() {}
+
+        public DestinationDto(String locationUUID, String operation, boolean dummy) {
+            this.locationUUID = locationUUID;
+            this.operation = operation;
+            this.dummy = dummy;
+        }
+
+        public boolean isDummy() {
+            return dummy;
+        }
+
+        public void setDummy(boolean dummy) {
+            this.dummy = dummy;
+        }
+
+        public void setLocationUUID(String locationUUID) {
+            this.locationUUID = locationUUID;
+        }
+
+        public String getLocationUUID() {
+            return locationUUID;
+        }
+
+        public String getOperation() {
+            return operation;
+        }
+
+        public void setOperation(String operation) {
+            this.operation = operation;
+        }
+
+        public String getState() {
+            return state;
+        }
+
+        public void setState(String state) {
+            this.state = state;
+        }
+    }
+
+    public static class View {
+        public interface Default {}
+        public interface Order extends Default {}
+        public interface Status extends Default {}
     }
 }

@@ -1,10 +1,10 @@
 package com.mj.tcs.api.v1.sock;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mj.tcs.LocalKernel;
 import com.mj.tcs.access.orders.Destination;
 import com.mj.tcs.access.orders.Transport;
-import com.mj.tcs.api.v1.dto.DestinationDto;
 import com.mj.tcs.api.v1.dto.TransportOrderDto;
 import com.mj.tcs.api.v1.dto.TransportWithdrawDto;
 import com.mj.tcs.api.v1.dto.base.EntityAuditorDto;
@@ -86,6 +86,7 @@ public class TransportOrderCommandSockController extends ServiceController {
         return responseEntity;
     }
 
+    @JsonView(TransportOrderDto.View.Order.class)
     private TCSResponseEntity<?> createTransportOrder(final LocalKernel kernel, long sceneId, Object jsonBody) throws Exception {
         if (jsonBody == null || jsonBody.toString().isEmpty()) {
             throw new IllegalArgumentException("The transport order can not created with EMPTY content");
@@ -112,7 +113,7 @@ public class TransportOrderCommandSockController extends ServiceController {
         orderDto.setAuditorDto(new EntityAuditorDto());
 
         // Destinations
-        final List<DestinationDto> destinationDtos = new ArrayList<>();
+        final List<TransportOrderDto.DestinationDto> destinationDtos = new ArrayList<>();
         if (transport.getDestinations() != null) {
             for (Destination dest : transport.getDestinations()) {
                 final String locUUID = dest.getLocationUUID();
@@ -123,7 +124,7 @@ public class TransportOrderCommandSockController extends ServiceController {
                     throw new ObjectUnknownException("The element by UUID [" + locUUID + "] is neither Point class nor Location class!");
                 }
 
-                destinationDtos.add(new DestinationDto(locUUID, operation, isPoint));
+                destinationDtos.add(new TransportOrderDto.DestinationDto(locUUID, operation, isPoint));
             }
         }
         orderDto.setDestinations(destinationDtos);

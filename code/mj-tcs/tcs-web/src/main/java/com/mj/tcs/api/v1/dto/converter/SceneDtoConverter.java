@@ -133,7 +133,7 @@ public class SceneDtoConverter {
 //                        if (!locationLink.isPresent()) {
 //                            throw new TCSServerRuntimeException("The link is null by Id " + linkDto.getId() + " of location " + locationDto.getName());
 //                        }
-//                        Optional<Point> linkedPoint = scene.getPointByUUID(locationLink.get().getPoint().getId());
+//                        Optional<Point> linkedPoint = scene.getPointByUUID(locationLink.get().getMapFromElement().getId());
 //                        if (!linkedPoint.isPresent()) {
 //                            throw new TCSServerRuntimeException("The linked point for link " + linkDto.getName() + " is null");
 //                        }

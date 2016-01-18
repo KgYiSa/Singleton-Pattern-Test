@@ -495,6 +495,8 @@ var getSceneContent = function (id) {
         success: function (data) {
             if(data){
                 buildTree(data);
+                disconnect();
+                connect();
                 // 存到本地
                 if(supportLocalStorage()){
                     localStorage.setItem("currentScene", data.id);

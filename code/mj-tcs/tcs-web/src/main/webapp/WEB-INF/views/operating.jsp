@@ -104,8 +104,8 @@
 						<div class="show-blocks"><img src="${ctxStatic}/images/block.18x18.png" title=""></div>
 						<div class="show-static-routes"><img src="${ctxStatic}/images/staticRoute.18x18.png" title=""></div>
 						<span>
-							<button id="connect" onclick="connect();">Connect</button>
-							<button id="disconnect" onclick="disconnect();" disabled="">Disconnect</button>
+							<button id="connect" onclick="connect();" style="display: none">Connect</button>
+							<button id="disconnect" onclick="disconnect();" disabled="" style="display: none">Disconnect</button>
 						</span>
 						<span class="show-position">x:0 y:0</span>
 					</div>

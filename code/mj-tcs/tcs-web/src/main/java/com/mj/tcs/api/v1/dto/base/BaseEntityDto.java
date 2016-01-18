@@ -23,6 +23,7 @@ import java.util.UUID;
 public class BaseEntityDto implements Serializable, Cloneable {
 
     @JsonProperty("UUID")
+    @Column(unique = true, nullable = false)
     private String uuid;
 
     /**

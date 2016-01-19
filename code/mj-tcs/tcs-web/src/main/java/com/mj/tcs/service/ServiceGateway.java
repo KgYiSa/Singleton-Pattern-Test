@@ -1,12 +1,12 @@
 package com.mj.tcs.service;
 
 import com.mj.tcs.LocalKernel;
-import com.mj.tcs.api.v1.dto.*;
-import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
-import com.mj.tcs.api.v1.dto.converter.SceneDtoConverter;
-import com.mj.tcs.api.v1.sock.SceneStatusSockController;
-import com.mj.tcs.api.v1.sock.TransportOrderStatusSockController;
-import com.mj.tcs.api.v1.sock.VehicleStatusSockController;
+import com.mj.tcs.api.dto.*;
+import com.mj.tcs.api.dto.base.BaseEntityDto;
+import com.mj.tcs.api.dto.converter.SceneDtoConverter;
+import com.mj.tcs.api.sock.SceneStatusSockController;
+import com.mj.tcs.api.sock.TransportOrderStatusSockController;
+import com.mj.tcs.api.sock.VehicleStatusSockController;
 import com.mj.tcs.config.AppContext;
 import com.mj.tcs.data.base.TCSObjectReference;
 import com.mj.tcs.data.model.Location;
@@ -23,8 +23,6 @@ import com.mj.tcs.kernel.StandardKernel;
 import com.mj.tcs.util.eventsystem.TCSEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PreDestroy;
 import java.util.*;

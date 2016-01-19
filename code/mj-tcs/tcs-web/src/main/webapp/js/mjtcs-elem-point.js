@@ -7,9 +7,12 @@ Point = function(x,y,type,name,textOffsetX,textOffsetY,two){
     var elemPoint = this;
     Elem.call(elemPoint);
 
-    var XY = elemPoint.initXY(x,y,0,0);
-    x = XY.x1;
-    y = XY.y1;
+    var pointsArray = [];
+    pointsArray.push(x);
+    pointsArray.push(y);
+    pointsArray = elemPoint.initXY(pointsArray);
+    x = pointsArray[0];
+    y = pointsArray[1];
 
     //var textTitleNumber = 1;
     var textTitle;
@@ -85,6 +88,10 @@ Point = function(x,y,type,name,textOffsetX,textOffsetY,two){
         ,elemPoint.circle,elemPoint.rect1,elemPoint.rect2,elemPoint.rect3,elemPoint.rect4,elemPoint.text);
 
     //textTitleNumber++;
+
+    elemPoint.getBoundingClientRect = function () {
+        return elemPoint.pointOrigin.getBoundingClientRect();
+    }
 };
 //
 //Point.prototype = {

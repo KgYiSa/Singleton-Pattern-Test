@@ -1,9 +1,9 @@
 package com.mj.tcs.util;
 
-import com.mj.tcs.api.v1.dto.*;
-import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
-import com.mj.tcs.api.v1.dto.base.EntityProperty;
-import com.mj.tcs.api.v1.dto.base.TripleDto;
+import com.mj.tcs.api.dto.*;
+import com.mj.tcs.api.dto.base.BaseEntityDto;
+import com.mj.tcs.api.dto.base.EntityProperty;
+import com.mj.tcs.api.dto.base.TripleDto;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
@@ -123,8 +123,8 @@ public class OpenTCSParser {
             for (int i = 0; i < points.length; i++) {
                 String[] label = points[i].split(LEVEL_2_DEVIDER);
                 TripleDto tripleDto = new TripleDto();
-                tripleDto.setX(Integer.parseInt(label[0]));
-                tripleDto.setY(Integer.parseInt(label[1]));
+                tripleDto.setX(Integer.parseInt(label[0])*50);
+                tripleDto.setY(-Integer.parseInt(label[1])*50);
                 tripleDto.setZ(0);
                 tripleDtos.add(tripleDto);
             }
@@ -190,7 +190,7 @@ public class OpenTCSParser {
         locationDto.setLabelOffsetY(getLongFromMap("LABEL_OFFSET_Y",map));//(Long.parseLong(map.get("LABEL_OFFSET_Y")));
         locationDto.setLocationTypeDto(getLocationTypeDtoFromMap("Type",map));//(sceneDto.getLocationTypeDtoByName(map.get("Type")));//Type
         locationDto.setDisplayPositionX(getLongFromMap("POSITION_X",map));//(Long.parseLong(map.get("POSITION_X")));
-        locationDto.setDisplayPositionY(getLongFromMap("POSITION_X",map));//(Long.parseLong(map.get("POSITION_Y")));
+        locationDto.setDisplayPositionY(getLongFromMap("POSITION_Y",map));//(Long.parseLong(map.get("POSITION_Y")));
 
         final Map<String, String> properties = getMapValueFromMap("Miscellaneous", map);
         locationDto.setProperties(properties.keySet().stream().map(k -> new EntityProperty(k, properties.get(k))).collect(Collectors.toSet()));

@@ -1,11 +1,11 @@
 package com.mj.tcs.util;
 
-import com.mj.tcs.api.v1.dto.BlockDto;
-import com.mj.tcs.api.v1.dto.PathDto;
-import com.mj.tcs.api.v1.dto.PointDto;
-import com.mj.tcs.api.v1.dto.SceneDto;
-import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
-import com.mj.tcs.api.v1.dto.base.EntityAuditorDto;
+import com.mj.tcs.api.dto.BlockDto;
+import com.mj.tcs.api.dto.PathDto;
+import com.mj.tcs.api.dto.PointDto;
+import com.mj.tcs.api.dto.SceneDto;
+import com.mj.tcs.api.dto.base.BaseEntityDto;
+import com.mj.tcs.api.dto.base.EntityAuditorDto;
 import com.mj.tcs.exception.ObjectUnknownException;
 import com.mj.tcs.exception.ResourceUnknownException;
 import org.apache.commons.beanutils.PropertyUtils;

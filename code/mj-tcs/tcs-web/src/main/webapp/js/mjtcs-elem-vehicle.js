@@ -7,9 +7,12 @@ Vehicle = function(x,y,name,initialPointUUID,two){
     var elemVehicle = this;
     Elem.call(elemVehicle);
 
-    var XY = elemVehicle.initXY(x,y,0,0);
-    x = XY.x1;
-    y = XY.y1;
+    var pointsArray = [];
+    pointsArray.push(x);
+    pointsArray.push(y);
+    pointsArray = elemVehicle.initXY(pointsArray);
+    x = pointsArray[0];
+    y = pointsArray[1];
 
     var vehicleOrigin = two.makePath(x-elemVehicle.POINT_RADIUS*4,y-elemVehicle.POINT_RADIUS*2,x+elemVehicle.POINT_RADIUS*2,y-elemVehicle.POINT_RADIUS*2,x+elemVehicle.POINT_RADIUS*4,y,x+elemVehicle.POINT_RADIUS*2,y+elemVehicle.POINT_RADIUS*2,x-elemVehicle.POINT_RADIUS*4,y+elemVehicle.POINT_RADIUS*2,true);
     vehicleOrigin.fill = "orangered";

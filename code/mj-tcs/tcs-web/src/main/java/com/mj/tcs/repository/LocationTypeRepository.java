@@ -6,7 +6,7 @@
 package com.mj.tcs.repository;
 
 
-import com.mj.tcs.api.v1.dto.LocationTypeDto;
+import com.mj.tcs.api.dto.LocationTypeDto;
 
 /**
  *  LocationType Repository support find methods only.

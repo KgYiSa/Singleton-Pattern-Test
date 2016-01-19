@@ -517,12 +517,13 @@
 		  VEHICLE_PARK: "VEHICLE_PARK"
 	  };
 	  var subscriberMap = new Map();// sceneId -> subscriberLists
-	  var sceneId = localStorage.getItem("currentScene");
+	  var sceneId;
 	  //	  alert(sceneId)
 	  var REQ_UUID = uuid();
 
 
 	  function connect() {
+		  sceneId = localStorage.getItem("currentScene");
 		  var socket = new SockJS(wsUrl);
 		  stompClient = Stomp.over(socket);
 		  stompClient.connect({}, function(frame) {
@@ -599,6 +600,7 @@
 			  stompClient.disconnect();
 		  }
 		  setConnected(false);
+		  $("#left-sidebar .content .adapter .table-body tbody").empty();
 		  console.log("Disconnected");
 	  }
 

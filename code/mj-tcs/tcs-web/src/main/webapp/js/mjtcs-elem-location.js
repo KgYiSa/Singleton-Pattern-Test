@@ -59,13 +59,12 @@ Location = function (x,y,type,name,textOffsetXX,textOffsetYY,two){
         linewidth:1,
         alignment:'center'
     };
-    textTitle =  name;
+    textTitle =  "L-"+name.slice(-3);
     var text = two.makeText(textTitle,x-textOffsetXX,y-textOffsetYY,styles);
     //this.selectedText = false;
     //设置当前标题偏移量
     elemLocation.textOffsetX = x-textOffsetXX - elemLocation.locationOrigin.translation.x;
     elemLocation.textOffsetY = y-textOffsetYY - elemLocation.locationOrigin.translation.x;
-
     elemLocation.text = text;
 
     elemLocation.group = two.makeGroup(elemLocation.locationOrigin
@@ -74,7 +73,11 @@ Location = function (x,y,type,name,textOffsetXX,textOffsetYY,two){
     //textTitleNumber++;
     elemLocation.getBoundingClientRect = function () {
         return elemLocation.locationOrigin.getBoundingClientRect();
-    }
+    };
+    elemLocation.setTextOpacity = function(){
+        elemLocation.text.opacity = elemLocation.text.opacity==0? 1:0;
+    };
+
 };
 //
 //Location.prototype = {

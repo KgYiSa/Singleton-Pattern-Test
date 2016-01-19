@@ -92,6 +92,9 @@ $(function(){
                 case 'show-splits':
                     showGrid(true);
                     break;
+                case 'show-comment':
+                    showText(true);
+                    break;
 
             }
         } else {
@@ -102,6 +105,9 @@ $(function(){
                 //    break;
                 case 'show-splits':
                     showGrid(false);
+                    break;
+                case 'show-comment':
+                    showText(false);
                     break;
 
             }
@@ -482,7 +488,10 @@ var showGrid = function(flg){
         linew[p].opacity = flg ? 0 : 0.3;
     }
     //two.update();
-}
+};
+var showText = function (flag) {
+    window.tcsDraw.canvas.showText();
+};
 
 
 // get data for tree
@@ -504,6 +513,7 @@ var getSceneContent = function (id) {
                     localStorage.setItem("fSceneJson", JSON.stringify(fJson));
                 }
                 endingLoading();
+                disconnect();
                 //window.tcsDraw.canvas.buildSceneEditor(data);
                 window.tcsDraw.loadScene(data, true);
             }

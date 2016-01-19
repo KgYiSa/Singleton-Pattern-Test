@@ -21,7 +21,7 @@ Vehicle = function(x,y,name,initialPointUUID,two){
     elemVehicle.vehicleOrigin = vehicleOrigin;
 
     //标题
-    var textTitle =  name.slice(-4);
+    var textTitle =  name.slice(-3);
     var styles={
         size:20*elemVehicle.ZOOM,
         alignment:'center'
@@ -47,9 +47,11 @@ Vehicle = function(x,y,name,initialPointUUID,two){
         elemVehicle.text.translation.set(x,y);
         elemVehicle.currentPointUUID = currentPointUUID;
     };
-
     elemVehicle.setVehicleDirection = function(start,end){
         elemVehicle.vehicleOrigin.rotation = angle(start,end);
+    };
+    elemVehicle.setTextOpacity = function(){
+        elemVehicle.text.opacity = elemVehicle.text.opacity==0? 1:0;
     };
 
     var angle = function(start,end){

@@ -21,7 +21,7 @@ Path = function(x1,y1,x2,y2,positiveVal,negativeVal,control_points,two){
     control_points.push(y2);
     var pointArray = elemPath.initXY(control_points);
 
-    var TRIANGLE_RADIUS = 7*elemPath.ZOOM;//PATH箭头半径
+    var TRIANGLE_RADIUS = 3*elemPath.ZOOM;//PATH箭头半径
 
     var atan2Angle = angle({x: pointArray[0],y: pointArray[1]},{x: pointArray[pointArray.length-2],y: pointArray[pointArray.length-1]});
     //正/负向速度不为0时，存在正/负向箭头

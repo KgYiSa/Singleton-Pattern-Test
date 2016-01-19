@@ -76,7 +76,7 @@ Point = function(x,y,type,name,textOffsetX,textOffsetY,two){
 
     //elemPoint.selectedPoint = false;
     //标题
-    textTitle =  name;
+    textTitle =  "P-"+name.slice(-3);
     var text = two.makeText(textTitle,x-textOffsetX,y-textOffsetY,styles);
     //console.log(text.getBoundingClientRect());
     //this.selectedText = false;
@@ -91,7 +91,10 @@ Point = function(x,y,type,name,textOffsetX,textOffsetY,two){
 
     elemPoint.getBoundingClientRect = function () {
         return elemPoint.pointOrigin.getBoundingClientRect();
-    }
+    };
+    elemPoint.setTextOpacity = function(){
+        elemPoint.text.opacity = elemPoint.text.opacity==0? 1:0;
+    };
 };
 //
 //Point.prototype = {

@@ -1,10 +1,7 @@
 package com.mj.tcs.service;
 
-import com.mj.tcs.api.v1.dto.SceneDto;
-import com.mj.tcs.api.v1.dto.TransportOrderDto;
-import com.mj.tcs.exception.TCSServerRuntimeException;
+import com.mj.tcs.api.dto.TransportOrderDto;
 import com.mj.tcs.repository.TransportOrderDtoRepository;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Isolation;

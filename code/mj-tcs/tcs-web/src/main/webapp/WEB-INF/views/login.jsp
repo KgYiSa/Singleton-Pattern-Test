@@ -23,7 +23,7 @@
             <div class="login-form-title form-group">
                 <h3>用户登录${date }</h3>
             </div>
-            <form action="/api/login" method="post">
+            <form action="/web/login" method="post">
             <div class="form-group">
                 <label for="inputEmail3" class="col-sm-offset-1 col-sm-2 control-label">Email</label>
                 <div class="col-sm-8">

@@ -6,7 +6,7 @@
 package com.mj.tcs.repository;
 
 
-import com.mj.tcs.api.v1.dto.PointDto;
+import com.mj.tcs.api.dto.PointDto;
 
 /**
  *  Point Repository support find methods only.

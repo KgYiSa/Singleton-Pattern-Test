@@ -6,7 +6,7 @@
 
 package com.mj.tcs.repository;
 
-import com.mj.tcs.api.v1.dto.StaticRouteDto;
+import com.mj.tcs.api.dto.StaticRouteDto;
 import org.springframework.data.repository.CrudRepository;
 
 /**

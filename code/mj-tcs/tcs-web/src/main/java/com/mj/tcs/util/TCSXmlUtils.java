@@ -1,7 +1,7 @@
 package com.mj.tcs.util;
 
-import com.mj.tcs.api.v1.dto.PointDto;
-import com.mj.tcs.api.v1.dto.base.TripleDto;
+import com.mj.tcs.api.dto.PointDto;
+import com.mj.tcs.api.dto.base.TripleDto;
 import org.dom4j.*;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;

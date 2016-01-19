@@ -1,9 +1,9 @@
 package com.mj.tcs.util;
 
-import com.mj.tcs.api.v1.dto.*;
-import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
-import com.mj.tcs.api.v1.dto.base.EntityProperty;
-import com.mj.tcs.api.v1.dto.base.TripleDto;
+import com.mj.tcs.api.dto.*;
+import com.mj.tcs.api.dto.base.BaseEntityDto;
+import com.mj.tcs.api.dto.base.EntityProperty;
+import com.mj.tcs.api.dto.base.TripleDto;
 import org.springframework.util.StringUtils;
 
 import java.util.*;

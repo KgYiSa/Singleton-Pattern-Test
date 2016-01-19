@@ -373,7 +373,7 @@ public class OpenTCSParser {
         String value = getStringFromMap(key,map);
         Boolean booleanValue = false;
         try {
-            booleanValue = value.equals("false");
+            booleanValue = value.equals("true");
         }catch (Exception e){
             throw new IllegalArgumentException("String is  :" + key + ",can not parseBoolean from this String." + e.getMessage());
         }

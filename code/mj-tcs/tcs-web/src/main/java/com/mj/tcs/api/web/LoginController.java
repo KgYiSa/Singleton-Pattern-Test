@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("/web")
 public class LoginController {
 
     /**
@@ -14,7 +13,7 @@ public class LoginController {
      *
      * @return String
      */
-    @RequestMapping(value= "/login",method = RequestMethod.GET)
+    @RequestMapping(value= {"", "/web/login"},method = RequestMethod.GET)
     public String getLoginPage() {
         return "login";
     }

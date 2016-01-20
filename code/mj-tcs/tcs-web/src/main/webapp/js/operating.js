@@ -79,7 +79,6 @@ $(function(){
 
     // operating，针对editor的共通操作eg：缩放，显示/隐藏网格线,title,blocks等
     $(".left-container .top-panel .top-panel-view .tcs-bottom div[class^=show-]").click(function(){
-        //console.log(this.className);
 
         if($(this).hasClass("selected")) {
 
@@ -268,7 +267,7 @@ $(function(){
             if(supportLocalStorage()) {
                 var data = localStorage.getItem("sceneJson");
                 var vehicleList = JSON.parse(data)["vehicles"];
-                console.log(vehicleList)
+
                 if(vehicleList){
                     var dropdownItem = "";
                     $.each(vehicleList, function (index, attr) {
@@ -291,6 +290,21 @@ $(function(){
         }
 
     });
+    //遍历得到所有小车
+    function getVehicleList(){
+        if(supportLocalStorage()) {
+            var data = localStorage.getItem("sceneJson");
+            var vehicleList = JSON.parse(data)["vehicles"];
+            console.log(vehicleList);
+            if(vehicleList){
+                var dropdownItem = "";
+                $.each(vehicleList, function (index, attr) {
+                    dropdownItem += "<li><a href='#' vehicle-uuid='" + attr.UUID + "' title='" + attr.name + "'>" + attr.name + "</a></li>";
+                })
+
+            }
+        }
+    }
 
     // 显示所有工位和 所有状态
     $("#show-location-list").click(function(){
@@ -298,7 +312,7 @@ $(function(){
         if(supportLocalStorage()) {
             var data = localStorage.getItem("sceneJson");
             var locationList = JSON.parse(data)["locations"];
-            //console.log(locationList)
+
             if(locationList){
                 var dropdownItem = "";
                 $.each(locationList, function (index, attr) {
@@ -487,6 +501,7 @@ var showGrid = function(flg){
 
 // get data for tree
 var getSceneContent = function (id) {
+
     $.ajax({
         type: "GET",
         url: "/web/scenes/"+id,
@@ -495,9 +510,8 @@ var getSceneContent = function (id) {
         //timeout: 1000,
         success: function (data) {
             if(data){
-                buildTree(data);
-                disconnect();
-                connect();
+               // buildTree(data);
+
                 // 存到本地
                 if(supportLocalStorage()){
                     localStorage.setItem("currentScene", data.id);
@@ -505,19 +519,23 @@ var getSceneContent = function (id) {
                     localStorage.setItem("sceneJson", JSON.stringify(data));
                     localStorage.setItem("fSceneJson", JSON.stringify(fJson));
                 }
+                disconnect();
+                connect();
                 endingLoading();
                 //window.tcsDraw.canvas.buildSceneEditor(data);
                 window.tcsDraw.loadScene(data, true);
+
             }
 
         },
         error: function (xhr) {
-            console.log("xhr")
-            console.log(xhr)
+
+            console.log(xhr);
             alert(xhr.responseText);
             endingLoading();
         }
     });
+
 }
 
 
@@ -530,7 +548,9 @@ var buildTree = function(data) {
 
     // init vehicle list
     if(data[initElementsObj[0]]) {
-        initVehicleList(data[initElementsObj[0]])
+        //更新页面下方小车栏
+        initVehicleList(data[initElementsObj[0]],data["id"]);
+       // console.log("场景id:"+data["id"]);
     }
 
 
@@ -636,8 +656,7 @@ var buildTree = function(data) {
         }
 
     }
-    //console.log(fJson)
-    //console.log(eleNodes)
+
     $.fn.zTree.init($("#elements-tree"), setting, eleNodes);
 
     var bloNodes =[];
@@ -698,11 +717,13 @@ var buildTree = function(data) {
 //
 //}
 
-//init vehicle list
-var initVehicleList = function(vehicleArray){
+//init vehicle list更新页面下方小车栏
+var initVehicleList = function(vehicleArray,mySceneId){
     var vehicleListStr ="";
     for(var i = 0 ; i < vehicleArray.length ; i ++ ) {
+
         vehicleListStr += "<div class='col-xs-6 col-sm-4 col-md-3 col-lg-2'>";
+        vehicleListStr += "<div class='vehicleList'>";
         vehicleListStr += "<div class='vehicle' vehicle-uuid='" + vehicleArray[i].UUID + "'>";
         vehicleListStr += "<div class='name'>" + vehicleArray[i].name + "</div>";
         var el = vehicleArray[i].energy_level;
@@ -727,14 +748,34 @@ var initVehicleList = function(vehicleArray){
         }
         vehicleListStr += " <div class='battery'><img src='/images/battery/battery-"+el+".png' /></div>";
         vehicleListStr += "<div class='status'> running </div>";
+
+        vehicleListStr += "</div>";
         //把Dispatch Vehicle放在外面
-        vehicleListStr += "<div class='dispatch'><button type='button' class='btn btn-primary btn-sm' onclick=dispatchVehicle('"+vehicleArray[i].UUID+"')>Dispatch Vehicle </button></div>";
+        vehicleListStr += "<div class='vehicleBtn'>" +
+        "<div class='dispatch'><button type='button' class='btn btn-primary btn-sm' onclick=dispatchVehicle('"+vehicleArray[i].UUID+"')>派遣</button></div>" +
+        "<div class='stop'><button type='button' class='btn btn-primary btn-sm' onclick=stopVehicle('"+vehicleArray[i].UUID+","+mySceneId+"')>停止</button></div>" +
+        "</div>";
         vehicleListStr += "</div>";
         vehicleListStr += "</div>"
     }
 
     $(".left-container .bottom-panel .bottom-panel-list").html(vehicleListStr)
 
+}
+//stopVehicle停止小车
+function stopVehicle(uuid,mySceneId) {
+    var request = {
+        "uuid":REQ_UUID,
+        "action_code":ACTIONS.VEHICLE_STOP_TO,
+        "body": {
+            "uuid":uuid,
+            "disable_vehicle":true
+        }
+    };
+
+    stompClient.send("/app/topic/actions/scenes/" + mySceneId + "/vehicles/request", {},
+        JSON.stringify(request));
+   // console.log("场景"+mySceneId+"中的小车"+uuid+"停止了");
 }
 
 var pro, className = "dark";

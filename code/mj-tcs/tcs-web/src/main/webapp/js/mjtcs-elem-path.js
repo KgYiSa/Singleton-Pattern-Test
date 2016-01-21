@@ -5,6 +5,7 @@
 
 Path = function(x1,y1,x2,y2,positiveVal,negativeVal,control_points,two){
     var elemPath = this;
+    elemPath.elem = "Path";
     Elem.call(elemPath);
 
     for(var p = 0; p < control_points.length-3;p+=2){

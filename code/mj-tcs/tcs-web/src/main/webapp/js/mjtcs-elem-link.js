@@ -5,6 +5,7 @@
 
 Link = function (x1,y1,x2,y2,two) {
     var elemLink = this;
+    elemLink.elem = "Link";
     Elem.call(elemLink);
 
     var pointsArray = [];

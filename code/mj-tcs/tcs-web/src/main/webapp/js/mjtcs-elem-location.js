@@ -5,6 +5,7 @@
 
 Location = function (x,y,type,name,textOffsetXX,textOffsetYY,two){
     var elemLocation = this;
+    elemLocation.elem = "Location";
     Elem.call(elemLocation);
 
     var pointsArray = [];
@@ -24,10 +25,10 @@ Location = function (x,y,type,name,textOffsetXX,textOffsetYY,two){
 
     var LOCATION_DIAMETER = 30*elemLocation.ZOOM;
 
-    var location =  two.makeRectangle(x,y,LOCATION_DIAMETER,LOCATION_DIAMETER);
-    location.stroke = 'black';
-    location.linewidth = 1*elemLocation.ZOOM;
-    elemLocation.location = location;
+    var locationRaw =  two.makeRectangle(x,y,LOCATION_DIAMETER,LOCATION_DIAMETER);
+    locationRaw.stroke = 'black';
+    locationRaw.linewidth = 1*elemLocation.ZOOM;
+    elemLocation.locationRaw = locationRaw;
 
     //编辑样式
     var rect1 = two.makeRectangle(x+LOCATION_DIAMETER,y+LOCATION_DIAMETER,5,5);
@@ -63,20 +64,21 @@ Location = function (x,y,type,name,textOffsetXX,textOffsetYY,two){
     var text = two.makeText(textTitle,x-textOffsetXX,y-textOffsetYY,styles);
     //this.selectedText = false;
     //设置当前标题偏移量
-    elemLocation.textOffsetX = x-textOffsetXX - elemLocation.location.translation.x;
-    elemLocation.textOffsetY = y-textOffsetYY - elemLocation.location.translation.x;
+    elemLocation.textOffsetX = x-textOffsetXX - elemLocation.locationRaw.translation.x;
+    elemLocation.textOffsetY = y-textOffsetYY - elemLocation.locationRaw.translation.x;
     elemLocation.text = text;
 
-    elemLocation.group = two.makeGroup(elemLocation.location
+    elemLocation.group = two.makeGroup(elemLocation.locationRaw
         ,elemLocation.circle,elemLocation.rect1,elemLocation.rect2,elemLocation.rect3,elemLocation.rect4,elemLocation.text);
 
     //textTitleNumber++;
     elemLocation.getBoundingClientRect = function () {
-        return elemLocation.location.getBoundingClientRect();
+        return elemLocation.locationRaw.getBoundingClientRect();
     };
     elemLocation.setTextOpacity = function(){
         elemLocation.text.opacity = elemLocation.text.opacity==0? 1:0;
     };
+    elemLocation.setHighlight= function(val){return};
 
 };
 //

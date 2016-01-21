@@ -811,7 +811,8 @@ function onClick(event, treeId, treeNode, clickFlag) {
         }
     });
 
-     showAttr(str)
+     showAttr(str);
+    window.tcsDraw.canvas.showElemInScene(uuid);
 }
 
 // 判断数组

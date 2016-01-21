@@ -5,6 +5,7 @@
 
 Vehicle = function(x,y,name,initialPointUUID,two){
     var elemVehicle = this;
+    elemVehicle.elem = "Vehicle";
     Elem.call(elemVehicle);
 
     var pointsArray = [];
@@ -14,11 +15,11 @@ Vehicle = function(x,y,name,initialPointUUID,two){
     x = pointsArray[0];
     y = pointsArray[1];
 
-    var vehicle = two.makePath(x-elemVehicle.POINT_RADIUS*4,y-elemVehicle.POINT_RADIUS*2,x+elemVehicle.POINT_RADIUS*2,y-elemVehicle.POINT_RADIUS*2,x+elemVehicle.POINT_RADIUS*4,y,x+elemVehicle.POINT_RADIUS*2,y+elemVehicle.POINT_RADIUS*2,x-elemVehicle.POINT_RADIUS*4,y+elemVehicle.POINT_RADIUS*2,true);
-    vehicle.fill = "orangered";
-    vehicle.closed = true;
-    vehicle.opacity = 0;
-    elemVehicle.vehicle = vehicle;
+    var vehicleRaw = two.makePath(x-elemVehicle.POINT_RADIUS*4,y-elemVehicle.POINT_RADIUS*2,x+elemVehicle.POINT_RADIUS*2,y-elemVehicle.POINT_RADIUS*2,x+elemVehicle.POINT_RADIUS*4,y,x+elemVehicle.POINT_RADIUS*2,y+elemVehicle.POINT_RADIUS*2,x-elemVehicle.POINT_RADIUS*4,y+elemVehicle.POINT_RADIUS*2,true);
+    vehicleRaw.fill = "orangered";
+    vehicleRaw.closed = true;
+    vehicleRaw.opacity = 0;
+    elemVehicle.vehicleRaw = vehicleRaw;
 
     //标题
     var textTitle =  name.slice(-3);
@@ -30,28 +31,45 @@ Vehicle = function(x,y,name,initialPointUUID,two){
     var text = two.makeText(textTitle,x,y,styles);
     text.opacity = 0;
     //elemVehicle.selectedText = false;
-    elemVehicle.textOffsetX = x - elemVehicle.vehicle.translation.x;
-    elemVehicle.textOffsetY = y - elemVehicle.vehicle.translation.x;
+    elemVehicle.textOffsetX = x - elemVehicle.vehicleRaw.translation.x;
+    elemVehicle.textOffsetY = y - elemVehicle.vehicleRaw.translation.x;
 
     elemVehicle.text = text;
 
-    elemVehicle.group = two.makeGroup(elemVehicle.vehicle,elemVehicle.text);
+    //高亮样式
+    var circle =  two.makeCircle(x,y,elemVehicle.POINT_RADIUS*7);
+    circle.noFill();
+    circle.opacity = 0;
+    circle.stroke = 'orangered';
+    circle.linewidth = 3;
+    elemVehicle.circle = circle;
+
+    elemVehicle.group = two.makeGroup(elemVehicle.vehicleRaw,elemVehicle.text,elemVehicle.circle);
 
     elemVehicle.initialPointUUID = initialPointUUID;
     elemVehicle.currentPointUUID = initialPointUUID;
 
     elemVehicle.setVehiclePosition = function(x,y,currentPointUUID){
-        elemVehicle.vehicle.opacity = 0.75;
+        if(!currentPointUUID){
+            elemVehicle.vehicleRaw.opacity = elemVehicle.text.opacity = 0;
+            return;
+        }
+        elemVehicle.vehicleRaw.opacity = 0.75;
         elemVehicle.text.opacity = 0.75;
-        elemVehicle.vehicle.translation.set(x,y);
+        //elemVehicle.group.translation.set(x,y);
+        elemVehicle.vehicleRaw.translation.set(x,y);
         elemVehicle.text.translation.set(x,y);
+        elemVehicle.circle.translation.set(x,y);
         elemVehicle.currentPointUUID = currentPointUUID;
     };
     elemVehicle.setVehicleDirection = function(start,end){
-        elemVehicle.vehicle.rotation = angle(start,end);
+        elemVehicle.vehicleRaw.rotation = angle(start,end);
     };
     elemVehicle.setTextOpacity = function(){
         elemVehicle.text.opacity = elemVehicle.text.opacity==0? 1:0;
+    };
+    elemVehicle.setHighlight= function(val){
+        elemVehicle.circle.opacity = val ? (elemVehicle.vehicleRaw.opacity==0 ? 0:1) : 0;
     };
 
     var angle = function(start,end){

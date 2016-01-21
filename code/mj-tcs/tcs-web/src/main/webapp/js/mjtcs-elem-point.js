@@ -5,6 +5,7 @@
 
 Point = function(x,y,type,name,textOffsetX,textOffsetY,two){
     var elemPoint = this;
+    elemPoint.elem = "Point";
     Elem.call(elemPoint);
 
     var pointsArray = [];
@@ -28,7 +29,7 @@ Point = function(x,y,type,name,textOffsetX,textOffsetY,two){
     //    mouseoverObject,
     //    selectedPoint;
 //console.log("x = " + x + ", y = " + y);
-    var point =  two.makeCircle(x,y,elemPoint.POINT_RADIUS);
+    var pointRaw =  two.makeCircle(x,y,elemPoint.POINT_RADIUS);
     //console.log(pointOrigin.getBoundingClientRect());
     var typeColor;
     if(type == "REPORT_POSITION"){//Report Point
@@ -38,15 +39,15 @@ Point = function(x,y,type,name,textOffsetX,textOffsetY,two){
     }else{//Halt Point
         typeColor = 'gray';
     }
-    point.fill = typeColor;
-    point.stroke = 'black';
-    point.linewidth = 1*elemPoint.ZOOM    ;
+    pointRaw.fill = typeColor;
+    pointRaw.stroke = 'black';
+    pointRaw.linewidth = 1*elemPoint.ZOOM    ;
     elemPoint.typeColor = typeColor;
-    elemPoint.point = point;
+    elemPoint.pointRaw = pointRaw;
 
     //高亮样式
     var circle =  two.makeCircle(x,y,elemPoint.POINT_RADIUS*3);
-    circle.fill = 'white';
+    circle.noFill();
     circle.opacity = 0;
     circle.stroke = 'orangered';
     circle.linewidth = 3;
@@ -80,20 +81,23 @@ Point = function(x,y,type,name,textOffsetX,textOffsetY,two){
     var text = two.makeText(textTitle,x-textOffsetX,y-textOffsetY,styles);
     //console.log(text.getBoundingClientRect());
     //this.selectedText = false;
-    elemPoint.textOffsetX = x-textOffsetX - elemPoint.point.translation.x;
-    elemPoint.textOffsetY = y-textOffsetY - elemPoint.point.translation.x;
+    elemPoint.textOffsetX = x-textOffsetX - elemPoint.pointRaw.translation.x;
+    elemPoint.textOffsetY = y-textOffsetY - elemPoint.pointRaw.translation.x;
     elemPoint.text = text;
 
-    elemPoint.group = two.makeGroup(elemPoint.point
+    elemPoint.group = two.makeGroup(elemPoint.pointRaw
         ,elemPoint.circle,elemPoint.rect1,elemPoint.rect2,elemPoint.rect3,elemPoint.rect4,elemPoint.text);
 
     //textTitleNumber++;
 
     elemPoint.getBoundingClientRect = function () {
-        return elemPoint.point.getBoundingClientRect();
+        return elemPoint.pointRaw.getBoundingClientRect();
     };
     elemPoint.setTextOpacity = function(){
         elemPoint.text.opacity = elemPoint.text.opacity==0? 1:0;
+    };
+    elemPoint.setHighlight= function(val){
+        elemPoint.circle.opacity = val ? 1 : 0;
     };
 };
 //

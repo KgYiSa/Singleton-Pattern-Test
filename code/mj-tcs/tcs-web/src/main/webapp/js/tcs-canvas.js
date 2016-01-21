@@ -617,19 +617,19 @@ $.TCSCanvas = function(container, config) {
 
     tcsCanvas.parseVehiclePosition = function(jsonStatusObject){
 
+        if(!jsonStatusObject.uuid)return;
         var currentVehicle = uuidToElemMap[jsonStatusObject.uuid];
 
-        var precisePointUUID = jsonStatusObject.position_uuid;
-        if(precisePointUUID == "" || precisePointUUID == null)return;
-
-        var initialPoint,currentPoint,precisePoint;
-        precisePoint = uuidToElemMap[precisePointUUID];
-
-        //相对于初始点的translation
-        var x,y;
-        x = precisePoint.point.translation.x;
-        y = precisePoint.point.translation.y;
-        currentVehicle.setVehiclePosition(x,y,precisePointUUID);
+        if(!!jsonStatusObject.position_uuid){
+            var precisePointUUID,precisePoint,x,y;
+            precisePointUUID = jsonStatusObject.position_uuid;
+            precisePoint = !!uuidToElemMap[precisePointUUID] ? uuidToElemMap[precisePointUUID] : 0;
+            x = !!precisePoint ? precisePoint.pointRaw.translation.x : 0;
+            y = !!precisePoint ? precisePoint.pointRaw.translation.y : 0;
+            currentVehicle.setVehiclePosition(x,y,precisePointUUID);
+        }else{
+            currentVehicle.setVehiclePosition(0,0,0);
+        }
 
     };
     tcsCanvas.setElemTranslation = function(elem){
@@ -672,17 +672,44 @@ $.TCSCanvas = function(container, config) {
             maxY = Math.max(maxY,jsonLocation.display_position_y);
         }
 
-        var length = maxX - minX,
-            width = maxY - minY;
-        tcsCanvas.minEdittorX = minX;
-        tcsCanvas.maxEdittorY = maxY;
+        if ((minX != Infinity && minX != -Infinity) &&
+            (minY != Infinity && minY != -Infinity) &&
+            (maxX != Infinity && maxX != -Infinity) &&
+            (maxY != Infinity && maxY != -Infinity)) {
+            var length = maxX - minX,
+                width = maxY - minY;
+            tcsCanvas.minEdittorX = minX;
+            tcsCanvas.maxEdittorY = maxY;
 
-        tcsCanvas.unit = Math.min(initRulerLength/length/zoomLevel,initRulerWidth/width/zoomLevel);
+            tcsCanvas.unit = Math.min(initRulerLength / length / zoomLevel, initRulerWidth / width / zoomLevel);
+        }
     };
     tcsCanvas.showText = function () {
         $.each(uuidToElemMap,function(key,value){
             value.setTextOpacity();
         });
+    };
+    tcsCanvas.showElemInScene = function (uuid) {
+        if(!!uuid && !!uuidToElemMap[uuid]){
+            $.each(uuidToElemMap,function(key,value){
+                value.setHighlight(false);
+            });
+
+            var elem = uuidToElemMap[uuid];
+            switch (elem.elem) {
+                case 'Point':
+                    elem.setHighlight(true);
+                    break;
+                case 'Location':
+                    break;
+                case 'Vehicle':
+                    elem.setHighlight(true);
+                    break;
+                default:
+                    return;
+            }
+        }
+
     };
 /////////////////////////////////////////////////  TWO JS  /////////////////////////////////////////////////////////////
 

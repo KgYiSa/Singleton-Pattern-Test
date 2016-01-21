@@ -1,0 +1,4 @@
+libraries/
+target/
+
+!tcs-kernel-1.0.jar

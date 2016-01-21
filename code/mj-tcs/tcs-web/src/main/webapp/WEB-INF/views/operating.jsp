@@ -320,6 +320,7 @@
                 <h4 class="modal-title" id="crate-to-title">创建调拨单</h4>
             </div>
             <div class="modal-body" style="overflow-wrap: break-word">
+
                 <div class="panel panel-default">
                     <!-- Default panel contents -->
                     <div class="panel-heading">Drive Orders</div>
@@ -336,6 +337,28 @@
                     </table>
                 </div>
                 <button type="button" class="btn btn-default location-list" id="show-location-list">添加</button>
+            </div>
+            <div class="modal-body" style="overflow-wrap: break-word">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Deadline</div>
+                    <label for="date">Date:</label><input id="date" type="text">
+                    <label for="time">Time:</label><input id="time" type="text">
+                </div>
+            </div>
+            <div class="modal-body" style="overflow-wrap: break-word">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Vehicle</div>
+                    <div class="dropdown">
+                        <button class="btn btn-default dropdown-toggle" type="button" id="vehicle-dropdownMenu2"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            请选择小车
+                            <span class="caret"></span>
+                        </button>
+                        <ul id="torderVehicle" class="dropdown-menu" aria-labelledby="vehicle-dropdownMenu2">
+                            <li><a href="#">--</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary submit">创建</button>
@@ -633,7 +656,7 @@
         $(".top-panel-to .table-body tbody .FINISHED").remove();
 
         // 添加更新的工单
-        console.log("showTOrderMessage里面的message:"+message);
+        console.log("showTOrderMessage里面的message:" + message);
 //		  var toContent = "<tr class='"+message.order_state+"'>";
 //		  toContent += "<td>" + message.uuid + "</td>";
 //		  toContent += "<td>" + message.type + "</td>";
@@ -652,7 +675,7 @@
     function hasUUid(message) {
         var trList = $(".top-panel-to .table-body tbody").children("tr");
         var has = false;
-        console.log("message.uuid为："+message.UUID);
+        console.log("message.uuid为：" + message.UUID);
         for (var i = 0, j = trList.length; i < j; i++) {
             var tdText = trList.eq(i).find("td").eq(0).text();
             if (tdText == message.UUID) {
@@ -698,14 +721,14 @@
     }
 
     // 创建工单
-    function createTransport(location, operation) {
+    function createTransport(deadline,intended_vehicle,location, operation) {
         var transport = {
             "uuid": REQ_UUID,
             "action_code": ACTIONS.TO_NEW,
             "body": {
                 "uuid": REQ_UUID,
-                "deadline": null,
-                "intended_vehicle": null,
+                "deadline": deadline,
+                "intended_vehicle": intended_vehicle,
                 "destinations": [
                     {
                         "location_uuid": location,

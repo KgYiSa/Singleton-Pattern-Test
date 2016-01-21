@@ -585,7 +585,7 @@
         if (supportLocalStorage()) {
             var currentSceneId = localStorage.getItem("currentScene");
             if (currentSceneId) {
-                sceneId=currentSceneId;
+                sceneId = currentSceneId;
             }
 
         }
@@ -601,7 +601,7 @@
         // add new subscribers
         var transportSubscriber = stompClient.subscribe("/topic/status/scenes/" + sceneId + "/torders",
                 function (message) {
-
+//                    console.log("在showTOrderMessage前面显示message:" + message);
                     showTOrderMessage(JSON.parse(message.body))
 //					  document.getElementById('transportStatus').innerHTML = "<b>TransportOrder:</b><br>" + message.body;
                 });
@@ -633,7 +633,7 @@
         $(".top-panel-to .table-body tbody .FINISHED").remove();
 
         // 添加更新的工单
-        console.log(message);
+        console.log("showTOrderMessage里面的message:"+message);
 //		  var toContent = "<tr class='"+message.order_state+"'>";
 //		  toContent += "<td>" + message.uuid + "</td>";
 //		  toContent += "<td>" + message.type + "</td>";
@@ -652,9 +652,10 @@
     function hasUUid(message) {
         var trList = $(".top-panel-to .table-body tbody").children("tr");
         var has = false;
+        console.log("message.uuid为："+message.UUID);
         for (var i = 0, j = trList.length; i < j; i++) {
             var tdText = trList.eq(i).find("td").eq(0).text();
-            if (tdText == message.uuid) {
+            if (tdText == message.UUID) {
                 has = true;
                 trList.eq(i).find("td").eq(1).text(message.type);
                 trList.eq(i).find("td").eq(2).text(message.executing_vehicle);
@@ -667,7 +668,7 @@
         }
         if (has == false) {
             var toContent = "<tr class='" + message.order_state + "'>";
-            toContent += "<td>" + message.uuid + "</td>";
+            toContent += "<td>" + message.UUID + "</td>";
             toContent += "<td>" + message.type + "</td>";
             toContent += "<td>" + message.executing_vehicle + "</td>";
             toContent += "<td>" + message.order_state + "</td>";

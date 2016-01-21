@@ -498,7 +498,7 @@ var showGrid = function(flg){
     //two.update();
 }
 
-
+var mySceneId;
 // get data for tree
 var getSceneContent = function (id) {
 
@@ -511,7 +511,7 @@ var getSceneContent = function (id) {
         success: function (data) {
             if(data){
                // buildTree(data);
-
+                mySceneId=data.id;
                 // 存到本地
                 if(supportLocalStorage()){
                     localStorage.setItem("currentScene", data.id);
@@ -549,8 +549,8 @@ var buildTree = function(data) {
     // init vehicle list
     if(data[initElementsObj[0]]) {
         //更新页面下方小车栏
-        initVehicleList(data[initElementsObj[0]],data["id"]);
-       // console.log("场景id:"+data["id"]);
+        initVehicleList(data[initElementsObj[0]]);
+        console.log("buildTree中场景id:"+data["id"]+"mySceneId:"+mySceneId);
     }
 
 
@@ -718,7 +718,8 @@ var buildTree = function(data) {
 //}
 
 //init vehicle list更新页面下方小车栏
-var initVehicleList = function(vehicleArray,mySceneId){
+var initVehicleList = function(vehicleArray){
+    console.log("initVehicleList中的mySceneId:"+mySceneId);
     var vehicleListStr ="";
     for(var i = 0 ; i < vehicleArray.length ; i ++ ) {
 
@@ -753,9 +754,9 @@ var initVehicleList = function(vehicleArray,mySceneId){
         //把Dispatch Vehicle放在外面
         vehicleListStr += "<div class='vehicleBtn'>" +
         "<div class='dispatch'><button type='button' class='btn btn-primary btn-sm' onclick=dispatchVehicle('"+vehicleArray[i].UUID+"')>派遣</button></div>" +
-        "<div class='stop'><button type='button' class='btn btn-primary btn-sm' onclick=stopVehicle('"+vehicleArray[i].UUID+","+mySceneId+"')>停止</button></div>" +
+        "<div class='stop'><button type='button' class='btn btn-primary btn-sm' onclick=stopVehicle('"+vehicleArray[i].UUID+"')>停止</button></div>" +
         "</div>";
-        vehicleListStr += "</div>";
+        vehicleListStr += "</div>"
         vehicleListStr += "</div>"
     }
 
@@ -763,7 +764,7 @@ var initVehicleList = function(vehicleArray,mySceneId){
 
 }
 //stopVehicle停止小车
-function stopVehicle(uuid,mySceneId) {
+function stopVehicle(uuid) {
     var request = {
         "uuid":REQ_UUID,
         "action_code":ACTIONS.VEHICLE_STOP_TO,
@@ -772,10 +773,9 @@ function stopVehicle(uuid,mySceneId) {
             "disable_vehicle":true
         }
     };
-
     stompClient.send("/app/topic/actions/scenes/" + mySceneId + "/vehicles/request", {},
         JSON.stringify(request));
-   // console.log("场景"+mySceneId+"中的小车"+uuid+"停止了");
+    console.log("场景"+mySceneId+"中的小车"+uuid+"停止了");
 }
 
 var pro, className = "dark";

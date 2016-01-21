@@ -251,7 +251,7 @@
     position: relative;
 }
 
-.left-container .bottom-panel .bottom-panel-list .vehicle {
+.left-container .bottom-panel .bottom-panel-list .vehicleList .vehicle {
     width: 100%;
     height: 30px;
     background-color: #C0FCB5;
@@ -264,7 +264,7 @@
     /*border: 2px solid grey;*/
 }
 /*dispatch按钮放到外面后的样式*/
-.left-container .bottom-panel .bottom-panel-list .vehicleBtn {
+.left-container .bottom-panel .bottom-panel-list .vehicleList .vehicleBtn {
     width: 100%;
     height: 30px;
     background-color: #C0FCB5;
@@ -279,10 +279,10 @@
     /*text-overflow: ellipsis;*/
     /*white-space: nowrap;*/
 }
-.left-container .bottom-panel .bottom-panel-list .vehicleBtn > div {
+.left-container .bottom-panel .bottom-panel-list .vehicleList .vehicleBtn > div {
     float: left;
 }
-.left-container .bottom-panel .bottom-panel-list .vehicleBtn .dispatch{
+.left-container .bottom-panel .bottom-panel-list .vehicleList .vehicleBtn .dispatch{
     height: 100%;
     width: 50%;
     padding-right: 1px;
@@ -290,7 +290,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.left-container .bottom-panel .bottom-panel-list .vehicleBtn .stop{
+.left-container .bottom-panel .bottom-panel-list .vehicleList .vehicleBtn .stop{
     height: 100%;
     width: 50%;
     padding-left: 1px;
@@ -299,11 +299,11 @@
     white-space: nowrap;
 }
 
-.left-container .bottom-panel .bottom-panel-list .vehicle > div {
+.left-container .bottom-panel .bottom-panel-list .vehicleList .vehicle > div {
     float: left;
 }
 
-.left-container .bottom-panel .bottom-panel-list .vehicle .name {
+.left-container .bottom-panel .bottom-panel-list .vehicleList .vehicle .name {
     height: 100%;
     width: 65%;
     padding-right: 10px;
@@ -312,7 +312,7 @@
     white-space: nowrap;
 }
 
-.left-container .bottom-panel .bottom-panel-list .vehicle .battery {
+.left-container .bottom-panel .bottom-panel-list .vehicleList .vehicle .battery {
     height: 100%;
     width: 20px;
     position: absolute;
@@ -327,7 +327,7 @@
 	width: 100%;
 }*/
 
-.left-container .bottom-panel .bottom-panel-list .vehicle .status {
+.left-container .bottom-panel .bottom-panel-list .vehicleList .vehicle .status {
     height: 100%;
     width: 35%;
     padding-left: 10px;

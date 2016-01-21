@@ -129,7 +129,7 @@ public class OpenTCSParser {
                 tripleDtos.add(tripleDto);
             }
         }catch (Exception e){
-//            System.out.print(e.getMessage());
+//            System.out.print(e.toString());
             e.printStackTrace();
         }
         return tripleDtos;
@@ -340,7 +340,7 @@ public class OpenTCSParser {
         try {
             intValue = Integer.parseInt(value.split("\\.")[0]);
         }catch (Exception e){
-            throw new IllegalArgumentException("String is  :" + key + ",can not parseInt from this String." + e.getMessage());
+            throw new IllegalArgumentException("String is  :" + key + ",can not parseInt from this String." + e.toString());
         }
         return intValue;
     }
@@ -352,7 +352,7 @@ public class OpenTCSParser {
             try {
                 doubleValue = Double.parseDouble(value);
             }catch (Exception e){
-                throw new IllegalArgumentException("String is  :" + key + ",can not parseDouble from this String." + e.getMessage());
+                throw new IllegalArgumentException("String is  :" + key + ",can not parseDouble from this String." + e.toString());
             }
         }
         return doubleValue;
@@ -364,7 +364,7 @@ public class OpenTCSParser {
         try {
             longValue = Long.parseLong(value.split("\\.")[0]);
         }catch (Exception e){
-            throw new IllegalArgumentException("String is  :" + key + ",can not parseLong from this String." + e.getMessage());
+            throw new IllegalArgumentException("String is  :" + key + ",can not parseLong from this String." + e.toString());
         }
         return longValue;
     }
@@ -375,7 +375,7 @@ public class OpenTCSParser {
         try {
             booleanValue = value.equals("true");
         }catch (Exception e){
-            throw new IllegalArgumentException("String is  :" + key + ",can not parseBoolean from this String." + e.getMessage());
+            throw new IllegalArgumentException("String is  :" + key + ",can not parseBoolean from this String." + e.toString());
         }
         return booleanValue;
     }
@@ -386,7 +386,7 @@ public class OpenTCSParser {
         try {
             type = PointDto.Type.valueOf(value+"_POSITION");
         }catch (Exception e){
-            throw new IllegalArgumentException("String is  :" + key + ",can not parsePointDto.Type from this String." + e.getMessage());
+            throw new IllegalArgumentException("String is  :" + key + ",can not parsePointDto.Type from this String." + e.toString());
         }
         return type;
     }
@@ -397,7 +397,7 @@ public class OpenTCSParser {
         try {
             pointDto = sceneDto.getPointDtoByName(value);
         }catch (Exception e){
-            throw new IllegalArgumentException("String is  key:" + key +" value:"+value+ ",can not parsePointDto from this String." + e.getMessage());
+            throw new IllegalArgumentException("String is  key:" + key +" value:"+value+ ",can not parsePointDto from this String." + e.toString());
         }
         return pointDto;
     }
@@ -408,7 +408,7 @@ public class OpenTCSParser {
         try {
             locationDto = sceneDto.getLocationDtoByName(value);
         }catch (Exception e){
-            throw new IllegalArgumentException("String is key:" + key + "  value:"+value+",can not parseLocationDto from this String." + e.getMessage());
+            throw new IllegalArgumentException("String is key:" + key + "  value:"+value+",can not parseLocationDto from this String." + e.toString());
         }
         return locationDto;
     }
@@ -419,7 +419,7 @@ public class OpenTCSParser {
         try {
             locationTypeDto = sceneDto.getLocationTypeDtoByName(value);
         }catch (Exception e){
-            throw new IllegalArgumentException("String is  key:" + key + "  value:"+value+",can not parseLocationTypeDto from this String." + e.getMessage());
+            throw new IllegalArgumentException("String is  key:" + key + "  value:"+value+",can not parseLocationTypeDto from this String." + e.toString());
         }
         return locationTypeDto;
     }

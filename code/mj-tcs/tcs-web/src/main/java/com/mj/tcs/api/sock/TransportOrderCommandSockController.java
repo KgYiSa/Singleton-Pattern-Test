@@ -78,7 +78,7 @@ public class TransportOrderCommandSockController extends ServiceController {
             responseEntity = TCSResponseEntity.getBuilder()
                     .setResponseUUID(request.getRequestUUID())
                     .setStatus(TCSResponseEntity.Status.ERROR)
-                    .setStatusMessage(e.getMessage())
+                    .setStatusMessage(e.toString())
                     .get();
         }
 

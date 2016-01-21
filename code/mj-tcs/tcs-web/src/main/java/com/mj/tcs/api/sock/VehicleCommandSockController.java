@@ -83,7 +83,7 @@ public class VehicleCommandSockController extends ServiceController {
             responseEntity = TCSResponseEntity.getBuilder()
                     .setResponseUUID(request.getRequestUUID())
                     .setStatus(TCSResponseEntity.Status.ERROR)
-                    .setStatusMessage(e.getMessage())
+                    .setStatusMessage(e.toString())
                     .get();
         }
 
@@ -220,14 +220,14 @@ public class VehicleCommandSockController extends ServiceController {
     }
 
     private  TCSResponseEntity<?> withdrawTObyVehicle(final LocalKernel kernel, long sceneId, Object jsonBody) throws IOException {
-        if (jsonBody == null || jsonBody.toString().isEmpty()) {
+        if (jsonBody == null || jsonBody.toString().isEmpty() || ((Map)jsonBody).get("uuid") == null) {
             throw new IllegalArgumentException("The vehicle can not be dispatched with EMPTY content");
         }
 
         String json = objectMapper.writeValueAsString(jsonBody);
         TransportWithdrawDto transportWithdrawDto = objectMapper.readValue(json, TransportWithdrawDto.class);
 
-        Vehicle vehicle = Objects.requireNonNull(kernel.getTCSObject(Vehicle.class, jsonBody.toString()));
+        Vehicle vehicle = Objects.requireNonNull(kernel.getTCSObject(Vehicle.class, ((Map)jsonBody).get("uuid").toString()));
         kernel.withdrawTransportOrderByVehicle(vehicle.getReference(), transportWithdrawDto.isDisableVehicle());
 
         return TCSResponseEntity.getBuilder()

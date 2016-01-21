@@ -66,7 +66,7 @@ public class UtilController extends ServiceController {
 
                 return "You successfully uploaded -uploaded !";
             } catch (Exception e) {
-                return "You failed to upload, ERROR: " + e.getMessage();
+                return "You failed to upload, ERROR: " + e.toString();
             }
         } else {
             return "You failed to upload , because the file was empty.";

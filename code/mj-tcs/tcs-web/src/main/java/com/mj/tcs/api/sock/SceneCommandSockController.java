@@ -65,7 +65,7 @@ public class SceneCommandSockController extends ServiceController {
             responseEntity = TCSResponseEntity.getBuilder()
                     .setResponseUUID(request.getRequestUUID())
                     .setStatus(TCSResponseEntity.Status.ERROR)
-                    .setStatusMessage(e.getMessage())
+                    .setStatusMessage(e.toString())
                     .get();
         }
 
@@ -100,7 +100,7 @@ public class SceneCommandSockController extends ServiceController {
         } catch (Exception e) {
             responseEntity = TCSResponseEntity.getBuilder()
                     .setStatus(TCSResponseEntity.Status.ERROR)
-                    .setStatusMessage(e.getMessage())
+                    .setStatusMessage(e.toString())
                     .get();
         }
 

@@ -151,7 +151,7 @@ public class TCSResponseEntity<T> extends TCSCommEntity<T> {
 
     @JsonIgnoreType
     public static class Builder<T> {
-        private TCSResponseEntity<T> responseEntity;
+        private final TCSResponseEntity<T> responseEntity;
 
         public Builder() {
             responseEntity = new TCSResponseEntity<T>();

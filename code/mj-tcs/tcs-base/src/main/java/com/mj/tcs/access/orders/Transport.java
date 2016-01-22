@@ -1,5 +1,6 @@
 package com.mj.tcs.access.orders;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
@@ -18,10 +19,10 @@ import java.util.List;
 @JsonNaming(PropertyNamingStrategy.LowerCaseWithUnderscoresStrategy.class)
 @XmlType(propOrder={"deadline", "intendedVehicle", "destinations", "dependencies"})
 public class Transport extends TCSOrder {
-
     /**
      * The deadling of this transport order.
      */
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private Date deadline;
     /**
      * The intended vehicle.

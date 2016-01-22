@@ -46,7 +46,7 @@ Point = function(x,y,type,name,textOffsetX,textOffsetY,two){
     elemPoint.pointRaw = pointRaw;
 
     //高亮样式
-    var circle =  two.makeCircle(x,y,elemPoint.POINT_RADIUS*3);
+    var circle =  two.makeCircle(x,y,elemPoint.POINT_RADIUS*5);
     circle.noFill();
     circle.opacity = 0;
     circle.stroke = 'orangered';

@@ -51,7 +51,7 @@ Vehicle = function(x,y,name,initialPointUUID,two){
 
     elemVehicle.setVehiclePosition = function(x,y,currentPointUUID){
         if(!currentPointUUID){
-            elemVehicle.vehicleRaw.opacity = elemVehicle.text.opacity = 0;
+            elemVehicle.vehicleRaw.opacity = elemVehicle.text.opacity = elemVehicle.circle.opacity = 0;
             return;
         }
         elemVehicle.vehicleRaw.opacity = 0.75;

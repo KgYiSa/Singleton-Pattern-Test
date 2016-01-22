@@ -690,17 +690,17 @@ $.TCSCanvas = function(container, config) {
         });
     };
     tcsCanvas.showElemInScene = function (uuid) {
+        $.each(uuidToElemMap,function(key,value){
+            value.setHighlight(false);
+        });
         if(!!uuid && !!uuidToElemMap[uuid]){
-            $.each(uuidToElemMap,function(key,value){
-                value.setHighlight(false);
-            });
-
             var elem = uuidToElemMap[uuid];
             switch (elem.elem) {
                 case 'Point':
                     elem.setHighlight(true);
                     break;
                 case 'Location':
+                    elem.setHighlight(true);
                     break;
                 case 'Vehicle':
                     elem.setHighlight(true);
@@ -709,7 +709,6 @@ $.TCSCanvas = function(container, config) {
                     return;
             }
         }
-
     };
 /////////////////////////////////////////////////  TWO JS  /////////////////////////////////////////////////////////////
 

@@ -68,8 +68,16 @@ Location = function (x,y,type,name,textOffsetXX,textOffsetYY,two){
     elemLocation.textOffsetY = y-textOffsetYY - elemLocation.locationRaw.translation.x;
     elemLocation.text = text;
 
+    //高亮样式
+    var circle =  two.makeCircle(x,y,elemLocation.POINT_RADIUS*10);
+    circle.noFill();
+    circle.opacity = 0;
+    circle.stroke = 'orangered';
+    circle.linewidth = 3;
+    elemLocation.circle = circle;
+
     elemLocation.group = two.makeGroup(elemLocation.locationRaw
-        ,elemLocation.circle,elemLocation.rect1,elemLocation.rect2,elemLocation.rect3,elemLocation.rect4,elemLocation.text);
+        ,elemLocation.circle,elemLocation.rect1,elemLocation.rect2,elemLocation.rect3,elemLocation.rect4,elemLocation.text,elemLocation.circle);
 
     //textTitleNumber++;
     elemLocation.getBoundingClientRect = function () {
@@ -78,7 +86,9 @@ Location = function (x,y,type,name,textOffsetXX,textOffsetYY,two){
     elemLocation.setTextOpacity = function(){
         elemLocation.text.opacity = elemLocation.text.opacity==0? 1:0;
     };
-    elemLocation.setHighlight= function(val){return};
+    elemLocation.setHighlight= function(val){
+        elemLocation.circle.opacity = val ? 1 : 0;
+    };
 
 };
 //

@@ -117,15 +117,20 @@
                         <table>
                             <thead>
                             <tr>
-                                <th>UUID</th>
-                                <th>Type</th>
-                                <th>Execute Vehicle</th>
-                                <th>Order State</th>
-                                <th>Column5</th>
-                                <th>Column6</th>
-                                <th>Column7</th>
-
-
+                                <%--<th>UUID</th>--%>
+                                <%--<th>Type</th>--%>
+                                <%--<th>Execute Vehicle</th>--%>
+                                <%--<th>Order State</th>--%>
+                                <%--<th>Column5</th>--%>
+                                <%--<th>Column6</th>--%>
+                                <%--<th>Column7</th>--%>
+                                <th style="display: none">UUID</th>
+                                <th>Name</th>
+                                <th>Source</th>
+                                <th>Target</th>
+                                <th>Intended Vehicle</th>
+                                <th>Executing Vehicle</th>
+                                <th>Status</th>
                             </tr>
                             </thead>
                         </table>
@@ -680,29 +685,72 @@
             var tdText = trList.eq(i).find("td").eq(0).text();
             if (tdText == message.UUID) {
                 has = true;
-                trList.eq(i).find("td").eq(1).text(message.type);
-                trList.eq(i).find("td").eq(2).text(message.executing_vehicle);
-                trList.eq(i).find("td").eq(3).text(message.order_state);
-                trList.eq(i).find("td").eq(4).text("Column5");
-                trList.eq(i).find("td").eq(5).text("Column6");
-                trList.eq(i).find("td").eq(6).text(new Date().getTime());
+                trList.eq(i).find("td").eq(1).text(message.name);
+                setDestinations(trList, i, message.destinations);
+                trList.eq(i).find("td").eq(4).text(getVehicleNameByUUID(message.intended_vehicle_uuid));
+                trList.eq(i).find("td").eq(5).text(getVehicleNameByUUID(message.executing_vehicle));
+                trList.eq(i).find("td").eq(6).text(message.order_state);
                 return;
             }
         }
         if (has == false) {
             var toContent = "<tr class='" + message.order_state + "'>";
-            toContent += "<td>" + message.UUID + "</td>";
-            toContent += "<td>" + message.type + "</td>";
-            toContent += "<td>" + message.executing_vehicle + "</td>";
+            toContent += "<td style='display: none'>" + message.UUID + "</td>";
+            toContent += "<td>" + message.name + "</td>";
+            toContent += getDestinations(message.destinations);
+
+            toContent += "<td>" + getVehicleNameByUUID(message.intended_vehicle_uuid) + "</td>";
+            toContent += "<td>" + getVehicleNameByUUID(message.executing_vehicle) + "</td>";
             toContent += "<td>" + message.order_state + "</td>";
-            toContent += "<td>Column5</td>";
-            toContent += "<td>Column6</td>";
-            toContent += "<td>" + new Date().getTime() + "</td>";
             toContent += "</tr>";
             $(".top-panel-to .table-body tbody").append(toContent);
         }
     }
+    //调拨单不存在，从destinations中得到Source和Target的值
+    function getDestinations(destinations) {
+        var result = "";
+        var myLength = destinations.length;
+        if (myLength == 0) {
+            result = "<td></td><td></td>";
+        } else if (myLength == 1) {
+            var location_uuid = destinations[0].location_uuid;
+            result = "<td></td>";
+            result += "<td>" + getLocationNameById(location_uuid) + "</td>";
+        } else {
+            result += "<td>" + getLocationNameById(destinations[0].location_uuid) + "</td>";
+            result += "<td>" + getLocationNameById(destinations[myLength - 1].location_uuid) + "</td>";
+        }
+        return result;
+    }
+    //调拨单存在，取出Source和Target的值然后赋值给列表
+    function setDestinations(trList, i, destinations) {
+        var myLength = destinations.length;
+        if (myLength == 0) {
 
+        } else if (myLength == 1) {
+            var location_uuid = destinations[0].location_uuid;
+            trList.eq(i).find("td").eq(3).text(getLocationNameById(location_uuid));
+        } else {
+            trList.eq(i).find("td").eq(2).text(getLocationNameById(destinations[0].location_uuid));
+            trList.eq(i).find("td").eq(3).text(getLocationNameById(destinations[myLength - 1].location_uuid));
+        }
+    }
+    //根据小车UUID得到小车名字
+    function getVehicleNameByUUID(myUUID) {
+        if (myUUID != null) {
+            return fJson[myUUID].name;
+        } else {
+            return null;
+        }
+    }
+    //根据location_uuid得到location_uuid的名字，例test_location_6317
+    function getLocationNameById(myLocationUUID) {
+        if (myLocationUUID != null) {
+            return fJson[myLocationUUID].name;
+        } else {
+            return null;
+        }
+    }
     function showVehicleMessage(message) {
         $(".bottom-panel-list [vehicle-uuid='" + message.uuid + "'] .status").text(message.state);
     }
@@ -721,13 +769,14 @@
     }
 
     // 创建工单
-    function createTransport(deadline,intended_vehicle,location, operation) {
+    function createTransport(deadline, intended_vehicle, location, operation) {
         var transport = {
             "uuid": REQ_UUID,
             "action_code": ACTIONS.TO_NEW,
             "body": {
                 "uuid": REQ_UUID,
                 "deadline": deadline,
+//                "deadline": null,
                 "intended_vehicle": intended_vehicle,
                 "destinations": [
                     {

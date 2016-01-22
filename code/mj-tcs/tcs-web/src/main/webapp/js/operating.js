@@ -631,7 +631,6 @@ var buildTree = function (data) {
                 eleNodes.push(pointObj);
                 fJson[attr.UUID] = attr;
 
-
             })
 
         }

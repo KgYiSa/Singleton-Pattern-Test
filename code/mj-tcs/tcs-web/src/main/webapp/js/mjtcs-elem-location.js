@@ -5,6 +5,7 @@
 
 Location = function (x,y,type,name,textOffsetXX,textOffsetYY,two){
     var elemLocation = this;
+    elemLocation.elem = "Location";
     Elem.call(elemLocation);
 
     var pointsArray = [];
@@ -24,10 +25,10 @@ Location = function (x,y,type,name,textOffsetXX,textOffsetYY,two){
 
     var LOCATION_DIAMETER = 30*elemLocation.ZOOM;
 
-    var locationOrigin =  two.makeRectangle(x,y,LOCATION_DIAMETER,LOCATION_DIAMETER);
-    locationOrigin.stroke = 'black';
-    locationOrigin.linewidth = 1*elemLocation.ZOOM;
-    elemLocation.locationOrigin = locationOrigin;
+    var locationRaw =  two.makeRectangle(x,y,LOCATION_DIAMETER,LOCATION_DIAMETER);
+    locationRaw.stroke = 'black';
+    locationRaw.linewidth = 1*elemLocation.ZOOM;
+    elemLocation.locationRaw = locationRaw;
 
     //编辑样式
     var rect1 = two.makeRectangle(x+LOCATION_DIAMETER,y+LOCATION_DIAMETER,5,5);
@@ -59,22 +60,36 @@ Location = function (x,y,type,name,textOffsetXX,textOffsetYY,two){
         linewidth:1,
         alignment:'center'
     };
-    textTitle =  name;
+    textTitle =  "L-"+name.slice(-3);
     var text = two.makeText(textTitle,x-textOffsetXX,y-textOffsetYY,styles);
     //this.selectedText = false;
     //设置当前标题偏移量
-    elemLocation.textOffsetX = x-textOffsetXX - elemLocation.locationOrigin.translation.x;
-    elemLocation.textOffsetY = y-textOffsetYY - elemLocation.locationOrigin.translation.x;
-
+    elemLocation.textOffsetX = x-textOffsetXX - elemLocation.locationRaw.translation.x;
+    elemLocation.textOffsetY = y-textOffsetYY - elemLocation.locationRaw.translation.x;
     elemLocation.text = text;
 
-    elemLocation.group = two.makeGroup(elemLocation.locationOrigin
-        ,elemLocation.circle,elemLocation.rect1,elemLocation.rect2,elemLocation.rect3,elemLocation.rect4,elemLocation.text);
+    //高亮样式
+    var circle =  two.makeCircle(x,y,elemLocation.POINT_RADIUS*10);
+    circle.noFill();
+    circle.opacity = 0;
+    circle.stroke = 'orangered';
+    circle.linewidth = 3;
+    elemLocation.circle = circle;
+
+    elemLocation.group = two.makeGroup(elemLocation.locationRaw
+        ,elemLocation.circle,elemLocation.rect1,elemLocation.rect2,elemLocation.rect3,elemLocation.rect4,elemLocation.text,elemLocation.circle);
 
     //textTitleNumber++;
     elemLocation.getBoundingClientRect = function () {
-        return elemLocation.locationOrigin.getBoundingClientRect();
-    }
+        return elemLocation.locationRaw.getBoundingClientRect();
+    };
+    elemLocation.setTextOpacity = function(){
+        elemLocation.text.opacity = elemLocation.text.opacity==0? 1:0;
+    };
+    elemLocation.setHighlight= function(val){
+        elemLocation.circle.opacity = val ? 1 : 0;
+    };
+
 };
 //
 //Location.prototype = {

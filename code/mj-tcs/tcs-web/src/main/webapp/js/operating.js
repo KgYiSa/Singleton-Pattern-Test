@@ -92,6 +92,9 @@ $(function(){
                 case 'show-splits':
                     showGrid(true);
                     break;
+                case 'show-comment':
+                    showText(true);
+                    break;
 
             }
         } else {
@@ -102,6 +105,9 @@ $(function(){
                 //    break;
                 case 'show-splits':
                     showGrid(false);
+                    break;
+                case 'show-comment':
+                    showText(false);
                     break;
 
             }
@@ -484,7 +490,10 @@ var showGrid = function(flg){
         linew[p].opacity = flg ? 0 : 0.3;
     }
     //two.update();
-}
+};
+var showText = function (flag) {
+    window.tcsDraw.canvas.showText();
+};
 
 
 // get data for tree
@@ -508,6 +517,8 @@ var getSceneContent = function (id) {
                     localStorage.setItem("fSceneJson", JSON.stringify(fJson));
                 }
                 endingLoading();
+                disconnect();
+                connect();
                 //window.tcsDraw.canvas.buildSceneEditor(data);
                 window.tcsDraw.loadScene(data, true);
             }
@@ -706,7 +717,7 @@ var initVehicleList = function(vehicleArray){
     for(var i = 0 ; i < vehicleArray.length ; i ++ ) {
         vehicleListStr += "<div class='col-xs-6 col-sm-4 col-md-3 col-lg-2'>";
         vehicleListStr += "<div class='vehicle' vehicle-uuid='" + vehicleArray[i].UUID + "'>";
-        vehicleListStr += "<div class='name'>" + vehicleArray[i].name + "</div>";
+        vehicleListStr += "<div class='name'>" + vehicleArray[i].name.slice(-2) + "</div>";
         var el = vehicleArray[i].energy_level;
         switch (el){
             case el = 0:
@@ -802,7 +813,8 @@ function onClick(event, treeId, treeNode, clickFlag) {
         }
     });
 
-     showAttr(str)
+     showAttr(str);
+    window.tcsDraw.canvas.showElemInScene(uuid);
 }
 
 // 判断数组

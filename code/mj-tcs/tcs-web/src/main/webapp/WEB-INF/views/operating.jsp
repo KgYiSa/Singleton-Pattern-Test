@@ -517,12 +517,13 @@
 		  VEHICLE_PARK: "VEHICLE_PARK"
 	  };
 	  var subscriberMap = new Map();// sceneId -> subscriberLists
-	  var sceneId = localStorage.getItem("currentScene");
+	  var sceneId;
 	  //	  alert(sceneId)
 	  var REQ_UUID = uuid();
 
 
 	  function connect() {
+		  sceneId = localStorage.getItem("currentScene");
 		  var socket = new SockJS(wsUrl);
 		  stompClient = Stomp.over(socket);
 		  stompClient.connect({}, function(frame) {
@@ -599,6 +600,7 @@
 			  stompClient.disconnect();
 		  }
 		  setConnected(false);
+		  $("#left-sidebar .content .adapter .table-body tbody").empty();
 		  console.log("Disconnected");
 	  }
 
@@ -720,6 +722,27 @@
 	  
 	// 初始化小车以及适配列表
 	function initVehicleAdapterList(response) {
+
+		var by = function(name){
+			return function(o, p){
+				var a, b;
+				if (typeof o === "object" && typeof p === "object" && o && p) {
+					a = o[name];
+					b = p[name];
+					if (a === b) {
+						return 0;
+					}
+					if (typeof a === typeof b) {
+						return a < b ? -1 : 1;
+					}
+					return typeof a < typeof b ? -1 : 1;
+				}
+				else {
+					throw ("error");
+				}
+			}
+		};
+		!!response && response.sort(by("name"));
 		  
 		  //console.log(response)
 		  var trContent = "";

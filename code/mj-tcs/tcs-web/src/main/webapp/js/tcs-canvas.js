@@ -426,7 +426,7 @@ $.TCSCanvas = function(container, config) {
         contentOffset = calculateContentOffset();
     };
 
-    var uuidToElemMap = new Map();//根据UUID存放对应point, location, vehicle
+    var uuidToElemMap = {};//根据UUID存放对应point, location, vehicle
     var boundingBox;
     tcsCanvas.buildSceneEditor = function(jsonObject,fill) {
 
@@ -454,8 +454,10 @@ $.TCSCanvas = function(container, config) {
         for(var elem in twoElements){
             twoElements[elem].remove();
         }
-        uuidToElemMap.clear();
-        twoElements.splice(0,twoElements.length);
+        //uuidToElemMap.clear();
+        uuidToElemMap = {};
+        twoElements = [];
+        //twoElements.splice(0,twoElements.length);
 
         if (!jsonObject) {
             return;
@@ -468,37 +470,29 @@ $.TCSCanvas = function(container, config) {
             var point = new Point(pointPositionRelativeZero[0],pointPositionRelativeZero[1],jsonPoint.type,jsonPoint.name,jsonPoint.label_offset_x,jsonPoint.label_offset_y,two);
             twoElements.push(point.group);
             boundingBox = calcInnerBBox(point.getBoundingClientRect(), boundingBox);
-            //uuidToElemMap[jsonPoint.UUID] = point;
-            uuidToElemMap.set(jsonPoint.UUID,point);
+            uuidToElemMap[jsonPoint.UUID] = point;
         }
         for(var i= 0; i<jsonObject.locations.length; i++){
             var jsonLocation = jsonObject.locations[i];
             var locationPositionRelativeZero = tcsCanvas.editorCoordinatesToCanvasCoordinates([jsonLocation.display_position_x, jsonLocation.display_position_y]);
             var location = new Location(locationPositionRelativeZero[0],locationPositionRelativeZero[1],jsonLocation.type,jsonLocation.name,jsonLocation.label_offset_x,jsonLocation.label_offset_y,two);
             for(var j=0; j<jsonLocation.attached_links.length; j++){
-                //var startX = uuidToElemMap[jsonLocation.attached_links[j].point.UUID].display_position_x;
-                //var startY = uuidToElemMap[jsonLocation.attached_links[j].point.UUID].display_position_y;
-                var startX = uuidToElemMap.get(jsonLocation.attached_links[j].point.UUID).display_position_x;
-                var startY = uuidToElemMap.get(jsonLocation.attached_links[j].point.UUID).display_position_y;
+                var startX = uuidToElemMap[jsonLocation.attached_links[j].point.UUID].display_position_x;
+                var startY = uuidToElemMap[jsonLocation.attached_links[j].point.UUID].display_position_y;
                 var link = new Link(startX,startY,locationPositionRelativeZero[0],locationPositionRelativeZero[1],two);
                 twoElements.push(link.group);
             }
             twoElements.push(location.group);
             boundingBox = calcInnerBBox(location.getBoundingClientRect(), boundingBox);
-            //uuidToElemMap[jsonLocation.UUID] = location;
-            uuidToElemMap.set(jsonLocation.UUID,location);
+            uuidToElemMap[jsonLocation.UUID] = location;
 
         }
         for(var i= 0; i<jsonObject.paths.length; i++){
             var jsonPath = jsonObject.paths[i];
-            //var startX = uuidToElemMap[jsonPath.source_point.UUID].display_position_x;
-            //var startY = uuidToElemMap[jsonPath.source_point.UUID].display_position_y;
-            //var endX = uuidToElemMap[jsonPath.destination_point.UUID].display_position_x;
-            //var endY = uuidToElemMap[jsonPath.destination_point.UUID].display_position_y;
-            var startX = uuidToElemMap.get(jsonPath.source_point.UUID).display_position_x;
-            var startY = uuidToElemMap.get(jsonPath.source_point.UUID).display_position_y;
-            var endX = uuidToElemMap.get(jsonPath.destination_point.UUID).display_position_x;
-            var endY = uuidToElemMap.get(jsonPath.destination_point.UUID).display_position_y;
+            var startX = uuidToElemMap[jsonPath.source_point.UUID].display_position_x;
+            var startY = uuidToElemMap[jsonPath.source_point.UUID].display_position_y;
+            var endX = uuidToElemMap[jsonPath.destination_point.UUID].display_position_x;
+            var endY = uuidToElemMap[jsonPath.destination_point.UUID].display_position_y;
             var control_points = [];
             for(var p in jsonPath.control_points){
                 var canvasControl_point = tcsCanvas.editorCoordinatesToCanvasCoordinates([jsonPath.control_points[p].x, jsonPath.control_points[p].y]);
@@ -510,17 +504,9 @@ $.TCSCanvas = function(container, config) {
         }
         for(var i= 0; i<jsonObject.vehicles.length; i++){
             var jsonVehicle = jsonObject.vehicles[i];
-            //var pointX = uuidToElemMap[jsonVehicle.initial_point].display_position_x;
-            //var pointY = uuidToElemMap[jsonVehicle.initial_point].display_position_y;
-            //if(jsonVehicle.initial_point == "" || jsonVehicle.initial_point == null)continue;
-            //var pointX = uuidToElemMap.get(jsonVehicle.initial_point).display_position_x;
-            //var pointY = uuidToElemMap.get(jsonVehicle.initial_point).display_position_y;
-            //var vehicle = new Vehicle(pointX,pointY,jsonVehicle.name,jsonVehicle.initial_point,two);
             var vehicle = new Vehicle(0,0,jsonVehicle.name,jsonVehicle.initial_point,two);
             twoElements.push(vehicle.group);
-            //boundingBox = calcInnerBBox(vehicle.group, boundingBox);
-            //uuidToElemMap[jsonVehicle.UUID] = vehicle;
-            uuidToElemMap.set(jsonVehicle.UUID,vehicle);
+            uuidToElemMap[jsonVehicle.UUID] = vehicle;
         }
 
         for(var elem in twoElements){
@@ -631,31 +617,19 @@ $.TCSCanvas = function(container, config) {
 
     tcsCanvas.parseVehiclePosition = function(jsonStatusObject){
 
-        var currentVehicle = uuidToElemMap.get(jsonStatusObject.uuid);
+        if(!jsonStatusObject.uuid)return;
+        var currentVehicle = uuidToElemMap[jsonStatusObject.uuid];
 
-        //var initialPointUUID;
-        //var currentPointUUID;
-        var precisePointUUID = jsonStatusObject.position_uuid;
-        if(precisePointUUID == "" || precisePointUUID == null)return;
-
-        //initialPointUUID = currentVehicle.initialPointUUID;
-        //currentPointUUID = currentVehicle.currentPointUUID;
-
-        var initialPoint,currentPoint,precisePoint;
-
-        //initialPoint = uuidToElemMap.get(initialPointUUID);
-        //currentPoint = uuidToElemMap.get(currentPointUUID);
-        precisePoint = uuidToElemMap.get(precisePointUUID);
-
-        //currentVehicle.setVehicleDirection(currentPoint.pointOrigin.translation,precisePoint.pointOrigin.translation);
-
-        //相对于初始点的translation
-        var x,y;
-        //x = precisePoint.pointOrigin.translation.x-initialPoint.pointOrigin.translation.x;
-        //y = precisePoint.pointOrigin.translation.y-initialPoint.pointOrigin.translation.y;
-        x = precisePoint.pointOrigin.translation.x;
-        y = precisePoint.pointOrigin.translation.y;
-        currentVehicle.setVehiclePosition(x,y,precisePointUUID);
+        if(!!jsonStatusObject.position_uuid){
+            var precisePointUUID,precisePoint,x,y;
+            precisePointUUID = jsonStatusObject.position_uuid;
+            precisePoint = !!uuidToElemMap[precisePointUUID] ? uuidToElemMap[precisePointUUID] : 0;
+            x = !!precisePoint ? precisePoint.pointRaw.translation.x : 0;
+            y = !!precisePoint ? precisePoint.pointRaw.translation.y : 0;
+            currentVehicle.setVehiclePosition(x,y,precisePointUUID);
+        }else{
+            currentVehicle.setVehiclePosition(0,0,0);
+        }
 
     };
     tcsCanvas.setElemTranslation = function(elem){
@@ -698,12 +672,43 @@ $.TCSCanvas = function(container, config) {
             maxY = Math.max(maxY,jsonLocation.display_position_y);
         }
 
-        var length = maxX - minX,
-            width = maxY - minY;
-        tcsCanvas.minEdittorX = minX;
-        tcsCanvas.maxEdittorY = maxY;
+        if ((minX != Infinity && minX != -Infinity) &&
+            (minY != Infinity && minY != -Infinity) &&
+            (maxX != Infinity && maxX != -Infinity) &&
+            (maxY != Infinity && maxY != -Infinity)) {
+            var length = maxX - minX,
+                width = maxY - minY;
+            tcsCanvas.minEdittorX = minX;
+            tcsCanvas.maxEdittorY = maxY;
 
-        tcsCanvas.unit = Math.min(initRulerLength/length/zoomLevel,initRulerWidth/width/zoomLevel);
+            tcsCanvas.unit = Math.min(initRulerLength / length / zoomLevel, initRulerWidth / width / zoomLevel);
+        }
+    };
+    tcsCanvas.showText = function () {
+        $.each(uuidToElemMap,function(key,value){
+            value.setTextOpacity();
+        });
+    };
+    tcsCanvas.showElemInScene = function (uuid) {
+        $.each(uuidToElemMap,function(key,value){
+            value.setHighlight(false);
+        });
+        if(!!uuid && !!uuidToElemMap[uuid]){
+            var elem = uuidToElemMap[uuid];
+            switch (elem.elem) {
+                case 'Point':
+                    elem.setHighlight(true);
+                    break;
+                case 'Location':
+                    elem.setHighlight(true);
+                    break;
+                case 'Vehicle':
+                    elem.setHighlight(true);
+                    break;
+                default:
+                    return;
+            }
+        }
     };
 /////////////////////////////////////////////////  TWO JS  /////////////////////////////////////////////////////////////
 
@@ -731,7 +736,7 @@ $.TCSCanvas = function(container, config) {
             fullscreen: false, // must be false !!!
             width: dimensions[0],
             height: dimensions[1],
-            type: Two.Types.webgl,
+            type: Two.Types.canvas,
             antialias: true,
             autostart: true
         };

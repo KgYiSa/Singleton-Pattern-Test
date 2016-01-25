@@ -506,9 +506,9 @@ var getSceneContent = function (id) {
         //timeout: 1000,
         success: function (data) {
             if(data){
-                buildTree(data);
-                disconnect();
-                connect();
+               // buildTree(data);
+                //disconnect();
+                //connect();
                 // 存到本地
                 if(supportLocalStorage()){
                     localStorage.setItem("currentScene", data.id);
@@ -516,9 +516,10 @@ var getSceneContent = function (id) {
                     localStorage.setItem("sceneJson", JSON.stringify(data));
                     localStorage.setItem("fSceneJson", JSON.stringify(fJson));
                 }
-                endingLoading();
                 disconnect();
                 connect();
+                endingLoading();
+
                 //window.tcsDraw.canvas.buildSceneEditor(data);
                 window.tcsDraw.loadScene(data, true);
             }
@@ -739,11 +740,11 @@ var initVehicleList = function(vehicleArray){
 
         }
         vehicleListStr += " <div class='battery'><img src='/images/battery/battery-"+el+".png' /></div>";
-        vehicleListStr += "<div class='status'> running </div>";
+        vehicleListStr += "<div class='status'>UNKNOWN</div>";
         //把Dispatch Vehicle放在外面
         vehicleListStr += "<div class='dispatch'><button type='button' class='btn btn-primary btn-sm' onclick=dispatchVehicle('"+vehicleArray[i].UUID+"')>Dispatch Vehicle </button></div>";
         vehicleListStr += "</div>";
-        vehicleListStr += "</div>"
+        vehicleListStr += "</div>";
     }
 
     $(".left-container .bottom-panel .bottom-panel-list").html(vehicleListStr)

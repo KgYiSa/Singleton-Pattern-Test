@@ -488,6 +488,7 @@
 
 
 	  var wsUrl = "http://localhost:8080/stomp";
+//	  var wsUrl = "http://192.168.88.52:8080/stomp";
 	  var stompClient = null;
 
 	  function setConnected(connected) {
@@ -658,6 +659,7 @@
 
 	  function showVehicleMessage(message) {
 		  $(".bottom-panel-list [vehicle-uuid='" + message.uuid + "'] .status").text(message.state);
+		  $("#left-sidebar [sidebarState='" + message.uuid + "']").text(message.state);
 	  }
 	  
 	  
@@ -749,7 +751,7 @@
 		  for(var i = 0 ; i < response.length; i++) {
 			  trContent += "<tr>";
 			  trContent += "<td><a href='javascript:;' vehicle-uuid='" + response[i].uuid + "'>" + response[i].name + "</a></td>";
-			  trContent += "<td title='" + response[i].state + "'>" + response[i].state + "</td>";
+			  trContent += "<td sidebarState='" + response[i].uuid + "' title='" + response[i].state + "'>" + response[i].state + "</td>";
 			 
 			  var adapterContent = "<select class='adapterSelect'>";
 			  adapterContent += "<option value=''>请选择</option>";

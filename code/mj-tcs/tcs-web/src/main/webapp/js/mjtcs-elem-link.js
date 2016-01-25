@@ -7,15 +7,20 @@ Link = function (x1,y1,x2,y2,two) {
     var elemLink = this;
     Elem.call(elemLink);
 
-    var XY = elemLink.initXY(x1,y1,x2,y2);
+    var pointsArray = [];
+    pointsArray.push(x1);
+    pointsArray.push(y1);
+    pointsArray.push(x2);
+    pointsArray.push(y2);
+    pointsArray = elemLink.initXY(pointsArray);
 
 
-    var atan2Angle = angle({x: XY.x1, y: XY.y1}, {x: XY.x2, y: XY.y2});
+    var atan2Angle = angle({x: pointsArray[0], y: pointsArray[1]}, {x: pointsArray[2], y: pointsArray[3]});
     //两端减去POINT和LOCATION半径后的坐标
-    x1 = XY.x1 + elemLink.POINT_RADIUS * Math.cos(atan2Angle);
-    y1 = XY.y1 + elemLink.POINT_RADIUS * Math.sin(atan2Angle);
-    x2 = XY.x2 - elemLink.LOCATION_RADIUS * Math.cos(atan2Angle);
-    y2 = XY.y2 - elemLink.LOCATION_RADIUS * Math.sin(atan2Angle);
+    x1 = pointsArray[0] + elemLink.POINT_RADIUS * Math.cos(atan2Angle);
+    y1 = pointsArray[1] + elemLink.POINT_RADIUS * Math.sin(atan2Angle);
+    x2 = pointsArray[2] - elemLink.LOCATION_RADIUS * Math.cos(atan2Angle);
+    y2 = pointsArray[3] - elemLink.LOCATION_RADIUS * Math.sin(atan2Angle);
 
     //斜长
     var hypotenuse = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
@@ -30,7 +35,8 @@ Link = function (x1,y1,x2,y2,two) {
 
         var dotted = two.makePath(xx1, yy1, xx2, yy2, true);
         dotted.linewidth = 1*elemLink.ZOOM;
-        //dotted.opacity = (i % 2 == 0 ? 0 : 1);
+        dotted.stroke = "orangered";
+        dotted.opacity = elemLink.lineOpacity;
         link.add(dotted);
     }
     elemLink.group = link;

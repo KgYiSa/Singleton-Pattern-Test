@@ -1,6 +1,6 @@
 //package com.mj.tcs.repository;
 //
-//import com.mj.tcs.api.v1.dto.connectity.SceneExtDto;
+//import com.mj.tcs.api.dto.connectity.SceneExtDto;
 //import org.springframework.data.repository.CrudRepository;
 //
 ///**

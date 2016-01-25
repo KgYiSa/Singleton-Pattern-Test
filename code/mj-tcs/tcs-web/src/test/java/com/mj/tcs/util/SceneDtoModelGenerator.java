@@ -1,9 +1,9 @@
 package com.mj.tcs.util;
 
-import com.mj.tcs.api.v1.dto.*;
-import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
-import com.mj.tcs.api.v1.dto.base.EntityAuditorDto;
-import com.mj.tcs.api.v1.dto.base.TripleDto;
+import com.mj.tcs.api.dto.*;
+import com.mj.tcs.api.dto.base.BaseEntityDto;
+import com.mj.tcs.api.dto.base.EntityAuditorDto;
+import com.mj.tcs.api.dto.base.TripleDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,7 +17,7 @@ public class SceneDtoModelGenerator {
     private static final String SCENE_NAME_PREFIX = "test_scene_";
     private static final String SCENE_NAME_SUFFIX_FORMAT = "yy_MM_dd_HH_mm_ss";
 
-    private static final String SCENE_POST_URI_FORMAT = "http://localhost:8080/api/v1/scenes/";
+    private static final String SCENE_POST_URI_FORMAT = "http://localhost:8080/api/scenes/";
 
     private static final String POINT_NAME_FORMAT = "test_point_%d";
 

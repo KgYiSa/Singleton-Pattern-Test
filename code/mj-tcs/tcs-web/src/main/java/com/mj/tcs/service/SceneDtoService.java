@@ -1,6 +1,6 @@
 package com.mj.tcs.service;
 
-import com.mj.tcs.api.v1.dto.SceneDto;
+import com.mj.tcs.api.dto.SceneDto;
 import com.mj.tcs.exception.TCSServerRuntimeException;
 import com.mj.tcs.repository.SceneDtoRepository;
 import org.hibernate.Hibernate;

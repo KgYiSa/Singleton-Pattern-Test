@@ -1,6 +1,6 @@
 package com.mj.tcs.util;
 
-import com.mj.tcs.api.v1.dto.*;
+import com.mj.tcs.api.dto.*;
 import org.junit.Test;
 
 import java.lang.reflect.Field;

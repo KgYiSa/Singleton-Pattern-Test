@@ -63,20 +63,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
 
                 //allow anonymous POSTs to login
-                .antMatchers(HttpMethod.POST, "/api/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/web/login").permitAll()
 
                 //allow anonymous GETs to API
-                .antMatchers(HttpMethod.GET, "/api/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/web/**").permitAll()
 
                 .and()
                 .formLogin()
-                .loginPage("/api/login")
+                .loginPage("/web/login")
                 /**
                  * REF: org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer
                  */
 //                .usernameParameter("user")
 //                .passwordParameter("pass")
-                .defaultSuccessUrl("/operating")
+                .defaultSuccessUrl("/web/operating")
                 .permitAll()
             .and()
                 .logout()

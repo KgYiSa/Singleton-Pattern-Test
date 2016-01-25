@@ -7,9 +7,12 @@ Location = function (x,y,type,name,textOffsetXX,textOffsetYY,two){
     var elemLocation = this;
     Elem.call(elemLocation);
 
-    var XY = elemLocation.initXY(x,y,0,0);
-    x = XY.x1;
-    y = XY.y1;
+    var pointsArray = [];
+    pointsArray.push(x);
+    pointsArray.push(y);
+    pointsArray = elemLocation.initXY(pointsArray);
+    x = pointsArray[0];
+    y = pointsArray[1];
 
 
 //var gridx,
@@ -19,7 +22,7 @@ Location = function (x,y,type,name,textOffsetXX,textOffsetYY,two){
 //    selectedPoint;
 
 
-    var LOCATION_DIAMETER = 60*elemLocation.ZOOM;
+    var LOCATION_DIAMETER = 30*elemLocation.ZOOM;
 
     var locationOrigin =  two.makeRectangle(x,y,LOCATION_DIAMETER,LOCATION_DIAMETER);
     locationOrigin.stroke = 'black';
@@ -69,6 +72,9 @@ Location = function (x,y,type,name,textOffsetXX,textOffsetYY,two){
         ,elemLocation.circle,elemLocation.rect1,elemLocation.rect2,elemLocation.rect3,elemLocation.rect4,elemLocation.text);
 
     //textTitleNumber++;
+    elemLocation.getBoundingClientRect = function () {
+        return elemLocation.locationOrigin.getBoundingClientRect();
+    }
 };
 //
 //Location.prototype = {

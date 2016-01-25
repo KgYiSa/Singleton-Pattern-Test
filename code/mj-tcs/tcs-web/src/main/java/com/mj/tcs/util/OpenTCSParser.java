@@ -1,9 +1,9 @@
 package com.mj.tcs.util;
 
-import com.mj.tcs.api.v1.dto.*;
-import com.mj.tcs.api.v1.dto.base.BaseEntityDto;
-import com.mj.tcs.api.v1.dto.base.EntityProperty;
-import com.mj.tcs.api.v1.dto.base.TripleDto;
+import com.mj.tcs.api.dto.*;
+import com.mj.tcs.api.dto.base.BaseEntityDto;
+import com.mj.tcs.api.dto.base.EntityProperty;
+import com.mj.tcs.api.dto.base.TripleDto;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
@@ -123,13 +123,13 @@ public class OpenTCSParser {
             for (int i = 0; i < points.length; i++) {
                 String[] label = points[i].split(LEVEL_2_DEVIDER);
                 TripleDto tripleDto = new TripleDto();
-                tripleDto.setX(Integer.parseInt(label[0]));
-                tripleDto.setY(Integer.parseInt(label[1]));
+                tripleDto.setX(Integer.parseInt(label[0])*50);
+                tripleDto.setY(-Integer.parseInt(label[1])*50);
                 tripleDto.setZ(0);
                 tripleDtos.add(tripleDto);
             }
         }catch (Exception e){
-//            System.out.print(e.getMessage());
+//            System.out.print(e.toString());
             e.printStackTrace();
         }
         return tripleDtos;
@@ -190,7 +190,7 @@ public class OpenTCSParser {
         locationDto.setLabelOffsetY(getLongFromMap("LABEL_OFFSET_Y",map));//(Long.parseLong(map.get("LABEL_OFFSET_Y")));
         locationDto.setLocationTypeDto(getLocationTypeDtoFromMap("Type",map));//(sceneDto.getLocationTypeDtoByName(map.get("Type")));//Type
         locationDto.setDisplayPositionX(getLongFromMap("POSITION_X",map));//(Long.parseLong(map.get("POSITION_X")));
-        locationDto.setDisplayPositionY(getLongFromMap("POSITION_X",map));//(Long.parseLong(map.get("POSITION_Y")));
+        locationDto.setDisplayPositionY(getLongFromMap("POSITION_Y",map));//(Long.parseLong(map.get("POSITION_Y")));
 
         final Map<String, String> properties = getMapValueFromMap("Miscellaneous", map);
         locationDto.setProperties(properties.keySet().stream().map(k -> new EntityProperty(k, properties.get(k))).collect(Collectors.toSet()));
@@ -340,7 +340,7 @@ public class OpenTCSParser {
         try {
             intValue = Integer.parseInt(value.split("\\.")[0]);
         }catch (Exception e){
-            throw new IllegalArgumentException("String is  :" + key + ",can not parseInt from this String." + e.getMessage());
+            throw new IllegalArgumentException("String is  :" + key + ",can not parseInt from this String." + e.toString());
         }
         return intValue;
     }
@@ -352,7 +352,7 @@ public class OpenTCSParser {
             try {
                 doubleValue = Double.parseDouble(value);
             }catch (Exception e){
-                throw new IllegalArgumentException("String is  :" + key + ",can not parseDouble from this String." + e.getMessage());
+                throw new IllegalArgumentException("String is  :" + key + ",can not parseDouble from this String." + e.toString());
             }
         }
         return doubleValue;
@@ -364,7 +364,7 @@ public class OpenTCSParser {
         try {
             longValue = Long.parseLong(value.split("\\.")[0]);
         }catch (Exception e){
-            throw new IllegalArgumentException("String is  :" + key + ",can not parseLong from this String." + e.getMessage());
+            throw new IllegalArgumentException("String is  :" + key + ",can not parseLong from this String." + e.toString());
         }
         return longValue;
     }
@@ -373,9 +373,9 @@ public class OpenTCSParser {
         String value = getStringFromMap(key,map);
         Boolean booleanValue = false;
         try {
-            booleanValue = value.equals("false");
+            booleanValue = value.equals("true");
         }catch (Exception e){
-            throw new IllegalArgumentException("String is  :" + key + ",can not parseBoolean from this String." + e.getMessage());
+            throw new IllegalArgumentException("String is  :" + key + ",can not parseBoolean from this String." + e.toString());
         }
         return booleanValue;
     }
@@ -386,7 +386,7 @@ public class OpenTCSParser {
         try {
             type = PointDto.Type.valueOf(value+"_POSITION");
         }catch (Exception e){
-            throw new IllegalArgumentException("String is  :" + key + ",can not parsePointDto.Type from this String." + e.getMessage());
+            throw new IllegalArgumentException("String is  :" + key + ",can not parsePointDto.Type from this String." + e.toString());
         }
         return type;
     }
@@ -397,7 +397,7 @@ public class OpenTCSParser {
         try {
             pointDto = sceneDto.getPointDtoByName(value);
         }catch (Exception e){
-            throw new IllegalArgumentException("String is  key:" + key +" value:"+value+ ",can not parsePointDto from this String." + e.getMessage());
+            throw new IllegalArgumentException("String is  key:" + key +" value:"+value+ ",can not parsePointDto from this String." + e.toString());
         }
         return pointDto;
     }
@@ -408,7 +408,7 @@ public class OpenTCSParser {
         try {
             locationDto = sceneDto.getLocationDtoByName(value);
         }catch (Exception e){
-            throw new IllegalArgumentException("String is key:" + key + "  value:"+value+",can not parseLocationDto from this String." + e.getMessage());
+            throw new IllegalArgumentException("String is key:" + key + "  value:"+value+",can not parseLocationDto from this String." + e.toString());
         }
         return locationDto;
     }
@@ -419,7 +419,7 @@ public class OpenTCSParser {
         try {
             locationTypeDto = sceneDto.getLocationTypeDtoByName(value);
         }catch (Exception e){
-            throw new IllegalArgumentException("String is  key:" + key + "  value:"+value+",can not parseLocationTypeDto from this String." + e.getMessage());
+            throw new IllegalArgumentException("String is  key:" + key + "  value:"+value+",can not parseLocationTypeDto from this String." + e.toString());
         }
         return locationTypeDto;
     }

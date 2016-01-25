@@ -1,6 +1,6 @@
 package com.mj.tcs.repository;
 
-import com.mj.tcs.api.v1.dto.TransportOrderDto;
+import com.mj.tcs.api.dto.TransportOrderDto;
 import org.springframework.data.repository.CrudRepository;
 
 /**

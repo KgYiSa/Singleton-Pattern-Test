@@ -159,7 +159,9 @@
                         tcsCanvas.play();
                         $("#zoom").val(parseInt(zoomlevel*100) + "%")
                         $("option", "#zoom_select").removeAttr("selected")
-                        $("option[value="+ parseInt(zoomlevel*100) +"]", "#zoom_select").attr("selected", "selected")
+                        $("option[value="+ parseInt(zoomlevel*100) +"]", "#zoom_select").attr("selected", "selected");
+                        //updateRulers(canvas);
+                        tcsCanvas.adjustSceneOffset();
                     }
                 };
                 animateZoom();
@@ -426,15 +428,16 @@
         Editor.loadScene = function(jsonObject, fill) {
 
             //Reset
-            tcsCanvas.resetZoomAndOffset();
-            $("#zoom").val(100).change()
+            tcsCanvas.autoResetScene(jsonObject);
+            $("#zoom").val(100).change();
 
-            tcsCanvas.buildSceneEditor(jsonObject);
+            var zoom = tcsCanvas.buildSceneEditor(jsonObject,true);
 //TODO
 //            var bbox = tcsCanvas.getBBox(true);
 //            Editor.updateCanvas();
-            var zoom = tcsCanvas.autoZoomAndOffset();
-            $("#zoom").val(zoom).change()
+
+            $("#zoom").val(zoom).change();
+            tcsCanvas.flagBBox = true;
         };
 
         /**

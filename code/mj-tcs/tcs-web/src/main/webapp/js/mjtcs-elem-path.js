@@ -3,37 +3,57 @@
 // 2) two.js
 // 3)mjtcs-elem.js
 
-Path = function(x1,y1,x2,y2,positiveVal,negativeVal,two){
+Path = function(x1,y1,x2,y2,positiveVal,negativeVal,control_points,two){
     var elemPath = this;
     Elem.call(elemPath);
 
-    var XY = elemPath.initXY(x1,y1,x2,y2);
+    for(var p = 0; p < control_points.length-3;p+=2){
+        if(control_points[p]==control_points[p+2] && control_points[p+1]==control_points[p+3]){
+            control_points.splice(p,1);
+            control_points.splice(p,1);
+            p-=2;
+        }
+    }
 
-    var TRIANGLE_RADIUS = 10*elemPath.ZOOM;//PATH箭头半径
+    control_points.unshift(y1);
+    control_points.unshift(x1);
+    control_points.push(x2);
+    control_points.push(y2);
+    var pointArray = elemPath.initXY(control_points);
 
-    var atan2Angle = angle({x: XY.x1,y: XY.y1},{x: XY.x2,y: XY.y2});
+    var TRIANGLE_RADIUS = 7*elemPath.ZOOM;//PATH箭头半径
+
+    var atan2Angle = angle({x: pointArray[0],y: pointArray[1]},{x: pointArray[pointArray.length-2],y: pointArray[pointArray.length-1]});
     //正/负向速度不为0时，存在正/负向箭头
     var positivePathArrowAdjust = positiveVal==0 ? 0:TRIANGLE_RADIUS;
     var negativePathArrowAdjust = negativeVal==0 ? 0:TRIANGLE_RADIUS;
     //根据正/负向箭头存在与否，调整线段长短，确定端点坐标
-    x1 = XY.x1 + (negativePathArrowAdjust+elemPath.POINT_RADIUS)*Math.cos(atan2Angle);
-    y1 = XY.y1 + (negativePathArrowAdjust+elemPath.POINT_RADIUS)*Math.sin(atan2Angle);
-    x2 = XY.x2 - (positivePathArrowAdjust+elemPath.POINT_RADIUS)*Math.cos(atan2Angle);
-    y2 = XY.y2 - (positivePathArrowAdjust+elemPath.POINT_RADIUS)*Math.sin(atan2Angle);
+    pointArray[0] = x1 = pointArray[0] + (negativePathArrowAdjust+elemPath.POINT_RADIUS)*Math.cos(atan2Angle);
+    pointArray[1] = y1 = pointArray[1] + (negativePathArrowAdjust+elemPath.POINT_RADIUS)*Math.sin(atan2Angle);
+    pointArray[pointArray.length-2] = x2 = pointArray[pointArray.length-2] - (positivePathArrowAdjust+elemPath.POINT_RADIUS)*Math.cos(atan2Angle);
+    pointArray[pointArray.length-1] = y2 = pointArray[pointArray.length-1] - (positivePathArrowAdjust+elemPath.POINT_RADIUS)*Math.sin(atan2Angle);
 
-    var line = two.makePath(x1,y1,x2,y2,true);
+    var lineCode = "var line = two.makePath(" ;
+
+    for(var p in pointArray){
+        lineCode += (pointArray[p]+",");
+    }
+    eval(lineCode+"true)");
 
     line.linewidth = 1*elemPath.ZOOM;
+    line.opacity = elemPath.lineOpacity;
+    line.curved = true;
+    line.noFill();
     elemPath.line = line;
 
     var positiveTriangle = two.makePolygon(x2,y2,TRIANGLE_RADIUS,3);
     positiveTriangle.fill = "black";
-    positiveTriangle.opacity = positiveVal==0 ? 0:1;
+    positiveTriangle.opacity = positiveVal==0 ? 0:elemPath.lineOpacity;
     elemPath.positiveTriangle = positiveTriangle;
 
     var negativeTriangle = two.makePolygon(x1,y1,TRIANGLE_RADIUS,3);
     negativeTriangle.fill = "white";
-    negativeTriangle.opacity = negativeVal==0 ? 0:1;
+    negativeTriangle.opacity = negativeVal==0 ? 0:elemPath.lineOpacity;
     elemPath.negativeTriangle = negativeTriangle;
 
     elemPath.group = two.makeGroup(elemPath.line,elemPath.positiveTriangle,elemPath.negativeTriangle);

@@ -405,6 +405,9 @@ var getSceneBaseList = function() {
         cache: false,//false时，会自动添加时间戳
         //timeout: 1000,
         success: function (data) {
+            if (!data.body) {
+                return;
+            }
 
             var trContent;
             $.each(data.body, function(idx, obj){

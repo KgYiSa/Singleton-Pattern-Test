@@ -487,8 +487,7 @@
 	  });
 
 
-	  var wsUrl = "http://localhost:8080/stomp";
-//	  var wsUrl = "http://192.168.88.52:8080/stomp";
+	  var wsUrl = "http://" + location.host + "/stomp";
 	  var stompClient = null;
 
 	  function setConnected(connected) {

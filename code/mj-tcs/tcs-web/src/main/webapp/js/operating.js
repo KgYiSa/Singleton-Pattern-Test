@@ -53,21 +53,21 @@ $(function () {
 
     });
 
-    ////平移按钮
-    //$(".operation-list .hand").click(function() {
-    //    // TODO:
-    //    window.tcsDraw.translate(100,100);
-    //});
-    //
-    ////工单按钮
-    //$(".operation-list .to").click(function() {
-    //	if ($(".top-panel .top-panel-to").css("display") == 'none') {
-    //		$(".top-panel .top-panel-to").css("display","block");
-    //	} else {
-    //		$(".top-panel .top-panel-to").css("display","none");
-    //	}
-    //
-    //})
+    //平移按钮
+    $(".operation-list .hand").click(function() {
+        // TODO:
+        window.tcsDraw.translate(100,100);
+    });
+
+    //工单按钮
+    $(".operation-list .to").click(function() {
+    	if ($(".top-panel .top-panel-to").css("display") == 'none') {
+    		$(".top-panel .top-panel-to").css("display","block");
+    	} else {
+    		$(".top-panel .top-panel-to").css("display","none");
+    	}
+
+    })
 
 
     // reset zoom
@@ -301,7 +301,7 @@ $(function () {
             var data = localStorage.getItem("sceneJson");
             var vehicleList = JSON.parse(data)["vehicles"];
             if (vehicleList) {
-                var dropdownItem = "";
+                var dropdownItem = "<li><a href='#' vehicle-uuid='null' title='请选择小车'>&nbsp;&nbsp;&nbsp;------&nbsp;&nbsp;&nbsp;</a></li>";
                 $.each(vehicleList, function (index, attr) {
                     dropdownItem += "<li><a href='#' vehicle-uuid='" + attr.UUID + "' title='" + attr.name + "'>" + attr.name + "</a></li>";
                 })

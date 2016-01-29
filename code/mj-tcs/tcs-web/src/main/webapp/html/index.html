@@ -10,7 +10,8 @@
         <script src="../plugin/sockjs/sockjs.js"></script>
         <script src="../plugin/stomp/stomp.min.js"></script>
         <script type="text/javascript">
-            var wsUrl = "http://localhost:8080/stomp";
+            var wsUrl = "http://" + location.host + "/stomp";
+
             var stompClient = null;
 
             function setConnected(connected) {

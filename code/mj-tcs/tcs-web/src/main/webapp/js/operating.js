@@ -301,7 +301,7 @@ $(function () {
             var data = localStorage.getItem("sceneJson");
             var vehicleList = JSON.parse(data)["vehicles"];
             if (vehicleList) {
-                var dropdownItem = "<li><a href='#' vehicle-uuid='null' title='请选择小车'>&nbsp;&nbsp;&nbsp;------&nbsp;&nbsp;&nbsp;</a></li>";
+                var dropdownItem = "<li><a href='#' vehicle-uuid='null' title='请选择小车'>自动选择</a></li>";
                 $.each(vehicleList, function (index, attr) {
                     dropdownItem += "<li><a href='#' vehicle-uuid='" + attr.UUID + "' title='" + attr.name + "'>" + attr.name + "</a></li>";
                 })
@@ -616,7 +616,7 @@ var buildTree = function (data) {
                 pointObj.name = attr.name;
                 pointObj.title = elem;
                 pointObj.click = true;
-                pointObj.icon = "./images/" + elem + ".18x18.png";
+                pointObj.icon = "../images/" + elem + ".18x18.png";
                 pointObj.elemId = attr.UUID;
                 eleNodes.push(pointObj);
                 fJson[attr.UUID] = attr;
@@ -658,7 +658,7 @@ var buildTree = function (data) {
                             pointObj.title = elem;
                             pointObj.click = true;
                             pointObj.elemId = attr.UUID
-                            pointObj.icon = "./images/" + elem + ".18x18.png";
+                            pointObj.icon = "../images/" + elem + ".18x18.png";
                             eleNodes.push(pointObj);
                             fJson[attr.UUID] = attr;
                         });
@@ -685,7 +685,7 @@ var buildTree = function (data) {
                     pointObj.name = attr.name;
                     pointObj.title = elem;
                     pointObj.click = true;
-                    pointObj.icon = "./images/" + elem + ".18x18.png";
+                    pointObj.icon = "../images/" + elem + ".18x18.png";
                     pointObj.elemId = attr.UUID;
                     eleNodes.push(pointObj);
                     fJson[attr.UUID] = attr;
@@ -741,7 +741,7 @@ var buildTree = function (data) {
                     blockObj.name = mem.name;
                     blockObj.title = mem.name;
                     blockObj.click = true;
-                    blockObj.icon = "./images/" + "block" + ".18x18.png";
+                    blockObj.icon = "../images/" + "block" + ".18x18.png";
                     blockObj.elemId = mem.UUID;
                     bloNodes.push(blockObj);
                     fJson[attr.UUID] = mem;

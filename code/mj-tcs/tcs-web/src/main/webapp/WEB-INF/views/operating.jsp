@@ -527,7 +527,8 @@
     });
 
 
-    var wsUrl = "http://localhost:8080/stomp";
+    var wsUrl = "http://" + location.host + "/stomp";
+//    "http://" + location.host + "/stomp";
     //	  var wsUrl = "http://192.168.88.52:8080/stomp";
     var stompClient = null;
 
@@ -647,6 +648,7 @@
                 trList.eq(i).find("td").eq(4).text(getVehicleNameByUUID(message.intended_vehicle_uuid));
                 trList.eq(i).find("td").eq(5).text(getVehicleNameByUUID(message.executing_vehicle));
                 trList.eq(i).find("td").eq(6).text(message.order_state);
+                trList.eq(i).find("td").eq(6).attr("class",message.order_state);
                 return;
             }
         }
@@ -658,7 +660,7 @@
 
             toContent += "<td>" + getVehicleNameByUUID(message.intended_vehicle_uuid) + "</td>";
             toContent += "<td>" + getVehicleNameByUUID(message.executing_vehicle) + "</td>";
-            toContent += "<td>" + message.order_state + "</td>";
+            toContent += "<td class='" + message.order_state + "'>" + message.order_state + "</td>";
             toContent += "</tr>";
             $(".top-panel-to .table-body tbody").append(toContent);
         }
@@ -852,6 +854,7 @@
 
 
     function dispatchVehicle(uuid) {
+
         var request = {
             "uuid": REQ_UUID,
             "action_code": ACTIONS.VEHICLE_DISPATCH,

@@ -18,6 +18,7 @@ public class OrderStatusMessage extends StatusMessage {
     /**
      * The transport order's name.
      */
+    private String orderName = "";
     private String orderUUID = "";
     private String executingVehicleUUID;
     /**
@@ -34,6 +35,14 @@ public class OrderStatusMessage extends StatusMessage {
      */
     public OrderStatusMessage(long sceneId) {
         super(sceneId);
+    }
+
+    public String getOrderName() {
+        return orderName;
+    }
+
+    public void setOrderName(String orderName) {
+        this.orderName = orderName;
     }
 
     /**

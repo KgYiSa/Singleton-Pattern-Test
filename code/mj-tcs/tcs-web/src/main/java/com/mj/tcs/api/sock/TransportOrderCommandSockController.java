@@ -101,7 +101,7 @@ public class TransportOrderCommandSockController extends ServiceController {
         orderDto.setSceneId(sceneId);
 
         // Name
-        orderDto.setName("TO-"+new UniqueTimestampGenerator().getNextTimestampInStringFormat(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss:SS")));
+        orderDto.setName("TO-"+new UniqueTimestampGenerator().getNextTimestampInStringFormat(new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss-SS")));
 
         if (transport.getDeadline() != null) {
             orderDto.setDeadline(transport.getDeadline().getTime());

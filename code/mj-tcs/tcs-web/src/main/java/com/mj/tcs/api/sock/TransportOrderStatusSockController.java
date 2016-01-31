@@ -44,6 +44,7 @@ public class TransportOrderStatusSockController extends ServiceController {
 //            orderStatusDto.setDestinationDtos(destinationStatusDtos);
 
             final TransportOrderDto orderDto = new TransportOrderDto();
+            orderDto.setName(message.getOrderName());
             orderDto.setUUID(message.getOrderUUID());
             orderDto.setExecutingVehicle(message.getExecutingVehicleUUID());
             orderDto.setOrderState(orderState.name());

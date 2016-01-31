@@ -13,7 +13,7 @@ Elem = function(){
     elem.lineOpacity = 0.75;//各种线条透明度
     elem.boardOffsetX = 0;
     elem.boardOffsetY = 0;
-    elem.POINT_RADIUS = 5*elem.ZOOM;
+    elem.POINT_RADIUS = 8*elem.ZOOM;
     elem.LOCATION_RADIUS = 15*elem.ZOOM;
 
     //将坐标转化成对应的网格坐标 网格边长为POINT_RADIUS*2

@@ -50,6 +50,7 @@ public class KernelEventHandler implements EventListener<TCSEvent>, EventFilter<
             TransportOrder order = (TransportOrder) objectEvent.getCurrentOrPreviousObjectState();
             OrderStatusMessage orderMessage = new OrderStatusMessage(this.sceneId);
             // TODO: Replace with DTO by GEDA
+            orderMessage.setOrderName(order.getName());
             orderMessage.setOrderUUID(order.getUUID());
             orderMessage.setOrderState(order.getState());
             orderMessage.setExecutingVehicle(order.getProcessingVehicle());

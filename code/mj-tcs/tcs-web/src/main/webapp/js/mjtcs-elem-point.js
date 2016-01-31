@@ -18,8 +18,8 @@ Point = function(x,y,type,name,textOffsetX,textOffsetY,two){
     //var textTitleNumber = 1;
     var textTitle;
     var styles={
-        size:10*elemPoint.ZOOM,
-        linewidth:1,
+        size:20*elemPoint.ZOOM,
+        linewidth:2.0,
         alignment:'center'
     };
 

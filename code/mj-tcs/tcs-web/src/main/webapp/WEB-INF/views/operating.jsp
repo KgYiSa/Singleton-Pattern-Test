@@ -454,15 +454,15 @@
         <div class="settinginfo">
             <div class="">
                 <p>IP ：</p>
-                <input type="text" name="ip" class="ip" value="127.0.0.1"/>
+                <input type="text" id="myIP" name="ip" class="ip" value="127.0.0.1"/>
             </div>
             <div class="port">
                 <p>Port ：</p>
-                <input type="text" name="port" class="port" value="8080"/>
+                <input type="text" id="myPort" name="port" class="port" value="8080"/>
             </div>
             <div class="">
                 <p>SlaveId ：</p>
-                <input type="text" name="slaveId" class="slaveId" value="502"/>
+                <input type="text" id="mySlaveId" name="slaveId" class="slaveId" value="502"/>
             </div>
             <div class="">
                 <input type="hidden" name="mark" value=""/>
@@ -528,7 +528,7 @@
 
 
     var wsUrl = "http://" + location.host + "/stomp";
-//    "http://" + location.host + "/stomp";
+    //    "http://" + location.host + "/stomp";
     //	  var wsUrl = "http://192.168.88.52:8080/stomp";
     var stompClient = null;
 
@@ -648,7 +648,7 @@
                 trList.eq(i).find("td").eq(4).text(getVehicleNameByUUID(message.intended_vehicle_uuid));
                 trList.eq(i).find("td").eq(5).text(getVehicleNameByUUID(message.executing_vehicle));
                 trList.eq(i).find("td").eq(6).text(message.order_state);
-                trList.eq(i).find("td").eq(6).attr("class",message.order_state);
+                trList.eq(i).find("td").eq(6).attr("class", message.order_state);
                 return;
             }
         }
@@ -734,8 +734,8 @@
             "action_code": ACTIONS.TO_NEW,
             "body": {
                 "uuid": REQ_UUID,
-               "deadline": deadline,
-              //  "deadline": null,
+                "deadline": deadline,
+                //  "deadline": null,
                 "intended_vehicle": intended_vehicle,
                 "destinations": [
                     {
@@ -799,8 +799,8 @@
 
         var trContent = "";
         for (var i = 0; i < response.length; i++) {
-            trContent += "<tr>";
-            trContent += "<td><a href='javascript:;' vehicle-uuid='" + response[i]["uuid"] + "'>" + response[i]["name"] + "</a></td>";
+            trContent += "<tr onclick='setIP()'>";
+            trContent += "<td ><a href='javascript:;' vehicle-uuid='" + response[i]["uuid"] + "'>" + response[i]["name"] + "</a></td>";
             trContent += "<td sidebarState='" + response[i].uuid + "' title='" + response[i].state + "'>" + response[i].state + "</td>";
 
             var adapterContent = "<select class='adapterSelect'>";
@@ -840,7 +840,12 @@
         $("#left-sidebar .content .adapter .table-body tbody").html("");
         $("#left-sidebar .content .adapter .table-body tbody").append(trContent);
     }
-
+    //点击左侧边栏中小车列表的每一行时设置为默认的IP,Port,SlaveId
+    function setIP() {
+        $("#myIP").val("127.0.0.1");
+        $("#myPort").val("8080");
+        $("#mySlaveId").val("502");
+    }
     function attachAdapter(content) {
         var request = {
             "uuid": REQ_UUID + "_" + ACTIONS.VEHICLE_ADAPTER_ATTACH,
